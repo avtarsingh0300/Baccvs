@@ -1,0 +1,15 @@
+export const Colors = {
+  Linear: '#291846',
+  LinearBlack: '#020103',
+  LinearDark: '#CD3AFF',
+  white: '#FFFFFF',
+  black: '#000000',
+  Pink: '#CD3AFF',
+  green: '#6DFF3A',
+  inputborder: '#CDCDCD',
+  btnLinear1: '#C68DC3',
+  btnLinear2: '#CD3AFF8F',
+  btnBackground: '#120c1f',
+  greyTxt: '#B9B9B9',
+  tranparent: 'transparent',
+};
