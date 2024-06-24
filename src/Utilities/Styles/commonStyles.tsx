@@ -46,4 +46,9 @@ export default StyleSheet.create({
     fontFamily: fontFamily.time_regular,
     alignSelf: 'center',
   },
+  font14: {
+    fontSize: textScale(14),
+    fontWeight: '400',
+    color: Colors.white,
+  },
 });

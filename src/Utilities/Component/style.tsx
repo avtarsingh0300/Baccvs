@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import {
   moderateScale,
   moderateScaleVertical,
@@ -67,6 +67,35 @@ const styles = StyleSheet.create({
     marginTop: 0,
     paddingTop: 0,
     paddingBottom: 0,
+  },
+  inputHolder: {
+    padding: 15,
+    paddingLeft: 18,
+    borderWidth: 1,
+    borderLeftWidth: 1,
+    borderColor: Colors.white,
+    borderRadius: 8,
+  },
+  input: {
+    color: Colors.greyTxt,
+    fontFamily: fontFamily.time_regular,
+    padding: 0,
+    fontWeight: '400',
+    fontSize: textScale(14),
+    width: '100%',
+  },
+  pickerContainer2: {
+    marginVertical: 10,
+  },
+  pickerLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  picker: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
   },
 });
 

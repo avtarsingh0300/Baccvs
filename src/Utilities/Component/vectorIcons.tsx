@@ -12,6 +12,8 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Feather from 'react-native-vector-icons/Feather';
+
 import {Colors} from '../Styles/colors';
 
 type VectorIconProps = {
@@ -39,6 +41,7 @@ const VectorIcons = {
   SimpleLineIcons,
   Fontisto,
   FontAwesome5,
+  Feather,
 };
 
 const VectorIcon: React.FC<VectorIconProps> = ({

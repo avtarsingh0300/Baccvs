@@ -10,6 +10,7 @@ import {
   ProgressHeader,
   SizeBox,
 } from '../../../Utilities/Component/Helpers';
+import NavigationStrings from '../../../Utilities/Constants/NavigationStrings';
 
 const PhoneNumber = (props: any) => {
   const [countryCode, setCountryCode] = useState('US');
@@ -22,6 +23,9 @@ const PhoneNumber = (props: any) => {
     setCountryCode(country.cca2);
     setCallingCode(country.callingCode[0]);
   };
+  const onContnue = () => {
+    props.navigation.navigate(NavigationStrings.OtpVerification);
+  };
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
@@ -32,7 +36,7 @@ const PhoneNumber = (props: any) => {
         <ProgressHeader onPress={onBack} value={2} />
         <SizeBox size={15} />
         <Text style={{...commonStyles.font18W700Center}}>Phone number</Text>
-        <SizeBox size={5} />
+        <SizeBox size={10} />
         <Text style={{...commonStyles.font14Center, color: Colors.greyTxt}}>
           Please insert your phone number.
         </Text>
@@ -50,7 +54,7 @@ const PhoneNumber = (props: any) => {
           </View>
         </View>
         <SizeBox size={40} />
-        <CommonBtn onPress={() => console.log('ok')} title={'Continue'} />
+        <CommonBtn onPress={onContnue} title={'Continue'} />
       </SafeAreaView>
     </LinearGradient>
   );

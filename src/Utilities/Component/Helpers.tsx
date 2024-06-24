@@ -1,21 +1,45 @@
 import React from 'react';
-import {Text, TextInput, TouchableOpacity, View} from 'react-native';
-import FastImage from 'react-native-fast-image';
-
+import {
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  StyleProp,
+  ImageStyle,
+} from 'react-native';
+import FastImage, {FastImageProps} from 'react-native-fast-image';
 import VectorIcon from './vectorIcons';
 
 import styles from './style';
-import {
-  moderateScale,
-  moderateScaleVertical,
-  width,
-} from '../Styles/responsiveSize';
+import {moderateScaleVertical, width} from '../Styles/responsiveSize';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../Styles/colors';
 import commonStyles from '../Styles/commonStyles';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
-import CountryPicker from 'react-native-country-picker-modal';
-export function ImageComponent({style, source, resizeMode}) {
+import CountryPicker, {
+  CountryCode,
+  Country,
+} from 'react-native-country-picker-modal';
+
+export const dummydata = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
+
+interface PhonePickerProps {
+  visible: boolean;
+  onSelect: (country: Country) => void;
+  onClose: () => void;
+  countryCode: CountryCode;
+}
+interface ImageComponentProps {
+  style?: StyleProp<ImageStyle>;
+  source: FastImageProps['source'];
+  resizeMode?: 'contain' | 'cover';
+}
+
+export function ImageComponent({
+  style,
+  source,
+  resizeMode = 'cover',
+}: ImageComponentProps) {
   return (
     <FastImage
       source={source}
@@ -28,7 +52,8 @@ export function ImageComponent({style, source, resizeMode}) {
     />
   );
 }
-export function Header({onPress}) {
+
+export function Header({onPress}: HeaderProps) {
   return (
     <View style={styles.headerRow}>
       <VectorIcon
@@ -42,11 +67,11 @@ export function Header({onPress}) {
     </View>
   );
 }
-export function SizeBox({size}) {
+
+export function SizeBox({size}: SizeBoxProps) {
   return <View style={{marginVertical: moderateScaleVertical(size)}} />;
 }
-
-export function CommonBtn({onPress, title}) {
+export function CommonBtn({onPress, title}: CommonBtnProps) {
   return (
     <LinearGradient
       colors={[Colors.btnLinear1, Colors.btnLinear2]}
@@ -71,7 +96,7 @@ export function CommonBtn({onPress, title}) {
   );
 }
 
-export function ProgressHeader({onPress, value}) {
+export function ProgressHeader({onPress, value}: ProgressHeaderProps) {
   return (
     <View
       style={{
@@ -90,7 +115,7 @@ export function ProgressHeader({onPress, value}) {
           width: 0,
           backgroundColor: Colors.tranparent,
         }}
-        values={[value ? value : 0]}
+        values={[value]}
         min={0}
         max={5}
         allowOverlap
@@ -102,7 +127,12 @@ export function ProgressHeader({onPress, value}) {
   );
 }
 
-export function PhonePicker({visible, onSelect, onClose, countryCode}) {
+export function PhonePicker({
+  visible,
+  onSelect,
+  onClose,
+  countryCode,
+}: PhonePickerProps) {
   return (
     <View style={styles.picVw}>
       <CountryPicker
@@ -123,5 +153,41 @@ export function PhonePicker({visible, onSelect, onClose, countryCode}) {
       />
       <VectorIcon groupName={'AntDesign'} name={'down'} size={15} />
     </View>
+  );
+}
+
+export function CommonInput({
+  placeholder,
+  multiline = false,
+  keyboardType = 'default',
+}: CommonInputProps) {
+  return (
+    <View
+      style={[
+        styles.inputHolder,
+        {
+          height: multiline
+            ? moderateScaleVertical(120)
+            : moderateScaleVertical(55),
+        },
+      ]}>
+      <TextInput
+        multiline={multiline}
+        keyboardType={keyboardType}
+        placeholder={placeholder}
+        placeholderTextColor={Colors.greyTxt}
+        style={styles.input}
+      />
+    </View>
+  );
+}
+export function CommonInputBtn({title, onPress}: CommonBtnProps) {
+  return (
+    <TouchableOpacity
+      style={styles.inputHolder}
+      activeOpacity={0.5}
+      onPress={onPress}>
+      <Text style={styles.input}>{title}</Text>
+    </TouchableOpacity>
   );
 }

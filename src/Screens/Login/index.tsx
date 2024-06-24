@@ -5,13 +5,16 @@ import LinearGradient from 'react-native-linear-gradient';
 import styles from './style';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import {CommonBtn, Header, SizeBox} from '../../Utilities/Component/Helpers';
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 
 const Login = (props: any) => {
   const onBack = () => {
     props.navigation.goBack();
   };
   const onLogin = () => {
-    props.navigation.goBack();
+    props.navigation.navigate(NavigationStrings.TabRoutes, {
+      screen: NavigationStrings.HomeScreen,
+    });
   };
   return (
     <LinearGradient

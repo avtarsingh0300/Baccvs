@@ -11,5 +11,9 @@ export const Colors = {
   btnLinear2: '#CD3AFF8F',
   btnBackground: '#120c1f',
   greyTxt: '#B9B9B9',
+  lightGrey: '#8F8F8F',
   tranparent: 'transparent',
+  lightPink: '#B69CFF',
+  dashBordervw: '#21262E',
+  dashBorder: '#3C444F',
 };

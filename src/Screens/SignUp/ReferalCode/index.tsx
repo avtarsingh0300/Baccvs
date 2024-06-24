@@ -30,7 +30,7 @@ const ReferalCode = (props: any) => {
         <Text style={{...commonStyles.font18W700Center}}>
           What’s your referral code?
         </Text>
-        <SizeBox size={5} />
+        <SizeBox size={10} />
         <Text style={{...commonStyles.font14Center, color: Colors.greyTxt}}>
           Please write your referral code.
         </Text>

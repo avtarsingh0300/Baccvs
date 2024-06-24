@@ -26,6 +26,21 @@ export default function (Stack: any) {
         component={screens?.PhoneNumber}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings?.OtpVerification}
+        component={screens?.OtpVerification}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings?.RegisterScreen}
+        component={screens?.RegisterScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings?.UploadImage}
+        component={screens?.UploadImage}
+        options={{headerShown: false}}
+      />
     </>
   );
 }
