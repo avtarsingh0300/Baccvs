@@ -16,4 +16,7 @@ export const Colors = {
   lightPink: '#B69CFF',
   dashBordervw: '#21262E',
   dashBorder: '#3C444F',
+  calenderback: '#1a151f',
+  red: '#C90303',
+  slider: '#8324C0',
 };

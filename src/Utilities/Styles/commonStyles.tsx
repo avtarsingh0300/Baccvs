@@ -51,4 +51,16 @@ export default StyleSheet.create({
     fontWeight: '400',
     color: Colors.white,
   },
+  font12Regular: {
+    fontSize: textScale(12),
+    fontWeight: '500',
+    fontFamily: fontFamily.time_regular,
+  },
+  Heading20font: {
+    fontSize: textScale(20),
+    fontWeight: '500',
+    fontFamily: fontFamily.time_regular,
+    color: Colors.white,
+    textAlign: 'center',
+  },
 });

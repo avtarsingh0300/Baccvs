@@ -33,3 +33,8 @@ interface HeaderProps {
 interface ImageComProps {
   onPress: () => void;
 }
+interface DrawerProps {
+  onBackdropPress: () => void;
+  onClose: () => void;
+  isVisible?: boolean;
+}

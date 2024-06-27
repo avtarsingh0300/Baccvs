@@ -97,6 +97,18 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
   },
+  profileimg: {
+    height: moderateScaleVertical(56),
+    width: moderateScale(58),
+    borderRadius: 8,
+  },
+  drawerCon: {
+    backgroundColor: Colors.white,
+    width: '80%',
+    height: '100%',
+    paddingLeft: moderateScale(20),
+    paddingTop: moderateScaleVertical(40),
+  },
 });
 
 export default styles;

@@ -12,4 +12,5 @@ export default {
   Chat: 'Chat',
   UserProfile: 'UserProfile',
   TabRoutes: 'TabRoutes',
+  EventFilter: 'EventFilter',
 };

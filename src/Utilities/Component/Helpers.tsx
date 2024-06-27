@@ -9,9 +9,13 @@ import {
 } from 'react-native';
 import FastImage, {FastImageProps} from 'react-native-fast-image';
 import VectorIcon from './vectorIcons';
-
+import Modal from 'react-native-modal';
 import styles from './style';
-import {moderateScaleVertical, width} from '../Styles/responsiveSize';
+import {
+  moderateScale,
+  moderateScaleVertical,
+  width,
+} from '../Styles/responsiveSize';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../Styles/colors';
 import commonStyles from '../Styles/commonStyles';
@@ -20,6 +24,8 @@ import CountryPicker, {
   CountryCode,
   Country,
 } from 'react-native-country-picker-modal';
+import {FlatList} from 'react-native';
+import ImagePath from '../Constants/ImagePath';
 
 export const dummydata = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
 
@@ -189,5 +195,116 @@ export function CommonInputBtn({title, onPress}: CommonBtnProps) {
       onPress={onPress}>
       <Text style={styles.input}>{title}</Text>
     </TouchableOpacity>
+  );
+}
+export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
+  return (
+    <Modal
+      useNativeDriver={true}
+      hideModalContentWhileAnimating={true}
+      animationIn="slideInLeft"
+      animationOut="slideOutLeft"
+      onBackdropPress={onBackdropPress}
+      avoidKeyboard={true}
+      style={{flex: 1, margin: 0}}
+      isVisible={isVisible}
+      backdropOpacity={0.8}>
+      <LinearGradient
+        colors={[Colors.Linear, Colors.LinearBlack]}
+        start={{x: 0, y: 0}}
+        end={{x: 1.3, y: 0.9}}
+        style={styles.drawerCon}>
+        <VectorIcon
+          groupName="Fontisto"
+          name="close-a"
+          size={20}
+          onPress={onClose}
+          color={Colors.white}
+        />
+        <ImageComponent
+          source={ImagePath.ProfileImg}
+          style={[styles.profileimg, {alignSelf: 'center'}]}
+        />
+        <SizeBox size={5} />
+        <Text
+          style={{
+            ...commonStyles.font14Center,
+            color: Colors.white,
+          }}>
+          Kathrin Down
+        </Text>
+
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          bounces={false}
+          data={[
+            {
+              id: 1,
+              name: 'Profile',
+              img: ImagePath.userprofile,
+            },
+            {id: 2, name: 'Invites', group: 'Feather', vector: 'mail'},
+            {id: 3, name: 'People likes', img: ImagePath.likes},
+            {
+              id: 4,
+              name: 'Events',
+              group: 'MaterialIcons',
+              vector: 'event',
+            },
+            {id: 5, name: 'Tickets', img: ImagePath.priceTag},
+            {id: 6, name: 'Upgrade', img: ImagePath.upload},
+            {
+              id: 7,
+              name: 'Settings',
+              group: 'Ionicons',
+              vector: 'settings-outline',
+            },
+            {id: 8, name: 'Blocked', img: ImagePath.block},
+            {id: 9, name: 'Feedback', img: ImagePath.feedback},
+            {id: 10, name: 'Referral Code', img: ImagePath.links},
+            {id: 11, name: 'Banking infos', img: ImagePath.bankInfo},
+            {id: 12, name: 'Scan', vector: 'qrcode', group: 'AntDesign'},
+            {
+              id: 13,
+              name: 'Logout',
+              group: 'MaterialCommunityIcons',
+              vector: 'logout',
+            },
+          ]}
+          renderItem={({item}) => (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginVertical: moderateScaleVertical(12),
+              }}>
+              {item.img ? (
+                <ImageComponent
+                  source={item.img}
+                  resizeMode="contain"
+                  style={{
+                    width: moderateScale(25),
+                    height: moderateScaleVertical(25),
+                  }}
+                />
+              ) : (
+                <VectorIcon
+                  groupName={item.group ? item.group : 'AntDesign'}
+                  name={item.vector ? item.vector : 'user'}
+                  size={25}
+                />
+              )}
+              <Text
+                style={{
+                  ...commonStyles.font20White,
+                  paddingLeft: moderateScale(20),
+                }}>
+                {item.name}
+              </Text>
+            </View>
+          )}
+        />
+      </LinearGradient>
+    </Modal>
   );
 }
