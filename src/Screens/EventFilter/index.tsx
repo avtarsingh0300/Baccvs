@@ -1,4 +1,4 @@
-import {View, Text, SafeAreaView, Switch} from 'react-native';
+import {View, Text, SafeAreaView} from 'react-native';
 import React, {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
@@ -20,7 +20,7 @@ import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import {FlatList} from 'react-native';
 import fontFamily from '../../Utilities/Styles/fontFamily';
-
+import ToggleSwitch from 'toggle-switch-react-native';
 const EventFilter = () => {
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
@@ -221,16 +221,13 @@ const EventFilter = () => {
                 }}>
                 Open to all music styles
               </Text>
-              {/* <View style={{width: 50, height: 25, borderRadius: 15}}> */}
-              <Switch
-                trackColor={{false: Colors.white, true: Colors.Pink}}
-                thumbColor={isEnabled ? Colors.white : Colors.Pink}
-                ios_backgroundColor={Colors.white}
-                onValueChange={toggleSwitch}
-                value={isEnabled}
-                // style={{width: 25, height: 25, borderRadius: 15}}
+              <ToggleSwitch
+                isOn={isEnabled}
+                onColor={Colors.Pink}
+                offColor={Colors.lightPink}
+                size="small"
+                onToggle={toggleSwitch}
               />
-              {/* </View> */}
             </View>
             <FlatList
               data={dummydata}
