@@ -55,7 +55,9 @@ const HomeScreen = (props: any) => {
   const onFilter = () => {
     props.navigation.navigate(NavigationStrings.EventFilter);
   };
-
+  const onNoti = () => {
+    props.navigation.navigate(NavigationStrings.Notification);
+  };
   const renderItem = () => (
     <View>
       <View style={styles.listContainer}>
@@ -191,6 +193,7 @@ const HomeScreen = (props: any) => {
             <VectorIcon
               groupName="Fontisto"
               name="bell"
+              onPress={onNoti}
               size={25}
               style={{right: moderateScale(12)}}
             />

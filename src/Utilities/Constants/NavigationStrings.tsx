@@ -13,4 +13,5 @@ export default {
   UserProfile: 'UserProfile',
   TabRoutes: 'TabRoutes',
   EventFilter: 'EventFilter',
+  Notification: 'Notification',
 };

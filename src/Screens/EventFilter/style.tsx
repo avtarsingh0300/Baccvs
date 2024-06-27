@@ -74,6 +74,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: moderateScale(20),
     paddingTop: moderateScaleVertical(5),
   },
+  flatcon2: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: moderateScale(15),
+    paddingVertical: moderateScaleVertical(5),
+    backgroundColor: Colors.lightPink,
+    marginTop: moderateScaleVertical(5),
+    borderRadius: 10,
+    width: '70%',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+
   tickvw: {
     height: 15,
     width: 15,
@@ -82,6 +95,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: Colors.white,
+  },
+  musicFlex: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  horzVw: {
+    paddingHorizontal: 5,
+    paddingVertical: 4,
+    backgroundColor: Colors.slider,
+    borderRadius: 15,
+    marginHorizontal: moderateScale(2),
+    marginVertical: moderateScaleVertical(5),
+  },
+  inputcon: {
+    backgroundColor: Colors.white,
+    borderRadius: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: moderateScaleVertical(8),
+  },
+  searchflex: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

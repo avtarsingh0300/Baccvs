@@ -2,8 +2,7 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import NavigationStrings from '../Utilities/Constants/NavigationStrings';
 import TabRoutes from './TabRoutes';
-import EventFilter from '../Screens/EventFilter';
-
+import * as screens from './index';
 export default function (Stack: any) {
   return (
     <>
@@ -14,7 +13,12 @@ export default function (Stack: any) {
       />
       <Stack.Screen
         name={NavigationStrings.EventFilter}
-        component={EventFilter}
+        component={screens.EventFilter}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.Notification}
+        component={screens.Notification}
         options={{headerShown: false}}
       />
     </>

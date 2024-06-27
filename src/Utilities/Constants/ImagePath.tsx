@@ -13,4 +13,5 @@ export default {
   upload: require('../../Assets/images/Upload.png'),
   Popper: require('../../Assets/images/popper.png'),
   stair: require('../../Assets/images/Stairs.png'),
+  lang: require('../../Assets/images/lang.png'),
 };

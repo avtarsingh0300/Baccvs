@@ -63,4 +63,14 @@ export default StyleSheet.create({
     color: Colors.white,
     textAlign: 'center',
   },
+  font10Regular: {
+    fontSize: textScale(10),
+    fontWeight: '500',
+    fontFamily: fontFamily.time_regular,
+  },
+  font10Bold: {
+    fontSize: textScale(10),
+    fontWeight: '500',
+    fontFamily: fontFamily.time_bold,
+  },
 });
