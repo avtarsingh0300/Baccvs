@@ -1,7 +1,7 @@
-import {StyleSheet} from 'react-native';
-import {textScale} from './responsiveSize';
+import { StyleSheet } from 'react-native';
+import { textScale } from './responsiveSize';
 import fontFamily from './fontFamily';
-import {Colors} from './colors';
+import { Colors } from './colors';
 
 export const hitSlopProp = {
   top: 25,
@@ -48,6 +48,16 @@ export default StyleSheet.create({
   },
   font14: {
     fontSize: textScale(14),
+    fontWeight: '400',
+    color: Colors.white,
+  },
+  font12: {
+    fontSize: textScale(12),
+    fontWeight: '400',
+    color: Colors.white,
+  },
+  font13: {
+    fontSize: textScale(12),
     fontWeight: '400',
     color: Colors.white,
   },
