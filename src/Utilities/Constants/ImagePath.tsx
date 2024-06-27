@@ -11,4 +11,6 @@ export default {
   feedback: require('../../Assets/images/feedback.png'),
   block: require('../../Assets/images/block.png'),
   upload: require('../../Assets/images/Upload.png'),
+  Popper: require('../../Assets/images/popper.png'),
+  stair: require('../../Assets/images/Stairs.png'),
 };
