@@ -15,4 +15,6 @@ export default {
   EventFilter: 'EventFilter',
   Notification: 'Notification',
   Settings: 'Settings',
+  EditProfile: 'EditProfile',
+  UserStack: 'UserStack',
 };
