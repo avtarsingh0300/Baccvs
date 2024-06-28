@@ -23,7 +23,7 @@ const Login = (props: any) => {
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
       <SafeAreaView>
-        <Header onPress={onBack} />
+        <Header onPress={onBack} title="Member access" />
         <SizeBox size={30} />
         <View>
           <View style={styles.inputHolder}>

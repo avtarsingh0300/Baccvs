@@ -12,3 +12,4 @@ export {default as Chat} from '../Screens/Chat';
 export {default as UserProfile} from '../Screens/UserProfile';
 export {default as Notification} from '../Screens/Notification';
 export {default as EventFilter} from '../Screens/EventFilter';
+export {default as Settings} from '../Screens/Settings';

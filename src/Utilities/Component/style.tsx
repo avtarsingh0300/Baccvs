@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   headerTxt: {
     ...commonStyles.font20White,
     textAlign: 'center',
-    top: 10,
+
     fontFamily: fontFamily.regular,
   },
   cbtn: {

@@ -26,6 +26,8 @@ import CountryPicker, {
 } from 'react-native-country-picker-modal';
 import {FlatList} from 'react-native';
 import ImagePath from '../Constants/ImagePath';
+import NavigationStrings from '../Constants/NavigationStrings';
+import {useNavigation} from '@react-navigation/native';
 
 export const dummydata = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
 
@@ -59,7 +61,7 @@ export function ImageComponent({
   );
 }
 
-export function Header({onPress}: HeaderProps) {
+export function Header({onPress, title}: HeaderProps) {
   return (
     <View style={styles.headerRow}>
       <VectorIcon
@@ -68,7 +70,7 @@ export function Header({onPress}: HeaderProps) {
         size={25}
         onPress={onPress}
       />
-      <Text style={styles.headerTxt}>Member access</Text>
+      <Text style={styles.headerTxt}>{title}</Text>
       <View />
     </View>
   );
@@ -198,6 +200,8 @@ export function CommonInputBtn({title, onPress}: CommonBtnProps) {
   );
 }
 export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
+  const navigation = useNavigation();
+
   return (
     <Modal
       useNativeDriver={true}
@@ -255,7 +259,7 @@ export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
             {id: 6, name: 'Upgrade', img: ImagePath.upload},
             {
               id: 7,
-              name: 'Settings',
+              name: NavigationStrings.Settings,
               group: 'Ionicons',
               vector: 'settings-outline',
             },
@@ -272,7 +276,11 @@ export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
             },
           ]}
           renderItem={({item}) => (
-            <View
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate(item.name);
+                onClose();
+              }}
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -301,7 +309,7 @@ export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
                 }}>
                 {item.name}
               </Text>
-            </View>
+            </TouchableOpacity>
           )}
         />
       </LinearGradient>

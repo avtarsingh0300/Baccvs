@@ -1,80 +1,80 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 import {
   height,
   moderateScale,
   moderateScaleVertical,
   textScale,
 } from '../../Utilities/Styles/responsiveSize';
-import { Colors } from '../../Utilities/Styles/colors';
+import {Colors} from '../../Utilities/Styles/colors';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 
 export const styles = StyleSheet.create({
   container: {
-    paddingBottom: moderateScaleVertical(20)
+    paddingBottom: moderateScaleVertical(20),
   },
   header: {
-    width: "100%",
+    width: '100%',
     paddingVertical: moderateScaleVertical(10),
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingHorizontal: moderateScale(30),
   },
   profileImage: {
     width: moderateScale(86),
     height: moderateScaleVertical(91),
-    alignSelf: "center",
+    alignSelf: 'center',
     marginVertical: moderateScaleVertical(10),
     borderRadius: 10,
     borderWidth: 1,
     borderColor: Colors.Pink,
   },
   followInfoContainer: {
-    width: "70%",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignSelf: "center",
-    alignItems: "center",
-    marginTop: moderateScaleVertical(10)
+    width: '70%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignSelf: 'center',
+    alignItems: 'center',
+    marginTop: moderateScaleVertical(10),
   },
   followText: {
     ...commonStyles.font14,
-    fontWeight: "400",
+    fontWeight: '400',
     color: Colors.Pink,
-    marginBottom: 5
+    marginBottom: 5,
   },
   followInner: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginLeft: moderateScale(20)
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: moderateScale(20),
   },
   statusContainer: {
-    width: "50%",
-    alignSelf: "center"
+    width: '50%',
+    alignSelf: 'center',
   },
   statusText: {
     ...commonStyles.font12,
-    textAlign: "center",
-    marginVertical: moderateScaleVertical(20)
+    textAlign: 'center',
+    marginVertical: moderateScaleVertical(20),
   },
   row: {
-    width: "90%",
+    width: '90%',
     paddingVertical: moderateScaleVertical(10),
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignSelf: "center"
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignSelf: 'center',
   },
   rowText: {
     ...commonStyles.font14,
   },
   postContainer: {
-    width: "90%",
-    alignSelf: "center",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
+    width: '90%',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
     paddingHorizontal: moderateScale(10),
-    marginTop: moderateScaleVertical(20)
+    marginTop: moderateScaleVertical(20),
   },
   postImage: {
     width: moderateScale(103),
@@ -82,13 +82,13 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     borderColor: Colors.Pink,
-    marginBottom: moderateScaleVertical(20)
+    marginBottom: moderateScaleVertical(20),
   },
   listContainer: {
-    width: "90%",
-    alignSelf: "center",
+    width: '90%',
+    alignSelf: 'center',
     justifyContent: 'center',
-    marginTop: moderateScaleVertical(10)
+    marginTop: moderateScaleVertical(10),
   },
   backContainer: {
     flexDirection: 'row',
@@ -130,7 +130,7 @@ export const styles = StyleSheet.create({
     height: moderateScaleVertical(32),
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: Colors.Pink
+    borderColor: Colors.Pink,
   },
   music: {
     borderWidth: 1,
@@ -140,14 +140,14 @@ export const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: moderateScale(10),
     backgroundColor: Colors.white,
-    marginHorizontal: 4
+    marginHorizontal: 4,
   },
   musictxt: {
-    color: "#21005D",
+    color: '#21005D',
     fontSize: textScale(8),
     fontFamily: fontFamily.time_bold,
   },
-  flex: { flexDirection: 'row', alignItems: 'center' },
+  flex: {flexDirection: 'row', alignItems: 'center'},
   date: {
     color: Colors.white,
     fontFamily: fontFamily.regular,
@@ -155,4 +155,3 @@ export const styles = StyleSheet.create({
     fontSize: textScale(13),
   },
 });
-

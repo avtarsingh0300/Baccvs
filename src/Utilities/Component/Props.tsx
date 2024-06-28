@@ -29,6 +29,7 @@ interface CommonBtnProps {
 }
 interface HeaderProps {
   onPress: () => void;
+  title: string;
 }
 interface ImageComProps {
   onPress: () => void;

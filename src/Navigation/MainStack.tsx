@@ -21,6 +21,11 @@ export default function (Stack: any) {
         component={screens.Notification}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.Settings}
+        component={screens.Settings}
+        options={{headerShown: false}}
+      />
     </>
   );
 }

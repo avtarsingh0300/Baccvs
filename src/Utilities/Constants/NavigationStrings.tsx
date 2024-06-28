@@ -14,4 +14,5 @@ export default {
   TabRoutes: 'TabRoutes',
   EventFilter: 'EventFilter',
   Notification: 'Notification',
+  Settings: 'Settings',
 };
