@@ -1,4 +1,4 @@
-import {Platform, StyleSheet} from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import {
   moderateScale,
   moderateScaleVertical,
@@ -6,7 +6,7 @@ import {
 } from '../Styles/responsiveSize';
 import commonStyles from '../Styles/commonStyles';
 import fontFamily from '../Styles/fontFamily';
-import {Colors} from '../Styles/colors';
+import { Colors } from '../Styles/colors';
 
 const styles = StyleSheet.create({
   headerRow: {

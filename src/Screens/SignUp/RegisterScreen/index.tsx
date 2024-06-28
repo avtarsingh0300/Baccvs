@@ -1,8 +1,8 @@
-import {FlatList, SafeAreaView, Text, View} from 'react-native';
-import React, {useState} from 'react';
+import { FlatList, SafeAreaView, Text, View } from 'react-native';
+import React, { useState } from 'react';
 import styles from './style';
 import LinearGradient from 'react-native-linear-gradient';
-import {Colors} from '../../../Utilities/Styles/colors';
+import { Colors } from '../../../Utilities/Styles/colors';
 import commonStyles from '../../../Utilities/Styles/commonStyles';
 import {
   CommonBtn,
@@ -11,18 +11,18 @@ import {
   ProgressHeader,
   SizeBox,
 } from '../../../Utilities/Component/Helpers';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import useScroll from '../../../Utilities/Component/hooks/useScroll';
 import fontFamily from '../../../Utilities/Styles/fontFamily';
 import VectorIcon from '../../../Utilities/Component/vectorIcons';
 import Modal from 'react-native-modal';
-import {height} from '../../../Utilities/Styles/responsiveSize';
+import { height } from '../../../Utilities/Styles/responsiveSize';
 import NavigationStrings from '../../../Utilities/Constants/NavigationStrings';
 
 const RegisterScreen = (props: any) => {
   const scrollConfig = useScroll();
   const [h, setH] = useState(0);
-  const {focusAction, scrollRef} = scrollConfig;
+  const { focusAction, scrollRef } = scrollConfig;
   const [selectedGender, setSelectedGender] = useState('Male');
   const [modalVisible, setModalVisible] = useState<boolean>(false);
 
@@ -38,20 +38,20 @@ const RegisterScreen = (props: any) => {
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
-      start={{x: 0, y: 0}}
-      end={{x: 1.3, y: 0.9}}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1.3, y: 0.9 }}
       style={styles.LinearConatiner}>
       <SafeAreaView>
         <ProgressHeader onPress={onBack} value={4} />
         <KeyboardAwareScrollView
           keyboardShouldPersistTaps="handled"
-          style={{flexGrow: 1, marginBottom: 50}}
+          style={{ flexGrow: 1, marginBottom: 50 }}
           onLayout={e => setH(e.nativeEvent.layout.height)}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           ref={ref => (scrollRef.current = ref)}>
           <SizeBox size={15} />
-          <Text style={{...commonStyles.font18W700Center}}>Sign up</Text>
+          <Text style={{ ...commonStyles.font18W700Center }}>Sign up</Text>
           <SizeBox size={10} />
           <Text
             style={{
@@ -111,11 +111,11 @@ const RegisterScreen = (props: any) => {
               backdropTransitionInTiming={600}
               backdropTransitionOutTiming={600}>
               <View
-                style={{height: height / 5, width: '95%', alignSelf: 'center'}}>
+                style={{ height: height / 5, width: '95%', alignSelf: 'center' }}>
                 <View style={styles.modalContainer}>
                   <FlatList
                     data={genders}
-                    renderItem={({item, index}) => (
+                    renderItem={({ item, index }) => (
                       <View
                         style={[
                           {

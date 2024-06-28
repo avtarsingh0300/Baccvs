@@ -7,7 +7,7 @@ import {
   StyleProp,
   ImageStyle,
 } from 'react-native';
-import FastImage, {FastImageProps} from 'react-native-fast-image';
+import FastImage, { FastImageProps } from 'react-native-fast-image';
 import VectorIcon from './vectorIcons';
 import Modal from 'react-native-modal';
 import styles from './style';
@@ -17,19 +17,19 @@ import {
   width,
 } from '../Styles/responsiveSize';
 import LinearGradient from 'react-native-linear-gradient';
-import {Colors} from '../Styles/colors';
+import { Colors } from '../Styles/colors';
 import commonStyles from '../Styles/commonStyles';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import CountryPicker, {
   CountryCode,
   Country,
 } from 'react-native-country-picker-modal';
-import {FlatList} from 'react-native';
+import { FlatList } from 'react-native';
 import ImagePath from '../Constants/ImagePath';
 import NavigationStrings from '../Constants/NavigationStrings';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
-export const dummydata = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
+export const dummydata = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
 
 interface PhonePickerProps {
   visible: boolean;
@@ -61,7 +61,7 @@ export function ImageComponent({
   );
 }
 
-export function Header({onPress, title}: HeaderProps) {
+export function Header({ onPress, title }: HeaderProps) {
   return (
     <View style={styles.headerRow}>
       <VectorIcon
@@ -76,15 +76,15 @@ export function Header({onPress, title}: HeaderProps) {
   );
 }
 
-export function SizeBox({size}: SizeBoxProps) {
-  return <View style={{marginVertical: moderateScaleVertical(size)}} />;
+export function SizeBox({ size }: SizeBoxProps) {
+  return <View style={{ marginVertical: moderateScaleVertical(size) }} />;
 }
-export function CommonBtn({onPress, title}: CommonBtnProps) {
+export function CommonBtn({ onPress, title }: CommonBtnProps) {
   return (
     <LinearGradient
       colors={[Colors.btnLinear1, Colors.btnLinear2]}
-      start={{x: 1, y: 0}}
-      end={{x: 1, y: 1}}
+      start={{ x: 1, y: 0 }}
+      end={{ x: 1, y: 1 }}
       style={{
         padding: 1,
         borderRadius: 8,
@@ -104,7 +104,7 @@ export function CommonBtn({onPress, title}: CommonBtnProps) {
   );
 }
 
-export function ProgressHeader({onPress, value}: ProgressHeaderProps) {
+export function ProgressHeader({ onPress, value }: ProgressHeaderProps) {
   return (
     <View
       style={{
@@ -176,7 +176,7 @@ export function CommonInput({
         {
           height: multiline
             ? moderateScaleVertical(120)
-            : moderateScaleVertical(55),
+            : moderateScaleVertical(47),
         },
       ]}>
       <TextInput
@@ -189,7 +189,7 @@ export function CommonInput({
     </View>
   );
 }
-export function CommonInputBtn({title, onPress}: CommonBtnProps) {
+export function CommonInputBtn({ title, onPress }: CommonBtnProps) {
   return (
     <TouchableOpacity
       style={styles.inputHolder}
@@ -199,7 +199,7 @@ export function CommonInputBtn({title, onPress}: CommonBtnProps) {
     </TouchableOpacity>
   );
 }
-export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
+export function Drawer({ onClose, isVisible, onBackdropPress }: DrawerProps) {
   const navigation = useNavigation();
 
   return (
@@ -210,13 +210,13 @@ export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
       animationOut="slideOutLeft"
       onBackdropPress={onBackdropPress}
       avoidKeyboard={true}
-      style={{flex: 1, margin: 0}}
+      style={{ flex: 1, margin: 0 }}
       isVisible={isVisible}
       backdropOpacity={0.8}>
       <LinearGradient
         colors={[Colors.Linear, Colors.LinearBlack]}
-        start={{x: 0, y: 0}}
-        end={{x: 1.3, y: 0.9}}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1.3, y: 0.9 }}
         style={styles.drawerCon}>
         <VectorIcon
           groupName="Fontisto"
@@ -227,7 +227,7 @@ export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
         />
         <ImageComponent
           source={ImagePath.ProfileImg}
-          style={[styles.profileimg, {alignSelf: 'center'}]}
+          style={[styles.profileimg, { alignSelf: 'center' }]}
         />
         <SizeBox size={5} />
         <Text
@@ -247,27 +247,27 @@ export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
               name: 'Profile',
               img: ImagePath.userprofile,
             },
-            {id: 2, name: 'Invites', group: 'Feather', vector: 'mail'},
-            {id: 3, name: 'People likes', img: ImagePath.likes},
+            { id: 2, name: 'Invites', group: 'Feather', vector: 'mail' },
+            { id: 3, name: 'People likes', img: ImagePath.likes },
             {
               id: 4,
               name: 'Events',
               group: 'MaterialIcons',
               vector: 'event',
             },
-            {id: 5, name: 'Tickets', img: ImagePath.priceTag},
-            {id: 6, name: 'Upgrade', img: ImagePath.upload},
+            { id: 5, name: 'Tickets', img: ImagePath.priceTag },
+            { id: 6, name: 'Upgrade', img: ImagePath.upload },
             {
               id: 7,
               name: NavigationStrings.Settings,
               group: 'Ionicons',
               vector: 'settings-outline',
             },
-            {id: 8, name: 'Blocked', img: ImagePath.block},
-            {id: 9, name: 'Feedback', img: ImagePath.feedback},
-            {id: 10, name: 'Referral Code', img: ImagePath.links},
-            {id: 11, name: 'Banking infos', img: ImagePath.bankInfo},
-            {id: 12, name: 'Scan', vector: 'qrcode', group: 'AntDesign'},
+            { id: 8, name: 'Blocked', img: ImagePath.block },
+            { id: 9, name: 'Feedback', img: ImagePath.feedback },
+            { id: 10, name: 'Referral Code', img: ImagePath.links },
+            { id: 11, name: 'Banking infos', img: ImagePath.bankInfo },
+            { id: 12, name: 'Scan', vector: 'qrcode', group: 'AntDesign' },
             {
               id: 13,
               name: 'Logout',
@@ -275,7 +275,7 @@ export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
               vector: 'logout',
             },
           ]}
-          renderItem={({item}) => (
+          renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate(item.name);
