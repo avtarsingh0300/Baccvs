@@ -230,17 +230,17 @@ const HomeScreen = (props: any) => {
                   const isActive =
                     value.toDateString() === item.date.toDateString();
                   return (
-                    <LinearGradient
-                      colors={[
-                        isActive ? Colors.Pink : Colors.calenderback,
-                        isActive ? Colors.LinearBlack : Colors.calenderback,
-                      ]}
-                      style={styles.btn}>
-                      <TouchableWithoutFeedback
-                        key={dateIndex}
-                        onPress={() => {
-                          setValue(item.date), console.log(item.date);
-                        }}>
+                    <TouchableWithoutFeedback
+                      key={dateIndex}
+                      onPress={() => {
+                        setValue(item.date), console.log(item.date);
+                      }}>
+                      <LinearGradient
+                        colors={[
+                          isActive ? Colors.Pink : Colors.calenderback,
+                          isActive ? Colors.LinearBlack : Colors.calenderback,
+                        ]}
+                        style={styles.btn}>
                         <View>
                           <Text
                             style={[
@@ -257,8 +257,8 @@ const HomeScreen = (props: any) => {
                             {item.weekday}
                           </Text>
                         </View>
-                      </TouchableWithoutFeedback>
-                    </LinearGradient>
+                      </LinearGradient>
+                    </TouchableWithoutFeedback>
                   );
                 })}
               </View>

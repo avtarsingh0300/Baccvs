@@ -15,4 +15,5 @@ export default {
   stair: require('../../Assets/images/Stairs.png'),
   lang: require('../../Assets/images/lang.png'),
   line_height: require('../../Assets/images/line-height.png'),
+  eventback: require('../../Assets/images/eventback.png'),
 };

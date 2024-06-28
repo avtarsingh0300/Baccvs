@@ -30,7 +30,7 @@ const EventFilter = () => {
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
       <SafeAreaView>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <SizeBox size={5} />
 
           <Text style={{...commonStyles.Heading20font}}>Event Filters</Text>
