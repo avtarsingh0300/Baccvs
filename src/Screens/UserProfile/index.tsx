@@ -1,5 +1,5 @@
-import { View, Text, SafeAreaView, Image, FlatList, ScrollView, Platform, ImageBackground } from 'react-native';
-import React from 'react';
+import { View, Text, SafeAreaView, Image, FlatList, ScrollView, Platform, ImageBackground, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import { Colors } from '../../Utilities/Styles/colors';
 import commonStyles from '../../Utilities/Styles/commonStyles';
@@ -9,9 +9,11 @@ import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import FastImage from 'react-native-fast-image';
 import { ImageComponent, SizeBox, dummydata } from '../../Utilities/Component/Helpers';
-import fontFamily from '../../Utilities/Styles/fontFamily';
+import Modal from 'react-native-modal';
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 
-const UserProfile = () => {
+const UserProfile = ({ navigation }: any) => {
+  const [showModal, setShowModal] = useState(false);
 
   const imageArrya = [
     ImagePath.ProfileImg,
@@ -92,6 +94,7 @@ const UserProfile = () => {
               name='dots-three-horizontal'
               size={30}
               color={Colors.white}
+              onPress={() => setShowModal(true)}
             />
           </View>
           <Image source={ImagePath.ProfileImg} style={styles.profileImage} />
@@ -173,6 +176,28 @@ const UserProfile = () => {
             renderItem={renderItem}
           />
         </ScrollView>
+        <Modal
+          useNativeDriver={true}
+          hideModalContentWhileAnimating={true}
+          animationIn="fadeIn"
+          animationOut="fadeOut"
+          onBackdropPress={() => setShowModal(false)}
+          avoidKeyboard={true}
+          style={{ flex: 1, margin: 0, justifyContent: "flex-start" }}
+          isVisible={showModal}
+          backdropOpacity={0.2}>
+          <View style={styles.optionContainer}>
+            <TouchableOpacity activeOpacity={0.8} style={styles.option} onPress={() => { navigation.navigate(NavigationStrings.EditProfile); setShowModal(false); }}>
+              <Text style={styles.optionText}>Edit profile</Text>
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.8} style={styles.option}>
+              <Text style={styles.optionText}>Edit Social part</Text>
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.8} style={[styles.option, { borderBottomWidth: 0 }]}>
+              <Text style={styles.optionText}>Turn profile to public</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
       </SafeAreaView>
     </LinearGradient>
   );

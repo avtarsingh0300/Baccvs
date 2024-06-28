@@ -1,20 +1,21 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import {
   createBottomTabNavigator,
   BottomTabBar,
 } from '@react-navigation/bottom-tabs';
-import {Platform, StyleSheet, View} from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import * as screens from './index';
 import {
   moderateScale,
   moderateScaleVertical,
 } from '../Utilities/Styles/responsiveSize';
-import {Colors} from '../Utilities/Styles/colors';
+import { Colors } from '../Utilities/Styles/colors';
 import NavigationStrings from '../Utilities/Constants/NavigationStrings';
 import VectorIcon from '../Utilities/Component/vectorIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import ImagePath from '../Utilities/Constants/ImagePath';
-import {ImageComponent} from '../Utilities/Component/Helpers';
+import { ImageComponent } from '../Utilities/Component/Helpers';
+import UserStack from './UserStack';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -23,11 +24,11 @@ const TabRoutes = () => {
     <BottomTab.Navigator
       tabBar={tabsProps => (
         <>
-          <View style={{backgroundColor: Colors.Linear}}>
+          <View style={{ backgroundColor: Colors.Linear }}>
             <LinearGradient
               colors={[Colors.Linear, Colors.LinearBlack]}
-              start={{x: 0.4, y: 0}}
-              end={{x: 0.4, y: 1.2}}
+              start={{ x: 0.4, y: 0 }}
+              end={{ x: 0.4, y: 1.2 }}
               style={{
                 borderTopStartRadius: 20,
                 borderTopEndRadius: 20,
@@ -54,7 +55,7 @@ const TabRoutes = () => {
         component={screens.HomeScreen}
         options={{
           tabBarShowLabel: true,
-          tabBarIcon: ({focused}) => {
+          tabBarIcon: ({ focused }) => {
             return (
               <VectorIcon
                 groupName="MaterialCommunityIcons"
@@ -72,7 +73,7 @@ const TabRoutes = () => {
         options={{
           tabBarShowLabel: true,
 
-          tabBarIcon: ({focused}) => {
+          tabBarIcon: ({ focused }) => {
             return (
               <VectorIcon
                 groupName="Ionicons"
@@ -89,7 +90,7 @@ const TabRoutes = () => {
         component={screens.AddScreen}
         options={{
           tabBarShowLabel: true,
-          tabBarIcon: ({focused}) => {
+          tabBarIcon: ({ focused }) => {
             return (
               <ImageComponent
                 source={ImagePath.PlusIcon}
@@ -107,7 +108,7 @@ const TabRoutes = () => {
         component={screens.Chat}
         options={{
           tabBarShowLabel: true,
-          tabBarIcon: ({focused}) => {
+          tabBarIcon: ({ focused }) => {
             return (
               <VectorIcon
                 groupName="Ionicons"
@@ -120,11 +121,11 @@ const TabRoutes = () => {
         }}
       />
       <BottomTab.Screen
-        name={NavigationStrings.UserProfile}
-        component={screens.UserProfile}
+        name={NavigationStrings.UserStack}
+        component={UserStack}
         options={{
           tabBarShowLabel: true,
-          tabBarIcon: ({focused}) => {
+          tabBarIcon: ({ focused }) => {
             return (
               <VectorIcon
                 groupName="Feather"

@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import {
   height,
   moderateScale,
@@ -147,12 +147,37 @@ export const styles = StyleSheet.create({
     fontSize: textScale(8),
     fontFamily: fontFamily.time_bold,
   },
-  flex: { flexDirection: 'row', alignItems: 'center' },
+  flex: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
   date: {
     color: Colors.white,
     fontFamily: fontFamily.regular,
     fontWeight: '500',
     fontSize: textScale(13),
   },
+  optionContainer: {
+    width: "45%",
+    paddingVertical: moderateScaleVertical(5),
+    borderRadius: 10,
+    backgroundColor: Colors.black,
+    marginTop: moderateScaleVertical(Platform.OS == "ios" ? 100 : 45),
+    alignSelf: "flex-end",
+    marginRight: moderateScale(25),
+    opacity: 0.7
+  },
+  option: {
+    width: "100%",
+    paddingVertical: moderateScaleVertical(10),
+    borderBottomWidth: 1,
+    borderColor: Colors.white,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  optionText: {
+    ...commonStyles.font14,
+    fontWeight: "600"
+  }
 });
 

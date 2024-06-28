@@ -14,4 +14,6 @@ export default {
   TabRoutes: 'TabRoutes',
   EventFilter: 'EventFilter',
   Notification: 'Notification',
+  EditProfile: 'EditProfile',
+  UserStack: 'UserStack',
 };
