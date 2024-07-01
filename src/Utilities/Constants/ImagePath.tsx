@@ -16,4 +16,10 @@ export default {
   lang: require('../../Assets/images/lang.png'),
   line_height: require('../../Assets/images/line-height.png'),
   eventback: require('../../Assets/images/eventback.png'),
+  Security_Rules: require('../../Assets/images/Security_Rules.png'),
+  Ticket: require('../../Assets/images/Ticket.png'),
+  Pin_alt: require('../../Assets/images/Pin_alt.png'),
+  ImageBackground: require('../../Assets/images/ImageBackground.png'),
+  infoIcon: require('../../Assets/images/infoIcon.png'),
+  followProfile: require('../../Assets/images/followProfile.png'),
 };

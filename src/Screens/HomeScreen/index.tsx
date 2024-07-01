@@ -8,9 +8,9 @@ import {
   FlatList,
   Platform,
 } from 'react-native';
-import React, {useMemo, useRef, useState} from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import {Colors} from '../../Utilities/Styles/colors';
+import { Colors } from '../../Utilities/Styles/colors';
 import styles from './style';
 import {
   Drawer,
@@ -40,7 +40,7 @@ const HomeScreen = (props: any) => {
   const weeks = useMemo(() => {
     const start = moment().add(week, 'weeks').startOf('week');
     return [-1, 0, 1].map(adj => {
-      return Array.from({length: 7}).map((_, index) => {
+      return Array.from({ length: 7 }).map((_, index) => {
         const date = moment(start).add(adj, 'week').add(index, 'day');
         return {
           weekday: date.format('ddd'),
@@ -58,117 +58,122 @@ const HomeScreen = (props: any) => {
   const onNoti = () => {
     props.navigation.navigate(NavigationStrings.Notification);
   };
+  const onEventDetails = () => {
+    props.navigation.navigate(NavigationStrings.EventDetails);
+  };
   const renderItem = () => (
-    <View>
-      <View style={styles.listContainer}>
-        <View style={styles.backContainer}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <ImageComponent
-              source={ImagePath.priceTag}
-              resizeMode="contain"
-              style={styles.tag}
-            />
-            <Text
-              style={{
-                ...commonStyles.font14,
-                fontFamily: fontFamily.time_bold,
-              }}>
-              {` `}FREE
-            </Text>
-          </View>
-          <Text
-            style={{
-              ...commonStyles.font16Regular,
-              color: Colors.Pink,
-            }}>
-            One life
-          </Text>
-          <Text style={styles.ontxt}>
-            Ongoing{` `}
-            <Text
-              style={{
-                color: Colors.white,
-              }}>
-              - 05h00
-            </Text>
-          </Text>
-        </View>
-        <ImageBackground source={ImagePath.ProfileImg} style={styles.backimg}>
-          <View style={styles.flexinner}>
-            <ImageComponent
-              source={ImagePath.ProfileImg}
-              style={styles.shortimg}
-            />
-            <ImageComponent
-              source={ImagePath.ProfileImg}
-              style={[
-                styles.extraimg,
-                {
-                  marginLeft: 5,
-                },
-              ]}
-            />
-            <ImageComponent
-              source={ImagePath.ProfileImg}
-              style={[
-                styles.extraimg,
-                {
-                  right: 10,
-                },
-              ]}
-            />
+    <TouchableOpacity activeOpacity={0.8} onPress={onEventDetails}>
+      <View>
+        <View style={styles.listContainer}>
+          <View style={styles.backContainer}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <ImageComponent
+                source={ImagePath.priceTag}
+                resizeMode="contain"
+                style={styles.tag}
+              />
+              <Text
+                style={{
+                  ...commonStyles.font14,
+                  fontFamily: fontFamily.time_bold,
+                }}>
+                {` `}FREE
+              </Text>
+            </View>
             <Text
               style={{
                 ...commonStyles.font16Regular,
-                alignSelf: 'flex-end',
-                color: Colors.white,
+                color: Colors.Pink,
               }}>
-              +8
+              One life
+            </Text>
+            <Text style={styles.ontxt}>
+              Ongoing{` `}
+              <Text
+                style={{
+                  color: Colors.white,
+                }}>
+                - 05h00
+              </Text>
             </Text>
           </View>
-        </ImageBackground>
-      </View>
-      <SizeBox size={14} />
-      <View style={styles.music}>
-        <Text style={styles.musictxt}>Progressive</Text>
-      </View>
-      <View style={styles.backContainer}>
-        <View style={styles.flex}>
-          <VectorIcon groupName="Feather" name="users" size={15} />
-          <Text
-            style={{
-              ...commonStyles.font12Regular,
-              color: Colors.red,
-            }}>
-            {` `}3 spots left
-          </Text>
+          <ImageBackground source={ImagePath.ProfileImg} style={styles.backimg}>
+            <View style={styles.flexinner}>
+              <ImageComponent
+                source={ImagePath.ProfileImg}
+                style={styles.shortimg}
+              />
+              <ImageComponent
+                source={ImagePath.ProfileImg}
+                style={[
+                  styles.extraimg,
+                  {
+                    marginLeft: 5,
+                  },
+                ]}
+              />
+              <ImageComponent
+                source={ImagePath.ProfileImg}
+                style={[
+                  styles.extraimg,
+                  {
+                    right: 10,
+                  },
+                ]}
+              />
+              <Text
+                style={{
+                  ...commonStyles.font16Regular,
+                  alignSelf: 'flex-end',
+                  color: Colors.white,
+                }}>
+                +8
+              </Text>
+            </View>
+          </ImageBackground>
         </View>
-        <Text
-          style={{
-            ...commonStyles.font14Center,
-            color: Colors.white,
-          }}>
-          Party - Afterparty
-        </Text>
-        <View style={styles.flex}>
+        <SizeBox size={14} />
+        <View style={styles.music}>
+          <Text style={styles.musictxt}>Progressive</Text>
+        </View>
+        <View style={styles.backContainer}>
+          <View style={styles.flex}>
+            <VectorIcon groupName="Feather" name="users" size={15} />
+            <Text
+              style={{
+                ...commonStyles.font12Regular,
+                color: Colors.red,
+              }}>
+              {` `}3 spots left
+            </Text>
+          </View>
           <Text
             style={{
-              ...commonStyles.font12Regular,
+              ...commonStyles.font14Center,
               color: Colors.white,
             }}>
-            2 km{` `}
+            Party - Afterparty
           </Text>
-          <VectorIcon groupName="Feather" name="map-pin" size={15} />
+          <View style={styles.flex}>
+            <Text
+              style={{
+                ...commonStyles.font12Regular,
+                color: Colors.white,
+              }}>
+              2 km{` `}
+            </Text>
+            <VectorIcon groupName="Feather" name="map-pin" size={15} />
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
-      start={{x: 0, y: 0}}
-      end={{x: 1.3, y: 0.9}}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1.3, y: 0.9 }}
       style={styles.LinearConatiner}>
       <SafeAreaView>
         <View style={styles.headerContainer}>
@@ -188,19 +193,19 @@ const HomeScreen = (props: any) => {
               groupName="MaterialCommunityIcons"
               name="map-marker-radius-outline"
               size={25}
-              style={{right: moderateScale(25)}}
+              style={{ right: moderateScale(25) }}
             />
             <VectorIcon
               groupName="Fontisto"
               name="bell"
               onPress={onNoti}
               size={25}
-              style={{right: moderateScale(12)}}
+              style={{ right: moderateScale(12) }}
             />
             <TouchableOpacity onPress={onFilter}>
               <ImageComponent
                 source={ImagePath.filterIcon}
-                style={{width: 30, height: 30}}
+                style={{ width: 30, height: 30 }}
                 resizeMode="contain"
               />
             </TouchableOpacity>
@@ -245,14 +250,14 @@ const HomeScreen = (props: any) => {
                           <Text
                             style={[
                               styles.itemDate,
-                              isActive && {color: Colors.white},
+                              isActive && { color: Colors.white },
                             ]}>
                             {item.date.getDate()}
                           </Text>
                           <Text
                             style={[
                               styles.itemWeekday,
-                              isActive && {color: Colors.white},
+                              isActive && { color: Colors.white },
                             ]}>
                             {item.weekday}
                           </Text>
@@ -272,7 +277,7 @@ const HomeScreen = (props: any) => {
             {moment(value).format('DD MMMM YYYY')} (18)
           </Text>
           <TouchableOpacity style={styles.allBtn}>
-            <Text style={{color: Colors.red, ...commonStyles.font12Regular}}>
+            <Text style={{ color: Colors.red, ...commonStyles.font12Regular }}>
               All
             </Text>
           </TouchableOpacity>

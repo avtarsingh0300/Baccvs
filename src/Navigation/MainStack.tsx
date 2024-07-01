@@ -9,22 +9,27 @@ export default function (Stack: any) {
       <Stack.Screen
         name={NavigationStrings.TabRoutes}
         component={TabRoutes}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={NavigationStrings.EventFilter}
         component={screens.EventFilter}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={NavigationStrings.EventDetails}
+        component={screens.EventDetails}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={NavigationStrings.Notification}
         component={screens.Notification}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={NavigationStrings.Settings}
         component={screens.Settings}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
     </>
   );

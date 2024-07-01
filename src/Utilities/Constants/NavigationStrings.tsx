@@ -17,4 +17,5 @@ export default {
   Settings: 'Settings',
   EditProfile: 'EditProfile',
   UserStack: 'UserStack',
+  EventDetails: 'EventDetails',
 };
