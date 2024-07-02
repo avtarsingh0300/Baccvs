@@ -15,7 +15,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import {
-  height,
   moderateScale,
   moderateScaleVertical,
   width,
