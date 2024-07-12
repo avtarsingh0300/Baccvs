@@ -10,7 +10,7 @@ import commonStyles from '../../Utilities/Styles/commonStyles';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 
 const styles = StyleSheet.create({
-  LinearConatiner: {flex: 1, paddingHorizontal: 20},
+  LinearConatiner: {flex: 1},
   backimg: {
     height: moderateScaleVertical(50),
     justifyContent: 'center',
@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     height: height / 8,
+    paddingHorizontal: moderateScale(20),
   },
   itemRow: {
     flexDirection: 'row',
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
   },
 
   btn: {
-    marginLeft: 10,
+    marginLeft: 5,
     width: moderateScale(52),
     height: moderateScale(55),
     justifyContent: 'center',
@@ -120,6 +121,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingTop: moderateScaleVertical(10),
     alignItems: 'center',
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
   },
 });
 

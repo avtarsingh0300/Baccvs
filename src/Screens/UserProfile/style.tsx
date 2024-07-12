@@ -69,7 +69,7 @@ export const styles = StyleSheet.create({
     ...commonStyles.font14,
   },
   postContainer: {
-    width: '90%',
+    width: '100%',
     alignSelf: 'center',
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -84,6 +84,7 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: Colors.Pink,
     marginBottom: moderateScaleVertical(20),
+    marginHorizontal: moderateScale(5),
   },
   listContainer: {
     width: '90%',

@@ -1,20 +1,60 @@
 import {View, Text, SafeAreaView, TextInput} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {Colors} from '../../Utilities/Styles/colors';
 import LinearGradient from 'react-native-linear-gradient';
 import styles from './style';
 import commonStyles from '../../Utilities/Styles/commonStyles';
-import {CommonBtn, Header, SizeBox} from '../../Utilities/Component/Helpers';
+import {
+  CommonBtn,
+  Header,
+  Loadingcomponent,
+  SizeBox,
+  showError,
+  showSuccess,
+} from '../../Utilities/Component/Helpers';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
-
+import {login} from '../../Utilities/Constants/auth';
+import {Keyboard} from 'react-native';
 const Login = (props: any) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loader, setLoader] = useState(false);
   const onBack = () => {
     props.navigation.goBack();
   };
   const onLogin = () => {
-    props.navigation.navigate(NavigationStrings.TabRoutes, {
-      screen: NavigationStrings.HomeScreen,
-    });
+    if (!username) {
+      return showError('Please enter username');
+    }
+    if (!password) {
+      return showError('Please enter password');
+    }
+    setLoader(true);
+    const formData = {
+      identifier: username,
+      password: password,
+    };
+    login(formData)
+      .then(res => {
+        setLoader(false);
+        Keyboard.dismiss();
+        console.log(res, 'res');
+        showSuccess(res?.message);
+        props.navigation.replace(NavigationStrings.TabRoutes, {
+          screen: NavigationStrings.HomeScreen,
+        });
+      })
+      .catch(err => {
+        setLoader(false);
+        showError(err?.message);
+        console.log(err, 'erro');
+      });
+  };
+  const handleChangeUser = (value: any) => {
+    setUsername(value);
+  };
+  const handleChangePass = (value: any) => {
+    setPassword(value);
   };
   return (
     <LinearGradient
@@ -23,6 +63,7 @@ const Login = (props: any) => {
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
       <SafeAreaView>
+        <Loadingcomponent isVisible={loader} />
         <Header onPress={onBack} title="Member access" />
         <SizeBox size={30} />
         <View>
@@ -31,6 +72,8 @@ const Login = (props: any) => {
               placeholder="Phone number, username, or email"
               placeholderTextColor={Colors.Pink}
               style={styles.input}
+              value={username}
+              onChangeText={text => handleChangeUser(text)}
             />
           </View>
           <SizeBox size={8} />
@@ -39,6 +82,8 @@ const Login = (props: any) => {
               placeholder="Password"
               placeholderTextColor={Colors.Pink}
               style={styles.input}
+              value={password}
+              onChangeText={text => handleChangePass(text)}
             />
           </View>
         </View>

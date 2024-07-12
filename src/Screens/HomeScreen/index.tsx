@@ -8,9 +8,9 @@ import {
   FlatList,
   Platform,
 } from 'react-native';
-import React, { useMemo, useRef, useState } from 'react';
+import React, {useMemo, useRef, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import { Colors } from '../../Utilities/Styles/colors';
+import {Colors} from '../../Utilities/Styles/colors';
 import styles from './style';
 import {
   Drawer,
@@ -30,17 +30,15 @@ import Swiper from 'react-native-swiper';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
-
-const HomeScreen = (props: any) => {
-  const swiper = useRef();
-
+const HomeScreen = ({navigation}: any) => {
+  const swiper: any = useRef();
   const [value, setValue] = useState(new Date());
   const [week, setWeek] = useState(0);
   const [modalVisible, SetModalVisible] = useState(false);
   const weeks = useMemo(() => {
     const start = moment().add(week, 'weeks').startOf('week');
     return [-1, 0, 1].map(adj => {
-      return Array.from({ length: 7 }).map((_, index) => {
+      return Array.from({length: 7}).map((_, index) => {
         const date = moment(start).add(adj, 'week').add(index, 'day');
         return {
           weekday: date.format('ddd'),
@@ -53,20 +51,23 @@ const HomeScreen = (props: any) => {
     SetModalVisible(!modalVisible);
   };
   const onFilter = () => {
-    props.navigation.navigate(NavigationStrings.EventFilter);
+    navigation.navigate(NavigationStrings.EventFilter);
   };
   const onNoti = () => {
-    props.navigation.navigate(NavigationStrings.Notification);
+    navigation.navigate(NavigationStrings.Notification);
   };
   const onEventDetails = () => {
-    props.navigation.navigate(NavigationStrings.EventDetails);
+    navigation.navigate(NavigationStrings.EventDetails);
+  };
+  const onMapPress = () => {
+    navigation.navigate(NavigationStrings.MapScreen);
   };
   const renderItem = () => (
     <TouchableOpacity activeOpacity={0.8} onPress={onEventDetails}>
       <View>
         <View style={styles.listContainer}>
           <View style={styles.backContainer}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <ImageComponent
                 source={ImagePath.priceTag}
                 resizeMode="contain"
@@ -172,8 +173,8 @@ const HomeScreen = (props: any) => {
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1.3, y: 0.9 }}
+      start={{x: 0, y: 0}}
+      end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
       <SafeAreaView>
         <View style={styles.headerContainer}>
@@ -193,19 +194,20 @@ const HomeScreen = (props: any) => {
               groupName="MaterialCommunityIcons"
               name="map-marker-radius-outline"
               size={25}
-              style={{ right: moderateScale(25) }}
+              onPress={onMapPress}
+              style={{right: moderateScale(25)}}
             />
             <VectorIcon
               groupName="Fontisto"
               name="bell"
               onPress={onNoti}
               size={25}
-              style={{ right: moderateScale(12) }}
+              style={{right: moderateScale(12)}}
             />
             <TouchableOpacity onPress={onFilter}>
               <ImageComponent
                 source={ImagePath.filterIcon}
-                style={{ width: 30, height: 30 }}
+                style={{width: 30, height: 30}}
                 resizeMode="contain"
               />
             </TouchableOpacity>
@@ -250,14 +252,14 @@ const HomeScreen = (props: any) => {
                           <Text
                             style={[
                               styles.itemDate,
-                              isActive && { color: Colors.white },
+                              isActive && {color: Colors.white},
                             ]}>
                             {item.date.getDate()}
                           </Text>
                           <Text
                             style={[
                               styles.itemWeekday,
-                              isActive && { color: Colors.white },
+                              isActive && {color: Colors.white},
                             ]}>
                             {item.weekday}
                           </Text>
@@ -277,7 +279,7 @@ const HomeScreen = (props: any) => {
             {moment(value).format('DD MMMM YYYY')} (18)
           </Text>
           <TouchableOpacity style={styles.allBtn}>
-            <Text style={{ color: Colors.red, ...commonStyles.font12Regular }}>
+            <Text style={{color: Colors.red, ...commonStyles.font12Regular}}>
               All
             </Text>
           </TouchableOpacity>

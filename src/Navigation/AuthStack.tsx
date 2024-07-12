@@ -41,6 +41,11 @@ export default function (Stack: any) {
         component={screens?.UploadImage}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings?.Invites}
+        component={screens?.Invites}
+        options={{headerShown: false}}
+      />
     </>
   );
 }

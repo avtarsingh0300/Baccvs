@@ -19,4 +19,5 @@ export const Colors = {
   calenderback: '#1a151f',
   red: '#C90303',
   slider: '#8324C0',
+  headerlinear: '#4725AB',
 };

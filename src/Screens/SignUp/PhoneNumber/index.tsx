@@ -15,7 +15,8 @@ import NavigationStrings from '../../../Utilities/Constants/NavigationStrings';
 const PhoneNumber = (props: any) => {
   const [countryCode, setCountryCode] = useState('US');
   const [callingCode, setCallingCode] = useState('1');
-
+  const [phoneno, setPhoneno] = useState('');
+  const [countryVisible, setCountryVisible] = useState(false);
   const onBack = () => {
     props.navigation.goBack();
   };
@@ -24,7 +25,16 @@ const PhoneNumber = (props: any) => {
     setCallingCode(country.callingCode[0]);
   };
   const onContnue = () => {
-    props.navigation.navigate(NavigationStrings.OtpVerification);
+    props.navigation.navigate(NavigationStrings.OtpVerification, {
+      phonenum: callingCode + phoneno,
+    });
+  };
+  const openPicker = () => {
+    setCountryVisible(!countryVisible);
+  };
+  const handleChange = (value: any) => {
+    setPhoneno(value);
+    // console.log(callingCode + value);
   };
   return (
     <LinearGradient
@@ -42,7 +52,12 @@ const PhoneNumber = (props: any) => {
         </Text>
         <SizeBox size={20} />
         <View style={{flexDirection: 'row'}}>
-          <PhonePicker countryCode={countryCode} onSelect={onSelect} />
+          <PhonePicker
+            visible={countryVisible}
+            countryCode={countryCode}
+            onSelect={onSelect}
+            onPress={openPicker}
+          />
           <View style={styles.inputHolder}>
             <TextInput
               keyboardType="phone-pad"
@@ -50,6 +65,8 @@ const PhoneNumber = (props: any) => {
               placeholderTextColor={Colors.white}
               style={styles.input}
               maxLength={10}
+              value={phoneno}
+              onChangeText={text => handleChange(text)}
             />
           </View>
         </View>

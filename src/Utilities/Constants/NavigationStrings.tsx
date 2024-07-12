@@ -18,4 +18,12 @@ export default {
   EditProfile: 'EditProfile',
   UserStack: 'UserStack',
   EventDetails: 'EventDetails',
+  Report: 'Report',
+  SocialPart: 'SocialPart',
+  MapScreen: 'MapScreen',
+  Invites: 'Invites',
+  Messages: 'Messages',
+  MyEvents: 'Events',
+  AddPeople: 'AddPeople',
+  EditGroup: 'EditGroup',
 };

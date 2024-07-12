@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   },
 
   btn: {
-    marginLeft: 10,
+    marginLeft: 5,
     width: moderateScale(52),
     height: moderateScale(55),
     justifyContent: 'center',

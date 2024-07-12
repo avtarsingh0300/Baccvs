@@ -13,7 +13,6 @@ import {
 import React, {useMemo, useRef, useState} from 'react';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import {
-  height,
   moderateScale,
   moderateScaleVertical,
   textScale,
@@ -32,13 +31,21 @@ import moment from 'moment';
 import Swiper from 'react-native-swiper';
 import styles from './style';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
+import MapView, {Marker} from 'react-native-maps';
 
 const AddScreen = ({navigation}: any) => {
-  const swiper = useRef();
+  const swiper: any = useRef();
 
   const [value, setValue] = useState(new Date());
   const [week, setWeek] = useState(0);
   const [modalVisible, SetModalVisible] = useState(false);
+  const initialRegion = {
+    latitude: 37.78825,
+    longitude: -122.4324,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  };
+
   const weeks = useMemo(() => {
     const start = moment().add(week, 'weeks').startOf('week');
     return [-1, 0, 1].map(adj => {
@@ -81,7 +88,21 @@ const AddScreen = ({navigation}: any) => {
             </Text>
           </TouchableOpacity>
           <SizeBox size={5} />
-          <View style={{height: 200, backgroundColor: Colors.white}}></View>
+          <View
+            style={{
+              height: moderateScaleVertical(200),
+            }}>
+            <MapView
+              style={styles.map}
+              // customMapStyle={mapStyle}
+              initialRegion={initialRegion}>
+              <Marker
+                coordinate={{latitude: 37.78825, longitude: -122.4324}}
+                title={'My Marker'}
+                description={'Some description'}
+              />
+            </MapView>
+          </View>
           <View style={styles.picker}>
             <Swiper
               index={1}
@@ -161,287 +182,295 @@ const AddScreen = ({navigation}: any) => {
             </TouchableOpacity>
           </View>
           <SizeBox size={20} />
-          <TouchableOpacity style={styles.cardBtn}>
-            <VectorIcon
-              groupName="SimpleLineIcons"
-              name="screen-smartphone"
-              size={20}
-              color={Colors.Pink}
-            />
-            <Text
-              style={{...commonStyles.font12Regualar2, color: Colors.white}}>
-              {`  `}+33 (___) ___ _____
-            </Text>
-          </TouchableOpacity>
-          <SizeBox size={10} />
-          <TouchableOpacity style={styles.cardBtn}>
-            <VectorIcon
-              groupName="Feather"
-              name="users"
-              size={20}
-              color={Colors.Pink}
-            />
-            <Text
-              style={{...commonStyles.font12Regualar2, color: Colors.white}}>
-              {`  `}Number of people allowed
-            </Text>
-          </TouchableOpacity>
-          <SizeBox size={10} />
-          <TouchableOpacity style={styles.cardBtn}>
-            <VectorIcon
-              groupName="Feather"
-              name="speaker"
-              size={25}
-              color={Colors.Pink}
-            />
-            <Text
-              style={{...commonStyles.font12Regualar2, color: Colors.white}}>
-              {`  `}Music Style
-            </Text>
-          </TouchableOpacity>
-          <SizeBox size={10} />
-          <TouchableOpacity style={styles.cardBtn}>
-            <Image
-              resizeMode="contain"
-              source={ImagePath.priceTag}
-              style={{
-                tintColor: Colors.Pink,
-                width: moderateScale(22),
-                height: moderateScaleVertical(22),
-              }}
-            />
-            <Text
-              style={{...commonStyles.font12Regualar2, color: Colors.white}}>
-              {`  `}Free / Chargeable
-            </Text>
-          </TouchableOpacity>
-          <SizeBox size={10} />
-          <TouchableOpacity style={styles.cardBtn}>
-            <ImageComponent
-              resizeMode="contain"
-              source={ImagePath.lang}
-              style={{
-                width: moderateScale(22),
-                height: moderateScaleVertical(22),
-              }}
-            />
-            <Text
-              style={{...commonStyles.font12Regualar2, color: Colors.white}}>
-              {`  `}Languages
-            </Text>
-          </TouchableOpacity>
-          <SizeBox size={10} />
-          <View style={styles.timecon}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text
-                style={{...commonStyles.font12Regualar2, color: Colors.green}}>
-                Private
-              </Text>
+          <View style={{paddingHorizontal: moderateScale(20)}}>
+            <TouchableOpacity style={styles.cardBtn}>
               <VectorIcon
-                groupName="AntDesign"
-                name="questioncircleo"
+                groupName="SimpleLineIcons"
+                name="screen-smartphone"
+                size={20}
                 color={Colors.Pink}
-                size={15}
-                style={{marginLeft: moderateScale(10)}}
               />
-            </View>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Text
                 style={{...commonStyles.font12Regualar2, color: Colors.white}}>
-                Public
+                {`  `}+33 (___) ___ _____
               </Text>
+            </TouchableOpacity>
+            <SizeBox size={10} />
+            <TouchableOpacity style={styles.cardBtn}>
               <VectorIcon
-                groupName="AntDesign"
-                name="questioncircleo"
+                groupName="Feather"
+                name="users"
+                size={20}
                 color={Colors.Pink}
-                size={15}
-                style={{marginLeft: moderateScale(10)}}
               />
+              <Text
+                style={{...commonStyles.font12Regualar2, color: Colors.white}}>
+                {`  `}Number of people allowed
+              </Text>
+            </TouchableOpacity>
+            <SizeBox size={10} />
+            <TouchableOpacity style={styles.cardBtn}>
+              <VectorIcon
+                groupName="Feather"
+                name="speaker"
+                size={25}
+                color={Colors.Pink}
+              />
+              <Text
+                style={{...commonStyles.font12Regualar2, color: Colors.white}}>
+                {`  `}Music Style
+              </Text>
+            </TouchableOpacity>
+            <SizeBox size={10} />
+            <TouchableOpacity style={styles.cardBtn}>
+              <Image
+                resizeMode="contain"
+                source={ImagePath.priceTag}
+                style={{
+                  tintColor: Colors.Pink,
+                  width: moderateScale(22),
+                  height: moderateScaleVertical(22),
+                }}
+              />
+              <Text
+                style={{...commonStyles.font12Regualar2, color: Colors.white}}>
+                {`  `}Free / Chargeable
+              </Text>
+            </TouchableOpacity>
+            <SizeBox size={10} />
+            <TouchableOpacity style={styles.cardBtn}>
+              <ImageComponent
+                resizeMode="contain"
+                source={ImagePath.lang}
+                style={{
+                  width: moderateScale(22),
+                  height: moderateScaleVertical(22),
+                }}
+              />
+              <Text
+                style={{...commonStyles.font12Regualar2, color: Colors.white}}>
+                {`  `}Languages
+              </Text>
+            </TouchableOpacity>
+            <SizeBox size={10} />
+            <View style={styles.timecon}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text
+                  style={{
+                    ...commonStyles.font12Regualar2,
+                    color: Colors.green,
+                  }}>
+                  Private
+                </Text>
+                <VectorIcon
+                  groupName="AntDesign"
+                  name="questioncircleo"
+                  color={Colors.Pink}
+                  size={15}
+                  style={{marginLeft: moderateScale(10)}}
+                />
+              </View>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text
+                  style={{
+                    ...commonStyles.font12Regualar2,
+                    color: Colors.white,
+                  }}>
+                  Public
+                </Text>
+                <VectorIcon
+                  groupName="AntDesign"
+                  name="questioncircleo"
+                  color={Colors.Pink}
+                  size={15}
+                  style={{marginLeft: moderateScale(10)}}
+                />
+              </View>
             </View>
-          </View>
-          <SizeBox size={10} />
+            <SizeBox size={10} />
 
-          <View style={styles.flatbox}>
+            <View style={styles.flatbox}>
+              <Text
+                style={{
+                  ...commonStyles.font12Regular,
+                  color: Colors.white,
+                }}>
+                Event type
+                <Text
+                  style={{
+                    fontSize: textScale(8),
+                    color: Colors.white,
+                  }}>
+                  {` `}(Up to 3)
+                </Text>
+              </Text>
+              <FlatList
+                data={dummydata}
+                renderItem={({item}) => (
+                  <View style={styles.flatcon}>
+                    <Text
+                      style={{
+                        ...commonStyles.font12Regular,
+                        color: Colors.white,
+                      }}>
+                      event
+                    </Text>
+                    <View style={styles.tickvw}>
+                      <VectorIcon
+                        groupName="MaterialCommunityIcons"
+                        name="check-outline"
+                        color={Colors.Pink}
+                        size={15}
+                        style={{bottom: 5, alignSlef: 'centre'}}
+                      />
+                    </View>
+                  </View>
+                )}
+              />
+            </View>
+            <SizeBox size={10} />
+            <View style={styles.flatbox}>
+              <Text
+                style={{
+                  ...commonStyles.font12Regular,
+                  color: Colors.white,
+                }}>
+                Venue type
+                <Text
+                  style={{
+                    fontSize: textScale(8),
+                    color: Colors.white,
+                  }}>
+                  {` `}(Up to 2)
+                </Text>
+              </Text>
+              <FlatList
+                data={dummydata}
+                renderItem={({item}) => (
+                  <View style={styles.flatcon}>
+                    <Text
+                      style={{
+                        ...commonStyles.font12Regular,
+                        color: Colors.white,
+                      }}>
+                      event
+                    </Text>
+                    <View style={styles.tickvw}>
+                      <VectorIcon
+                        groupName="MaterialCommunityIcons"
+                        name="check-outline"
+                        color={Colors.Pink}
+                        size={15}
+                        style={{bottom: 5, alignSlef: 'centre'}}
+                      />
+                    </View>
+                  </View>
+                )}
+              />
+            </View>
+            <SizeBox size={10} />
+            <View style={styles.flatbox}>
+              <VectorIcon
+                groupName="SimpleLineIcons"
+                name="camera"
+                size={20}
+                style={{alignSelf: 'center'}}
+              />
+              <View style={styles.camerarow}>
+                <Text
+                  style={{
+                    ...commonStyles.font12Regular,
+                    color: Colors.white,
+                  }}>
+                  Add videos
+                </Text>
+                <VectorIcon
+                  groupName="AntDesign"
+                  name="questioncircleo"
+                  color={Colors.Pink}
+                  size={15}
+                  style={{left: moderateScale(20)}}
+                />
+              </View>
+            </View>
+            <SizeBox size={10} />
+            <View style={styles.flatbox}>
+              <VectorIcon
+                groupName="Fontisto"
+                name="picture"
+                size={15}
+                style={{alignSelf: 'center'}}
+              />
+              <View style={styles.camerarow}>
+                <Text
+                  style={{
+                    ...commonStyles.font12Regular,
+                    color: Colors.white,
+                  }}>
+                  Select a thumbnail
+                </Text>
+                <VectorIcon
+                  groupName="AntDesign"
+                  name="questioncircleo"
+                  color={Colors.Pink}
+                  size={15}
+                  style={{left: moderateScale(20)}}
+                />
+              </View>
+            </View>
+            <SizeBox size={10} />
+            <View style={styles.flatbox}>
+              <VectorIcon
+                groupName="AntDesign"
+                name="addusergroup"
+                size={25}
+                style={{alignSelf: 'center'}}
+              />
+              <View style={styles.camerarow}>
+                <Text
+                  style={{
+                    ...commonStyles.font12Regular,
+                    color: Colors.white,
+                  }}>
+                  Add members
+                </Text>
+                <VectorIcon
+                  groupName="AntDesign"
+                  name="questioncircleo"
+                  color={Colors.Pink}
+                  size={15}
+                  style={{left: moderateScale(20)}}
+                />
+              </View>
+            </View>
+            <SizeBox size={10} />
             <Text
               style={{
                 ...commonStyles.font12Regular,
                 color: Colors.white,
+                alignSelf: 'center',
               }}>
-              Event type
-              <Text
-                style={{
-                  fontSize: textScale(8),
-                  color: Colors.white,
-                }}>
-                {` `}(Up to 3)
-              </Text>
+              Description
             </Text>
-            <FlatList
-              data={dummydata}
-              renderItem={({item}) => (
-                <View style={styles.flatcon}>
-                  <Text
-                    style={{
-                      ...commonStyles.font12Regular,
-                      color: Colors.white,
-                    }}>
-                    event
-                  </Text>
-                  <View style={styles.tickvw}>
-                    <VectorIcon
-                      groupName="MaterialCommunityIcons"
-                      name="check-outline"
-                      color={Colors.Pink}
-                      size={15}
-                      style={{bottom: 5, alignSlef: 'centre'}}
-                    />
-                  </View>
-                </View>
-              )}
-            />
-          </View>
-          <SizeBox size={10} />
-          <View style={styles.flatbox}>
-            <Text
+            <SizeBox size={10} />
+            <LinearGradient
+              colors={[Colors.Linear, Colors.green]}
               style={{
-                ...commonStyles.font12Regular,
-                color: Colors.white,
+                minHeight: moderateScaleVertical(150),
+                borderRadius: 10,
+                padding: 10,
               }}>
-              Venue type
-              <Text
-                style={{
-                  fontSize: textScale(8),
-                  color: Colors.white,
-                }}>
-                {` `}(Up to 2)
-              </Text>
-            </Text>
-            <FlatList
-              data={dummydata}
-              renderItem={({item}) => (
-                <View style={styles.flatcon}>
-                  <Text
-                    style={{
-                      ...commonStyles.font12Regular,
-                      color: Colors.white,
-                    }}>
-                    event
-                  </Text>
-                  <View style={styles.tickvw}>
-                    <VectorIcon
-                      groupName="MaterialCommunityIcons"
-                      name="check-outline"
-                      color={Colors.Pink}
-                      size={15}
-                      style={{bottom: 5, alignSlef: 'centre'}}
-                    />
-                  </View>
-                </View>
-              )}
-            />
-          </View>
-          <SizeBox size={10} />
-          <View style={styles.flatbox}>
-            <VectorIcon
-              groupName="SimpleLineIcons"
-              name="camera"
-              size={20}
-              style={{alignSelf: 'center'}}
-            />
-            <View style={styles.camerarow}>
-              <Text
-                style={{
-                  ...commonStyles.font12Regular,
-                  color: Colors.white,
-                }}>
-                Add videos
-              </Text>
-              <VectorIcon
-                groupName="AntDesign"
-                name="questioncircleo"
-                color={Colors.Pink}
-                size={15}
-                style={{left: moderateScale(20)}}
+              <TextInput
+                placeholder="This party about...."
+                placeholderTextColor={Colors.white}
+                multiline={true}
+                style={{...commonStyles.font12Regular, color: Colors.white}}
               />
-            </View>
+            </LinearGradient>
+            <SizeBox size={15} />
+            <CommonBtn title="Create Event" onPress={onCreate} />
+            <SizeBox size={15} />
           </View>
-          <SizeBox size={10} />
-          <View style={styles.flatbox}>
-            <VectorIcon
-              groupName="Fontisto"
-              name="picture"
-              size={15}
-              style={{alignSelf: 'center'}}
-            />
-            <View style={styles.camerarow}>
-              <Text
-                style={{
-                  ...commonStyles.font12Regular,
-                  color: Colors.white,
-                }}>
-                Select a thumbnail
-              </Text>
-              <VectorIcon
-                groupName="AntDesign"
-                name="questioncircleo"
-                color={Colors.Pink}
-                size={15}
-                style={{left: moderateScale(20)}}
-              />
-            </View>
-          </View>
-          <SizeBox size={10} />
-          <View style={styles.flatbox}>
-            <VectorIcon
-              groupName="AntDesign"
-              name="addusergroup"
-              size={25}
-              style={{alignSelf: 'center'}}
-            />
-            <View style={styles.camerarow}>
-              <Text
-                style={{
-                  ...commonStyles.font12Regular,
-                  color: Colors.white,
-                }}>
-                Add members
-              </Text>
-              <VectorIcon
-                groupName="AntDesign"
-                name="questioncircleo"
-                color={Colors.Pink}
-                size={15}
-                style={{left: moderateScale(20)}}
-              />
-            </View>
-          </View>
-          <SizeBox size={10} />
-          <Text
-            style={{
-              ...commonStyles.font12Regular,
-              color: Colors.white,
-              alignSelf: 'center',
-            }}>
-            Description
-          </Text>
-          <SizeBox size={10} />
-          <LinearGradient
-            colors={[Colors.Linear, Colors.green]}
-            style={{
-              minHeight: moderateScaleVertical(150),
-              borderRadius: 10,
-              padding: 10,
-            }}>
-            <TextInput
-              placeholder="This party about...."
-              placeholderTextColor={Colors.white}
-              multiline={true}
-              style={{...commonStyles.font12Regular, color: Colors.white}}
-            />
-          </LinearGradient>
-          <SizeBox size={15} />
-          <CommonBtn title="Create Event" onPress={onCreate} />
-          <SizeBox size={15} />
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>

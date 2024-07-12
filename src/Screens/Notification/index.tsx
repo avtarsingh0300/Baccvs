@@ -5,7 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
 import styles from './style';
@@ -16,12 +16,7 @@ import {
 } from '../../Utilities/Component/Helpers';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import ImagePath from '../../Utilities/Constants/ImagePath';
-import {
-  moderateScale,
-  moderateScaleVertical,
-  textScale,
-  width,
-} from '../../Utilities/Styles/responsiveSize';
+import {textScale} from '../../Utilities/Styles/responsiveSize';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 
 const Notification = () => {

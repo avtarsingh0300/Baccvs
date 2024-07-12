@@ -1,12 +1,10 @@
 import {View, Text, SafeAreaView} from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
 import styles from './style';
 import {Header, SizeBox} from '../../Utilities/Component/Helpers';
 import commonStyles from '../../Utilities/Styles/commonStyles';
-import fontFamily from '../../Utilities/Styles/fontFamily';
-import {moderateScale} from '../../Utilities/Styles/responsiveSize';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 
 const Settings = (props: any) => {

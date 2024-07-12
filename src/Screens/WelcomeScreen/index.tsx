@@ -7,7 +7,6 @@ import {
   height,
   moderateScale,
   moderateScaleVertical,
-  textScale,
 } from '../../Utilities/Styles/responsiveSize';
 import {ImageComponent} from '../../Utilities/Component/Helpers';
 import ImagePath from '../../Utilities/Constants/ImagePath';

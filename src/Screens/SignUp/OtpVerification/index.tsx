@@ -1,5 +1,5 @@
 import {Keyboard, SafeAreaView, Text, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './style';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../../Utilities/Styles/colors';
@@ -18,6 +18,7 @@ import {
 import fontFamily from '../../../Utilities/Styles/fontFamily';
 import NavigationStrings from '../../../Utilities/Constants/NavigationStrings';
 const OtpVerification = (props: any) => {
+  console.log(props.route.params.phonenum);
   const [value, setValue] = useState('');
   const ref = useBlurOnFulfill({value, cellCount: 4});
   const [propsOtp = props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -27,6 +28,7 @@ const OtpVerification = (props: any) => {
   const onBack = () => {
     props.navigation.goBack();
   };
+
   const onContinue = () => {
     props.navigation.navigate(NavigationStrings.RegisterScreen);
   };

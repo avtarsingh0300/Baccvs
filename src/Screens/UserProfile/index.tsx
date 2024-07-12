@@ -5,7 +5,6 @@ import {
   Image,
   FlatList,
   ScrollView,
-  Platform,
   ImageBackground,
   TouchableOpacity,
 } from 'react-native';
@@ -23,14 +22,7 @@ import {styles} from './style';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import FastImage from 'react-native-fast-image';
-
-import {
-  ImageComponent,
-  SizeBox,
-  dummydata,
-} from '../../Utilities/Component/Helpers';
-import fontFamily from '../../Utilities/Styles/fontFamily';
-
+import {ImageComponent, dummydata} from '../../Utilities/Component/Helpers';
 import Modal from 'react-native-modal';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 
@@ -45,7 +37,10 @@ const UserProfile = ({navigation}: any) => {
     ImagePath.ProfileImg,
     ImagePath.ProfileImg,
   ];
-
+  const onSocialpart = () => {
+    setShowModal(false);
+    navigation.navigate(NavigationStrings.SocialPart);
+  };
   const renderItem = () => (
     <View>
       <View style={styles.listContainer}>
@@ -260,7 +255,10 @@ const UserProfile = ({navigation}: any) => {
               }}>
               <Text style={styles.optionText}>Edit profile</Text>
             </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} style={styles.option}>
+            <TouchableOpacity
+              onPress={onSocialpart}
+              activeOpacity={0.8}
+              style={styles.option}>
               <Text style={styles.optionText}>Edit Social part</Text>
             </TouchableOpacity>
             <TouchableOpacity
