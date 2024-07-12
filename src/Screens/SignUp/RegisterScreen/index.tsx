@@ -25,7 +25,7 @@ const RegisterScreen = (props: any) => {
   const { focusAction, scrollRef } = scrollConfig;
   const [selectedGender, setSelectedGender] = useState('Male');
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-
+  const [fullName, setFullName] = useState("");
   const genders = ['Male', 'Female', 'Other'];
 
   const onBack = () => {
@@ -63,7 +63,11 @@ const RegisterScreen = (props: any) => {
             Please fill out the form carefully to complete your registration.
           </Text>
           <SizeBox size={10} />
-          <CommonInput placeholder="Fullname" />
+          <CommonInput
+            placeholder="Fullname"
+            value={fullName}
+            onChangeText={(e: string) => setFullName(e)}
+          />
           <SizeBox size={10} />
 
           <CommonInput
