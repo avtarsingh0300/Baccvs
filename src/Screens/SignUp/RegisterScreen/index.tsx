@@ -1,4 +1,4 @@
-import { FlatList, SafeAreaView, Text, View } from 'react-native';
+import { FlatList, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 import styles from './style';
 import LinearGradient from 'react-native-linear-gradient';
@@ -9,6 +9,7 @@ import {
   CommonInput,
   CommonInputBtn,
   ProgressHeader,
+  showError,
   SizeBox,
 } from '../../../Utilities/Component/Helpers';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -18,22 +19,69 @@ import VectorIcon from '../../../Utilities/Component/vectorIcons';
 import Modal from 'react-native-modal';
 import { height } from '../../../Utilities/Styles/responsiveSize';
 import NavigationStrings from '../../../Utilities/Constants/NavigationStrings';
+import DatePicker from 'react-native-date-picker';
+import moment from 'moment';
+import languages from '../../../Utilities/Constants';
 
 const RegisterScreen = (props: any) => {
   const scrollConfig = useScroll();
   const [h, setH] = useState(0);
   const { focusAction, scrollRef } = scrollConfig;
-  const [selectedGender, setSelectedGender] = useState('Male');
+  const [selectedGender, setSelectedGender] = useState("");
+  const [selectedLang, setSelectedLang] = useState([]);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [modalLanguageVisible, setModalLanguageVisible] = useState<boolean>(false);
   const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [userName, setUserName] = useState("");
+  const [userBio, setUserBio] = useState("");
+  const [userPassword, setUserPassword] = useState("");
+  const [userConfirmPassword, setUserConfirmPassword] = useState("");
   const genders = ['Male', 'Female', 'Other'];
+  const [date, setDate] = useState(new Date());
+  const [open, setOpen] = useState(false);
 
   const onBack = () => {
     props.navigation.goBack();
   };
   const onContinue = () => {
-    props.navigation.navigate(NavigationStrings.UploadImage);
+    if (fullName?.length == 0 && email?.length == 0 && userConfirmPassword?.length == 0
+      && userName?.length == 0 && userBio?.length == 0 && userPassword?.length == 0
+      && selectedGender?.length == 0 && selectedLang?.length == 0) {
+      return showError("All field are mandatory");
+    }
+    if (userPassword != userConfirmPassword) {
+      return showError("Password and confirm password should be same");
+    }
+    const data = {
+      full_name: fullName,
+      email: email,
+      dob: moment(date).format('YYYY-MM-DD'),
+      username: userName,
+      gender: selectedGender,
+      bio: userBio,
+      language: selectedLang,
+      password: userPassword
+    };
+    props.navigation.navigate(NavigationStrings.UploadImage, { data: data });
   };
+
+  const selectModalHandler = (item: any) => {
+    if (modalLanguageVisible) {
+      const filterData = selectedLang?.filter((i: any) => i == item?.name);
+      if (filterData?.length > 0) {
+        const filterData2 = selectedLang?.filter((i: any) => i != item?.name);
+        setSelectedLang(filterData2);
+      } else {
+        setSelectedLang([...selectedLang, item?.name]);
+      }
+    } else {
+      setSelectedGender(item);
+      setModalVisible(false);
+      setModalLanguageVisible(false);
+    }
+  };
+
 
   return (
     <LinearGradient
@@ -73,17 +121,19 @@ const RegisterScreen = (props: any) => {
           <CommonInput
             placeholder="Email Address"
             keyboardType="email-address"
+            value={email}
+            onChangeText={(e: string) => setEmail(e?.trim())}
           />
           <SizeBox size={10} />
           <CommonInputBtn
-            title="Date of Birth"
-            onPress={() => console.log('ok')}
+            title={date ? moment(date).format('YYYY-MM-DD') : "Date of Birth"}
+            onPress={() => setOpen(true)}
           />
           <SizeBox size={10} />
-
-          <CommonInputBtn
-            title="Choose your username"
-            onPress={() => console.log('ok')}
+          <CommonInput
+            placeholder="Choose your username"
+            value={userName}
+            onChangeText={(e: string) => setUserName(e)}
           />
           <SizeBox size={10} />
           <Text
@@ -97,16 +147,19 @@ const RegisterScreen = (props: any) => {
           <SizeBox size={15} />
           <View>
             <CommonInputBtn
-              title="Select your gender"
+              title={selectedGender?.length > 0 ? selectedGender : "Select your gender"}
               onPress={() => setModalVisible(true)}
             />
             <Modal
-              isVisible={modalVisible}
+              isVisible={modalVisible || modalLanguageVisible}
               style={{
                 justifyContent: 'flex-end',
                 margin: 0,
               }}
-              onBackdropPress={() => setModalVisible(false)}
+              onBackdropPress={() => {
+                setModalVisible(false);
+                setModalLanguageVisible(false);
+              }}
               backdropOpacity={0.5}
               animationIn="slideInUp"
               animationOut="flipOutY"
@@ -118,31 +171,39 @@ const RegisterScreen = (props: any) => {
                 style={{ height: height / 5, width: '95%', alignSelf: 'center' }}>
                 <View style={styles.modalContainer}>
                   <FlatList
-                    data={genders}
-                    renderItem={({ item, index }) => (
-                      <View
-                        style={[
-                          {
-                            borderBottomWidth: index === 2 ? 0 : 1,
-                          },
-                          styles.mondaInvw,
-                        ]}>
-                        <Text
-                          style={{
-                            color: Colors.white,
-                            padding: 5,
-                            fontWeight: '600',
-                            fontFamily: fontFamily.time_regular,
-                          }}>
-                          {item}
-                        </Text>
-                        <VectorIcon
-                          groupName="MaterialCommunityIcons"
-                          name="radiobox-blank"
-                          size={18}
-                        />
-                      </View>
-                    )}
+                    data={modalLanguageVisible ? languages : genders}
+                    renderItem={({ item, index }) => {
+                      const filterData = selectedLang?.filter((i: any) => i == item?.name);
+                      console.log((selectedGender || filterData[0]) == (item?.name ? item?.name : item), "(selectedGender || filterData[0]) == (item?.name ? item?.name : item)")
+                      return (
+                        <TouchableOpacity
+                          activeOpacity={0.8}
+                          onPress={() => {
+                            selectModalHandler(item);
+                          }}
+                          style={[
+                            {
+                              borderBottomWidth: index == (modalLanguageVisible ? languages?.length - 1 : genders?.length - 1) ? 0 : 1,
+                            },
+                            styles.mondaInvw,
+                          ]}>
+                          <Text
+                            style={{
+                              color: Colors.white,
+                              padding: 5,
+                              fontWeight: '600',
+                              fontFamily: fontFamily.time_regular,
+                            }}>
+                            {modalLanguageVisible ? item?.name : item}
+                          </Text>
+                          <VectorIcon
+                            groupName="MaterialCommunityIcons"
+                            name={(selectedGender || filterData[0]) == (item?.name ? item?.name : item) ? "radiobox-marked" : "radiobox-blank"}
+                            size={18}
+                          />
+                        </TouchableOpacity>
+                      )
+                    }}
                   />
                 </View>
               </View>
@@ -150,25 +211,64 @@ const RegisterScreen = (props: any) => {
           </View>
           <SizeBox size={10} />
           <Text style={styles.biotxt}>Bio</Text>
-
           <SizeBox size={10} />
           <CommonInput
             multiline={true}
             placeholder="Write a little bio to make people know you better."
+            value={userBio}
+            onChangeText={(e: string) => setUserBio(e)}
           />
           <SizeBox size={10} />
-
-          <CommonInput placeholder="Languages" />
+          {selectedLang?.length > 0 ?
+            <TouchableOpacity activeOpacity={0.8} onPress={() => setModalLanguageVisible(true)} style={styles.langContainer}>
+              {selectedLang?.map((item) => (
+                <TouchableOpacity style={styles.langItem} activeOpacity={0.8}
+                  onPress={() => {
+                    const filterData2 = selectedLang?.filter((i: any) => i != item);
+                    setSelectedLang(filterData2);
+                  }}>
+                  <Text style={styles.langItemText}>{item}  &#x2715;</Text>
+                </TouchableOpacity>
+              ))}
+            </TouchableOpacity>
+            :
+            <CommonInputBtn
+              title="Languages"
+              onPress={() => setModalLanguageVisible(true)}
+            />}
           <SizeBox size={10} />
-          <CommonInput placeholder="Password" />
+          <CommonInput
+            placeholder="Password"
+            value={userPassword}
+            onChangeText={(e: string) => setUserPassword(e?.trim())}
+            secureTextEntry={true}
+          />
           <SizeBox size={10} />
-          <CommonInput placeholder="Confirm password" />
+          <CommonInput
+            placeholder="Confirm password"
+            value={userConfirmPassword}
+            onChangeText={(e: string) => setUserConfirmPassword(e?.trim())}
+          />
           <SizeBox size={20} />
           <CommonBtn onPress={onContinue} title={'Continue'} />
+          <SizeBox size={20} />
         </KeyboardAwareScrollView>
-        <SizeBox size={20} />
+        <DatePicker
+          modal
+          open={open}
+          date={date}
+          onConfirm={(date) => {
+            setOpen(false)
+            setDate(date);
+          }}
+          maximumDate={new Date()}
+          mode='date'
+          onCancel={() => {
+            setOpen(false)
+          }}
+        />
       </SafeAreaView>
-    </LinearGradient>
+    </LinearGradient >
   );
 };
 

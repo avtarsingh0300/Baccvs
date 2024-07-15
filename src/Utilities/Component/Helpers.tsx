@@ -208,7 +208,8 @@ export function CommonInput({
   multiline = false,
   keyboardType = 'default',
   value,
-  onChangeText
+  onChangeText,
+  secureTextEntry
 }: CommonInputProps) {
   return (
     <View
@@ -228,6 +229,7 @@ export function CommonInput({
         style={styles.input}
         value={value}
         onChangeText={onChangeText}
+        secureTextEntry={secureTextEntry}
       />
     </View>
   );

@@ -41,6 +41,8 @@
 		<string>Baccvs app need access to your documents to upload files</string>
 		<key>NSCameraUsageDescription</key>
 		<string>Baccvs app need access to your camera to upload files</string>
+		<key>NSPhotoLibraryAddUsageDescription</key>
+        <string>Your message to the user when the photo library is accessed for saving images</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
 		<string></string>
 		<key>UIAppFonts</key>

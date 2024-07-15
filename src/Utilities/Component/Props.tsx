@@ -1,6 +1,7 @@
 interface CommonInputProps {
   placeholder: string;
   multiline?: boolean;
+  secureTextEntry?: boolean;
   value?: string;
   onChangeText?: Function;
   keyboardType?:
