@@ -1247,15 +1247,15 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNImageCropPicker (0.41.2):
+  - RNImageCropPicker (0.38.1):
     - React-Core
     - React-RCTImage
-    - RNImageCropPicker/QBImagePickerController (= 0.41.2)
-    - TOCropViewController (~> 2.7.4)
-  - RNImageCropPicker/QBImagePickerController (0.41.2):
+    - RNImageCropPicker/QBImagePickerController (= 0.38.1)
+    - TOCropViewController
+  - RNImageCropPicker/QBImagePickerController (0.38.1):
     - React-Core
     - React-RCTImage
-    - TOCropViewController (~> 2.7.4)
+    - TOCropViewController
   - RNScreens (3.31.1):
     - DoubleConversion
     - glog
@@ -1306,7 +1306,7 @@ PODS:
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
   - SocketRocket (0.7.0)
-  - TOCropViewController (2.7.4)
+  - TOCropViewController (2.7.3)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -1608,13 +1608,13 @@ SPEC CHECKSUMS:
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: 2282cfbcf86c360d29f44ace393203afd5c6cff7
-  RNImageCropPicker: 771e2ca319d2cf92e04ebf334ece892ee9a6728f
+  RNImageCropPicker: 648356d68fbf9911a1016b3e3723885d28373eda
   RNScreens: b32a9ff15bea7fcdbe5dff6477bc503f792b1208
   RNVectorIcons: 2a2f79274248390b80684ea3c4400bd374a15c90
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
-  TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
+  TOCropViewController: b9b2905938c0424f289ea2d9964993044913fac6
   Yoga: ae3c32c514802d30f687a04a6a35b348506d411f
 
 PODFILE CHECKSUM: bf1bc4b53773ba699f936d768ab80e7a060288bc
