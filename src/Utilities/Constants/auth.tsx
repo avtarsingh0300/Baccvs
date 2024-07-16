@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { LOGIN, OTP_MATCH, OTP_SEND } from './Urls';
-import { apiGet, apiPost } from './requestHandler';
-import { saveUserData } from '../../Redux/Action/auth';
+import {LOGIN, OTP_MATCH, OTP_SEND, REGISTER_USER} from './Urls';
+import {apiGet, apiPost} from './requestHandler';
+import {saveUserData} from '../../Redux/Action/auth';
 
 // export function SignUp(data: object) {
 //   return apiPost(SIGNUP, data);
@@ -17,6 +17,9 @@ export function otpSend(data: object) {
 
 export function otpMatch(data: object) {
   return apiPost(OTP_MATCH, data);
+}
+export function registerUser(data: object) {
+  return apiPost(REGISTER_USER, data, {'Content-Type': 'multipart/form-data'});
 }
 
 export const setDataHandler = async (data: any) => {

@@ -35,8 +35,9 @@ export function apiReq(
     const headers = {
       ...defaultHeader,
       ...customHeaders,
+      // 'Content-Type': 'multipart/form-data',
       // 'Content-Type': 'application/json',
-      // "Content-Type": "multipart/form-data",
+      // 'Content-Type': 'multipart/form-data',
     };
 
     if (method === 'get') {
@@ -95,7 +96,7 @@ export async function apiGet(endPoint: string, data: object, headers = {}) {
   }
 }
 
-export async function apiPost(endPoint: string, data: object, headers = {}) {
+export async function apiPost(endPoint: string, data: object, headers: object) {
   console.log(endPoint, ':endPoint');
   var result = await apiReq(endPoint, data, 'post', headers);
   if (result === true) {

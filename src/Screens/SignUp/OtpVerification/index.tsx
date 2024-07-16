@@ -33,6 +33,9 @@ const OtpVerification = (props: any) => {
   };
 
   const onContinue = () => {
+    if (value.length < 4) {
+      return showError('Invalid otp!!');
+    }
     const formData = {
       phone_number: props.route.params.phonenum,
       otp: value,
@@ -41,7 +44,9 @@ const OtpVerification = (props: any) => {
       .then(res => {
         // console.log(res, "res in match otp");
         showSuccess(res?.message);
-        props.navigation.navigate(NavigationStrings.WelcomScreen);
+        props.navigation.navigate(NavigationStrings.RegisterScreen, {
+          phone: props.route.params.phonenum,
+        });
       })
       .catch(err => {
         showError(err?.message);

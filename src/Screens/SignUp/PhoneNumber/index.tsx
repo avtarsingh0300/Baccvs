@@ -1,8 +1,8 @@
-import { SafeAreaView, Text, TextInput, View } from 'react-native';
-import React, { useState } from 'react';
+import {SafeAreaView, Text, TextInput, View} from 'react-native';
+import React, {useState} from 'react';
 import styles from './style';
 import LinearGradient from 'react-native-linear-gradient';
-import { Colors } from '../../../Utilities/Styles/colors';
+import {Colors} from '../../../Utilities/Styles/colors';
 import commonStyles from '../../../Utilities/Styles/commonStyles';
 import {
   CommonBtn,
@@ -12,7 +12,7 @@ import {
   SizeBox,
 } from '../../../Utilities/Component/Helpers';
 import NavigationStrings from '../../../Utilities/Constants/NavigationStrings';
-import { otpSend } from '../../../Utilities/Constants/auth';
+import {otpSend} from '../../../Utilities/Constants/auth';
 
 const PhoneNumber = (props: any) => {
   const [countryCode, setCountryCode] = useState('US');
@@ -31,17 +31,18 @@ const PhoneNumber = (props: any) => {
   const onContnue = () => {
     const formData = {
       phone_number: `+${callingCode}${phoneno}`,
-      query: "signup"
+      query: 'signup',
     };
-    otpSend(formData).then(res => {
-      props.navigation.navigate(NavigationStrings.OtpVerification, {
-        phonenum: phoneno,
-        callingCode: callingCode,
+    otpSend(formData)
+      .then(res => {
+        props.navigation.navigate(NavigationStrings.OtpVerification, {
+          phonenum: `+${callingCode}${phoneno}`,
+          callingCode: callingCode,
+        });
+      })
+      .catch(err => {
+        showError(err?.message);
       });
-    }).catch(err => {
-      showError(err?.message);
-    });
-
   };
   const openPicker = () => {
     setCountryVisible(!countryVisible);
@@ -52,19 +53,19 @@ const PhoneNumber = (props: any) => {
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1.3, y: 0.9 }}
+      start={{x: 0, y: 0}}
+      end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
       <SafeAreaView>
         <ProgressHeader onPress={onBack} value={2} />
         <SizeBox size={15} />
-        <Text style={{ ...commonStyles.font18W700Center }}>Phone number</Text>
+        <Text style={{...commonStyles.font18W700Center}}>Phone number</Text>
         <SizeBox size={10} />
-        <Text style={{ ...commonStyles.font14Center, color: Colors.greyTxt }}>
+        <Text style={{...commonStyles.font14Center, color: Colors.greyTxt}}>
           Please insert your phone number.
         </Text>
         <SizeBox size={20} />
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{flexDirection: 'row'}}>
           <PhonePicker
             visible={countryVisible}
             countryCode={countryCode}
