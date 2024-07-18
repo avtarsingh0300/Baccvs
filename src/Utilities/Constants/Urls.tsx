@@ -5,4 +5,5 @@ export const getApiUrl = (endpoint: string) => `${BASE_URL}${endpoint}`;
 export const LOGIN = getApiUrl('loginuser');
 export const OTP_SEND = getApiUrl('signupcodesend');
 export const OTP_MATCH = getApiUrl('signupcodematch');
+export const USER_DATA = getApiUrl('userdata');
 export const REGISTER_USER = getApiUrl('insertuser');

@@ -1,9 +1,9 @@
-import {SafeAreaView, Text, View, FlatList, Image} from 'react-native';
-import React, {useState} from 'react';
-import {Colors} from '../../Utilities/Styles/colors';
+import { SafeAreaView, Text, View, FlatList, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Colors } from '../../Utilities/Styles/colors';
 import LinearGradient from 'react-native-linear-gradient';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {styles} from './style';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { styles } from './style';
 import {
   CommonBtn,
   CommonInput,
@@ -19,12 +19,24 @@ import Modal from 'react-native-modal';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
+import { getUserProfile } from '../../Utilities/Constants/auth';
+import languages from '../../Utilities/Constants';
 
-const EditProfile = ({navigation}: any) => {
+const EditProfile = ({ navigation }: any) => {
   const [Name, setName] = useState('');
+  const [userHeight, setUserHeight] = useState('');
+  const [userAge, setUserAge] = useState('');
+  const [userBio, setUserBio] = useState('');
+  const [userLocation, setUserLocation] = useState('');
+  const [sign, setSign] = useState('');
+  const [job, setJob] = useState('');
+  const [selectedDrink, setSelectDrink] = useState('');
+  const [selectedSmoke, setSelectSmoke] = useState('');
+  const [selectedGender, setSelectGender] = useState('');
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [modalVisibleLang, setModalVisibleLang] = useState<boolean>(false);
   const [modalVisibleDrink, setModalVisibleDrink] = useState<boolean>(false);
+  const [userData, setUserData] = useState<object>({});
   const [modalVisibleSmoking, setModalVisibleSmoking] =
     useState<boolean>(false);
   const genders = ['Male', 'Female', 'Other'];
@@ -33,12 +45,39 @@ const EditProfile = ({navigation}: any) => {
   const onBack = () => {
     navigation.goBack();
   };
+
+
+  useEffect(() => {
+    getUserData();
+  }, []);
+
+  const getUserData = async () => {
+    getUserProfile().then(res => {
+      console.log(res, "res in getUserProfile");
+      setUserData(res);
+      setName(res?.full_name);
+      setUserHeight(res?.height);
+      setUserAge(res?.age?.toString());
+      setSign(res?.zodiac_sign);
+      setJob(res?.job_title);
+      setSelectDrink(res?.drinking);
+      setSelectDrink(res?.drinking);
+      setSelectSmoke(res?.smoking);
+      setUserBio(res?.bio);
+      setSelectGender(res?.gender);
+      setUserLocation(res?.location);
+    }).catch(err => {
+      console.log(err, "err in getUserProfile");
+    })
+  };
+
+
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
-      start={{x: 0, y: 0}}
-      end={{x: 1.3, y: 0.9}}
-      style={{flex: 1}}>
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1.3, y: 0.9 }}
+      style={{ flex: 1 }}>
       <SafeAreaView>
         <KeyboardAwareScrollView
           contentContainerStyle={styles.container}
@@ -54,8 +93,11 @@ const EditProfile = ({navigation}: any) => {
               color={Colors.white}
               size={21}
             />
-            <View style={{width: '90%'}}>
-              <CommonInput placeholder="Name" />
+            <View style={{ width: '90%' }}>
+              <CommonInput
+                value={Name}
+                onChangeText={(e: string) => setName(e.trim())}
+                placeholder="Name" />
             </View>
           </View>
           <SizeBox size={10} />
@@ -68,9 +110,9 @@ const EditProfile = ({navigation}: any) => {
               color={Colors.white}
               size={21}
             />
-            <View style={{width: '90%'}}>
+            <View style={{ width: '90%' }}>
               <CommonInputBtn
-                title="Gender"
+                title={selectedGender?.length > 0 ? selectedGender : "Gender"}
                 onPress={() => setModalVisible(true)}
               />
             </View>
@@ -80,8 +122,13 @@ const EditProfile = ({navigation}: any) => {
           <SizeBox size={5} />
           <View style={styles.inputContainer}>
             <Image source={ImagePath.line_height} tintColor={Colors.white} />
-            <View style={{width: '90%'}}>
-              <CommonInput placeholder="Height" keyboardType="number-pad" />
+            <View style={{ width: '90%' }}>
+              <CommonInput
+                placeholder="Height"
+                keyboardType="number-pad"
+                value={userHeight}
+                onChangeText={(e: string) => setUserHeight(e?.trim())}
+              />
             </View>
           </View>
           <SizeBox size={10} />
@@ -94,8 +141,13 @@ const EditProfile = ({navigation}: any) => {
               color={Colors.white}
               size={21}
             />
-            <View style={{width: '90%'}}>
-              <CommonInput placeholder="Age" keyboardType="number-pad" />
+            <View style={{ width: '90%' }}>
+              <CommonInput
+                placeholder="Age"
+                keyboardType="number-pad"
+                value={userAge}
+                onChangeText={(e: string) => setUserAge(e?.trim())}
+              />
             </View>
           </View>
           <SizeBox size={10} />
@@ -108,8 +160,12 @@ const EditProfile = ({navigation}: any) => {
               color={Colors.white}
               size={21}
             />
-            <View style={{width: '90%'}}>
-              <CommonInput placeholder="Zodiac sign" />
+            <View style={{ width: '90%' }}>
+              <CommonInput
+                placeholder="Zodiac sign"
+                value={sign}
+                onChangeText={(e: string) => setSign(e?.trim())}
+              />
             </View>
           </View>
           <SizeBox size={10} />
@@ -122,8 +178,12 @@ const EditProfile = ({navigation}: any) => {
               color={Colors.white}
               size={21}
             />
-            <View style={{width: '90%'}}>
-              <CommonInput placeholder="Job title" />
+            <View style={{ width: '90%' }}>
+              <CommonInput
+                placeholder="Job title"
+                value={job}
+                onChangeText={(e: string) => setJob(e?.trim())}
+              />
             </View>
           </View>
           <SizeBox size={10} />
@@ -136,8 +196,12 @@ const EditProfile = ({navigation}: any) => {
               color={Colors.white}
               size={21}
             />
-            <View style={{width: '90%'}}>
-              <CommonInput placeholder="Add your area" />
+            <View style={{ width: '90%' }}>
+              <CommonInput
+                placeholder="Add your area"
+                value={userLocation}
+                onChangeText={(e: string) => setUserLocation(e)}
+              />
             </View>
           </View>
           <SizeBox size={10} />
@@ -150,7 +214,7 @@ const EditProfile = ({navigation}: any) => {
               color={Colors.white}
               size={21}
             />
-            <View style={{width: '90%'}}>
+            <View style={{ width: '90%' }}>
               <CommonInputBtn
                 title="Select all languages you speak"
                 onPress={() => setModalVisibleLang(true)}
@@ -167,9 +231,9 @@ const EditProfile = ({navigation}: any) => {
               color={Colors.white}
               size={21}
             />
-            <View style={{width: '90%'}}>
+            <View style={{ width: '90%' }}>
               <CommonInputBtn
-                title="Drink"
+                title={selectedDrink?.length > 0 ? selectedDrink : "Drink"}
                 onPress={() => setModalVisibleDrink(true)}
               />
             </View>
@@ -184,9 +248,9 @@ const EditProfile = ({navigation}: any) => {
               color={Colors.white}
               size={21}
             />
-            <View style={{width: '90%'}}>
+            <View style={{ width: '90%' }}>
               <CommonInputBtn
-                title="Smoking"
+                title={selectedSmoke?.length > 0 ? selectedSmoke : "Smoking"}
                 onPress={() => setModalVisibleSmoking(true)}
               />
             </View>
@@ -195,9 +259,14 @@ const EditProfile = ({navigation}: any) => {
           <Text style={styles.label}>Bio</Text>
           <SizeBox size={5} />
           <View style={styles.inputContainer}>
-            <View style={{width: '10%'}} />
-            <View style={{width: '90%'}}>
-              <CommonInput placeholder="Bio" multiline={true} />
+            <View style={{ width: '10%' }} />
+            <View style={{ width: '90%' }}>
+              <CommonInput
+                placeholder="Bio"
+                multiline={true}
+                value={userBio}
+                onChangeText={(e: string) => setUserBio(e)}
+              />
             </View>
           </View>
           <View
@@ -243,14 +312,15 @@ const EditProfile = ({navigation}: any) => {
             <View style={styles.modalContainer}>
               <FlatList
                 data={
-                  modalVisible ? genders : modalVisibleLang ? lang : drinkList
+                  modalVisible ? genders : modalVisibleLang ? languages : drinkList
                 }
-                renderItem={({item, index}) => {
+                keyExtractor={(item, index) => index?.toString()}
+                renderItem={({ item, index }) => {
                   const lengthFlag = modalVisible
                     ? genders?.length
                     : modalVisibleLang
-                    ? lang?.length
-                    : drinkList?.length;
+                      ? lang?.length
+                      : drinkList?.length;
                   return (
                     <View
                       style={[
@@ -266,11 +336,11 @@ const EditProfile = ({navigation}: any) => {
                           fontWeight: '600',
                           fontFamily: fontFamily.time_regular,
                         }}>
-                        {item}
+                        {item?.name ? item?.name : item}
                       </Text>
                       <VectorIcon
                         groupName="MaterialCommunityIcons"
-                        name="radiobox-blank"
+                        name={(modalVisible ? selectedGender == item : modalVisibleDrink ? selectedDrink == item : selectedSmoke == item) ? "radiobox-marked" : "radiobox-blank"}
                         size={18}
                       />
                     </View>

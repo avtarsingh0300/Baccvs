@@ -1,10 +1,11 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {clearUserData} from './auth';
+import { clearUserData } from './auth';
 import types from '../../Redux/types';
 import store from '../../Redux/store';
 
 interface UserData {
+  token: string;
   access_token: string;
 }
 export async function getHeaders() {
@@ -13,7 +14,7 @@ export async function getHeaders() {
     if (userData) {
       const parsedUserData: UserData = JSON.parse(userData);
       return {
-        Authorization: `Bearer ${parsedUserData?.access_token}`,
+        Authorization: `Bearer ${parsedUserData?.token}`,
       };
     }
     return {};
@@ -47,9 +48,9 @@ export function apiReq(
       };
     }
 
-    await axios[method](endPoint, recieve_data, {headers})
+    await axios[method](endPoint, recieve_data, { headers })
       .then((result: any) => {
-        const {data} = result;
+        const { data } = result;
         data.status = result.status;
         if (data.status === false) {
           rej(data);
@@ -63,7 +64,7 @@ export function apiReq(
           (error && error?.response && error?.response?.status === 403) ||
           error?.response?.data?.message == 'Unauthenticated'
         ) {
-          const {dispatch} = store;
+          const { dispatch } = store;
           dispatch({
             type: types?.CLEAR_REDUX_STATE,
             payload: {},
@@ -80,7 +81,7 @@ export function apiReq(
           }
           rej(error?.response?.data);
         } else {
-          rej({message: 'Network Error', msg: 'Network Error'});
+          rej({ message: 'Network Error', msg: 'Network Error' });
         }
       });
   });
