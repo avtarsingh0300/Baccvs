@@ -7,8 +7,9 @@ import {
   ImageBackground,
   FlatList,
   Platform,
+  PermissionsAndroid,
 } from 'react-native';
-import React, {useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
 import styles from './style';
@@ -30,7 +31,10 @@ import Swiper from 'react-native-swiper';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
+import Geolocation from 'react-native-geolocation-service';
+import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 const HomeScreen = ({navigation}: any) => {
+  const [location, setLocation] = useState(null);
   const swiper: any = useRef();
   const [value, setValue] = useState(new Date());
   const [week, setWeek] = useState(0);
@@ -62,6 +66,7 @@ const HomeScreen = ({navigation}: any) => {
   const onMapPress = () => {
     navigation.navigate(NavigationStrings.MapScreen);
   };
+
   const renderItem = () => (
     <TouchableOpacity activeOpacity={0.8} onPress={onEventDetails}>
       <View>

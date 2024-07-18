@@ -42,13 +42,13 @@
 		<key>NSCameraUsageDescription</key>
 		<string>Baccvs app need access to your camera to upload files</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>We need your location to show you relevant data.</string>
+		<string>Baccvs app need your location to show you relevant data.</string>
 		<key>NSLocationAlwaysUsageDescription</key>
-		<string>We need your location to show you relevant data.</string>
+		<string>Baccvs app need your location to show you relevant data.</string>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>Baccvs app need your location to show you relevant data.</string>
 		<key>NSPhotoLibraryAddUsageDescription</key>
-        <string>Your message to the user when the photo library is accessed for saving images</string>
-		<key>NSLocationWhenInUseUsageDescription</key>
-		<string></string>
+		<string>Your message to the user when the photo library is accessed for saving images</string>
 		<key>UIAppFonts</key>
 		<array>
 			<string>AntDesign.ttf</string>
