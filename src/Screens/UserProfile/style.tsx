@@ -1,4 +1,4 @@
-import {Platform, StyleSheet} from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 import {
   height,
@@ -6,7 +6,7 @@ import {
   moderateScaleVertical,
   textScale,
 } from '../../Utilities/Styles/responsiveSize';
-import {Colors} from '../../Utilities/Styles/colors';
+import { Colors } from '../../Utilities/Styles/colors';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 
@@ -73,7 +73,7 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     paddingHorizontal: moderateScale(10),
     marginTop: moderateScaleVertical(20),
   },
