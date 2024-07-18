@@ -65,5 +65,29 @@ export const styles = StyleSheet.create({
         textAlign: 'center',
         color: Colors.white,
     },
+    langContainer: {
+        padding: 7,
+        paddingLeft: 18,
+        borderWidth: 1,
+        borderLeftWidth: 1,
+        borderColor: Colors.white,
+        borderRadius: 8,
+        flexWrap: "wrap",
+        flexDirection: "row"
+    },
+    langItem: {
+        padding: 7,
+        borderWidth: 1,
+        borderColor: Colors.white,
+        borderRadius: 8,
+        margin: 5
+    },
+    langItemText: {
+        color: Colors.greyTxt,
+        fontFamily: fontFamily.time_regular,
+        padding: 0,
+        fontWeight: '400',
+        fontSize: textScale(14),
+    }
 });
 
