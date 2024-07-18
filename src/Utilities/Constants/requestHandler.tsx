@@ -5,6 +5,7 @@ import types from '../../Redux/types';
 import store from '../../Redux/store';
 
 interface UserData {
+  token: string;
   access_token: string;
 }
 export async function getHeaders() {
@@ -13,7 +14,7 @@ export async function getHeaders() {
     if (userData) {
       const parsedUserData: UserData = JSON.parse(userData);
       return {
-        Authorization: `Bearer ${parsedUserData?.access_token}`,
+        Authorization: `Bearer ${parsedUserData?.token}`,
       };
     }
     return {};

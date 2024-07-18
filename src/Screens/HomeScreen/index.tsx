@@ -16,6 +16,7 @@ import styles from './style';
 import {
   Drawer,
   ImageComponent,
+  Loadingcomponent,
   SizeBox,
   dummydata,
 } from '../../Utilities/Component/Helpers';
@@ -31,14 +32,18 @@ import Swiper from 'react-native-swiper';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
-import Geolocation from 'react-native-geolocation-service';
-import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import Geolocation from '@react-native-community/geolocation';
+import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import {getHomedata} from '../../Utilities/Constants/auth';
 const HomeScreen = ({navigation}: any) => {
   const [location, setLocation] = useState(null);
   const swiper: any = useRef();
   const [value, setValue] = useState(new Date());
   const [week, setWeek] = useState(0);
   const [modalVisible, SetModalVisible] = useState(false);
+  const [loading, SetLoading] = useState(false);
+  const [eventData, SetEventData] = useState([]);
+  const [memberData, SetMemberData] = useState([]);
   const weeks = useMemo(() => {
     const start = moment().add(week, 'weeks').startOf('week');
     return [-1, 0, 1].map(adj => {
@@ -66,8 +71,79 @@ const HomeScreen = ({navigation}: any) => {
   const onMapPress = () => {
     navigation.navigate(NavigationStrings.MapScreen);
   };
+  useEffect(() => {
+    const requestLocationPermission = async () => {
+      if (Platform.OS === 'android') {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            {
+              title: 'Location Permission',
+              message: 'This app needs access to your location',
+              buttonNeutral: 'Ask Me Later',
+              buttonNegative: 'Cancel',
+              buttonPositive: 'OK',
+            },
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            getLocation();
+          } else {
+            console.log('Location permission denied');
+          }
+        } catch (err) {
+          console.warn(err);
+        }
+      } else if (Platform.OS === 'ios') {
+        try {
+          const result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+          if (result === RESULTS.GRANTED) {
+            getLocation();
+          } else {
+            console.log('Location permission denied');
+          }
+        } catch (err) {
+          console.warn(err);
+        }
+      }
+    };
 
-  const renderItem = () => (
+    requestLocationPermission();
+  }, []);
+
+  const getLocation = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        SetLoading(true);
+        setLocation(position);
+        console.log(position.coords);
+        setTimeout(() => {
+          getdata(position.coords.latitude, position.coords.longitude);
+        }, 500);
+      },
+      error => {
+        SetLoading(false);
+        console.log(error.code, error.message);
+      },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+    );
+  };
+  const getdata = (lat: any, long: any) => {
+    SetLoading(true);
+    getHomedata(lat, long)
+      .then(res => {
+        SetLoading(false);
+        SetEventData(res.events);
+        SetMemberData(res.events.members);
+        console.log(res.events, 'ress -----');
+      })
+      .catch(err => {
+        SetLoading(false);
+        console.log(err);
+      });
+  };
+
+  const renderItem = ({item}: any) => (
+    // console.log(item)
     <TouchableOpacity activeOpacity={0.8} onPress={onEventDetails}>
       <View>
         <View style={styles.listContainer}>
@@ -91,7 +167,7 @@ const HomeScreen = ({navigation}: any) => {
                 ...commonStyles.font16Regular,
                 color: Colors.Pink,
               }}>
-              One life
+              {item.event_name}
             </Text>
             <Text style={styles.ontxt}>
               Ongoing{` `}
@@ -99,49 +175,67 @@ const HomeScreen = ({navigation}: any) => {
                 style={{
                   color: Colors.white,
                 }}>
-                - 05h00
+                - {item.duration}
               </Text>
             </Text>
           </View>
-          <ImageBackground source={ImagePath.ProfileImg} style={styles.backimg}>
+          <ImageBackground
+            source={{uri: item.thumbnail_urls[0]}}
+            style={styles.backimg}>
             <View style={styles.flexinner}>
               <ImageComponent
-                source={ImagePath.ProfileImg}
+                source={{uri: item?.members[0]?.imageUrl}}
                 style={styles.shortimg}
               />
-              <ImageComponent
-                source={ImagePath.ProfileImg}
-                style={[
-                  styles.extraimg,
-                  {
-                    marginLeft: 5,
-                  },
-                ]}
-              />
-              <ImageComponent
-                source={ImagePath.ProfileImg}
-                style={[
-                  styles.extraimg,
-                  {
-                    right: 10,
-                  },
-                ]}
-              />
-              <Text
-                style={{
-                  ...commonStyles.font16Regular,
-                  alignSelf: 'flex-end',
-                  color: Colors.white,
-                }}>
-                +8
-              </Text>
+              {item?.members[1]?.imageUrl ? (
+                <ImageComponent
+                  source={{uri: item?.members[1]?.imageUrl}}
+                  style={[
+                    styles.extraimg,
+                    {
+                      marginLeft: 5,
+                    },
+                  ]}
+                />
+              ) : null}
+
+              {item?.members[2]?.imageUrl ? (
+                <ImageComponent
+                  source={{uri: item?.members[2]?.imageUrl}}
+                  style={[
+                    styles.extraimg,
+                    {
+                      right: 10,
+                    },
+                  ]}
+                />
+              ) : null}
+
+              {item.members.length > 3 ? (
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    alignSelf: 'flex-end',
+                    color: Colors.white,
+                  }}>
+                  +{item.members.length - 3}
+                </Text>
+              ) : null}
             </View>
           </ImageBackground>
         </View>
         <SizeBox size={14} />
-        <View style={styles.music}>
-          <Text style={styles.musictxt}>Progressive</Text>
-        </View>
+        <FlatList
+          data={item.music_type}
+          horizontal
+          style={{alignSelf: 'center'}}
+          renderItem={({item}) => (
+            <View style={styles.music}>
+              <Text style={styles.musictxt}>{item}</Text>
+            </View>
+          )}
+        />
+
         <View style={styles.backContainer}>
           <View style={styles.flex}>
             <VectorIcon groupName="Feather" name="users" size={15} />
@@ -150,7 +244,8 @@ const HomeScreen = ({navigation}: any) => {
                 ...commonStyles.font12Regular,
                 color: Colors.red,
               }}>
-              {` `}3 spots left
+              {` `}
+              {item.spot} spots
             </Text>
           </View>
           <Text
@@ -166,7 +261,8 @@ const HomeScreen = ({navigation}: any) => {
                 ...commonStyles.font12Regular,
                 color: Colors.white,
               }}>
-              2 km{` `}
+              {item.distance}
+              {` `}
             </Text>
             <VectorIcon groupName="Feather" name="map-pin" size={15} />
           </View>
@@ -182,6 +278,7 @@ const HomeScreen = ({navigation}: any) => {
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
       <SafeAreaView>
+        <Loadingcomponent isVisible={loading} />
         <View style={styles.headerContainer}>
           <TouchableOpacity onPress={showDrawer}>
             <ImageComponent
@@ -298,7 +395,7 @@ const HomeScreen = ({navigation}: any) => {
             marginBottom:
               Platform.OS === 'android' ? height / 3.5 : height / 3.6,
           }}
-          data={dummydata}
+          data={eventData}
           renderItem={renderItem}
         />
         <Drawer
