@@ -39,6 +39,9 @@ import languages from '../../Utilities/Constants';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import Modal from 'react-native-modal';
 import ImagePicker from 'react-native-image-crop-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import Geolocation from '@react-native-community/geolocation';
+
 const AddScreen = ({navigation}: any) => {
   const swiper: any = useRef();
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -55,16 +58,21 @@ const AddScreen = ({navigation}: any) => {
   const [selectedVenue, setSelectedVenue] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
   const [selectedVideos, setSelectedVideos] = useState([]);
+  const [showStartPicker, setShowStartPicker] = useState(false);
+  const [showEndPicker, setShowEndPicker] = useState(false);
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [userLocation, setUserLocation] = useState(null);
   const [pin, setPin] = useState({
     latitude: 37.78825,
     longitude: -122.4324,
   });
-  const initialRegion = {
-    latitude: 37.78825,
-    longitude: -122.4324,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  };
+  // const initialRegion = {
+  //   latitude: 37.78825,
+  //   longitude: -122.4324,
+  //   latitudeDelta: 0.0922,
+  //   longitudeDelta: 0.0421,
+  // };
 
   const weeks = useMemo(() => {
     const start = moment().add(week, 'weeks').startOf('week');
@@ -91,6 +99,7 @@ const AddScreen = ({navigation}: any) => {
   };
 
   useEffect(() => {
+    getLocation();
     getEventsTypes();
   }, []);
 
@@ -191,6 +200,47 @@ const AddScreen = ({navigation}: any) => {
       prevVideos.filter(video => video.id !== id),
     );
   };
+  const onStartChange = (event: any, selectedDate: any) => {
+    setShowStartPicker(false);
+    const currentDate = selectedDate || new Date();
+    setStartTime(currentDate.toLocaleTimeString());
+  };
+
+  const onEndChange = (event: any, selectedDate: any) => {
+    setShowEndPicker(false);
+    const currentDate = selectedDate || new Date();
+    setEndTime(currentDate.toLocaleTimeString());
+  };
+
+  const getLocation = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        setUserLocation(position?.coords);
+        console.log(position, 'hghg');
+      },
+      error => {
+        console.log(error.code, error.message, 'jiwhd');
+      },
+      {
+        // enableHighAccuracy: true,
+        timeout: 15000,
+        // maximumAge: 10000
+      },
+    );
+  };
+  const initialRegion = userLocation
+    ? {
+        latitude: userLocation.latitude,
+        longitude: userLocation.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      }
+    : {
+        latitude: 37.78825,
+        longitude: -122.4324,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      };
   return (
     <LinearGradient
       colors={[Colors.Linear, Colors.LinearBlack]}
@@ -238,12 +288,14 @@ const AddScreen = ({navigation}: any) => {
               style={styles.map}
               // customMapStyle={mapStyle}
               onPress={handleMapPress}
-              initialRegion={initialRegion}>
-              <Marker
-                coordinate={pin}
-                title={'My Marker'}
-                description={'Some description'}
-              />
+              region={userLocation ? initialRegion : undefined}>
+              {userLocation && (
+                <Marker
+                  coordinate={userLocation}
+                  title={'My Marker'}
+                  description={''}
+                />
+              )}
             </MapView>
           </View>
           <View style={styles.picker}>
@@ -314,7 +366,9 @@ const AddScreen = ({navigation}: any) => {
 
           <SizeBox size={10} />
           <View style={styles.timecon}>
-            <TouchableOpacity style={styles.startbtn}>
+            <TouchableOpacity
+              onPress={() => setShowStartPicker(true)}
+              style={styles.startbtn}>
               <Text
                 style={{...commonStyles.font12Regualar2, color: Colors.Pink}}>
                 Start
@@ -322,9 +376,18 @@ const AddScreen = ({navigation}: any) => {
             </TouchableOpacity>
             <Text
               style={{...commonStyles.font12Regualar2, color: Colors.white}}>
-              Time
+              {startTime ? startTime : '0:0:0'}
             </Text>
-            <TouchableOpacity style={styles.startbtn}>
+            <Text style={{...commonStyles.font12Regualar2, color: Colors.Pink}}>
+              -
+            </Text>
+            <Text
+              style={{...commonStyles.font12Regualar2, color: Colors.white}}>
+              {endTime ? endTime : '0:0:0'}
+            </Text>
+            <TouchableOpacity
+              style={styles.startbtn}
+              onPress={() => setShowEndPicker(true)}>
               <Text
                 style={{...commonStyles.font12Regualar2, color: Colors.Pink}}>
                 End
@@ -880,6 +943,22 @@ const AddScreen = ({navigation}: any) => {
             </View>
           </View>
         </Modal>
+        {showStartPicker && (
+          <DateTimePicker
+            value={new Date()}
+            mode="time"
+            display="default"
+            onChange={onStartChange}
+          />
+        )}
+        {showEndPicker && (
+          <DateTimePicker
+            value={new Date()}
+            mode="time"
+            display="default"
+            onChange={onEndChange}
+          />
+        )}
       </SafeAreaView>
     </LinearGradient>
   );
