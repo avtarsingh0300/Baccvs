@@ -9,9 +9,9 @@ import {
   Platform,
   PermissionsAndroid,
 } from 'react-native';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import {Colors} from '../../Utilities/Styles/colors';
+import { Colors } from '../../Utilities/Styles/colors';
 import styles from './style';
 import {
   Drawer,
@@ -33,9 +33,9 @@ import fontFamily from '../../Utilities/Styles/fontFamily';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import Geolocation from '@react-native-community/geolocation';
-import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
-import {getHomedata} from '../../Utilities/Constants/auth';
-const HomeScreen = ({navigation}: any) => {
+import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { getHomedata } from '../../Utilities/Constants/auth';
+const HomeScreen = ({ navigation }: any) => {
   const [location, setLocation] = useState(null);
   const swiper: any = useRef();
   const [value, setValue] = useState(new Date());
@@ -47,7 +47,7 @@ const HomeScreen = ({navigation}: any) => {
   const weeks = useMemo(() => {
     const start = moment().add(week, 'weeks').startOf('week');
     return [-1, 0, 1].map(adj => {
-      return Array.from({length: 7}).map((_, index) => {
+      return Array.from({ length: 7 }).map((_, index) => {
         const date = moment(start).add(adj, 'week').add(index, 'day');
         return {
           weekday: date.format('ddd'),
@@ -124,7 +124,11 @@ const HomeScreen = ({navigation}: any) => {
         SetLoading(false);
         console.log(error.code, error.message);
       },
-      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+      {
+        // enableHighAccuracy: true,
+        timeout: 15000,
+        // maximumAge: 10000
+      },
     );
   };
   const getdata = (lat: any, long: any) => {
@@ -134,7 +138,7 @@ const HomeScreen = ({navigation}: any) => {
         SetLoading(false);
         SetEventData(res.events);
         SetMemberData(res.events.members);
-        console.log(res.events, 'ress -----');
+        // console.log(res.events, 'ress -----');
       })
       .catch(err => {
         SetLoading(false);
@@ -142,13 +146,13 @@ const HomeScreen = ({navigation}: any) => {
       });
   };
 
-  const renderItem = ({item}: any) => (
+  const renderItem = ({ item }: any) => (
     // console.log(item)
     <TouchableOpacity activeOpacity={0.8} onPress={onEventDetails}>
       <View>
         <View style={styles.listContainer}>
           <View style={styles.backContainer}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <ImageComponent
                 source={ImagePath.priceTag}
                 resizeMode="contain"
@@ -180,16 +184,16 @@ const HomeScreen = ({navigation}: any) => {
             </Text>
           </View>
           <ImageBackground
-            source={{uri: item?.thumbnail_urls[0]}}
+            source={{ uri: item?.thumbnail_urls[0] }}
             style={styles.backimg}>
             <View style={styles.flexinner}>
               <ImageComponent
-                source={{uri: item?.members[0]?.imageUrl}}
+                source={{ uri: item?.members[0]?.imageUrl }}
                 style={styles.shortimg}
               />
               {item?.members[1]?.imageUrl ? (
                 <ImageComponent
-                  source={{uri: item?.members[1]?.imageUrl}}
+                  source={{ uri: item?.members[1]?.imageUrl }}
                   style={[
                     styles.extraimg,
                     {
@@ -201,7 +205,7 @@ const HomeScreen = ({navigation}: any) => {
 
               {item?.members[2]?.imageUrl ? (
                 <ImageComponent
-                  source={{uri: item?.members[2]?.imageUrl}}
+                  source={{ uri: item?.members[2]?.imageUrl }}
                   style={[
                     styles.extraimg,
                     {
@@ -228,8 +232,8 @@ const HomeScreen = ({navigation}: any) => {
         <FlatList
           data={item.music_type}
           horizontal
-          style={{alignSelf: 'center'}}
-          renderItem={({item}) => (
+          style={{ alignSelf: 'center' }}
+          renderItem={({ item }) => (
             <View style={styles.music}>
               <Text style={styles.musictxt}>{item}</Text>
             </View>
@@ -274,8 +278,8 @@ const HomeScreen = ({navigation}: any) => {
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
-      start={{x: 0, y: 0}}
-      end={{x: 1.3, y: 0.9}}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1.3, y: 0.9 }}
       style={styles.LinearConatiner}>
       <SafeAreaView>
         <Loadingcomponent isVisible={loading} />
@@ -297,19 +301,19 @@ const HomeScreen = ({navigation}: any) => {
               name="map-marker-radius-outline"
               size={25}
               onPress={onMapPress}
-              style={{right: moderateScale(25)}}
+              style={{ right: moderateScale(25) }}
             />
             <VectorIcon
               groupName="Fontisto"
               name="bell"
               onPress={onNoti}
               size={25}
-              style={{right: moderateScale(12)}}
+              style={{ right: moderateScale(12) }}
             />
             <TouchableOpacity onPress={onFilter}>
               <ImageComponent
                 source={ImagePath.filterIcon}
-                style={{width: 30, height: 30}}
+                style={{ width: 30, height: 30 }}
                 resizeMode="contain"
               />
             </TouchableOpacity>
@@ -354,14 +358,14 @@ const HomeScreen = ({navigation}: any) => {
                           <Text
                             style={[
                               styles.itemDate,
-                              isActive && {color: Colors.white},
+                              isActive && { color: Colors.white },
                             ]}>
                             {item.date.getDate()}
                           </Text>
                           <Text
                             style={[
                               styles.itemWeekday,
-                              isActive && {color: Colors.white},
+                              isActive && { color: Colors.white },
                             ]}>
                             {item.weekday}
                           </Text>
@@ -381,7 +385,7 @@ const HomeScreen = ({navigation}: any) => {
             {moment(value).format('DD MMMM YYYY')} (18)
           </Text>
           <TouchableOpacity style={styles.allBtn}>
-            <Text style={{color: Colors.red, ...commonStyles.font12Regular}}>
+            <Text style={{ color: Colors.red, ...commonStyles.font12Regular }}>
               All
             </Text>
           </TouchableOpacity>
