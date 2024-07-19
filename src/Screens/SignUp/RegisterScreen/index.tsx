@@ -5,10 +5,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import styles from './style';
 import LinearGradient from 'react-native-linear-gradient';
-import {Colors} from '../../../Utilities/Styles/colors';
+import { Colors } from '../../../Utilities/Styles/colors';
 import commonStyles from '../../../Utilities/Styles/commonStyles';
 import {
   CommonBtn,
@@ -18,12 +18,12 @@ import {
   showError,
   SizeBox,
 } from '../../../Utilities/Component/Helpers';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import useScroll from '../../../Utilities/Component/hooks/useScroll';
 import fontFamily from '../../../Utilities/Styles/fontFamily';
 import VectorIcon from '../../../Utilities/Component/vectorIcons';
 import Modal from 'react-native-modal';
-import {height} from '../../../Utilities/Styles/responsiveSize';
+import { height } from '../../../Utilities/Styles/responsiveSize';
 import NavigationStrings from '../../../Utilities/Constants/NavigationStrings';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
@@ -32,7 +32,7 @@ import languages from '../../../Utilities/Constants';
 const RegisterScreen = (props: any) => {
   const scrollConfig = useScroll();
   const [h, setH] = useState(0);
-  const {focusAction, scrollRef} = scrollConfig;
+  const { focusAction, scrollRef } = scrollConfig;
   const [selectedGender, setSelectedGender] = useState('');
   const [selectedLang, setSelectedLang] = useState([]);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -77,7 +77,7 @@ const RegisterScreen = (props: any) => {
       password: userPassword,
       phone_number: props.route.params.phone,
     };
-    props.navigation.navigate(NavigationStrings.UploadImage, {data: data});
+    props.navigation.navigate(NavigationStrings.UploadImage, { data: data });
   };
 
   const selectModalHandler = (item: any) => {
@@ -99,20 +99,20 @@ const RegisterScreen = (props: any) => {
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
-      start={{x: 0, y: 0}}
-      end={{x: 1.3, y: 0.9}}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1.3, y: 0.9 }}
       style={styles.LinearConatiner}>
       <SafeAreaView>
         <ProgressHeader onPress={onBack} value={4} />
         <KeyboardAwareScrollView
           keyboardShouldPersistTaps="handled"
-          style={{flexGrow: 1, marginBottom: 50}}
+          style={{ flexGrow: 1, marginBottom: 50 }}
           onLayout={e => setH(e.nativeEvent.layout.height)}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           ref={ref => (scrollRef.current = ref)}>
           <SizeBox size={15} />
-          <Text style={{...commonStyles.font18W700Center}}>Sign up</Text>
+          <Text style={{ ...commonStyles.font18W700Center }}>Sign up</Text>
           <SizeBox size={10} />
           <Text
             style={{
@@ -185,17 +185,17 @@ const RegisterScreen = (props: any) => {
               backdropTransitionInTiming={600}
               backdropTransitionOutTiming={600}>
               <View
-                style={{height: height / 5, width: '95%', alignSelf: 'center'}}>
+                style={{ height: height / 5, width: '95%', alignSelf: 'center' }}>
                 <View style={styles.modalContainer}>
                   <FlatList
                     data={modalLanguageVisible ? languages : genders}
-                    renderItem={({item, index}) => {
+                    renderItem={({ item, index }) => {
                       const filterData = selectedLang?.filter(
                         (i: any) => i == item?.name,
                       );
                       console.log(
                         (selectedGender || filterData[0]) ==
-                          (item?.name ? item?.name : item),
+                        (item?.name ? item?.name : item),
                         '(selectedGender || filterData[0]) == (item?.name ? item?.name : item)',
                       );
                       return (
@@ -208,9 +208,9 @@ const RegisterScreen = (props: any) => {
                             {
                               borderBottomWidth:
                                 index ==
-                                (modalLanguageVisible
-                                  ? languages?.length - 1
-                                  : genders?.length - 1)
+                                  (modalLanguageVisible
+                                    ? languages?.length - 1
+                                    : genders?.length - 1)
                                   ? 0
                                   : 1,
                             },
@@ -229,7 +229,7 @@ const RegisterScreen = (props: any) => {
                             groupName="MaterialCommunityIcons"
                             name={
                               (selectedGender || filterData[0]) ==
-                              (item?.name ? item?.name : item)
+                                (item?.name ? item?.name : item)
                                 ? 'radiobox-marked'
                                 : 'radiobox-blank'
                             }

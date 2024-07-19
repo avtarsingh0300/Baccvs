@@ -45,12 +45,17 @@ const UserProfile = ({ navigation }: any) => {
   };
 
   useEffect(() => {
-    getUserData();
+    const _unsubscribe = navigation.addListener('focus', () => {
+      getUserData();
+    });
+    return () => {
+      _unsubscribe();
+    };
   }, []);
 
   const getUserData = async () => {
     getUserProfile().then(res => {
-      console.log(res, "res in getUserProfile");
+      // console.log(res, "res in getUserProfile");
       setUserData(res);
     }).catch(err => {
       console.log(err, "err in getUserProfile");
@@ -189,7 +194,7 @@ const UserProfile = ({ navigation }: any) => {
               size={20}
               color={Colors.Pink}
             />
-            <Text style={styles.rowText}>Eiffel Tower</Text>
+            <Text style={styles.rowText}>{userData?.location ? userData?.location : "Eiffel Tower"}</Text>
             <View
               style={{
                 height: moderateScaleVertical(25),

@@ -10,14 +10,14 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
-import React, {useMemo, useRef, useState} from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import {
   moderateScale,
   moderateScaleVertical,
   textScale,
 } from '../../Utilities/Styles/responsiveSize';
-import {Colors} from '../../Utilities/Styles/colors';
+import { Colors } from '../../Utilities/Styles/colors';
 import LinearGradient from 'react-native-linear-gradient';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import {
@@ -26,19 +26,23 @@ import {
   SizeBox,
   dummydata,
 } from '../../Utilities/Component/Helpers';
-import {ImageBackground} from 'react-native';
+import { ImageBackground } from 'react-native';
 import moment from 'moment';
 import Swiper from 'react-native-swiper';
 import styles from './style';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
-import MapView, {Marker} from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 
-const AddScreen = ({navigation}: any) => {
+const AddScreen = ({ navigation }: any) => {
   const swiper: any = useRef();
 
   const [value, setValue] = useState(new Date());
   const [week, setWeek] = useState(0);
   const [modalVisible, SetModalVisible] = useState(false);
+  const [pin, setPin] = useState({
+    latitude: 37.78825,
+    longitude: -122.4324,
+  });
   const initialRegion = {
     latitude: 37.78825,
     longitude: -122.4324,
@@ -49,7 +53,7 @@ const AddScreen = ({navigation}: any) => {
   const weeks = useMemo(() => {
     const start = moment().add(week, 'weeks').startOf('week');
     return [-1, 0, 1].map(adj => {
-      return Array.from({length: 7}).map((_, index) => {
+      return Array.from({ length: 7 }).map((_, index) => {
         const date = moment(start).add(adj, 'week').add(index, 'day');
         return {
           weekday: date.format('ddd'),
@@ -58,32 +62,40 @@ const AddScreen = ({navigation}: any) => {
       });
     });
   }, [week]);
+
   const onCreate = () => {
     Alert.alert('Event create  !!');
+  };
+
+  const handleMapPress = (event) => {
+    const { latitude, longitude } = event.nativeEvent.coordinate;
+    console.log(latitude, "latitude");
+    console.log(longitude, "longitude");
+    setPin({ latitude, longitude });
   };
   return (
     <LinearGradient
       colors={[Colors.Linear, Colors.LinearBlack]}
-      start={{x: 0, y: 0}}
-      end={{x: 1.3, y: 0.9}}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1.3, y: 0.9 }}
       style={styles.LinearConatiner}>
       <SafeAreaView>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={{...commonStyles.Heading20font}}>Create Event</Text>
+          <Text style={{ ...commonStyles.Heading20font }}>Create Event</Text>
           <SizeBox size={20} />
           <ImageBackground
             source={ImagePath.eventback}
             resizeMode="contain"
             style={styles.backimg}>
             <Text
-              style={{...commonStyles.font12Regualar2, color: Colors.green}}>
+              style={{ ...commonStyles.font12Regualar2, color: Colors.green }}>
               Event Name
             </Text>
           </ImageBackground>
           <SizeBox size={10} />
           <TouchableOpacity activeOpacity={0.7} style={styles.locbtn}>
             <Text
-              style={{...commonStyles.font12Regualar2, color: Colors.white}}>
+              style={{ ...commonStyles.font12Regualar2, color: Colors.white }}>
               Add event location
             </Text>
           </TouchableOpacity>
@@ -95,9 +107,10 @@ const AddScreen = ({navigation}: any) => {
             <MapView
               style={styles.map}
               // customMapStyle={mapStyle}
+              onPress={handleMapPress}
               initialRegion={initialRegion}>
               <Marker
-                coordinate={{latitude: 37.78825, longitude: -122.4324}}
+                coordinate={pin}
                 title={'My Marker'}
                 description={'Some description'}
               />
@@ -142,14 +155,14 @@ const AddScreen = ({navigation}: any) => {
                             <Text
                               style={[
                                 styles.itemDate,
-                                isActive && {color: Colors.white},
+                                isActive && { color: Colors.white },
                               ]}>
                               {item.date.getDate()}
                             </Text>
                             <Text
                               style={[
                                 styles.itemWeekday,
-                                isActive && {color: Colors.white},
+                                isActive && { color: Colors.white },
                               ]}>
                               {item.weekday}
                             </Text>
@@ -166,23 +179,23 @@ const AddScreen = ({navigation}: any) => {
           <View style={styles.timecon}>
             <TouchableOpacity style={styles.startbtn}>
               <Text
-                style={{...commonStyles.font12Regualar2, color: Colors.Pink}}>
+                style={{ ...commonStyles.font12Regualar2, color: Colors.Pink }}>
                 Start
               </Text>
             </TouchableOpacity>
             <Text
-              style={{...commonStyles.font12Regualar2, color: Colors.white}}>
+              style={{ ...commonStyles.font12Regualar2, color: Colors.white }}>
               Time
             </Text>
             <TouchableOpacity style={styles.startbtn}>
               <Text
-                style={{...commonStyles.font12Regualar2, color: Colors.Pink}}>
+                style={{ ...commonStyles.font12Regualar2, color: Colors.Pink }}>
                 End
               </Text>
             </TouchableOpacity>
           </View>
           <SizeBox size={20} />
-          <View style={{paddingHorizontal: moderateScale(20)}}>
+          <View style={{ paddingHorizontal: moderateScale(20) }}>
             <TouchableOpacity style={styles.cardBtn}>
               <VectorIcon
                 groupName="SimpleLineIcons"
@@ -191,7 +204,7 @@ const AddScreen = ({navigation}: any) => {
                 color={Colors.Pink}
               />
               <Text
-                style={{...commonStyles.font12Regualar2, color: Colors.white}}>
+                style={{ ...commonStyles.font12Regualar2, color: Colors.white }}>
                 {`  `}+33 (___) ___ _____
               </Text>
             </TouchableOpacity>
@@ -204,7 +217,7 @@ const AddScreen = ({navigation}: any) => {
                 color={Colors.Pink}
               />
               <Text
-                style={{...commonStyles.font12Regualar2, color: Colors.white}}>
+                style={{ ...commonStyles.font12Regualar2, color: Colors.white }}>
                 {`  `}Number of people allowed
               </Text>
             </TouchableOpacity>
@@ -217,7 +230,7 @@ const AddScreen = ({navigation}: any) => {
                 color={Colors.Pink}
               />
               <Text
-                style={{...commonStyles.font12Regualar2, color: Colors.white}}>
+                style={{ ...commonStyles.font12Regualar2, color: Colors.white }}>
                 {`  `}Music Style
               </Text>
             </TouchableOpacity>
@@ -233,7 +246,7 @@ const AddScreen = ({navigation}: any) => {
                 }}
               />
               <Text
-                style={{...commonStyles.font12Regualar2, color: Colors.white}}>
+                style={{ ...commonStyles.font12Regualar2, color: Colors.white }}>
                 {`  `}Free / Chargeable
               </Text>
             </TouchableOpacity>
@@ -248,13 +261,13 @@ const AddScreen = ({navigation}: any) => {
                 }}
               />
               <Text
-                style={{...commonStyles.font12Regualar2, color: Colors.white}}>
+                style={{ ...commonStyles.font12Regualar2, color: Colors.white }}>
                 {`  `}Languages
               </Text>
             </TouchableOpacity>
             <SizeBox size={10} />
             <View style={styles.timecon}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text
                   style={{
                     ...commonStyles.font12Regualar2,
@@ -267,10 +280,10 @@ const AddScreen = ({navigation}: any) => {
                   name="questioncircleo"
                   color={Colors.Pink}
                   size={15}
-                  style={{marginLeft: moderateScale(10)}}
+                  style={{ marginLeft: moderateScale(10) }}
                 />
               </View>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text
                   style={{
                     ...commonStyles.font12Regualar2,
@@ -283,7 +296,7 @@ const AddScreen = ({navigation}: any) => {
                   name="questioncircleo"
                   color={Colors.Pink}
                   size={15}
-                  style={{marginLeft: moderateScale(10)}}
+                  style={{ marginLeft: moderateScale(10) }}
                 />
               </View>
             </View>
@@ -306,7 +319,7 @@ const AddScreen = ({navigation}: any) => {
               </Text>
               <FlatList
                 data={dummydata}
-                renderItem={({item}) => (
+                renderItem={({ item }) => (
                   <View style={styles.flatcon}>
                     <Text
                       style={{
@@ -321,7 +334,7 @@ const AddScreen = ({navigation}: any) => {
                         name="check-outline"
                         color={Colors.Pink}
                         size={15}
-                        style={{bottom: 5, alignSlef: 'centre'}}
+                        style={{ bottom: 5, alignSlef: 'centre' }}
                       />
                     </View>
                   </View>
@@ -346,7 +359,7 @@ const AddScreen = ({navigation}: any) => {
               </Text>
               <FlatList
                 data={dummydata}
-                renderItem={({item}) => (
+                renderItem={({ item }) => (
                   <View style={styles.flatcon}>
                     <Text
                       style={{
@@ -361,7 +374,7 @@ const AddScreen = ({navigation}: any) => {
                         name="check-outline"
                         color={Colors.Pink}
                         size={15}
-                        style={{bottom: 5, alignSlef: 'centre'}}
+                        style={{ bottom: 5, alignSlef: 'centre' }}
                       />
                     </View>
                   </View>
@@ -374,7 +387,7 @@ const AddScreen = ({navigation}: any) => {
                 groupName="SimpleLineIcons"
                 name="camera"
                 size={20}
-                style={{alignSelf: 'center'}}
+                style={{ alignSelf: 'center' }}
               />
               <View style={styles.camerarow}>
                 <Text
@@ -389,7 +402,7 @@ const AddScreen = ({navigation}: any) => {
                   name="questioncircleo"
                   color={Colors.Pink}
                   size={15}
-                  style={{left: moderateScale(20)}}
+                  style={{ left: moderateScale(20) }}
                 />
               </View>
             </View>
@@ -399,7 +412,7 @@ const AddScreen = ({navigation}: any) => {
                 groupName="Fontisto"
                 name="picture"
                 size={15}
-                style={{alignSelf: 'center'}}
+                style={{ alignSelf: 'center' }}
               />
               <View style={styles.camerarow}>
                 <Text
@@ -414,7 +427,7 @@ const AddScreen = ({navigation}: any) => {
                   name="questioncircleo"
                   color={Colors.Pink}
                   size={15}
-                  style={{left: moderateScale(20)}}
+                  style={{ left: moderateScale(20) }}
                 />
               </View>
             </View>
@@ -424,7 +437,7 @@ const AddScreen = ({navigation}: any) => {
                 groupName="AntDesign"
                 name="addusergroup"
                 size={25}
-                style={{alignSelf: 'center'}}
+                style={{ alignSelf: 'center' }}
               />
               <View style={styles.camerarow}>
                 <Text
@@ -439,7 +452,7 @@ const AddScreen = ({navigation}: any) => {
                   name="questioncircleo"
                   color={Colors.Pink}
                   size={15}
-                  style={{left: moderateScale(20)}}
+                  style={{ left: moderateScale(20) }}
                 />
               </View>
             </View>
@@ -464,7 +477,7 @@ const AddScreen = ({navigation}: any) => {
                 placeholder="This party about...."
                 placeholderTextColor={Colors.white}
                 multiline={true}
-                style={{...commonStyles.font12Regular, color: Colors.white}}
+                style={{ ...commonStyles.font12Regular, color: Colors.white }}
               />
             </LinearGradient>
             <SizeBox size={15} />

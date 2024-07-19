@@ -7,10 +7,11 @@ import {
   OTP_MATCH,
   OTP_SEND,
   REGISTER_USER,
+  UPDATE_USER_PROFILE,
   USER_DATA,
 } from './Urls';
-import {apiGet, apiPost} from './requestHandler';
-import {saveUserData} from '../../Redux/Action/auth';
+import { apiGet, apiPost } from './requestHandler';
+import { saveUserData } from '../../Redux/Action/auth';
 
 export function login(data: object) {
   return apiPost(LOGIN, data);
@@ -18,6 +19,10 @@ export function login(data: object) {
 
 export function otpSend(data: object) {
   return apiPost(OTP_SEND, data);
+}
+
+export function UpdateUserProfile(data: object) {
+  return apiPost(UPDATE_USER_PROFILE, data);
 }
 
 export function otpMatch(data: object) {
@@ -31,7 +36,7 @@ export function getMyEvent(status: string) {
   return apiGet(`${GET_MY_EVENT}?filter=${status}`);
 }
 export function registerUser(data: object) {
-  return apiPost(REGISTER_USER, data, {'Content-Type': 'multipart/form-data'});
+  return apiPost(REGISTER_USER, data, { 'Content-Type': 'multipart/form-data' });
 }
 export function getHomedata(latitude: number, longitude: number) {
   return apiGet(

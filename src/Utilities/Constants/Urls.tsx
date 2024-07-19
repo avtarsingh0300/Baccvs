@@ -9,3 +9,4 @@ export const USER_DATA = getApiUrl('userdata');
 export const REGISTER_USER = getApiUrl('insertuser');
 export const GET_HOME_DATA = getApiUrl('home_data');
 export const GET_MY_EVENT = getApiUrl('myevents');
+export const UPDATE_USER_PROFILE = getApiUrl('updateUserDetails');
