@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   GET_HOME_DATA,
+  GET_MY_EVENT,
   LOGIN,
   OTP_MATCH,
   OTP_SEND,
@@ -25,6 +26,9 @@ export function otpMatch(data: object) {
 
 export function getUserProfile() {
   return apiGet(USER_DATA);
+}
+export function getMyEvent(status: string) {
+  return apiGet(`${GET_MY_EVENT}?filter=${status}`);
 }
 export function registerUser(data: object) {
   return apiPost(REGISTER_USER, data, {'Content-Type': 'multipart/form-data'});

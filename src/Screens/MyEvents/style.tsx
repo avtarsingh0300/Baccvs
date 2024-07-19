@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   },
   backimg: {
     width: '100%',
-    height: '100%',
+    height: '96%',
   },
   flexinner: {
     flexDirection: 'row',

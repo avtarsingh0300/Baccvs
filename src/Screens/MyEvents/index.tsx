@@ -5,37 +5,66 @@ import {
   FlatList,
   ImageBackground,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Colors} from '../../Utilities/Styles/colors';
 import LinearGradient from 'react-native-linear-gradient';
 import styles from './style';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import {
   ImageComponent,
+  Loadingcomponent,
   SizeBox,
   dummydata,
+  showError,
 } from '../../Utilities/Component/Helpers';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import {
+  height,
   moderateScale,
   moderateScaleVertical,
   width,
 } from '../../Utilities/Styles/responsiveSize';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import fontFamily from '../../Utilities/Styles/fontFamily';
+import {getMyEvent} from '../../Utilities/Constants/auth';
 
 const MyEvents = ({navigation}: any) => {
-  const [button, setButton] = useState('Past');
+  const [button, setButton] = useState('missed');
+  const [loading, SetLoading] = useState(false);
+  const [eventData, SetEventData] = useState([]);
+
   const handleButton = (value: any) => {
-    if (value === 'Past') {
-      setButton('Past');
-    } else if (value === 'Today') {
-      setButton('Today');
-    } else if (value === 'Future') {
-      setButton('Future');
+    if (value === 'missed') {
+      setButton('missed');
+      getMyEvents('missed');
+    } else if (value === 'ongoing') {
+      setButton('ongoing');
+      getMyEvents('ongoing');
+    } else if (value === 'upcoming') {
+      setButton('upcoming');
+      getMyEvents('upcoming');
     }
   };
-  const renderItem = () => (
+
+  useEffect(() => {
+    getMyEvents('ongoing');
+  }, []);
+
+  const getMyEvents = (status: any) => {
+    console.log(status);
+    SetLoading(true);
+    getMyEvent(status)
+      .then(res => {
+        SetLoading(false);
+        SetEventData(res.events), console.log(res.events);
+      })
+      .catch(err => {
+        SetLoading(false), showError(err?.message);
+        console.log(err);
+      });
+  };
+
+  const renderItem = ({item}: any) => (
     <View>
       <View style={styles.listContainer}>
         <SizeBox size={5} />
@@ -61,9 +90,10 @@ const MyEvents = ({navigation}: any) => {
             Host
           </Text>
         </View>
+
         <SizeBox size={5} />
         <ImageBackground
-          source={ImagePath.ProfileImg}
+          source={{uri: item?.thumbnail_urls[0]}}
           borderRadius={5}
           style={styles.backimg}>
           <View style={styles.icon}>
@@ -75,36 +105,45 @@ const MyEvents = ({navigation}: any) => {
           </View>
           <View style={styles.positionVw}>
             <View style={styles.flexinner}>
-              <ImageComponent
-                source={ImagePath.ProfileImg}
-                style={styles.shortimg}
-              />
-              <ImageComponent
-                source={ImagePath.ProfileImg}
-                style={[
-                  styles.extraimg,
-                  {
-                    marginLeft: 5,
-                  },
-                ]}
-              />
-              <ImageComponent
-                source={ImagePath.ProfileImg}
-                style={[
-                  styles.extraimg,
-                  {
-                    right: 10,
-                  },
-                ]}
-              />
-              <Text
-                style={{
-                  ...commonStyles.font16Regular,
-                  alignSelf: 'flex-end',
-                  color: Colors.white,
-                }}>
-                +8
-              </Text>
+              {item?.members[0]?.imageUrl ? (
+                <ImageComponent
+                  source={{uri: item?.members[0]?.imageUrl}}
+                  style={styles.shortimg}
+                />
+              ) : null}
+              {item?.members[1]?.imageUrl ? (
+                <ImageComponent
+                  source={{uri: item?.members[1]?.imageUrl}}
+                  style={[
+                    styles.extraimg,
+                    {
+                      marginLeft: 5,
+                    },
+                  ]}
+                />
+              ) : null}
+
+              {item?.members[2]?.imageUrl ? (
+                <ImageComponent
+                  source={{uri: item?.members[2]?.imageUrl}}
+                  style={[
+                    styles.extraimg,
+                    {
+                      right: 10,
+                    },
+                  ]}
+                />
+              ) : null}
+              {item.members.length > 3 ? (
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    alignSelf: 'flex-end',
+                    color: Colors.white,
+                  }}>
+                  +{item.members.length - 3}
+                </Text>
+              ) : null}
             </View>
             <View style={styles.priceVw}>
               <ImageComponent
@@ -137,6 +176,7 @@ const MyEvents = ({navigation}: any) => {
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
       <SafeAreaView>
+        <Loadingcomponent isVisible={loading} />
         <SizeBox size={10} />
         <View style={styles.header}>
           <View />
@@ -152,10 +192,10 @@ const MyEvents = ({navigation}: any) => {
         <View style={styles.buttonGroup}>
           <View>
             <Text
-              onPress={() => handleButton('Past')}
+              onPress={() => handleButton('missed')}
               style={{
                 ...commonStyles.font14Center,
-                color: button === 'Past' ? Colors.green : Colors.white,
+                color: button === 'missed' ? Colors.green : Colors.white,
               }}>
               Past
             </Text>
@@ -164,18 +204,18 @@ const MyEvents = ({navigation}: any) => {
             </View>
           </View>
           <Text
-            onPress={() => handleButton('Today')}
+            onPress={() => handleButton('ongoing')}
             style={{
               ...commonStyles.font14Center,
-              color: button === 'Today' ? Colors.green : Colors.white,
+              color: button === 'ongoing' ? Colors.green : Colors.white,
             }}>
             Today
           </Text>
           <Text
-            onPress={() => handleButton('Future')}
+            onPress={() => handleButton('upcoming')}
             style={{
               ...commonStyles.font14Center,
-              color: button === 'Future' ? Colors.green : Colors.white,
+              color: button === 'upcoming' ? Colors.green : Colors.white,
             }}>
             Future
           </Text>
@@ -187,9 +227,10 @@ const MyEvents = ({navigation}: any) => {
           showsVerticalScrollIndicator={false}
           style={{
             width: width,
+            marginBottom: height / 5,
             alignSelf: 'center',
           }}
-          data={dummydata?.slice(0, 1)}
+          data={eventData}
           renderItem={renderItem}
         />
         <SizeBox size={15} />

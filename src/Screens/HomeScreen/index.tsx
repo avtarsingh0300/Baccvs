@@ -180,7 +180,7 @@ const HomeScreen = ({navigation}: any) => {
             </Text>
           </View>
           <ImageBackground
-            source={{uri: item.thumbnail_urls[0]}}
+            source={{uri: item?.thumbnail_urls[0]}}
             style={styles.backimg}>
             <View style={styles.flexinner}>
               <ImageComponent
