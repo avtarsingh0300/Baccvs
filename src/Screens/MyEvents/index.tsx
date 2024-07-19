@@ -56,7 +56,7 @@ const MyEvents = ({navigation}: any) => {
     getMyEvent(status)
       .then(res => {
         SetLoading(false);
-        SetEventData(res.events), console.log(res.events);
+        SetEventData(res?.events), console.log(res?.events);
       })
       .catch(err => {
         SetLoading(false), showError(err?.message);

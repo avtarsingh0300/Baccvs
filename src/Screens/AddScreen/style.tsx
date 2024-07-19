@@ -4,6 +4,7 @@ import {
   height,
   moderateScale,
   moderateScaleVertical,
+  textScale,
   width,
 } from '../../Utilities/Styles/responsiveSize';
 import commonStyles from '../../Utilities/Styles/commonStyles';
@@ -124,6 +125,61 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
+  },
+  modalContainer: {
+    padding: 15,
+    width: '100%',
+    borderWidth: 1,
+    borderColor: Colors.inputborder,
+    borderRadius: 8,
+    backgroundColor: Colors.LinearBlack,
+  },
+  mondaInvw: {
+    padding: 5,
+    borderColor: Colors.Pink,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  langContainer: {
+    padding: 2,
+    paddingLeft: 18,
+    borderWidth: 1,
+    borderLeftWidth: 1,
+    borderColor: Colors.white,
+    borderRadius: 8,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    width: '90%',
+  },
+  langItem: {
+    padding: 2,
+    borderWidth: 1,
+    borderColor: Colors.white,
+    borderRadius: 8,
+    margin: 2,
+  },
+  langItemText: {
+    color: Colors.greyTxt,
+    fontFamily: fontFamily.time_regular,
+    paddingBottom: 2,
+    paddingHorizontal: 2,
+    fontWeight: '400',
+    fontSize: textScale(10),
+  },
+  imageContainer: {
+    height: 50,
+
+    width: 50,
+    marginLeft: 10,
+    alignSelf: 'center',
+
+    borderRadius: 8,
+
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: moderateScaleVertical(10),
   },
 });
 
