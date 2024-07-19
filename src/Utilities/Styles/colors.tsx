@@ -20,4 +20,5 @@ export const Colors = {
   red: '#C90303',
   slider: '#8324C0',
   headerlinear: '#4725AB',
+  appColor: '#291846',
 };

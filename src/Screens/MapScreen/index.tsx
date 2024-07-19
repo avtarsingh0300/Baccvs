@@ -1,6 +1,6 @@
-import { Image, View } from 'react-native';
+import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { height, moderateScale } from '../../Utilities/Styles/responsiveSize';
+import { height, moderateScale, moderateScaleVertical } from '../../Utilities/Styles/responsiveSize';
 import { SizeBox } from '../../Utilities/Component/Helpers';
 import styles from './style';
 import MapView, { Marker } from 'react-native-maps';
@@ -11,6 +11,7 @@ import { getDistance } from 'geolib';
 import { getMapData } from '../../Utilities/Constants/auth';
 const MapScreen = ({ navigation }: any) => {
   const [userLocation, setUserLocation] = useState(null);
+  const [activeBtn, setActiveBtn] = useState(0);
   const [location, setLocation] = useState({});
   const [loading, SetLoading] = useState(false);
   const [eventData, setEventData] = useState([]);
@@ -37,9 +38,9 @@ const MapScreen = ({ navigation }: any) => {
         console.log(error.code, error.message, "jiwhd");
       },
       {
-        // enableHighAccuracy: true,
+        enableHighAccuracy: true,
         timeout: 15000,
-        // maximumAge: 10000
+        maximumAge: 10000
       },
     );
   };
@@ -58,7 +59,7 @@ const MapScreen = ({ navigation }: any) => {
   const getLocationData = () => {
     getMapData().then(res => {
       // console.log(res, "res in getMapData");
-      setEventData(res?.events);
+      setEventData(res);
     }).catch(err => {
       console.log(err, "err in getMapData");
     });
@@ -70,18 +71,29 @@ const MapScreen = ({ navigation }: any) => {
         style={{
           height: height,
         }}>
-        <View style={styles.backBtnContainer}>
-          <VectorIcon
-            groupName={'AntDesign'}
-            name={'leftcircle'}
-            size={25}
-            color={Colors.white}
-            style={{}}
-            onPress={onPressBack}
-          />
+        <View style={styles.header}>
+          <View style={styles.backBtnContainer}>
+            <VectorIcon
+              groupName={'AntDesign'}
+              name={'leftcircle'}
+              size={25}
+              color={Colors.white}
+              style={{}}
+              onPress={onPressBack}
+            />
+          </View>
+          <View style={styles.btnContainer}>
+            <TouchableOpacity activeOpacity={0.8} style={styles.btn} onPress={() => setActiveBtn(0)}>
+              <Text style={[styles.btnText, { color: activeBtn == 0 ? Colors.Pink : Colors.white }]}>Events</Text>
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.8} style={styles.btn} onPress={() => setActiveBtn(1)}>
+              <Text style={[styles.btnText, { color: activeBtn == 1 ? Colors.Pink : Colors.white }]}>People</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ width: "10%" }} />
         </View>
         <MapView style={styles.map} region={userLocation ? initialRegion : undefined}>
-          {eventData?.map((item, index) => (
+          {eventData?.events?.map((item, index) => (
             console.log(item, "iii"),
             <Marker
               key={index}
@@ -89,7 +101,7 @@ const MapScreen = ({ navigation }: any) => {
               title={'My Marker'}
               description={'Some description'}
               icon={{ uri: item?.image_url[0], width: 30, height: 32, }}
-              style={{ width: 30, height: 32, borderRadius: 20 }}
+            // style={{ width: 30, height: 32, borderRadius: 20, borderWidth: 1, borderColor: "red" }}
             />
           ))}
           {userLocation && <Marker
@@ -98,6 +110,18 @@ const MapScreen = ({ navigation }: any) => {
             description={'Some description'}
           />}
         </MapView>
+        <View style={styles.bottomContainer}>
+          <FlatList
+            data={activeBtn == 0 ? eventData?.events : eventData?.users?.users}
+            keyExtractor={(item, index) => index?.toString()}
+            renderItem={({ item, index }) => (
+              console.log(item, "item"),
+              <Image source={{ uri: activeBtn == 0 ? item?.image_url[0] : item?.image_url }} style={styles.img} />
+            )}
+            horizontal={true}
+            contentContainerStyle={{ flexGrow: 1, zIndex: 300 }}
+          />
+        </View>
       </View>
     </View>
   );
