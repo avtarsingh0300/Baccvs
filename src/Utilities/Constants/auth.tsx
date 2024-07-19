@@ -5,6 +5,7 @@ import {
   GET_HOME_DATA,
   GET_MY_EVENT,
   LOGIN,
+  MAP_SEARCH,
   OTP_MATCH,
   OTP_SEND,
   REGISTER_USER,
@@ -28,6 +29,10 @@ export function UpdateUserProfile(data: object) {
 
 export function otpMatch(data: object) {
   return apiPost(OTP_MATCH, data);
+}
+
+export function getMapData() {
+  return apiPost(MAP_SEARCH);
 }
 
 export function getUserProfile() {

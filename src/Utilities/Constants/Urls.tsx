@@ -1,4 +1,5 @@
 const BASE_URL = 'http://51.20.72.60:3002/api/';
+const IMAGE_URL = 'http://51.20.72.60:3002/';
 
 export const getApiUrl = (endpoint: string) => `${BASE_URL}${endpoint}`;
 
@@ -10,4 +11,7 @@ export const REGISTER_USER = getApiUrl('insertuser');
 export const GET_HOME_DATA = getApiUrl('home_data');
 export const GET_MY_EVENT = getApiUrl('myevents');
 export const UPDATE_USER_PROFILE = getApiUrl('updateUserDetails');
+
 export const GET_EVENT_TYPE = getApiUrl('getevent');
+
+export const MAP_SEARCH = getApiUrl('mapsearch');
