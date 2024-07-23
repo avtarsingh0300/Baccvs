@@ -1,6 +1,6 @@
-import { View, Text, SafeAreaView, TextInput } from 'react-native';
-import React, { useState } from 'react';
-import { Colors } from '../../Utilities/Styles/colors';
+import {View, Text, SafeAreaView, TextInput} from 'react-native';
+import React, {useState} from 'react';
+import {Colors} from '../../Utilities/Styles/colors';
 import LinearGradient from 'react-native-linear-gradient';
 import styles from './style';
 import commonStyles from '../../Utilities/Styles/commonStyles';
@@ -13,8 +13,8 @@ import {
   showSuccess,
 } from '../../Utilities/Component/Helpers';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
-import { login, setDataHandler } from '../../Utilities/Constants/auth';
-import { Keyboard } from 'react-native';
+import {login, setDataHandler} from '../../Utilities/Constants/auth';
+import {Keyboard} from 'react-native';
 const Login = (props: any) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -38,9 +38,9 @@ const Login = (props: any) => {
       .then(res => {
         setLoader(false);
         Keyboard.dismiss();
-        // console.log(res, 'res');
+        console.log(res, 'res');
         setDataHandler(res);
-        showSuccess(res?.message);
+        showSuccess(res);
         props.navigation.replace(NavigationStrings.TabRoutes, {
           screen: NavigationStrings.HomeScreen,
         });
@@ -60,8 +60,8 @@ const Login = (props: any) => {
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1.3, y: 0.9 }}
+      start={{x: 0, y: 0}}
+      end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
       <SafeAreaView>
         <Loadingcomponent isVisible={loader} />

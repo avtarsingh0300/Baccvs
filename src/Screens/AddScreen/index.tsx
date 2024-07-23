@@ -41,7 +41,8 @@ import Modal from 'react-native-modal';
 import ImagePicker from 'react-native-image-crop-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Geolocation from '@react-native-community/geolocation';
-
+import Geocoder from 'react-native-geocoding';
+Geocoder.init('AIzaSyA-WTLYCwUjh4ffr-NkzBJnVHv6NEaHYSc');
 const AddScreen = ({navigation}: any) => {
   const swiper: any = useRef();
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -63,16 +64,17 @@ const AddScreen = ({navigation}: any) => {
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [userLocation, setUserLocation] = useState(null);
+  const [address, setAddress] = useState('');
   const [pin, setPin] = useState({
     latitude: 37.78825,
     longitude: -122.4324,
   });
-  // const initialRegion = {
-  //   latitude: 37.78825,
-  //   longitude: -122.4324,
-  //   latitudeDelta: 0.0922,
-  //   longitudeDelta: 0.0421,
-  // };
+  const [eventname, setEventname] = useState('');
+  const [phone, setPhone] = useState('');
+  const [numpeople, setNumPeople] = useState('');
+  const [publicPrivate, setPublicPrivatee] = useState('Private');
+  const [bio, setBio] = useState('');
+  const [charges, setCharges] = useState('');
 
   const weeks = useMemo(() => {
     const start = moment().add(week, 'weeks').startOf('week');
@@ -89,13 +91,6 @@ const AddScreen = ({navigation}: any) => {
 
   const onCreate = () => {
     Alert.alert('Event create  !!');
-  };
-
-  const handleMapPress = event => {
-    const {latitude, longitude} = event.nativeEvent.coordinate;
-    console.log(latitude, 'latitude');
-    console.log(longitude, 'longitude');
-    setPin({latitude, longitude});
   };
 
   useEffect(() => {
@@ -228,19 +223,21 @@ const AddScreen = ({navigation}: any) => {
       },
     );
   };
-  const initialRegion = userLocation
-    ? {
-        latitude: userLocation.latitude,
-        longitude: userLocation.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      }
-    : {
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      };
+  const handleMapPress = (event: any) => {
+    const {latitude, longitude} = event.nativeEvent.coordinate;
+    setPin({latitude, longitude});
+    getAddressFromCoords(latitude, longitude);
+  };
+  const getAddressFromCoords = (latitude: any, longitude: any) => {
+    Geocoder.from(latitude, longitude)
+      .then(json => {
+        const addressComponent = json.results[0].formatted_address;
+        console.log(addressComponent);
+        setAddress(addressComponent);
+      })
+      .catch(error => console.warn(error));
+  };
+
   return (
     <LinearGradient
       colors={[Colors.Linear, Colors.LinearBlack]}
@@ -265,7 +262,9 @@ const AddScreen = ({navigation}: any) => {
                 alignItems: 'center',
                 alignSelf: 'center',
               }}
-              placeholder="Event Name"
+              value={eventname}
+              onChangeText={text => setEventname(text)}
+              placeholder="Enter event Name"
             />
             {/* <Text
               style={{...commonStyles.font12Regualar2, color: Colors.green}}>
@@ -276,7 +275,7 @@ const AddScreen = ({navigation}: any) => {
           <TouchableOpacity activeOpacity={0.7} style={styles.locbtn}>
             <Text
               style={{...commonStyles.font12Regualar2, color: Colors.white}}>
-              Add event location
+              {address ? address : 'Drag the marker on the map'}
             </Text>
           </TouchableOpacity>
           <SizeBox size={5} />
@@ -286,15 +285,15 @@ const AddScreen = ({navigation}: any) => {
             }}>
             <MapView
               style={styles.map}
-              // customMapStyle={mapStyle}
               onPress={handleMapPress}
-              region={userLocation ? initialRegion : undefined}>
+              region={{
+                latitude: userLocation ? userLocation.latitude : 37.78825,
+                longitude: userLocation ? userLocation.longitude : -122.4324,
+                latitudeDelta: 0.015,
+                longitudeDelta: 0.0121,
+              }}>
               {userLocation && (
-                <Marker
-                  coordinate={userLocation}
-                  title={'My Marker'}
-                  description={''}
-                />
+                <Marker coordinate={pin} title={'My Marker'} description={''} />
               )}
             </MapView>
           </View>
@@ -410,6 +409,8 @@ const AddScreen = ({navigation}: any) => {
                   color: Colors.white,
                   paddingHorizontal: 10,
                 }}
+                value={phone}
+                onChangeText={text => setPhone(text)}
                 placeholder="+33 (___) ___ _____"
               />
             </View>
@@ -429,6 +430,8 @@ const AddScreen = ({navigation}: any) => {
                   color: Colors.white,
                   paddingHorizontal: 10,
                 }}
+                value={numpeople}
+                onChangeText={text => setNumPeople(text)}
                 placeholder="Number of people allowed"
               />
             </View>
@@ -488,6 +491,8 @@ const AddScreen = ({navigation}: any) => {
                   color: Colors.white,
                   paddingHorizontal: 10,
                 }}
+                value={charges}
+                onChangeText={text => setCharges(text)}
                 placeholder="Free / Chargeable"
               />
             </View>
@@ -851,6 +856,8 @@ const AddScreen = ({navigation}: any) => {
                 placeholder="This party about...."
                 placeholderTextColor={Colors.white}
                 multiline={true}
+                value={bio}
+                onChangeText={text => setBio(text)}
                 style={{...commonStyles.font12Regular, color: Colors.white}}
               />
             </LinearGradient>

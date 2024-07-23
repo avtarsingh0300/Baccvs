@@ -51,7 +51,7 @@ export function registerUser(data: object) {
 }
 export function getHomedata(latitude: number, longitude: number) {
   return apiGet(
-    `${GET_HOME_DATA}?filter=upcoming&userLatitude=${latitude}&userLongitude=${longitude}`,
+    `${GET_HOME_DATA}?filter=all&userLatitude=${latitude}&userLongitude=${longitude}&page=1&limit=5`,
   );
 }
 
