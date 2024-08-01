@@ -21,13 +21,7 @@ import {
 import {Colors} from '../../Utilities/Styles/colors';
 import LinearGradient from 'react-native-linear-gradient';
 import ImagePath from '../../Utilities/Constants/ImagePath';
-import {
-  CommonBtn,
-  ImageComponent,
-  SizeBox,
-  dummydata,
-  showError,
-} from '../../Utilities/Component/Helpers';
+import {CommonBtn, SizeBox, showError} from '../../Utilities/Component/Helpers';
 import {ImageBackground} from 'react-native';
 import moment from 'moment';
 import Swiper from 'react-native-swiper';
@@ -38,14 +32,17 @@ import {getEventTypes} from '../../Utilities/Constants/auth';
 import languages from '../../Utilities/Constants';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import Modal from 'react-native-modal';
-import ImagePicker from 'react-native-image-crop-picker';
+
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Geolocation from '@react-native-community/geolocation';
 import Geocoder from 'react-native-geocoding';
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 Geocoder.init('AIzaSyA-WTLYCwUjh4ffr-NkzBJnVHv6NEaHYSc');
 const AddScreen = ({navigation}: any) => {
   const swiper: any = useRef();
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
+
   const [value, setValue] = useState(new Date());
   const [week, setWeek] = useState(0);
   const [musicStyle, setMusicStyle] = useState([]);
@@ -54,11 +51,9 @@ const AddScreen = ({navigation}: any) => {
   const [modalVisibleLang, SetModalVisibleLang] = useState(false);
   const [selectedLang, setSelectedLang] = useState([]);
   const [selectedMusic, setSelectedMusic] = useState([]);
-  const [selectedMusicID, setSelectedMusicID] = useState([]);
   const [selectedEventType, setselectedEventType] = useState([]);
   const [selectedVenue, setSelectedVenue] = useState([]);
-  const [selectedImages, setSelectedImages] = useState([]);
-  const [selectedVideos, setSelectedVideos] = useState([]);
+
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
   const [startTime, setStartTime] = useState('');
@@ -72,7 +67,7 @@ const AddScreen = ({navigation}: any) => {
   const [eventname, setEventname] = useState('');
   const [phone, setPhone] = useState('');
   const [numpeople, setNumPeople] = useState('');
-  const [publicPrivate, setPublicPrivatee] = useState('Private');
+
   const [bio, setBio] = useState('');
   const [charges, setCharges] = useState('');
 
@@ -90,7 +85,61 @@ const AddScreen = ({navigation}: any) => {
   }, [week]);
 
   const onCreate = () => {
-    Alert.alert('Event create  !!');
+    if (!eventname) {
+      return showError('Enter event name ');
+    }
+    if (!value) {
+      return showError('Select event date');
+    }
+    if (phone.length < 10) {
+      return showError('Invalid phonenumber !');
+    }
+    if (!numpeople) {
+      return showError('Add a people capacity');
+    }
+    if (selectedLang.length === 0) {
+      return showError('Select languages !');
+    }
+    if (selectedMusic.length === 0) {
+      return showError('Select music type');
+    }
+    if (selectedEventType.length === 0) {
+      return showError('Select Event type');
+    }
+    if (selectedVenue.length === 0) {
+      return showError('Select venue type');
+    }
+    if (!bio) {
+      return showError('Add party description');
+    }
+    if (!address) {
+      return showError('Select address of event');
+    }
+    if (!startTime) {
+      return showError('Select start time');
+    }
+    if (!endTime) {
+      return showError('Select end time');
+    }
+
+    const data = {
+      eventname,
+      phone,
+      numpeople,
+      bio,
+      charges,
+      address,
+      pin,
+      startTime,
+      endTime,
+      selectedLang,
+      selectedMusic,
+      selectedEventType,
+      selectedVenue,
+      value,
+    };
+    console.log(data);
+    navigation.navigate(NavigationStrings.CreateSuccess, {data: data});
   };
 
   useEffect(() => {
@@ -123,25 +172,17 @@ const AddScreen = ({navigation}: any) => {
     } else {
     }
   };
+
   const selectMusicType = (item: any) => {
-    // console.log(item._id);
-    if (modalVisible) {
-      const filterData = selectedMusic?.filter((i: any) => i == item?.name);
-      if (filterData?.length > 0) {
-        const filterData2 = selectedMusic?.filter((i: any) => i != item?.name);
-        setSelectedMusic(filterData2);
-        const filterData3 = selectedMusic?.filter((i: any) => i != item?._id);
-        setSelectedMusicID(filterData3);
-      } else {
-        setSelectedMusic([...selectedMusic, item?.name]);
-        setSelectedMusicID(...selectedMusicID, item?._id);
+    setSelectedMusic((prevSelectedItems): any => {
+      if (prevSelectedItems.includes(item?._id)) {
+        return prevSelectedItems.filter(id => id !== item?._id);
       }
-    } else {
-      // setSelectedGender(item);
-      // setModalVisible(false);
-      // setModalLanguageVisible(false);
-    }
+
+      return [...prevSelectedItems, item._id];
+    });
   };
+
   const handleSelectItem = (item: any) => {
     setselectedEventType((prevSelectedItems): any => {
       if (prevSelectedItems.includes(item?._id)) {
@@ -162,49 +203,28 @@ const AddScreen = ({navigation}: any) => {
       return prevSelectedItems;
     });
   };
-  const addImg = () => {
-    ImagePicker.openPicker({
-      width: 300,
-      height: 400,
-      cropping: true,
-    }).then(image => {
-      setSelectedImages(prevImages => [
-        ...prevImages,
-        {id: prevImages.length, uri: image.path},
-      ]);
-    });
+
+  const showDatePicker = () => {
+    setShowStartPicker(true);
   };
-  const removeImg = id => {
-    setSelectedImages(prevImages =>
-      prevImages.filter(image => image.id !== id),
-    );
-  };
-  const addVideo = () => {
-    ImagePicker.openPicker({
-      mediaType: 'video',
-    }).then(video => {
-      setSelectedVideos(prevVideos => [
-        ...prevVideos,
-        {id: prevVideos.length, uri: video.path},
-      ]);
-    });
+  const showDatePicker2 = () => {
+    setShowEndPicker(true);
   };
 
-  const removeVideo = id => {
-    setSelectedVideos(prevVideos =>
-      prevVideos.filter(video => video.id !== id),
-    );
-  };
-  const onStartChange = (event: any, selectedDate: any) => {
+  const hideDatePicker = () => {
     setShowStartPicker(false);
-    const currentDate = selectedDate || new Date();
-    setStartTime(currentDate.toLocaleTimeString());
+    setShowEndPicker(false);
   };
 
-  const onEndChange = (event: any, selectedDate: any) => {
-    setShowEndPicker(false);
-    const currentDate = selectedDate || new Date();
+  const handleConfirm = (date: any) => {
+    const currentDate = date || new Date();
+    setStartTime(currentDate.toLocaleTimeString());
+    hideDatePicker();
+  };
+  const onEndChange = (date: any) => {
+    const currentDate = date || new Date();
     setEndTime(currentDate.toLocaleTimeString());
+    hideDatePicker();
   };
 
   const getLocation = () => {
@@ -232,7 +252,6 @@ const AddScreen = ({navigation}: any) => {
     Geocoder.from(latitude, longitude)
       .then(json => {
         const addressComponent = json.results[0].formatted_address;
-        console.log(addressComponent);
         setAddress(addressComponent);
       })
       .catch(error => console.warn(error));
@@ -240,12 +259,12 @@ const AddScreen = ({navigation}: any) => {
 
   return (
     <LinearGradient
-      colors={[Colors.Linear, Colors.LinearBlack]}
+      colors={[Colors.Linear, Colors.LinearBlack, Colors.LinearBlack]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
       <SafeAreaView>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
           <Text style={{...commonStyles.Heading20font}}>Create Event</Text>
           <SizeBox size={20} />
           <ImageBackground
@@ -255,7 +274,7 @@ const AddScreen = ({navigation}: any) => {
             <TextInput
               style={{
                 ...commonStyles.font12Regualar2,
-                color: Colors.green,
+                color: Colors.lightPink,
                 paddingHorizontal: 10,
                 width: '50%',
                 textAlign: 'center',
@@ -266,10 +285,6 @@ const AddScreen = ({navigation}: any) => {
               onChangeText={text => setEventname(text)}
               placeholder="Enter event Name"
             />
-            {/* <Text
-              style={{...commonStyles.font12Regualar2, color: Colors.green}}>
-              Event Name
-            </Text> */}
           </ImageBackground>
           <SizeBox size={10} />
           <TouchableOpacity activeOpacity={0.7} style={styles.locbtn}>
@@ -328,7 +343,7 @@ const AddScreen = ({navigation}: any) => {
                         }}>
                         <LinearGradient
                           colors={[
-                            isActive ? Colors.green : Colors.calenderback,
+                            isActive ? Colors.lightPink : Colors.calenderback,
                             isActive ? Colors.Linear : Colors.calenderback,
                           ]}
                           style={styles.btn}>
@@ -356,20 +371,24 @@ const AddScreen = ({navigation}: any) => {
               ))}
             </Swiper>
           </View>
-          <TouchableOpacity
-            style={[styles.startbtn, {marginLeft: 15, width: '90%'}]}>
-            <Text style={{...commonStyles.font12Regualar2, color: Colors.Pink}}>
+          <View style={[styles.startbtn, {marginLeft: 15, width: '90%'}]}>
+            <Text
+              style={{
+                ...commonStyles.font12Regualar2,
+                color: Colors.lightPink,
+              }}>
               {moment(value).format('DD MMMM YYYY')}
             </Text>
-          </TouchableOpacity>
+          </View>
 
           <SizeBox size={10} />
           <View style={styles.timecon}>
-            <TouchableOpacity
-              onPress={() => setShowStartPicker(true)}
-              style={styles.startbtn}>
+            <TouchableOpacity onPress={showDatePicker} style={styles.startbtn}>
               <Text
-                style={{...commonStyles.font12Regualar2, color: Colors.Pink}}>
+                style={{
+                  ...commonStyles.font12Regualar2,
+                  color: Colors.lightPink,
+                }}>
                 Start
               </Text>
             </TouchableOpacity>
@@ -377,18 +396,23 @@ const AddScreen = ({navigation}: any) => {
               style={{...commonStyles.font12Regualar2, color: Colors.white}}>
               {startTime ? startTime : '0:0:0'}
             </Text>
-            <Text style={{...commonStyles.font12Regualar2, color: Colors.Pink}}>
+            <Text
+              style={{
+                ...commonStyles.font12Regualar2,
+                color: Colors.lightPink,
+              }}>
               -
             </Text>
             <Text
               style={{...commonStyles.font12Regualar2, color: Colors.white}}>
               {endTime ? endTime : '0:0:0'}
             </Text>
-            <TouchableOpacity
-              style={styles.startbtn}
-              onPress={() => setShowEndPicker(true)}>
+            <TouchableOpacity style={styles.startbtn} onPress={showDatePicker2}>
               <Text
-                style={{...commonStyles.font12Regualar2, color: Colors.Pink}}>
+                style={{
+                  ...commonStyles.font12Regualar2,
+                  color: Colors.lightPink,
+                }}>
                 End
               </Text>
             </TouchableOpacity>
@@ -400,7 +424,7 @@ const AddScreen = ({navigation}: any) => {
                 groupName="SimpleLineIcons"
                 name="screen-smartphone"
                 size={20}
-                color={Colors.Pink}
+                color={Colors.lightPink}
               />
               <TextInput
                 keyboardType="phone-pad"
@@ -420,7 +444,7 @@ const AddScreen = ({navigation}: any) => {
                 groupName="Feather"
                 name="users"
                 size={20}
-                color={Colors.Pink}
+                color={Colors.lightPink}
               />
               <TextInput
                 keyboardType="number-pad"
@@ -432,53 +456,17 @@ const AddScreen = ({navigation}: any) => {
                 }}
                 value={numpeople}
                 onChangeText={text => setNumPeople(text)}
-                placeholder="Number of people allowed"
+                placeholder="People Capacity"
               />
             </View>
 
-            <SizeBox size={10} />
-            <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={() => setModalVisible(true)}
-              style={styles.cardBtn}>
-              <VectorIcon
-                groupName="Feather"
-                name="speaker"
-                size={25}
-                color={Colors.Pink}
-              />
-              {selectedMusic.length ? null : (
-                <Text
-                  style={{
-                    ...commonStyles.font12Regualar2,
-                    color: Colors.white,
-                  }}>
-                  {`  `}Music Style
-                </Text>
-              )}
-              {selectedMusic?.map(item => (
-                <ScrollView horizontal>
-                  <TouchableOpacity
-                    style={styles.langItem}
-                    activeOpacity={0.8}
-                    onPress={() => {
-                      const filterData2 = selectedMusic?.filter(
-                        (i: any) => i != item,
-                      );
-                      setSelectedMusic(filterData2);
-                    }}>
-                    <Text style={styles.langItemText}>{item} &#x2715;</Text>
-                  </TouchableOpacity>
-                </ScrollView>
-              ))}
-            </TouchableOpacity>
             <SizeBox size={10} />
             <View style={[styles.cardBtn, {padding: 0, paddingHorizontal: 10}]}>
               <Image
                 resizeMode="contain"
                 source={ImagePath.priceTag}
                 style={{
-                  tintColor: Colors.Pink,
+                  tintColor: Colors.lightPink,
                   width: moderateScale(22),
                   height: moderateScaleVertical(22),
                 }}
@@ -502,10 +490,11 @@ const AddScreen = ({navigation}: any) => {
               style={styles.cardBtn}
               activeOpacity={0.5}
               onPress={() => SetModalVisibleLang(true)}>
-              <ImageComponent
+              <Image
                 resizeMode="contain"
                 source={ImagePath.lang}
                 style={{
+                  tintColor: Colors.lightPink,
                   width: moderateScale(22),
                   height: moderateScaleVertical(22),
                 }}
@@ -536,305 +525,156 @@ const AddScreen = ({navigation}: any) => {
               ))}
             </TouchableOpacity>
             <SizeBox size={10} />
-            <View style={styles.timecon}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text
-                  style={{
-                    ...commonStyles.font12Regualar2,
-                    color: Colors.green,
-                  }}>
-                  Private
-                </Text>
-                <VectorIcon
-                  groupName="AntDesign"
-                  name="questioncircleo"
-                  color={Colors.Pink}
-                  size={15}
-                  style={{marginLeft: moderateScale(10)}}
-                />
-              </View>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text
-                  style={{
-                    ...commonStyles.font12Regualar2,
-                    color: Colors.white,
-                  }}>
-                  Public
-                </Text>
-                <VectorIcon
-                  groupName="AntDesign"
-                  name="questioncircleo"
-                  color={Colors.Pink}
-                  size={15}
-                  style={{marginLeft: moderateScale(10)}}
-                />
-              </View>
-            </View>
-            <SizeBox size={10} />
 
-            <View style={styles.flatbox}>
-              <Text
-                style={{
-                  ...commonStyles.font12Regular,
-                  color: Colors.white,
-                }}>
-                Event type
-                <Text
-                  style={{
-                    fontSize: textScale(8),
-                    color: Colors.white,
-                  }}>
-                  {` `}(Up to 3)
-                </Text>
-              </Text>
-              <FlatList
-                data={eventType}
-                renderItem={({item}) => {
-                  if (!item || !item._id) {
-                    return null;
-                  }
-                  return (
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      style={styles.flatcon}
-                      onPress={() => handleSelectItem(item)}>
-                      <Text
-                        style={{
-                          ...commonStyles.font12Regular,
-                          color: Colors.white,
-                        }}>
-                        {item?.name}
-                      </Text>
-                      <View style={styles.tickvw}>
-                        {selectedEventType.includes(item._id) && (
-                          <VectorIcon
-                            groupName="MaterialCommunityIcons"
-                            name="check-outline"
-                            color={Colors.Pink}
-                            size={15}
-                            style={{bottom: 5, alignSlef: 'centre'}}
-                          />
-                        )}
-                      </View>
-                    </TouchableOpacity>
-                  );
-                }}
-                keyExtractor={item => item._id.toString()}
-              />
-            </View>
-            <SizeBox size={10} />
-            <View style={styles.flatbox}>
-              <Text
-                style={{
-                  ...commonStyles.font12Regular,
-                  color: Colors.white,
-                }}>
-                Venue type
-                <Text
-                  style={{
-                    fontSize: textScale(8),
-                    color: Colors.white,
-                  }}>
-                  {` `}(Up to 2)
-                </Text>
-              </Text>
-              <FlatList
-                data={venueType}
-                renderItem={({item}) => (
+            <Text
+              style={{
+                ...commonStyles.font16Regular,
+                color: Colors.lightPink,
+              }}>
+              Music type
+            </Text>
+            <SizeBox size={5} />
+            <FlatList
+              data={musicStyle}
+              renderItem={({item}) => {
+                if (!item || !item._id) {
+                  return null;
+                }
+                return (
                   <TouchableOpacity
                     activeOpacity={0.8}
-                    style={styles.flatcon}
+                    style={{
+                      borderWidth: selectedMusic.includes(item._id) ? 0 : 1,
+                      borderColor: Colors.white,
+                      padding: 5,
+                      backgroundColor: selectedMusic.includes(item._id)
+                        ? Colors.lightPink
+                        : Colors.tranparent,
+                      borderRadius: 8,
+                      marginHorizontal: 5,
+                      marginVertical: 5,
+                    }}
+                    onPress={() => selectMusicType(item)}>
+                    <Text
+                      style={{
+                        ...commonStyles.font12Regular,
+                        color: selectedMusic.includes(item._id)
+                          ? Colors.black
+                          : Colors.white,
+                      }}>
+                      {item?.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+              numColumns={3}
+              keyExtractor={item => item._id.toString()}
+            />
+            <SizeBox size={10} />
+            <Text
+              style={{
+                ...commonStyles.font16Regular,
+                color: Colors.lightPink,
+              }}>
+              Event type
+              <Text
+                style={{
+                  fontSize: textScale(8),
+                  color: Colors.lightPink,
+                }}>
+                {` `}(Up to 3)
+              </Text>
+            </Text>
+            <SizeBox size={5} />
+            <FlatList
+              data={eventType}
+              renderItem={({item}) => {
+                if (!item || !item._id) {
+                  return null;
+                }
+                return (
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={{
+                      borderWidth: selectedEventType.includes(item._id) ? 0 : 1,
+                      borderColor: Colors.white,
+                      padding: 5,
+                      backgroundColor: selectedEventType.includes(item._id)
+                        ? Colors.lightPink
+                        : Colors.tranparent,
+                      borderRadius: 8,
+                      marginHorizontal: 5,
+                      marginVertical: 5,
+                    }}
+                    onPress={() => handleSelectItem(item)}>
+                    <Text
+                      style={{
+                        ...commonStyles.font12Regular,
+                        color: selectedEventType.includes(item._id)
+                          ? Colors.black
+                          : Colors.white,
+                      }}>
+                      {item?.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+              numColumns={3}
+              keyExtractor={item => item._id.toString()}
+            />
+            <SizeBox size={10} />
+            <Text
+              style={{
+                ...commonStyles.font16Regular,
+                color: Colors.lightPink,
+              }}>
+              Venue type
+              <Text
+                style={{
+                  fontSize: textScale(8),
+                  color: Colors.lightPink,
+                }}>
+                {` `}(Up to 2)
+              </Text>
+            </Text>
+            <SizeBox size={5} />
+            <FlatList
+              data={venueType}
+              renderItem={({item}) => {
+                if (!item || !item._id) {
+                  return null;
+                }
+                return (
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={{
+                      borderWidth: selectedVenue.includes(item._id) ? 0 : 1,
+                      borderColor: Colors.white,
+                      padding: 5,
+                      backgroundColor: selectedVenue.includes(item._id)
+                        ? Colors.lightPink
+                        : Colors.tranparent,
+                      borderRadius: 8,
+                      marginHorizontal: 5,
+                      marginVertical: 5,
+                    }}
                     onPress={() => handleVenueItem(item)}>
                     <Text
                       style={{
                         ...commonStyles.font12Regular,
-                        color: Colors.white,
+                        color: selectedVenue.includes(item._id)
+                          ? Colors.black
+                          : Colors.white,
                       }}>
                       {item?.name}
                     </Text>
-                    <View style={styles.tickvw}>
-                      {selectedVenue.includes(item._id) && (
-                        <VectorIcon
-                          groupName="MaterialCommunityIcons"
-                          name="check-outline"
-                          color={Colors.Pink}
-                          size={15}
-                          style={{bottom: 5, alignSlef: 'centre'}}
-                        />
-                      )}
-                    </View>
                   </TouchableOpacity>
-                )}
-                keyExtractor={item => item._id.toString()}
-              />
-            </View>
-            <SizeBox size={10} />
-            <TouchableOpacity onPress={() => addVideo()} style={styles.flatbox}>
-              <VectorIcon
-                groupName="SimpleLineIcons"
-                name="camera"
-                size={20}
-                style={{alignSelf: 'center'}}
-              />
-              <View style={styles.camerarow}>
-                <Text
-                  style={{
-                    ...commonStyles.font12Regular,
-                    color: Colors.white,
-                  }}>
-                  Add videos
-                </Text>
+                );
+              }}
+              numColumns={3}
+              keyExtractor={item => item._id.toString()}
+            />
 
-                <VectorIcon
-                  groupName="AntDesign"
-                  name="questioncircleo"
-                  color={Colors.Pink}
-                  size={15}
-                  style={{left: moderateScale(20)}}
-                />
-              </View>
-              {selectedVideos.length ? (
-                <FlatList
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  bounces={false}
-                  showsVerticalScrollIndicator={false}
-                  data={selectedVideos}
-                  renderItem={({item}) => (
-                    <View
-                      style={[
-                        styles.imageContainer,
-                        {backgroundColor: Colors.black},
-                      ]}>
-                      <VectorIcon
-                        groupName="AntDesign"
-                        name="playcircleo"
-                        size={15}
-                        color={Colors.white}
-                      />
-                      {/* <Image
-                        source={{uri: item.uri}}
-                        style={{width: '100%', height: '100%'}}
-                      /> */}
-                      <TouchableOpacity
-                        onPress={() => removeVideo(item.id)}
-                        style={{position: 'absolute', top: -2, right: -1}}>
-                        <VectorIcon
-                          groupName="AntDesign"
-                          name="closecircle"
-                          size={15}
-                          color={Colors.white}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                  keyExtractor={item => item.id.toString()}
-                />
-              ) : null}
-            </TouchableOpacity>
-            <SizeBox size={10} />
-            <TouchableOpacity onPress={() => addImg()} style={styles.flatbox}>
-              <VectorIcon
-                groupName="Fontisto"
-                name="picture"
-                size={15}
-                style={{alignSelf: 'center'}}
-              />
-              <View style={styles.camerarow}>
-                <Text
-                  style={{
-                    ...commonStyles.font12Regular,
-                    color: Colors.white,
-                  }}>
-                  Select a thumbnail
-                </Text>
-
-                <VectorIcon
-                  groupName="AntDesign"
-                  name="questioncircleo"
-                  color={Colors.Pink}
-                  size={15}
-                  style={{left: moderateScale(20)}}
-                />
-              </View>
-              {selectedImages.length ? (
-                <FlatList
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  bounces={false}
-                  showsVerticalScrollIndicator={false}
-                  data={selectedImages}
-                  renderItem={({item}) => (
-                    <View style={styles.imageContainer}>
-                      <Image
-                        source={{uri: item.uri}}
-                        style={{width: '100%', height: '100%'}}
-                      />
-                      <TouchableOpacity
-                        onPress={() => removeImg(item.id)}
-                        style={{position: 'absolute', top: -2, right: -1}}>
-                        <VectorIcon
-                          groupName="AntDesign"
-                          name="closecircle"
-                          size={15}
-                          color={Colors.white}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                  keyExtractor={item => item.id.toString()}
-                />
-              ) : null}
-            </TouchableOpacity>
-            {/* <View style={styles.flatbox}>
-              <VectorIcon
-                groupName="Fontisto"
-                name="picture"
-                size={15}
-                style={{alignSelf: 'center'}}
-              />
-              <View style={styles.camerarow}>
-                <Text
-                  style={{
-                    ...commonStyles.font12Regular,
-                    color: Colors.white,
-                  }}>
-                  Select a thumbnail
-                </Text>
-                <VectorIcon
-                  groupName="AntDesign"
-                  name="questioncircleo"
-                  color={Colors.Pink}
-                  size={15}
-                  style={{left: moderateScale(20)}}
-                />
-              </View>
-            </View> */}
-            <SizeBox size={10} />
-            <View style={styles.flatbox}>
-              <VectorIcon
-                groupName="AntDesign"
-                name="addusergroup"
-                size={25}
-                style={{alignSelf: 'center'}}
-              />
-              <View style={styles.camerarow}>
-                <Text
-                  style={{
-                    ...commonStyles.font12Regular,
-                    color: Colors.white,
-                  }}>
-                  Add members
-                </Text>
-                <VectorIcon
-                  groupName="AntDesign"
-                  name="questioncircleo"
-                  color={Colors.Pink}
-                  size={15}
-                  style={{left: moderateScale(20)}}
-                />
-              </View>
-            </View>
             <SizeBox size={10} />
             <Text
               style={{
@@ -842,11 +682,11 @@ const AddScreen = ({navigation}: any) => {
                 color: Colors.white,
                 alignSelf: 'center',
               }}>
-              Description
+              Party Description
             </Text>
             <SizeBox size={10} />
             <LinearGradient
-              colors={[Colors.Linear, Colors.green]}
+              colors={[Colors.Linear, Colors.lightPink]}
               style={{
                 minHeight: moderateScaleVertical(150),
                 borderRadius: 10,
@@ -865,16 +705,15 @@ const AddScreen = ({navigation}: any) => {
             <CommonBtn title="Create Event" onPress={onCreate} />
             <SizeBox size={15} />
           </View>
-        </ScrollView>
+        </KeyboardAwareScrollView>
         <Modal
-          isVisible={modalVisible || modalVisibleLang}
+          isVisible={modalVisibleLang}
           style={{
             justifyContent: 'flex-end',
             margin: 0,
           }}
           onBackdropPress={() => {
             SetModalVisibleLang(false);
-            setModalVisible(false);
           }}
           backdropOpacity={0.5}
           animationIn="slideInUp"
@@ -892,28 +731,20 @@ const AddScreen = ({navigation}: any) => {
             }}>
             <View style={styles.modalContainer}>
               <FlatList
-                data={modalVisible ? musicStyle : languages}
+                data={languages}
                 keyExtractor={(item, index) => index?.toString()}
                 renderItem={({item, index}) => {
-                  const lengthFlag = modalVisible
-                    ? musicStyle?.length
-                    : languages?.length;
+                  const lengthFlag = languages?.length;
 
                   const filterData = selectedLang?.filter(
                     (i: any) => i == item?.name,
                   );
-                  const filterData2 = selectedMusic?.filter(
-                    (i: any) => i == item?.name,
-                  );
+
                   return (
                     <TouchableOpacity
                       activeOpacity={0.8}
                       onPress={() => {
-                        if (modalVisible) {
-                          selectMusicType(item);
-                        } else {
-                          selectModalHandler(item);
-                        }
+                        selectModalHandler(item);
                       }}
                       style={[
                         {
@@ -933,11 +764,7 @@ const AddScreen = ({navigation}: any) => {
                       <VectorIcon
                         groupName="MaterialCommunityIcons"
                         name={
-                          modalVisible
-                            ? filterData2[0] === item?.name
-                              ? 'radiobox-marked'
-                              : 'radiobox-blank'
-                            : filterData[0] == item?.name
+                          filterData[0] == item?.name
                             ? 'radiobox-marked'
                             : 'radiobox-blank'
                         }
@@ -950,22 +777,29 @@ const AddScreen = ({navigation}: any) => {
             </View>
           </View>
         </Modal>
-        {showStartPicker && (
+        {/* {showStartPicker && (
           <DateTimePicker
             value={new Date()}
             mode="time"
             display="default"
-            onChange={onStartChange}
+         
           />
-        )}
-        {showEndPicker && (
-          <DateTimePicker
-            value={new Date()}
-            mode="time"
-            display="default"
-            onChange={onEndChange}
-          />
-        )}
+        )} */}
+        <DateTimePickerModal
+          isVisible={showStartPicker}
+          mode="time"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+          date={new Date()}
+        />
+
+        <DateTimePickerModal
+          isVisible={showEndPicker}
+          mode="time"
+          onConfirm={onEndChange}
+          onCancel={hideDatePicker}
+          date={new Date()}
+        />
       </SafeAreaView>
     </LinearGradient>
   );

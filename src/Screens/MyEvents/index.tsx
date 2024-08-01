@@ -27,6 +27,7 @@ import {
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import {getMyEvent} from '../../Utilities/Constants/auth';
+import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 
 const MyEvents = ({navigation}: any) => {
   const [button, setButton] = useState('missed');
@@ -63,7 +64,9 @@ const MyEvents = ({navigation}: any) => {
         console.log(err);
       });
   };
-
+  const onbackPress = () => {
+    navigation.goBack();
+  };
   const renderItem = ({item}: any) => (
     <View>
       <View style={styles.listContainer}>
@@ -93,7 +96,7 @@ const MyEvents = ({navigation}: any) => {
 
         <SizeBox size={5} />
         <ImageBackground
-          source={{uri: item?.thumbnail_urls[0]}}
+          source={{uri: IMAGE_URL + item?.thumbnail_urls[0]}}
           borderRadius={5}
           style={styles.backimg}>
           <View style={styles.icon}>
@@ -107,13 +110,13 @@ const MyEvents = ({navigation}: any) => {
             <View style={styles.flexinner}>
               {item?.members[0]?.imageUrl ? (
                 <ImageComponent
-                  source={{uri: item?.members[0]?.imageUrl}}
+                  source={{uri: IMAGE_URL + item?.members[0]?.imageUrl}}
                   style={styles.shortimg}
                 />
               ) : null}
               {item?.members[1]?.imageUrl ? (
                 <ImageComponent
-                  source={{uri: item?.members[1]?.imageUrl}}
+                  source={{uri: IMAGE_URL + item?.members[1]?.imageUrl}}
                   style={[
                     styles.extraimg,
                     {
@@ -125,7 +128,7 @@ const MyEvents = ({navigation}: any) => {
 
               {item?.members[2]?.imageUrl ? (
                 <ImageComponent
-                  source={{uri: item?.members[2]?.imageUrl}}
+                  source={{uri: IMAGE_URL + item?.members[2]?.imageUrl}}
                   style={[
                     styles.extraimg,
                     {
@@ -179,7 +182,12 @@ const MyEvents = ({navigation}: any) => {
         <Loadingcomponent isVisible={loading} />
         <SizeBox size={10} />
         <View style={styles.header}>
-          <View />
+          <VectorIcon
+            groupName={'Ionicons'}
+            name={'chevron-back'}
+            size={25}
+            onPress={onbackPress}
+          />
           <Text style={{...commonStyles.Heading20font}}>My Events</Text>
           <VectorIcon
             groupName="Ionicons"
@@ -199,9 +207,11 @@ const MyEvents = ({navigation}: any) => {
               }}>
               Past
             </Text>
-            <View style={styles.reddot}>
-              <Text style={styles.dottxt}>99+</Text>
-            </View>
+            {eventData?.length ? (
+              <View style={styles.reddot}>
+                <Text style={styles.dottxt}>{eventData?.length}</Text>
+              </View>
+            ) : null}
           </View>
           <Text
             onPress={() => handleButton('ongoing')}
@@ -223,16 +233,26 @@ const MyEvents = ({navigation}: any) => {
         <SizeBox size={15} />
         <View style={styles.border} />
         <SizeBox size={15} />
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          style={{
-            width: width,
-            marginBottom: height / 5,
-            alignSelf: 'center',
-          }}
-          data={eventData}
-          renderItem={renderItem}
-        />
+        {eventData?.length ? (
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            style={{
+              width: width,
+              marginBottom: height / 5,
+              alignSelf: 'center',
+            }}
+            data={eventData}
+            renderItem={renderItem}
+          />
+        ) : (
+          <Text
+            style={{
+              ...commonStyles.font14Center,
+              color: Colors.white,
+            }}>
+            No data found ..
+          </Text>
+        )}
         <SizeBox size={15} />
       </SafeAreaView>
     </LinearGradient>

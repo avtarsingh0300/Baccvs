@@ -8,28 +8,29 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 
 import LinearGradient from 'react-native-linear-gradient';
-import { Colors } from '../../Utilities/Styles/colors';
+import {Colors} from '../../Utilities/Styles/colors';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import {
   moderateScale,
   moderateScaleVertical,
   width,
 } from '../../Utilities/Styles/responsiveSize';
-import { styles } from './style';
+import {styles} from './style';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import FastImage from 'react-native-fast-image';
-import { ImageComponent, dummydata } from '../../Utilities/Component/Helpers';
+import {ImageComponent, dummydata} from '../../Utilities/Component/Helpers';
 import Modal from 'react-native-modal';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
-import { getUserProfile } from '../../Utilities/Constants/auth';
+import {getUserProfile} from '../../Utilities/Constants/auth';
+import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 
-const UserProfile = ({ navigation }: any) => {
+const UserProfile = ({navigation}: any) => {
   const [showModal, setShowModal] = useState(false);
-  const [userData, setUserData] = useState({})
+  const [userData, setUserData] = useState({});
 
   const imageArrya = [
     ImagePath.ProfileImg,
@@ -54,19 +55,21 @@ const UserProfile = ({ navigation }: any) => {
   }, []);
 
   const getUserData = async () => {
-    getUserProfile().then(res => {
-      // console.log(res, "res in getUserProfile");
-      setUserData(res);
-    }).catch(err => {
-      console.log(err, "err in getUserProfile");
-    })
+    getUserProfile()
+      .then(res => {
+        console.log(res, 'res in getUserProfile');
+        setUserData(res);
+      })
+      .catch(err => {
+        console.log(err, 'err in getUserProfile');
+      });
   };
 
-  const renderItem = ({ item, index }) => (
+  const renderItem = ({item, index}) => (
     <View>
       <View style={styles.listContainer}>
         <ImageBackground
-          source={{ uri: item }}
+          source={{uri: IMAGE_URL + item}}
           borderRadius={5}
           style={styles.backimg}>
           <View style={styles.flexinner}>
@@ -102,7 +105,7 @@ const UserProfile = ({ navigation }: any) => {
             </Text>
           </View>
         </ImageBackground>
-        <View style={[styles.row, { justifyContent: 'center' }]}>
+        <View style={[styles.row, {justifyContent: 'center'}]}>
           <View style={styles.music}>
             <Text style={styles.musictxt}>Progressive</Text>
           </View>
@@ -120,17 +123,18 @@ const UserProfile = ({ navigation }: any) => {
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1.3, y: 0.9 }}
-      style={{ flex: 1 }}>
+      start={{x: 0, y: 0}}
+      end={{x: 1.3, y: 0.9}}
+      style={{flex: 1}}>
       <SafeAreaView>
         <ScrollView
           contentContainerStyle={styles.container}
           showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
-            <View style={{ width: '10%' }} />
-            <Text style={{ ...commonStyles.Heading20font, color: Colors.Pink }}>
-              {userData?.full_name?.charAt(0).toUpperCase() + userData?.full_name?.slice(1)}
+            <View style={{width: '10%'}} />
+            <Text style={{...commonStyles.Heading20font, color: Colors.Pink}}>
+              {userData?.full_name?.charAt(0).toUpperCase() +
+                userData?.full_name?.slice(1)}
             </Text>
             <VectorIcon
               groupName="Entypo"
@@ -144,25 +148,25 @@ const UserProfile = ({ navigation }: any) => {
           <View style={styles.followInfoContainer}>
             <View style={styles.followInner}>
               <Text style={styles.followText}>Events</Text>
-              <Text style={[styles.followText, { color: Colors.white }]}>{userData?.event_count}</Text>
+              <Text style={[styles.followText, {color: Colors.white}]}>
+                {userData?.event_count}
+              </Text>
             </View>
             <View style={styles.followInner}>
               <Text style={styles.followText}>Followers</Text>
-              <Text style={[styles.followText, { color: Colors.white }]}>
-                {userData?.followers}
+              <Text style={[styles.followText, {color: Colors.white}]}>
+                {userData?.followers?.length}
               </Text>
             </View>
             <View style={styles.followInner}>
               <Text style={styles.followText}>Following</Text>
-              <Text style={[styles.followText, { color: Colors.white }]}>
-                {userData?.following}
+              <Text style={[styles.followText, {color: Colors.white}]}>
+                {userData?.following?.length ? userData?.following?.lengt : 0}
               </Text>
             </View>
           </View>
           <View style={styles.statusContainer}>
-            <Text style={styles.statusText}>
-              {userData?.bio}
-            </Text>
+            <Text style={styles.statusText}>{userData?.bio}</Text>
           </View>
           <View style={styles.row}>
             <VectorIcon
@@ -194,7 +198,9 @@ const UserProfile = ({ navigation }: any) => {
               size={20}
               color={Colors.Pink}
             />
-            <Text style={styles.rowText}>{userData?.location ? userData?.location : "Eiffel Tower"}</Text>
+            <Text style={styles.rowText}>
+              {userData?.location ? userData?.location : 'Eiffel Tower'}
+            </Text>
             <View
               style={{
                 height: moderateScaleVertical(25),
@@ -225,12 +231,16 @@ const UserProfile = ({ navigation }: any) => {
           </View>
           <View style={styles.postContainer}>
             {userData?.thumbnail_urls?.map((i, index) => (
-              <FastImage source={{ uri: i }} key={index} style={styles.postImage} />
+              <FastImage
+                source={{uri: IMAGE_URL + i}}
+                key={index}
+                style={styles.postImage}
+              />
             ))}
           </View>
           <View style={styles.row}>
-            <View style={{ width: '10%' }} />
-            <Text style={{ ...commonStyles.font16White }}>See more</Text>
+            <View style={{width: '10%'}} />
+            <Text style={{...commonStyles.font16White}}>See more</Text>
             <VectorIcon
               groupName="Feather"
               name="edit"
@@ -263,7 +273,7 @@ const UserProfile = ({ navigation }: any) => {
           animationOut="fadeOut"
           onBackdropPress={() => setShowModal(false)}
           avoidKeyboard={true}
-          style={{ flex: 1, margin: 0, justifyContent: 'flex-start' }}
+          style={{flex: 1, margin: 0, justifyContent: 'flex-start'}}
           isVisible={showModal}
           backdropOpacity={0.2}>
           <View style={styles.optionContainer}>
@@ -284,7 +294,7 @@ const UserProfile = ({ navigation }: any) => {
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.8}
-              style={[styles.option, { borderBottomWidth: 0 }]}>
+              style={[styles.option, {borderBottomWidth: 0}]}>
               <Text style={styles.optionText}>Turn profile to public</Text>
             </TouchableOpacity>
           </View>

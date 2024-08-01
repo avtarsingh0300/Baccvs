@@ -55,21 +55,26 @@ const App = () => {
   };
 
   return (
-    <Provider store={store}>
-      <GestureHandlerRootView style={{flex: 1}}>
-        <SafeAreaProvider>
-          <Routes />
-          <FlashMessage
-            titleStyle={{
-              marginRight: moderateScale(5),
-              fontFamily: fontFamily.time_regular,
-              fontSize: textScale(12),
-            }}
-            position="top"
-          />
-        </SafeAreaProvider>
-      </GestureHandlerRootView>
-    </Provider>
+    <GestureHandlerRootView
+      style={{
+        flex: 1,
+      }}>
+      <Provider store={store}>
+        <GestureHandlerRootView style={{flex: 1}}>
+          <SafeAreaProvider>
+            <Routes />
+            <FlashMessage
+              titleStyle={{
+                marginRight: moderateScale(5),
+                fontFamily: fontFamily.time_regular,
+                fontSize: textScale(12),
+              }}
+              position="top"
+            />
+          </SafeAreaProvider>
+        </GestureHandlerRootView>
+      </Provider>
+    </GestureHandlerRootView>
   );
 };
 

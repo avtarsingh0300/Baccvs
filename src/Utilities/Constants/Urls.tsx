@@ -1,5 +1,5 @@
-const BASE_URL = 'http://13.51.167.189:3002/api/';
-const IMAGE_URL = 'http://51.20.72.60:3002/';
+export const BASE_URL = 'https://www.baccvs.com/api/';
+export const IMAGE_URL = 'https://www.baccvs.com/';
 
 export const getApiUrl = (endpoint: string) => `${BASE_URL}${endpoint}`;
 
@@ -9,9 +9,18 @@ export const OTP_MATCH = getApiUrl('verify-otp');
 export const USER_DATA = getApiUrl('user-details');
 export const REGISTER_USER = getApiUrl('create-user');
 export const GET_HOME_DATA = getApiUrl('home-data');
-export const GET_MY_EVENT = getApiUrl('myevents');
-export const UPDATE_USER_PROFILE = getApiUrl('updateUserDetails');
-
-export const GET_EVENT_TYPE = getApiUrl('getevent');
-
-export const MAP_SEARCH = getApiUrl('mapsearch');
+export const GET_MY_EVENT = getApiUrl('my-events');
+export const UPDATE_USER_PROFILE = getApiUrl('update-User-Details');
+export const GET_FOLLOWER_LIST = getApiUrl('follower-list');
+export const GET_EVENT_TYPE = getApiUrl('event-type-list');
+export const CREATE_EVENT = getApiUrl('create-event');
+export const MAP_SEARCH = getApiUrl('map-search');
+export const EVENT_DETAIL = getApiUrl('event');
+export const GET_NOTIFICATION = getApiUrl('notification-list');
+export const CHANGE_PASS = getApiUrl('change-password');
+export const USER_DELETE = getApiUrl('deactivate-account');
+export const BLOCKED_LIST = getApiUrl('block-user-list');
+export const UN_BLOCKED_USER = getApiUrl('unblock-user');
+export const GET_INVITES = getApiUrl('get-invites');
+export const ACCEPT_INVITES = getApiUrl('invite-accept');
+export const REFUSE_INVITES = getApiUrl('invite-refuse');

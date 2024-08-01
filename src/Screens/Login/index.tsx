@@ -15,12 +15,13 @@ import {
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {login, setDataHandler} from '../../Utilities/Constants/auth';
 import {Keyboard} from 'react-native';
-const Login = (props: any) => {
+import {saveUserData} from '../../Redux/Action/auth';
+const Login = ({navigation}: any) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loader, setLoader] = useState(false);
   const onBack = () => {
-    props.navigation.goBack();
+    navigation.goBack();
   };
   const onLogin = () => {
     if (!username) {
@@ -34,16 +35,18 @@ const Login = (props: any) => {
       identifier: username,
       password: password,
     };
+    console.log(formData);
     login(formData)
       .then(res => {
         setLoader(false);
-        Keyboard.dismiss();
         console.log(res, 'res');
-        setDataHandler(res);
-        showSuccess(res);
-        props.navigation.replace(NavigationStrings.TabRoutes, {
-          screen: NavigationStrings.HomeScreen,
-        });
+        navigation.navigate(NavigationStrings.TabRoutes);
+        setTimeout(() => {
+          setDataHandler(res);
+          saveUserData(res);
+        }, 1000);
+        Keyboard.dismiss();
+        showSuccess(res?.message);
       })
       .catch(err => {
         setLoader(false);

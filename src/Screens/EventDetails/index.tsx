@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {styles} from './styles';
 import {Colors} from '../../Utilities/Styles/colors';
 import LinearGradient from 'react-native-linear-gradient';
@@ -25,21 +25,23 @@ import {
 import RBSheet from 'react-native-raw-bottom-sheet';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {TextInput} from 'react-native';
-import {SizeBox} from '../../Utilities/Component/Helpers';
+import {
+  Loadingcomponent,
+  SizeBox,
+  showError,
+} from '../../Utilities/Component/Helpers';
 import MapView, {Marker} from 'react-native-maps';
-const EventDetails = ({navigation}: any) => {
+import {getEventDetail} from '../../Utilities/Constants/auth';
+import {IMAGE_URL} from '../../Utilities/Constants/Urls';
+import {EventEmitter} from 'react-native';
+const EventDetails = ({navigation, route}: any) => {
   const refRBSheet: any = useRef();
   const refComRBSheet: any = useRef();
   const refInfoRBSheet: any = useRef();
   const refPeopleRBSheet: any = useRef();
   const refMapRBSheet: any = useRef();
-
-  const initialRegion = {
-    latitude: 37.78825,
-    longitude: -122.4324,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  };
+  const [loading, setLoading] = useState(false);
+  const [eventData, setEventData] = useState({});
 
   const onPressBack = () => {
     navigation.goBack();
@@ -88,18 +90,69 @@ const EventDetails = ({navigation}: any) => {
     },
   ];
 
+  useEffect(() => {
+    getEvent();
+  }, []);
+
+  const getEvent = () => {
+    setLoading(true);
+    getEventDetail(route.params.eventId)
+      .then(res => {
+        setLoading(false);
+        setEventData(res);
+
+        console.log(res, 'sss');
+      })
+      .catch(err => {
+        setLoading(false), showError(err.message), console.log(err);
+      });
+  };
+  const formatTime = (timeString: string) => {
+    const date = new Date(`1970-01-01T${timeString}Z`);
+    return date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+  };
+
+  const calculateDuration = (startTime: string, endTime: string) => {
+    if (startTime !== '' || (undefined && endTime !== '') || undefined) {
+      const startDate: any = new Date(`1970-01-01T${startTime}Z`);
+      const endDate: any = new Date(`1970-01-01T${endTime}Z`);
+      const diffMs = endDate - startDate;
+      const diffHrs = Math.floor(diffMs / 3600000);
+      const diffMins = Math.round((diffMs % 3600000) / 60000);
+      return `${diffHrs}h ${diffMins}m`;
+    }
+  };
+  const initialRegion = {
+    latitude: eventData.latitude ? eventData.latitude : 37.78825,
+    longitude: eventData.longitude ? eventData.longitude : -122.4324,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  };
   const renderItem = ({item, index}: any) => (
     <View style={styles.itemContainer}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Image
-          source={ImagePath.followProfile}
-          style={{borderWidth: 1, borderRadius: 8, borderColor: Colors.Pink}}
-        />
+        {item?.user?.image ? (
+          <Image
+            source={{uri: IMAGE_URL + item?.user?.image}}
+            style={{
+              borderWidth: 1,
+              borderRadius: 8,
+              borderColor: Colors.Pink,
+              width: 40,
+              height: 47,
+            }}
+          />
+        ) : (
+          <Image
+            source={ImagePath.followProfile}
+            style={{borderWidth: 1, borderRadius: 8, borderColor: Colors.Pink}}
+          />
+        )}
         <Text style={[styles.distanceText, {marginLeft: 10}]}>
-          {item?.name}
+          {item?.user?.name}
         </Text>
       </View>
-      <TouchableOpacity activeOpacity={0.8}>
+      {/* <TouchableOpacity activeOpacity={0.8}>
         <LinearGradient
           colors={[Colors.LinearBlack, Colors.Pink]}
           style={{
@@ -109,27 +162,78 @@ const EventDetails = ({navigation}: any) => {
           }}>
           <Text style={styles.timeText}>Follow</Text>
         </LinearGradient>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
   const comItem = ({item, index}: any) => (
     <View style={styles.itemContainer}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Image
-          source={ImagePath.followProfile}
-          style={{borderWidth: 1, borderRadius: 8, borderColor: Colors.Pink}}
-        />
+        {item?.user?.image ? (
+          <Image
+            source={{uri: IMAGE_URL + item?.user?.image}}
+            style={{
+              borderWidth: 1,
+              borderRadius: 8,
+              borderColor: Colors.Pink,
+              width: 40,
+              height: 47,
+            }}
+          />
+        ) : (
+          <Image
+            source={ImagePath.followProfile}
+            style={{borderWidth: 1, borderRadius: 8, borderColor: Colors.Pink}}
+          />
+        )}
         <View>
           <Text style={[styles.distanceText, {marginLeft: 10}]}>
-            {item?.name}
+            {item?.user?.name}
           </Text>
           <Text style={[styles.cmttxt, {marginLeft: 10}]}>
-            Looks fire ! Can I join?
+            {item?.description}
           </Text>
         </View>
       </View>
     </View>
   );
+  const renderMembers = ({item, index}: any) => (
+    <View style={styles.itemContainer}>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        {item?.user?.image ? (
+          <Image
+            source={{uri: IMAGE_URL + item?.user?.image}}
+            style={{
+              borderWidth: 1,
+              borderRadius: 8,
+              borderColor: Colors.Pink,
+              width: 40,
+              height: 47,
+            }}
+          />
+        ) : (
+          <Image
+            source={ImagePath.followProfile}
+            style={{borderWidth: 1, borderRadius: 8, borderColor: Colors.Pink}}
+          />
+        )}
+        <Text style={[styles.distanceText, {marginLeft: 10}]}>
+          {item?.name}
+        </Text>
+      </View>
+      {/* <TouchableOpacity activeOpacity={0.8}>
+        <LinearGradient
+          colors={[Colors.LinearBlack, Colors.Pink]}
+          style={{
+            padding: 10,
+            paddingHorizontal: 20,
+            borderRadius: 10,
+          }}>
+          <Text style={styles.timeText}>Follow</Text>
+        </LinearGradient>
+      </TouchableOpacity> */}
+    </View>
+  );
+  const thumbnailUrl = eventData.thumbnail_urls?.[0];
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
@@ -137,8 +241,11 @@ const EventDetails = ({navigation}: any) => {
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
       <SafeAreaView>
+        <Loadingcomponent isVisible={loading} />
         <ImageBackground
-          source={ImagePath.ImageBackground}
+          source={
+            thumbnailUrl ? {uri: IMAGE_URL + thumbnailUrl} : ImagePath.eventback
+          }
           style={{height: height, width: width}}>
           <View style={styles.headerRow}>
             <VectorIcon
@@ -147,7 +254,7 @@ const EventDetails = ({navigation}: any) => {
               size={25}
               onPress={onPressBack}
             />
-            <Text style={styles.headerTxt}>One life</Text>
+            <Text style={styles.headerTxt}>{eventData?.event_name}</Text>
             <View style={{flexDirection: 'row'}}>
               <VectorIcon
                 groupName={'MaterialCommunityIcons'}
@@ -176,19 +283,22 @@ const EventDetails = ({navigation}: any) => {
             start={{x: 0, y: 0}}
             end={{x: 1.3, y: 0.9}}
             style={styles.secondHeader}>
-            <Text style={styles.timeText}>23h00 - 05h00</Text>
+            <Text style={styles.timeText}>
+              {formatTime(eventData?.start_time)} -
+              {formatTime(eventData?.end_time)}
+            </Text>
             <TouchableOpacity
               activeOpacity={0.8}
               style={styles.ticketContainer}>
               <Image source={ImagePath.Ticket} />
-              <Text style={styles.ticketPrice}> €120</Text>
+              <Text style={styles.ticketPrice}> €{eventData?.price_type}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{flexDirection: 'row'}}
               onPress={() => {
                 refMapRBSheet.current.open();
               }}>
-              <Text style={styles.distanceText}>1 km </Text>
+              <Text style={styles.distanceText}>{eventData?.distance}</Text>
               <Image source={ImagePath.Pin_alt} />
             </TouchableOpacity>
           </LinearGradient>
@@ -221,19 +331,25 @@ const EventDetails = ({navigation}: any) => {
               />
               <Text style={styles.bottomBarText}>Comments</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.8}
+            <View
               style={[
                 styles.likebtn,
                 {
                   bottom: moderateScaleVertical(10),
                 },
               ]}>
-              <Image source={ImagePath.ProfileImg} style={styles.profileimg} />
+              <Image
+                source={
+                  thumbnailUrl
+                    ? {uri: IMAGE_URL + thumbnailUrl}
+                    : ImagePath.ProfileImg
+                }
+                style={styles.profileimg}
+              />
               <Text style={[styles.bottomBarText, {fontSize: textScale(14)}]}>
                 Kingson
               </Text>
-            </TouchableOpacity>
+            </View>
             <TouchableOpacity
               activeOpacity={0.8}
               style={styles.likebtn}
@@ -302,7 +418,7 @@ const EventDetails = ({navigation}: any) => {
                 Likes
               </Text>
               <FlatList
-                data={likeData}
+                data={eventData?.likes}
                 keyExtractor={item => item?.id?.toString()}
                 renderItem={renderItem}
               />
@@ -348,17 +464,17 @@ const EventDetails = ({navigation}: any) => {
                 Comments
               </Text>
               <FlatList
-                data={likeData}
+                data={eventData?.comments}
                 keyExtractor={item => item?.id?.toString()}
                 renderItem={comItem}
               />
 
-              <TextInput
+              {/* <TextInput
                 placeholder="Add a comment... "
                 multiline
                 placeholderTextColor={Colors.white}
                 style={styles.cmtinpt}
-              />
+              /> */}
               <SizeBox size={10} />
             </LinearGradient>
           </RBSheet>
@@ -391,11 +507,12 @@ const EventDetails = ({navigation}: any) => {
                   style={{alignSelf: 'flex-end', top: 10}}
                   onPress={() => refInfoRBSheet.current.close()}
                 />
-                <Text style={[styles.timeText, styles.onelife]}>One Life</Text>
+                <Text style={[styles.timeText, styles.onelife]}>
+                  {eventData?.event_name}
+                </Text>
                 <SizeBox size={10} />
                 <Text style={[styles.cmttxt, {fontSize: textScale(10)}]}>
-                  This party about having fun, bring your stuff and come enjoy
-                  the moment with us.
+                  {eventData?.description}
                 </Text>
                 <Text style={[styles.cmttxt, {fontSize: textScale(10)}]}>
                   Free entry, be respectful of others.
@@ -409,7 +526,11 @@ const EventDetails = ({navigation}: any) => {
                     color={Colors.white}
                   />
                   <Text style={[styles.timeText, {color: Colors.green}]}>
-                    {`  `}23h00 - 05h00
+                    {`  `}
+                    {calculateDuration(
+                      eventData?.start_time,
+                      eventData?.end_time,
+                    )}
                   </Text>
                 </View>
                 <SizeBox size={10} />
@@ -420,17 +541,24 @@ const EventDetails = ({navigation}: any) => {
                     size={25}
                     color={Colors.white}
                   />
-                  <TouchableOpacity style={styles.allBtn}>
-                    <Text style={styles.timeText}>Techno</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.allBtn}>
-                    <Text style={styles.timeText}>Deep house</Text>
-                  </TouchableOpacity>
+                  <FlatList
+                    showsHorizontalScrollIndicator={false}
+                    horizontal
+                    data={eventData?.music_type}
+                    renderItem={({item}) => (
+                      <TouchableOpacity style={styles.allBtn}>
+                        <Text style={styles.timeText}>{item}</Text>
+                      </TouchableOpacity>
+                    )}
+                  />
                 </View>
                 <SizeBox size={10} />
                 <View style={{flexDirection: 'row'}}>
                   <Image source={ImagePath.Pin_alt} />
-                  <Text style={styles.distanceText}>{`  `}1 km </Text>
+                  <Text style={styles.distanceText}>
+                    {`  `}
+                    {eventData?.distance}
+                  </Text>
                 </View>
               </View>
               <SizeBox size={30} />
@@ -441,7 +569,10 @@ const EventDetails = ({navigation}: any) => {
                   {width: '30%', alignSelf: 'center'},
                 ]}>
                 <Image source={ImagePath.Ticket} />
-                <Text style={styles.ticketPrice}> €120</Text>
+                <Text style={styles.ticketPrice}>
+                  {' '}
+                  €{eventData?.price_type}
+                </Text>
               </TouchableOpacity>
             </LinearGradient>
           </RBSheet>
@@ -485,11 +616,26 @@ const EventDetails = ({navigation}: any) => {
                 ]}>
                 Event members
               </Text>
-              <FlatList
-                data={likeData}
-                keyExtractor={item => item?.id?.toString()}
-                renderItem={renderItem}
-              />
+
+              {eventData?.members_names ? (
+                <FlatList
+                  data={eventData?.members_names}
+                  keyExtractor={item => item?.id?.toString()}
+                  renderItem={renderMembers}
+                />
+              ) : (
+                <Text
+                  style={[
+                    styles.cmttxt,
+                    {
+                      fontSize: textScale(10),
+                      alignSelf: 'center',
+                      marginTop: 20,
+                    },
+                  ]}>
+                  No data found ..
+                </Text>
+              )}
             </LinearGradient>
           </RBSheet>
           <RBSheet
@@ -541,7 +687,14 @@ const EventDetails = ({navigation}: any) => {
                 }}>
                 <MapView style={styles.map} initialRegion={initialRegion}>
                   <Marker
-                    coordinate={{latitude: 37.78825, longitude: -122.4324}}
+                    coordinate={{
+                      latitude: eventData?.latitude
+                        ? eventData?.latitude
+                        : 37.78825,
+                      longitude: eventData?.longitude
+                        ? eventData?.longitude
+                        : -122.4324,
+                    }}
                     title={'My Marker'}
                     description={'Some description'}
                   />

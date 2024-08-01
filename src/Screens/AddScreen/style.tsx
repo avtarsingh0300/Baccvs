@@ -7,7 +7,7 @@ import {
   textScale,
   width,
 } from '../../Utilities/Styles/responsiveSize';
-import commonStyles from '../../Utilities/Styles/commonStyles';
+
 import fontFamily from '../../Utilities/Styles/fontFamily';
 
 const styles = StyleSheet.create({
@@ -90,39 +90,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 
-  flatbox: {
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: Colors.lightGrey,
-    borderRadius: 8,
-    width: '95%',
-    marginLeft: 10,
-    alignSelf: 'center',
-    borderStyle: 'dashed',
-
-    paddingVertical: moderateScaleVertical(10),
-  },
-  flatcon: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: moderateScale(20),
-    paddingTop: moderateScaleVertical(5),
-  },
-  tickvw: {
-    height: 15,
-    width: 15,
-    borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: Colors.white,
-  },
-  camerarow: {
-    alignSelf: 'center',
-    flexDirection: 'row',
-    paddingTop: moderateScaleVertical(10),
-    alignItems: 'center',
-  },
   map: {
     ...StyleSheet.absoluteFillObject,
   },
@@ -167,19 +134,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
     fontWeight: '400',
     fontSize: textScale(10),
-  },
-  imageContainer: {
-    height: 50,
-
-    width: 50,
-    marginLeft: 10,
-    alignSelf: 'center',
-
-    borderRadius: 8,
-
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: moderateScaleVertical(10),
   },
 });
 

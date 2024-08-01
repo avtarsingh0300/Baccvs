@@ -3,7 +3,10 @@ import {Colors} from '../../Utilities/Styles/colors';
 import {
   moderateScale,
   moderateScaleVertical,
+  textScale,
 } from '../../Utilities/Styles/responsiveSize';
+import fontFamily from '../../Utilities/Styles/fontFamily';
+import commonStyles from '../../Utilities/Styles/commonStyles';
 
 const styles = StyleSheet.create({
   LinearConatiner: {flex: 1, paddingHorizontal: 20},
@@ -121,6 +124,56 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  langItem: {
+    padding: 2,
+    borderWidth: 1,
+    borderColor: Colors.white,
+    borderRadius: 8,
+    margin: 2,
+    flexDirection: 'row',
+  },
+  langItemText: {
+    color: Colors.greyTxt,
+    fontFamily: fontFamily.time_regular,
+    paddingBottom: 2,
+    paddingHorizontal: 2,
+    fontWeight: '400',
+    fontSize: textScale(10),
+  },
+  modalContainer: {
+    padding: 15,
+    width: '100%',
+    borderWidth: 1,
+    borderColor: Colors.inputborder,
+    borderRadius: 8,
+    backgroundColor: Colors.LinearBlack,
+  },
+  mondaInvw: {
+    padding: 5,
+    borderColor: Colors.Pink,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  Btnmain: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  btn: {
+    padding: 1,
+    borderRadius: 7,
+    width: '30%',
+  },
+  button: {
+    backgroundColor: Colors.LinearBlack,
+    borderRadius: 7,
+    height: 50,
+    justifyContent: 'center',
+  },
+  text: {
+    ...commonStyles.font14Center,
   },
 });
 

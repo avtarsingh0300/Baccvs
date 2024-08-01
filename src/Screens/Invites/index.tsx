@@ -1,15 +1,26 @@
 import {Image, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import styles from './style';
-import {Header, SizeBox} from '../../Utilities/Component/Helpers';
+import {
+  Header,
+  Loadingcomponent,
+  SizeBox,
+  showError,
+} from '../../Utilities/Component/Helpers';
 import {FlatList} from 'react-native';
 import ImagePath from '../../Utilities/Constants/ImagePath';
+import {getInvitesList} from '../../Utilities/Constants/auth';
+import {IMAGE_URL} from '../../Utilities/Constants/Urls';
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 
 const Invites = ({navigation}: any) => {
   const [button, setButton] = useState('R');
+  const [recdata, setRecdata] = useState([]);
+  const [sendata, setSenddata] = useState([]);
+  const [loader, setLoader] = useState(false);
   const onGoback = () => {
     navigation.goBack();
   };
@@ -19,28 +30,66 @@ const Invites = ({navigation}: any) => {
   const onSent = () => {
     setButton('S');
   };
-  const renderItem = () => (
+  useEffect(() => {
+    getInvites();
+  }, []);
+
+  const getInvites = () => {
+    setLoader(true);
+    getInvitesList()
+      .then(res => {
+        setLoader(false);
+        setRecdata(res?.pagination?.received?.data);
+        setSenddata(res?.pagination?.sent?.data);
+        console.log(res?.pagination?.received?.data);
+      })
+      .catch(err => {
+        setLoader(false);
+        showError(err.message);
+        console.log(err);
+      });
+  };
+  const onSeeEvent = (id: string) => {
+    navigation.navigate(NavigationStrings.EventDetails, {eventId: id});
+  };
+  const onAccept = () => {
+    console.log('accept');
+  };
+  const onRefuse = () => {
+    console.log('refuse');
+  };
+  const renderItem = ({item}: any) => (
     <View style={styles.flex}>
-      <Image source={ImagePath.ProfileImg} style={styles.userimg} />
+      {item?.image ? (
+        <Image source={ImagePath.ProfileImg} style={styles.userimg} />
+      ) : (
+        <Image source={{uri: IMAGE_URL + item?.image}} style={styles.userimg} />
+      )}
       <View>
-        <Text style={styles.heading}>X invited you to his party.</Text>
+        <Text style={styles.heading}>{item?.message}</Text>
         <SizeBox size={8} />
-        <TouchableOpacity style={styles.seebtn}>
+        <TouchableOpacity
+          style={styles.seebtn}
+          onPress={() => onSeeEvent(item?.event_id)}>
           <Text style={styles.btntxt}>See Event</Text>
         </TouchableOpacity>
       </View>
       <View>
-        <LinearGradient
-          colors={[Colors.Linear, Colors.Pink]}
-          style={styles.acbtn}>
-          <Text style={styles.btntxt}>Accept</Text>
-        </LinearGradient>
+        <TouchableOpacity onPress={onAccept}>
+          <LinearGradient
+            colors={[Colors.Linear, Colors.Pink]}
+            style={styles.acbtn}>
+            <Text style={styles.btntxt}>Accept</Text>
+          </LinearGradient>
+        </TouchableOpacity>
         <SizeBox size={2} />
-        <LinearGradient
-          colors={[Colors.LinearBlack, Colors.Linear]}
-          style={styles.acbtn}>
-          <Text style={styles.btntxt}>Refuse</Text>
-        </LinearGradient>
+        <TouchableOpacity onPress={onRefuse}>
+          <LinearGradient
+            colors={[Colors.LinearBlack, Colors.Linear]}
+            style={styles.acbtn}>
+            <Text style={styles.btntxt}>Refuse</Text>
+          </LinearGradient>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -70,6 +119,7 @@ const Invites = ({navigation}: any) => {
       end={{x: 1.3, y: 0.9}}
       style={styles.conatiner}>
       <SafeAreaView>
+        <Loadingcomponent isVisible={loader} />
         <Header onPress={onGoback} title="Invites" />
         <SizeBox size={10} />
         <View style={styles.buttongroup}>
@@ -93,9 +143,27 @@ const Invites = ({navigation}: any) => {
         <SizeBox size={15} />
 
         {button === 'R' ? (
-          <FlatList data={[{id: 1}, {id: 1}]} renderItem={renderItem} />
+          <>
+            {recdata?.length > 0 ? (
+              <FlatList data={recdata} renderItem={renderItem} />
+            ) : (
+              <Text
+                style={[{...commonStyles.font14Center}, {color: Colors.white}]}>
+                No data found ..
+              </Text>
+            )}
+          </>
         ) : (
-          <FlatList data={[{id: 1}, {id: 1}]} renderItem={renderItemm} />
+          <>
+            {sendata?.length > 0 ? (
+              <FlatList data={sendata} renderItem={renderItemm} />
+            ) : (
+              <Text
+                style={[{...commonStyles.font14Center}, {color: Colors.white}]}>
+                No data found ..
+              </Text>
+            )}
+          </>
         )}
       </SafeAreaView>
     </LinearGradient>

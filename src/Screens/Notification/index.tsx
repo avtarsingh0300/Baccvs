@@ -5,48 +5,82 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
 import styles from './style';
 import {
   ImageComponent,
+  Loadingcomponent,
   SizeBox,
-  dummydata,
+  showError,
 } from '../../Utilities/Component/Helpers';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import ImagePath from '../../Utilities/Constants/ImagePath';
-import {textScale} from '../../Utilities/Styles/responsiveSize';
+import {textScale, width} from '../../Utilities/Styles/responsiveSize';
 import fontFamily from '../../Utilities/Styles/fontFamily';
+import {getNotification} from '../../Utilities/Constants/auth';
+import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 
 const Notification = () => {
-  const renderItem = () => (
+  const [loading, setLoader] = useState(false);
+  const [dataNoti, setDataNoti] = useState([]);
+  useEffect(() => {
+    getNoti();
+  }, []);
+  const getNoti = () => {
+    setLoader(true);
+    getNotification()
+      .then(res => {
+        setLoader(false);
+        setDataNoti(res?.data);
+      })
+      .catch(err => {
+        setLoader(false);
+        showError(err.message);
+        console.log(err);
+      });
+  };
+  const renderItem = ({item}: any) => (
     <View style={styles.flatcon}>
       <View
         style={{
           flexDirection: 'row',
           alignItems: 'center',
         }}>
-        <ImageComponent source={ImagePath.ProfileImg} style={styles.userImg} />
+        {item?.image ? (
+          <ImageComponent
+            source={{uri: IMAGE_URL + item.image}}
+            style={styles.userImg}
+          />
+        ) : (
+          <ImageComponent
+            source={ImagePath.ProfileImg}
+            style={styles.userImg}
+          />
+        )}
         <View>
           <Text
             style={{
               ...commonStyles.font10Bold,
               color: Colors.white,
               paddingLeft: 15,
+              width: width / 1.5,
             }}>
-            BonnieD
+            {item?.subject}
             <Text
               style={{
                 fontSize: textScale(9),
+
                 fontFamily: fontFamily.time_regular,
               }}>
-              {` `}started following you.
+              {` `}
+              {item?.message}
             </Text>
           </Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.follbtn}>
+      {/* <TouchableOpacity style={styles.follbtn}>
         <Text
           style={{
             ...commonStyles.font10Bold,
@@ -54,7 +88,7 @@ const Notification = () => {
           }}>
           Follow back
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 
@@ -65,15 +99,24 @@ const Notification = () => {
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
       <SafeAreaView>
+        <Loadingcomponent isVisible={loading} />
         <SizeBox size={5} />
 
         <Text style={{...commonStyles.Heading20font}}>Notifications</Text>
         <SizeBox size={10} />
         <View style={{flexDirection: 'row'}}>
-          <ImageComponent
-            source={ImagePath.ProfileImg}
-            style={styles.userImg}
-          />
+          {dataNoti[0]?.image ? (
+            <ImageComponent
+              source={{uri: IMAGE_URL + dataNoti[0]?.image}}
+              style={styles.userImg}
+            />
+          ) : (
+            <ImageComponent
+              source={ImagePath.ProfileImg}
+              style={styles.userImg}
+            />
+          )}
+
           <View>
             <Text
               style={{
@@ -81,14 +124,17 @@ const Notification = () => {
                 color: Colors.white,
                 paddingLeft: 15,
               }}>
-              Follow requests
+              {dataNoti[0]?.subject}
             </Text>
-            <Text style={styles.numreq}>Sonikm +91 others</Text>
+            <Text style={styles.numreq}>
+              {' '}
+              {dataNoti[0]?.subject} {dataNoti.length}
+            </Text>
           </View>
         </View>
         <SizeBox size={10} />
         <View style={styles.border} />
-        <FlatList data={dummydata} renderItem={renderItem} />
+        <FlatList data={dataNoti} renderItem={renderItem} />
       </SafeAreaView>
     </LinearGradient>
   );

@@ -3,7 +3,7 @@ import React from 'react';
 import NavigationStrings from '../Utilities/Constants/NavigationStrings';
 import * as screens from './index';
 
-export default function (Stack: any) {
+export default function AuthStack(Stack: any) {
   return (
     <>
       <Stack.Screen

@@ -23,3 +23,8 @@ export {default as Messages} from '../Screens/Messages';
 export {default as MyEvents} from '../Screens/MyEvents';
 export {default as AddPeople} from '../Screens/AddPeople';
 export {default as EditGroup} from '../Screens/EditGroup';
+export {default as CreateSuccess} from '../Screens/AddScreen/CreateSuccess';
+export {default as AccountInfo} from '../Screens/AccountInfo';
+export {default as ChangePass} from '../Screens/ChangePassword';
+export {default as DeactivateScreen} from '../Screens/DeactiveScreen';
+export {default as BlockAccounts} from '../Screens/BlockAccounts';

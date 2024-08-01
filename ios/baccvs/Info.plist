@@ -49,6 +49,9 @@
 		<string>Baccvs app need your location to show you relevant data.</string>
 		<key>NSPhotoLibraryAddUsageDescription</key>
 		<string>Your message to the user when the photo library is accessed for saving images</string>
+		<key>NSAppleMusicUsageDescription</key>
+		<string>This app requires access to your music library to provide a personalized music
+			experience.</string>
 		<key>UIAppFonts</key>
 		<array>
 			<string>AntDesign.ttf</string>

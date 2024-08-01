@@ -26,4 +26,9 @@ export default {
   MyEvents: 'Events',
   AddPeople: 'AddPeople',
   EditGroup: 'EditGroup',
+  CreateSuccess: 'CreateSuccess',
+  AccountInfo: 'AccountInfo',
+  ChangePass: 'ChangePass',
+  DeactiveScreen: 'DeactiveScreen',
+  BlockedAccount: 'BlockedAccount',
 };

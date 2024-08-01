@@ -1,9 +1,16 @@
-import { SafeAreaView, Text, View, FlatList, Image, TouchableOpacity } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { Colors } from '../../Utilities/Styles/colors';
+import {
+  SafeAreaView,
+  Text,
+  View,
+  FlatList,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Colors} from '../../Utilities/Styles/colors';
 import LinearGradient from 'react-native-linear-gradient';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { styles } from './style';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {styles} from './style';
 import {
   CommonBtn,
   CommonInput,
@@ -20,10 +27,13 @@ import Modal from 'react-native-modal';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
-import { getUserProfile, UpdateUserProfile } from '../../Utilities/Constants/auth';
+import {
+  getUserProfile,
+  UpdateUserProfile,
+} from '../../Utilities/Constants/auth';
 import languages from '../../Utilities/Constants';
 
-const EditProfile = ({ navigation }: any) => {
+const EditProfile = ({navigation}: any) => {
   const [Name, setName] = useState('');
   const [userHeight, setUserHeight] = useState('');
   const [userAge, setUserAge] = useState('');
@@ -49,33 +59,34 @@ const EditProfile = ({ navigation }: any) => {
     navigation.goBack();
   };
 
-
   useEffect(() => {
     setLoading(true);
     getUserData();
   }, []);
 
   const getUserData = async () => {
-    getUserProfile().then(res => {
-      // console.log(res, "res in getUserProfile");
-      setUserData(res);
-      setName(res?.full_name);
-      setUserHeight(res?.height);
-      setUserAge(res?.age?.toString());
-      setSign(res?.zodiac_sign);
-      setJob(res?.job_title);
-      setSelectDrink(res?.drinking);
-      setSelectDrink(res?.drinking);
-      setSelectSmoke(res?.smoking);
-      setUserBio(res?.bio);
-      setSelectedLang(res?.language);
-      setSelectGender(res?.gender);
-      setUserLocation(res?.location);
-      setLoading(false);
-    }).catch(err => {
-      setLoading(false);
-      console.log(err, "err in getUserProfile");
-    })
+    getUserProfile()
+      .then(res => {
+        // console.log(res, "res in getUserProfile");
+        setUserData(res);
+        setName(res?.full_name);
+        setUserHeight(res?.height);
+        setUserAge(res?.age?.toString());
+        setSign(res?.zodiac_sign);
+        setJob(res?.job_title);
+        setSelectDrink(res?.drinking);
+        setSelectDrink(res?.drinking);
+        setSelectSmoke(res?.smoking);
+        setUserBio(res?.bio);
+        setSelectedLang(res?.language);
+        setSelectGender(res?.gender);
+        setUserLocation(res?.location);
+        setLoading(false);
+      })
+      .catch(err => {
+        setLoading(false);
+        console.log(err, 'err in getUserProfile');
+      });
   };
 
   const selectModalHandler = (item: any) => {
@@ -94,7 +105,6 @@ const EditProfile = ({ navigation }: any) => {
     }
   };
 
-
   const updateProfileHandler = () => {
     const formData = {
       full_name: Name,
@@ -107,25 +117,27 @@ const EditProfile = ({ navigation }: any) => {
       language: selectedLang,
       smoking: selectedSmoke,
       drinking: selectedDrink,
-      bio: userBio
+      bio: userBio,
     };
     setLoading(true);
-    UpdateUserProfile(formData).then(res => {
-      // console.log(res, "res in UpdateUserProfile");
-      getUserData();
-      onBack();
-    }).catch(err => {
-      setLoading(false);
-      console.log(err, "err in UpdateUserProfile");
-    })
+    UpdateUserProfile(formData)
+      .then(res => {
+        // console.log(res, "res in UpdateUserProfile");
+        getUserData();
+        onBack();
+      })
+      .catch(err => {
+        setLoading(false);
+        console.log(err, 'err in UpdateUserProfile');
+      });
   };
 
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1.3, y: 0.9 }}
-      style={{ flex: 1 }}>
+      start={{x: 0, y: 0}}
+      end={{x: 1.3, y: 0.9}}
+      style={{flex: 1}}>
       <SafeAreaView>
         <KeyboardAwareScrollView
           contentContainerStyle={styles.container}
@@ -142,11 +154,12 @@ const EditProfile = ({ navigation }: any) => {
               color={Colors.white}
               size={21}
             />
-            <View style={{ width: '90%' }}>
+            <View style={{width: '90%'}}>
               <CommonInput
                 value={Name}
                 onChangeText={(e: string) => setName(e.trim())}
-                placeholder="Name" />
+                placeholder="Name"
+              />
             </View>
           </View>
           <SizeBox size={10} />
@@ -159,9 +172,9 @@ const EditProfile = ({ navigation }: any) => {
               color={Colors.white}
               size={21}
             />
-            <View style={{ width: '90%' }}>
+            <View style={{width: '90%'}}>
               <CommonInputBtn
-                title={selectedGender?.length > 0 ? selectedGender : "Gender"}
+                title={selectedGender?.length > 0 ? selectedGender : 'Gender'}
                 onPress={() => setModalVisible(true)}
               />
             </View>
@@ -171,7 +184,7 @@ const EditProfile = ({ navigation }: any) => {
           <SizeBox size={5} />
           <View style={styles.inputContainer}>
             <Image source={ImagePath.line_height} tintColor={Colors.white} />
-            <View style={{ width: '90%' }}>
+            <View style={{width: '90%'}}>
               <CommonInput
                 placeholder="Height"
                 keyboardType="number-pad"
@@ -190,7 +203,7 @@ const EditProfile = ({ navigation }: any) => {
               color={Colors.white}
               size={21}
             />
-            <View style={{ width: '90%' }}>
+            <View style={{width: '90%'}}>
               <CommonInput
                 placeholder="Age"
                 keyboardType="number-pad"
@@ -209,7 +222,7 @@ const EditProfile = ({ navigation }: any) => {
               color={Colors.white}
               size={21}
             />
-            <View style={{ width: '90%' }}>
+            <View style={{width: '90%'}}>
               <CommonInput
                 placeholder="Zodiac sign"
                 value={sign}
@@ -227,7 +240,7 @@ const EditProfile = ({ navigation }: any) => {
               color={Colors.white}
               size={21}
             />
-            <View style={{ width: '90%' }}>
+            <View style={{width: '90%'}}>
               <CommonInput
                 placeholder="Job title"
                 value={job}
@@ -245,7 +258,7 @@ const EditProfile = ({ navigation }: any) => {
               color={Colors.white}
               size={21}
             />
-            <View style={{ width: '90%' }}>
+            <View style={{width: '90%'}}>
               <CommonInput
                 placeholder="Add your area"
                 value={userLocation}
@@ -263,29 +276,32 @@ const EditProfile = ({ navigation }: any) => {
               color={Colors.white}
               size={21}
             />
-            <View style={{ width: '90%' }}>
-              {selectedLang?.length > 0 ? <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => setModalVisibleLang(true)}
-                style={styles.langContainer}>
-                {selectedLang?.map(item => (
-                  <TouchableOpacity
-                    style={styles.langItem}
-                    activeOpacity={0.8}
-                    onPress={() => {
-                      const filterData2 = selectedLang?.filter(
-                        (i: any) => i != item,
-                      );
-                      setSelectedLang(filterData2);
-                    }}>
-                    <Text style={styles.langItemText}>{item} &#x2715;</Text>
-                  </TouchableOpacity>
-                ))}
-              </TouchableOpacity> :
+            <View style={{width: '90%'}}>
+              {selectedLang?.length > 0 ? (
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => setModalVisibleLang(true)}
+                  style={styles.langContainer}>
+                  {selectedLang?.map(item => (
+                    <TouchableOpacity
+                      style={styles.langItem}
+                      activeOpacity={0.8}
+                      onPress={() => {
+                        const filterData2 = selectedLang?.filter(
+                          (i: any) => i != item,
+                        );
+                        setSelectedLang(filterData2);
+                      }}>
+                      <Text style={styles.langItemText}>{item} &#x2715;</Text>
+                    </TouchableOpacity>
+                  ))}
+                </TouchableOpacity>
+              ) : (
                 <CommonInputBtn
                   title="Select all languages you speak"
                   onPress={() => setModalVisibleLang(true)}
-                />}
+                />
+              )}
             </View>
           </View>
           <SizeBox size={10} />
@@ -298,9 +314,9 @@ const EditProfile = ({ navigation }: any) => {
               color={Colors.white}
               size={21}
             />
-            <View style={{ width: '90%' }}>
+            <View style={{width: '90%'}}>
               <CommonInputBtn
-                title={selectedDrink?.length > 0 ? selectedDrink : "Drink"}
+                title={selectedDrink?.length > 0 ? selectedDrink : 'Drink'}
                 onPress={() => setModalVisibleDrink(true)}
               />
             </View>
@@ -315,9 +331,9 @@ const EditProfile = ({ navigation }: any) => {
               color={Colors.white}
               size={21}
             />
-            <View style={{ width: '90%' }}>
+            <View style={{width: '90%'}}>
               <CommonInputBtn
-                title={selectedSmoke?.length > 0 ? selectedSmoke : "Smoking"}
+                title={selectedSmoke?.length > 0 ? selectedSmoke : 'Smoking'}
                 onPress={() => setModalVisibleSmoking(true)}
               />
             </View>
@@ -326,8 +342,8 @@ const EditProfile = ({ navigation }: any) => {
           <Text style={styles.label}>Bio</Text>
           <SizeBox size={5} />
           <View style={styles.inputContainer}>
-            <View style={{ width: '10%' }} />
-            <View style={{ width: '90%' }}>
+            <View style={{width: '10%'}} />
+            <View style={{width: '90%'}}>
               <CommonInput
                 placeholder="Bio"
                 multiline={true}
@@ -379,20 +395,25 @@ const EditProfile = ({ navigation }: any) => {
             <View style={styles.modalContainer}>
               <FlatList
                 data={
-                  modalVisible ? genders : modalVisibleLang ? languages : drinkList
+                  modalVisible
+                    ? genders
+                    : modalVisibleLang
+                    ? languages
+                    : drinkList
                 }
                 keyExtractor={(item, index) => index?.toString()}
-                renderItem={({ item, index }) => {
+                renderItem={({item, index}) => {
                   const lengthFlag = modalVisible
                     ? genders?.length
                     : modalVisibleLang
-                      ? languages?.length
-                      : drinkList?.length;
+                    ? languages?.length
+                    : drinkList?.length;
                   const filterData = selectedLang?.filter(
                     (i: any) => i == item?.name,
                   );
                   return (
-                    <TouchableOpacity activeOpacity={0.8}
+                    <TouchableOpacity
+                      activeOpacity={0.8}
                       onPress={() => {
                         if (modalVisible) {
                           setSelectGender(item);
@@ -421,7 +442,19 @@ const EditProfile = ({ navigation }: any) => {
                       </Text>
                       <VectorIcon
                         groupName="MaterialCommunityIcons"
-                        name={(modalVisible ? selectedGender == item : modalVisibleDrink ? selectedDrink == item : modalVisibleSmoking ? selectedSmoke == item : filterData[0] == item?.name) ? "radiobox-marked" : "radiobox-blank"}
+                        name={
+                          (
+                            modalVisible
+                              ? selectedGender == item
+                              : modalVisibleDrink
+                              ? selectedDrink == item
+                              : modalVisibleSmoking
+                              ? selectedSmoke == item
+                              : filterData[0] == item?.name
+                          )
+                            ? 'radiobox-marked'
+                            : 'radiobox-blank'
+                        }
                         size={18}
                       />
                     </TouchableOpacity>

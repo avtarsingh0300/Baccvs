@@ -3,11 +3,11 @@ import React from 'react';
 import NavigationStrings from '../Utilities/Constants/NavigationStrings';
 import TabRoutes from './TabRoutes';
 import * as screens from './index';
-export default function (Stack: any) {
+export default function MainStack(Stack: any) {
   return (
     <>
       <Stack.Screen
-        name={NavigationStrings.TabRoutes}
+        name={NavigationStrings?.TabRoutes}
         component={TabRoutes}
         options={{headerShown: false}}
       />
@@ -60,6 +60,36 @@ export default function (Stack: any) {
       <Stack.Screen
         name={NavigationStrings.EditGroup}
         component={screens.EditGroup}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.CreateSuccess}
+        component={screens.CreateSuccess}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.AccountInfo}
+        component={screens.AccountInfo}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.ChangePass}
+        component={screens.ChangePass}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.DeactiveScreen}
+        component={screens.DeactivateScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.BlockedAccount}
+        component={screens.BlockAccounts}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.Invites}
+        component={screens.Invites}
         options={{headerShown: false}}
       />
     </>

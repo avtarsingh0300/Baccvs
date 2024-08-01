@@ -39,7 +39,7 @@ const TabRoutes = () => {
           </View>
         </>
       )}
-      initialRouteName={NavigationStrings.HomeScreen}
+      initialRouteName={NavigationStrings?.HomeScreen}
       screenOptions={{
         tabBarActiveTintColor: Colors.tranparent,
         tabBarInactiveTintColor: Colors.tranparent,
@@ -51,7 +51,7 @@ const TabRoutes = () => {
         headerShown: false,
       }}>
       <BottomTab.Screen
-        name={NavigationStrings.HomeScreen}
+        name={NavigationStrings?.HomeScreen}
         component={screens.HomeScreen}
         options={{
           tabBarShowLabel: true,
@@ -68,7 +68,7 @@ const TabRoutes = () => {
         }}
       />
       <BottomTab.Screen
-        name={NavigationStrings.Search}
+        name={NavigationStrings?.Search}
         component={screens.Search}
         options={{
           tabBarShowLabel: true,

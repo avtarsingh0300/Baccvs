@@ -1,16 +1,27 @@
-import {View, Text, SafeAreaView, ScrollView, TextInput} from 'react-native';
-import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
 import styles from './style';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import {
+  Header,
   ImageComponent,
   SizeBox,
   dummydata,
+  showError,
 } from '../../Utilities/Component/Helpers';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import {
+  height,
   moderateScale,
   moderateScaleVertical,
   textScale,
@@ -20,9 +31,97 @@ import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import {FlatList} from 'react-native';
 import ToggleSwitch from 'toggle-switch-react-native';
-const EventFilter = () => {
+import {getEventTypes} from '../../Utilities/Constants/auth';
+
+import Modal from 'react-native-modal';
+import fontFamily from '../../Utilities/Styles/fontFamily';
+import languages from '../../Utilities/Constants';
+const EventFilter = ({navigation}: any) => {
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const [musicStyle, setMusicStyle] = useState([]);
+  const [eventType, setEventType] = useState([]);
+  const [venueType, setVenueType] = useState([]);
+  const [modalVisibleLang, SetModalVisibleLang] = useState(false);
+  const [selectedLang, setSelectedLang] = useState([]);
+  const [selectedValue, setSelected] = useState([1, 4]);
+  const [selectedValues2, setSelectedValues2] = useState([1, 4]);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItems2, setSelectedItems2] = useState([]);
+  const [selectedItems3, setSelectedItems3] = useState([]);
+  useEffect(() => {
+    getEventsTypes();
+  }, []);
+  const getEventsTypes = () => {
+    getEventTypes()
+      .then(res => {
+        setMusicStyle(res?.musictype);
+        setEventType(res?.eventtype);
+        setVenueType(res?.venuetype);
+        console.log(res, 'ressss');
+      })
+      .catch(err => {
+        showError(err?.message), console.log(err);
+      });
+  };
+
+  const selectModalHandler = (item: any) => {
+    if (modalVisibleLang) {
+      const filterData = selectedLang?.filter((i: any) => i == item?.name);
+      if (filterData?.length > 0) {
+        const filterData2 = selectedLang?.filter((i: any) => i != item?.name);
+        setSelectedLang(filterData2);
+      } else {
+        setSelectedLang([...selectedLang, item?.name]);
+      }
+    } else {
+    }
+  };
+  const onValuesChangeFinish = (values: any) => {
+    setSelected(values);
+  };
+  const onValuesChangeFinish2 = values => {
+    setSelectedValues2(values);
+  };
+  const toggleSelection = (item: any) => {
+    setSelectedItems(prevSelectedItems => {
+      if (prevSelectedItems.includes(item._id)) {
+        return prevSelectedItems.filter(id => id !== item._id);
+      } else {
+        return [...prevSelectedItems, item._id];
+      }
+    });
+  };
+
+  const toggleSelection2 = (item: any) => {
+    setSelectedItems2(prevSelectedItems => {
+      if (prevSelectedItems.includes(item._id)) {
+        return prevSelectedItems.filter(id => id !== item._id);
+      } else {
+        return [...prevSelectedItems, item._id];
+      }
+    });
+  };
+
+  const toggleSelection3 = (item: any) => {
+    setSelectedItems3(prevSelectedItems => {
+      if (prevSelectedItems.includes(item._id)) {
+        return prevSelectedItems.filter(id => id !== item._id);
+      } else {
+        return [...prevSelectedItems, item._id];
+      }
+    });
+  };
+
+  const resetButton = () => {
+    setSelectedItems([]);
+    setSelectedItems2([]);
+    setSelectedItems3([]);
+    setSelectedLang([]);
+    setSelectedValues2([0, 0]);
+    setSelected([0, 0]);
+  };
+
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
@@ -33,7 +132,7 @@ const EventFilter = () => {
         <ScrollView showsVerticalScrollIndicator={false}>
           <SizeBox size={5} />
 
-          <Text style={{...commonStyles.Heading20font}}>Event Filters</Text>
+          <Header title="Map filter" onPress={() => navigation.goBack()} />
           <SizeBox size={10} />
           <Text
             style={{
@@ -49,15 +148,16 @@ const EventFilter = () => {
             <View style={styles.moneyVw}>
               <Text
                 style={{...commonStyles.font16Regular, color: Colors.white}}>
-                10€
+                0
               </Text>
             </View>
             <MultiSlider
               markerStyle={styles.marker}
-              values={[1, 4]}
               min={0}
-              max={5}
+              max={100}
+              onValuesChangeFinish={onValuesChangeFinish}
               allowOverlap
+              values={selectedValue} // Wrap the single value in an array
               sliderLength={width / 1.7}
               selectedStyle={styles.select}
               unselectedStyle={styles.unsel}
@@ -65,7 +165,7 @@ const EventFilter = () => {
             <View style={styles.moneyVw}>
               <Text
                 style={{...commonStyles.font16Regular, color: Colors.white}}>
-                32€
+                {selectedValue[0]}€
               </Text>
             </View>
           </View>
@@ -85,16 +185,31 @@ const EventFilter = () => {
                 }}>
                 Distance
               </Text>
-              <MultiSlider
-                markerStyle={styles.marker}
-                values={[1]}
-                min={0}
-                max={5}
-                allowOverlap
-                sliderLength={width / 1.7}
-                selectedStyle={styles.select}
-                unselectedStyle={styles.unsel}
-              />
+              <Text
+                style={{
+                  ...commonStyles.font10Regular,
+                  color: Colors.white,
+                  position: 'absolute',
+                  top: 0,
+                  right: 5,
+                }}>
+                {selectedValues2.length > 1
+                  ? `${selectedValues2[0]} km - ${selectedValues2[1]} km`
+                  : `${selectedValues2[0]} km`}
+              </Text>
+              <View>
+                <MultiSlider
+                  markerStyle={styles.marker}
+                  values={selectedValues2}
+                  min={0}
+                  max={5}
+                  allowOverlap
+                  sliderLength={width / 1.7}
+                  selectedStyle={styles.select}
+                  unselectedStyle={styles.unsel}
+                  onValuesChangeFinish={onValuesChangeFinish2}
+                />
+              </View>
             </View>
           </View>
           <SizeBox size={10} />
@@ -124,26 +239,30 @@ const EventFilter = () => {
                 </Text>
               </Text>
               <FlatList
-                data={dummydata}
+                data={eventType}
                 renderItem={({item}) => (
-                  <View style={styles.flatcon}>
+                  <TouchableOpacity
+                    style={styles.flatcon}
+                    onPress={() => toggleSelection(item)}>
                     <Text
                       style={{
                         ...commonStyles.font12Regular,
                         color: Colors.white,
                       }}>
-                      event
+                      {item?.name}
                     </Text>
                     <View style={styles.tickvw}>
-                      <VectorIcon
-                        groupName="MaterialCommunityIcons"
-                        name="check-outline"
-                        color={Colors.Pink}
-                        size={15}
-                        style={{bottom: 5, alignSlef: 'centre'}}
-                      />
+                      {selectedItems.includes(item._id) ? (
+                        <VectorIcon
+                          groupName="MaterialCommunityIcons"
+                          name="check-outline"
+                          color={Colors.Pink}
+                          size={15}
+                          style={{bottom: 5, alignSlef: 'centre'}}
+                        />
+                      ) : null}
                     </View>
-                  </View>
+                  </TouchableOpacity>
                 )}
               />
             </View>
@@ -168,32 +287,90 @@ const EventFilter = () => {
                 Venue type
               </Text>
               <FlatList
-                data={dummydata}
+                data={venueType}
                 renderItem={({item}) => (
-                  <View style={styles.flatcon}>
+                  <TouchableOpacity
+                    style={styles.flatcon}
+                    onPress={() => toggleSelection2(item)}>
                     <Text
                       style={{
                         ...commonStyles.font12Regular,
                         color: Colors.white,
                       }}>
-                      event
+                      {item?.name}
                     </Text>
                     <View style={styles.tickvw}>
-                      <VectorIcon
-                        groupName="MaterialCommunityIcons"
-                        name="check-outline"
-                        color={Colors.Pink}
-                        size={15}
-                        style={{bottom: 5, alignSlef: 'centre'}}
-                      />
+                      {selectedItems2.includes(item._id) ? (
+                        <VectorIcon
+                          groupName="MaterialCommunityIcons"
+                          name="check-outline"
+                          color={Colors.Pink}
+                          size={15}
+                          style={{bottom: 5, alignSlef: 'centre'}}
+                        />
+                      ) : null}
                     </View>
-                  </View>
+                  </TouchableOpacity>
                 )}
               />
             </View>
           </View>
           <SizeBox size={10} />
           <View style={styles.flexout}>
+            <ImageComponent
+              resizeMode="contain"
+              source={ImagePath.Popper}
+              style={{
+                width: moderateScale(22),
+                height: moderateScaleVertical(22),
+              }}
+            />
+
+            <View style={styles.flatbox}>
+              <Text
+                style={{
+                  ...commonStyles.font12Regular,
+                  color: Colors.white,
+                }}>
+                Music type
+                <Text
+                  style={{
+                    fontSize: textScale(8),
+                    color: Colors.white,
+                  }}>
+                  {` `}(Up to 3)
+                </Text>
+              </Text>
+              <FlatList
+                data={musicStyle}
+                renderItem={({item}) => (
+                  <TouchableOpacity
+                    style={styles.flatcon}
+                    onPress={() => toggleSelection3(item)}>
+                    <Text
+                      style={{
+                        ...commonStyles.font12Regular,
+                        color: Colors.white,
+                      }}>
+                      {item?.name}
+                    </Text>
+                    <View style={styles.tickvw}>
+                      {selectedItems3.includes(item._id) ? (
+                        <VectorIcon
+                          groupName="MaterialCommunityIcons"
+                          name="check-outline"
+                          color={Colors.Pink}
+                          size={15}
+                          style={{bottom: 5, alignSlef: 'centre'}}
+                        />
+                      ) : null}
+                    </View>
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
+          </View>
+          {/* <View style={styles.flexout}>
             <VectorIcon
               groupName="Feather"
               name="speaker"
@@ -295,7 +472,7 @@ const EventFilter = () => {
                 )}
               />
             </View>
-          </View>
+          </View> */}
           <SizeBox size={10} />
           <View style={styles.flexout}>
             <ImageComponent
@@ -307,7 +484,7 @@ const EventFilter = () => {
               }}
             />
 
-            <View style={styles.flatbox}>
+            {/* <View style={styles.flatbox}>
               <Text
                 style={{
                   ...commonStyles.font12Regular,
@@ -385,8 +562,127 @@ const EventFilter = () => {
                   </View>
                 )}
               />
-            </View>
+            </View> */}
+            <TouchableOpacity
+              style={styles.flatbox}
+              activeOpacity={0.5}
+              onPress={() => SetModalVisibleLang(true)}>
+              <Text
+                style={{
+                  ...commonStyles.font12Regular,
+                  color: Colors.white,
+                }}>
+                Languages
+              </Text>
+
+              <SizeBox size={5} />
+              <FlatList
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                data={selectedLang}
+                renderItem={({item}) => (
+                  <TouchableOpacity
+                    style={styles.langItem}
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      const filterData2 = selectedLang?.filter(
+                        (i: any) => i != item,
+                      );
+                      setSelectedLang(filterData2);
+                    }}>
+                    <Text style={styles.langItemText}>{item} &#x2715;</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            </TouchableOpacity>
           </View>
+          <SizeBox size={15} />
+          <View style={styles.Btnmain}>
+            <LinearGradient colors={['#FC00F2', '#CD3AFF']} style={styles.btn}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation.goBack()}>
+                <Text style={styles.text}>Apply</Text>
+              </TouchableOpacity>
+            </LinearGradient>
+
+            <Text
+              onPress={resetButton}
+              style={[styles.text, {color: Colors.white}]}>
+              Reset
+            </Text>
+          </View>
+          <Modal
+            isVisible={modalVisibleLang}
+            style={{
+              justifyContent: 'flex-end',
+              margin: 0,
+            }}
+            onBackdropPress={() => {
+              SetModalVisibleLang(false);
+            }}
+            backdropOpacity={0.5}
+            animationIn="slideInUp"
+            animationOut="flipOutY"
+            animationInTiming={600}
+            animationOutTiming={600}
+            backdropTransitionInTiming={600}
+            backdropTransitionOutTiming={600}>
+            <View
+              style={{
+                minHeight: height / 5,
+                maxHeight: height / 3,
+                width: '95%',
+                alignSelf: 'center',
+              }}>
+              <View style={styles.modalContainer}>
+                <FlatList
+                  data={languages}
+                  keyExtractor={(item, index) => index?.toString()}
+                  renderItem={({item, index}) => {
+                    const lengthFlag = languages?.length;
+
+                    const filterData = selectedLang?.filter(
+                      (i: any) => i == item?.name,
+                    );
+
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => {
+                          selectModalHandler(item);
+                        }}
+                        style={[
+                          {
+                            borderBottomWidth: lengthFlag - 1 == index ? 0 : 1,
+                          },
+                          styles.mondaInvw,
+                        ]}>
+                        <Text
+                          style={{
+                            color: Colors.white,
+                            padding: 5,
+                            fontWeight: '600',
+                            fontFamily: fontFamily.time_regular,
+                          }}>
+                          {item?.name}
+                        </Text>
+                        <VectorIcon
+                          groupName="MaterialCommunityIcons"
+                          name={
+                            filterData[0] == item?.name
+                              ? 'radiobox-marked'
+                              : 'radiobox-blank'
+                          }
+                          size={18}
+                        />
+                      </TouchableOpacity>
+                    );
+                  }}
+                />
+              </View>
+            </View>
+          </Modal>
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>
