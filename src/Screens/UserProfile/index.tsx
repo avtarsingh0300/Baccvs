@@ -32,14 +32,6 @@ const UserProfile = ({navigation}: any) => {
   const [showModal, setShowModal] = useState(false);
   const [userData, setUserData] = useState({});
 
-  const imageArrya = [
-    ImagePath.ProfileImg,
-    ImagePath.ProfileImg,
-    ImagePath.ProfileImg,
-    ImagePath.ProfileImg,
-    ImagePath.ProfileImg,
-    ImagePath.ProfileImg,
-  ];
   const onSocialpart = () => {
     setShowModal(false);
     navigation.navigate(NavigationStrings.SocialPart);

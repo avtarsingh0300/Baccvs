@@ -31,4 +31,5 @@ export default {
   ChangePass: 'ChangePass',
   DeactiveScreen: 'DeactiveScreen',
   BlockedAccount: 'BlockedAccount',
+  MeetPeople: 'MeetPeople',
 };

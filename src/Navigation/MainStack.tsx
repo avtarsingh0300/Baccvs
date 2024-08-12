@@ -92,6 +92,23 @@ export default function MainStack(Stack: any) {
         component={screens.Invites}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.UserProfile}
+        component={screens.UserProfile}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name={NavigationStrings.EditProfile}
+        component={screens.EditProfile}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name={NavigationStrings.SocialPart}
+        component={screens.SocialPart}
+        options={{headerShown: false}}
+      />
     </>
   );
 }

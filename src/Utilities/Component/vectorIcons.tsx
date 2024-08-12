@@ -13,7 +13,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
-
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import {Colors} from '../Styles/colors';
 
 type VectorIconProps = {
@@ -42,6 +42,7 @@ const VectorIcons = {
   Fontisto,
   FontAwesome5,
   Feather,
+  FontAwesome6,
 };
 
 const VectorIcon: React.FC<VectorIconProps> = ({
