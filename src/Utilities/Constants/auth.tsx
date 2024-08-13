@@ -5,13 +5,17 @@ import {
   BLOCKED_LIST,
   CHANGE_PASS,
   CREATE_EVENT,
+  DISLIKE_USER_PROFILE,
   EVENT_DETAIL,
+  GET_ALL_MEET_GROUPS,
+  GET_ALL_USERS,
   GET_EVENT_TYPE,
   GET_FOLLOWER_LIST,
   GET_HOME_DATA,
   GET_INVITES,
   GET_MY_EVENT,
   GET_NOTIFICATION,
+  LIKE_USER_PROFILE,
   LOGIN,
   MAP_SEARCH,
   OTP_MATCH,
@@ -40,6 +44,14 @@ export function UpdateUserProfile(data: object) {
 
 export function otpMatch(data: object) {
   return apiPost(OTP_MATCH, data);
+}
+
+export function likeUser(data: object) {
+  return apiPost(LIKE_USER_PROFILE, data);
+}
+
+export function disLikeUser(data: object) {
+  return apiPost(DISLIKE_USER_PROFILE, data);
 }
 
 export function getMapData() {
@@ -85,6 +97,12 @@ export function getBlockedUser(id: string) {
 }
 export function getMyEvent(status: string) {
   return apiGet(`${GET_MY_EVENT}?filter=${status}`);
+}
+export function getAllUsers() {
+  return apiGet(`${GET_ALL_USERS}`);
+}
+export function getAllMeetGroups() {
+  return apiGet(`${GET_ALL_MEET_GROUPS}`);
 }
 export function getInvitesList() {
   return apiGet(GET_INVITES);
