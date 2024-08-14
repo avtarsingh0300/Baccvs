@@ -25,8 +25,9 @@ import {
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import {useSelector} from 'react-redux';
 import Modal from 'react-native-modal';
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 
-const MeetPeople = () => {
+const MeetPeople = ({navigation}) => {
   const [button, setButton] = useState('online');
   const [currentImage, setCurrentImage] = useState({});
   const [loader, setLoader] = useState(false);
@@ -335,7 +336,7 @@ const MeetPeople = () => {
           <View
             style={[
               styles.optionContainer,
-              {width: activeIndexModal == 0 ? '45%' : '55%'},
+              {width: activeIndexModal == 0 ? '45%' : '60%'},
             ]}>
             {activeIndexModal == 0 ? (
               <>
@@ -343,8 +344,8 @@ const MeetPeople = () => {
                   activeOpacity={0.8}
                   style={styles.option}
                   onPress={() => {
-                    // navigation.navigate(NavigationStrings.EditProfile);
-                    // setShowModal(false);
+                    navigation.navigate(NavigationStrings.CreateGroup);
+                    setShowModal(false);
                   }}>
                   <Text style={styles.optionText}>New group</Text>
                   <VectorIcon
@@ -358,7 +359,7 @@ const MeetPeople = () => {
                   // onPress={}
                   activeOpacity={0.8}
                   style={[styles.option, {borderBottomWidth: 0}]}>
-                  <Text style={styles.optionText}>New groups</Text>
+                  <Text style={styles.optionText}>My groups</Text>
                   <VectorIcon
                     groupName="FontAwesome"
                     name="question-circle-o"

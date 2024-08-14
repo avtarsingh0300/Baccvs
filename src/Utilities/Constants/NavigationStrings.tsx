@@ -32,4 +32,5 @@ export default {
   DeactiveScreen: 'DeactiveScreen',
   BlockedAccount: 'BlockedAccount',
   MeetPeople: 'MeetPeople',
+  CreateGroup: 'CreateGroup',
 };

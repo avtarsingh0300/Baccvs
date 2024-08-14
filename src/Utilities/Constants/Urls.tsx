@@ -27,4 +27,5 @@ export const REFUSE_INVITES = getApiUrl('invite-refuse');
 export const GET_ALL_USERS = getApiUrl('get-all-users');
 export const GET_ALL_MEET_GROUPS = getApiUrl('get-all-meet-groups');
 export const LIKE_USER_PROFILE = getApiUrl('like-user');
+export const GET_GROUP_PEOPLE = getApiUrl('get-group-people');
 export const DISLIKE_USER_PROFILE = getApiUrl('dislike-user');

@@ -11,6 +11,7 @@ import {
   GET_ALL_USERS,
   GET_EVENT_TYPE,
   GET_FOLLOWER_LIST,
+  GET_GROUP_PEOPLE,
   GET_HOME_DATA,
   GET_INVITES,
   GET_MY_EVENT,
@@ -87,6 +88,10 @@ export function getFollowerList() {
 }
 export function getNotification() {
   return apiGet(GET_NOTIFICATION);
+}
+
+export function getGroupPeople() {
+  return apiGet(GET_GROUP_PEOPLE);
 }
 
 export function getEventDetail(id: any) {

@@ -29,3 +29,4 @@ export {default as ChangePass} from '../Screens/ChangePassword';
 export {default as DeactivateScreen} from '../Screens/DeactiveScreen';
 export {default as BlockAccounts} from '../Screens/BlockAccounts';
 export {default as MeetPeople} from '../Screens/MeetPeople';
+export {default as CreateGroup} from '../Screens/CreateGroup';

@@ -103,10 +103,14 @@ export default function MainStack(Stack: any) {
         component={screens.EditProfile}
         options={{headerShown: false}}
       />
-
       <Stack.Screen
         name={NavigationStrings.SocialPart}
         component={screens.SocialPart}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.CreateGroup}
+        component={screens.CreateGroup}
         options={{headerShown: false}}
       />
     </>
