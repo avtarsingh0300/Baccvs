@@ -22,4 +22,5 @@ export const Colors = {
   headerlinear: '#4725AB',
   appColor: '#291846',
   yellow: '#FFC542',
+  grey: '#DADADA',
 };

@@ -1,3 +1,5 @@
+import Tickets from '../../Screens/Tickets';
+
 export default {
   WelcomScreen: 'WelcomScreen',
   LoginScreen: 'LoginScreen',
@@ -35,4 +37,5 @@ export default {
   CreateGroup: 'CreateGroup',
   MyGroups: 'MyGroups',
   Scanner: 'Scan',
+  Tickets: 'Tickets',
 };

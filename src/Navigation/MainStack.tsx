@@ -123,6 +123,11 @@ export default function MainStack(Stack: any) {
         component={screens.Scanner}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.Tickets}
+        component={screens.Tickets}
+        options={{headerShown: false}}
+      />
     </>
   );
 }
