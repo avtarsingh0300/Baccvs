@@ -1,3 +1,5 @@
+import Tickets from "../../Screens/Tickets";
+
 export default {
   WelcomScreen: 'WelcomScreen',
   LoginScreen: 'LoginScreen',
@@ -31,4 +33,5 @@ export default {
   ChangePass: 'ChangePass',
   DeactiveScreen: 'DeactiveScreen',
   BlockedAccount: 'BlockedAccount',
+  Tickets: 'Tickets',
 };

@@ -92,6 +92,11 @@ export default function MainStack(Stack: any) {
         component={screens.Invites}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.Tickets}
+        component={screens.Tickets}
+        options={{headerShown: false}}
+      />
     </>
   );
 }
