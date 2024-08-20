@@ -22,7 +22,11 @@ import {styles} from './style';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import FastImage from 'react-native-fast-image';
-import {ImageComponent, dummydata} from '../../Utilities/Component/Helpers';
+import {
+  ImageComponent,
+  Loadingcomponent,
+  dummydata,
+} from '../../Utilities/Component/Helpers';
 import Modal from 'react-native-modal';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {getUserProfile} from '../../Utilities/Constants/auth';
@@ -30,6 +34,7 @@ import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 
 const UserProfile = ({navigation}: any) => {
   const [showModal, setShowModal] = useState(false);
+  const [loader, setLoader] = useState(false);
   const [userData, setUserData] = useState({});
 
   const onSocialpart = () => {
@@ -47,12 +52,15 @@ const UserProfile = ({navigation}: any) => {
   }, []);
 
   const getUserData = async () => {
+    setLoader(true);
     getUserProfile()
       .then(res => {
+        setLoader(false);
         console.log(res, 'res in getUserProfile');
-        setUserData(res);
+        setUserData(res?.user);
       })
       .catch(err => {
+        setLoader(false);
         console.log(err, 'err in getUserProfile');
       });
   };
@@ -119,6 +127,7 @@ const UserProfile = ({navigation}: any) => {
       end={{x: 1.3, y: 0.9}}
       style={{flex: 1}}>
       <SafeAreaView>
+        <Loadingcomponent isVisible={loader} />
         <ScrollView
           contentContainerStyle={styles.container}
           showsVerticalScrollIndicator={false}>

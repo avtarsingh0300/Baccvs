@@ -29,3 +29,4 @@ export const GET_ALL_MEET_GROUPS = getApiUrl('get-all-meet-groups');
 export const LIKE_USER_PROFILE = getApiUrl('like-user');
 export const GET_GROUP_PEOPLE = getApiUrl('get-group-people');
 export const DISLIKE_USER_PROFILE = getApiUrl('dislike-user');
+export const GET_MY_GROUPS = getApiUrl('get-my-meet-groups');

@@ -15,6 +15,7 @@ import {
   GET_HOME_DATA,
   GET_INVITES,
   GET_MY_EVENT,
+  GET_MY_GROUPS,
   GET_NOTIFICATION,
   LIKE_USER_PROFILE,
   LOGIN,
@@ -108,6 +109,9 @@ export function getAllUsers() {
 }
 export function getAllMeetGroups() {
   return apiGet(`${GET_ALL_MEET_GROUPS}`);
+}
+export function getMyGroups() {
+  return apiGet(GET_MY_GROUPS);
 }
 export function getInvitesList() {
   return apiGet(GET_INVITES);

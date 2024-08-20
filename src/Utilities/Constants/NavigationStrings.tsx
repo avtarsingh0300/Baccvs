@@ -33,4 +33,6 @@ export default {
   BlockedAccount: 'BlockedAccount',
   MeetPeople: 'MeetPeople',
   CreateGroup: 'CreateGroup',
+  MyGroups: 'MyGroups',
+  Scanner: 'Scan',
 };

@@ -26,6 +26,7 @@ import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import {useSelector} from 'react-redux';
 import Modal from 'react-native-modal';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
+import ImagePath from '../../Utilities/Constants/ImagePath';
 
 const MeetPeople = ({navigation}) => {
   const [button, setButton] = useState('online');
@@ -159,7 +160,7 @@ const MeetPeople = ({navigation}) => {
           </Text>
           <View style={styles.invw}>
             <VectorIcon
-              groupName="FontAwesome6"
+              groupName="FontAwesome"
               name="sliders"
               size={20}
               color={Colors.white}
@@ -227,13 +228,34 @@ const MeetPeople = ({navigation}) => {
           />
         ) : (
           <>
-            {currentImage?.pictures && (
+            {currentImage?.pictures ? (
               <ImageBackground
                 borderRadius={10}
                 source={{uri: IMAGE_URL + currentImage?.pictures[0]}}
                 style={{
                   width: width * 0.8,
-                  height: height / 1.7,
+                  height: height / 1.9,
+                  alignSelf: 'center',
+                  marginBottom: 20,
+                  justifyContent: 'flex-end',
+                }}>
+                <Text
+                  style={{
+                    ...commonStyles.font14,
+                    color: Colors.white,
+                    fontWeight: '600',
+                    padding: 15,
+                  }}>
+                  {currentImage?.username}, {currentImage?.age}
+                </Text>
+              </ImageBackground>
+            ) : (
+              <ImageBackground
+                borderRadius={10}
+                source={ImagePath.ProfileImg}
+                style={{
+                  width: width * 0.8,
+                  height: height / 1.9,
                   alignSelf: 'center',
                   marginBottom: 20,
                   justifyContent: 'flex-end',
@@ -306,15 +328,27 @@ const MeetPeople = ({navigation}) => {
               renderItem={({item}) => (
                 // console.log(item, 'item'),
                 <TouchableWithoutFeedback onPress={() => setCurrentImage(item)}>
-                  <Image
-                    source={{uri: `${IMAGE_URL}${item?.pictures[0]}`}}
-                    style={{
-                      width: 51,
-                      height: 67,
-                      marginLeft: 10,
-                      borderRadius: 10,
-                    }}
-                  />
+                  {item?.pictures[0] ? (
+                    <Image
+                      source={{uri: `${IMAGE_URL}${item?.pictures[0]}`}}
+                      style={{
+                        width: 51,
+                        height: 67,
+                        marginLeft: 10,
+                        borderRadius: 10,
+                      }}
+                    />
+                  ) : (
+                    <Image
+                      source={ImagePath.ProfileImg}
+                      style={{
+                        width: 51,
+                        height: 67,
+                        marginLeft: 10,
+                        borderRadius: 10,
+                      }}
+                    />
+                  )}
                 </TouchableWithoutFeedback>
               )}
               onMomentumScrollEnd={handleScrollEnd}
@@ -356,7 +390,10 @@ const MeetPeople = ({navigation}) => {
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  // onPress={}
+                  onPress={() => {
+                    navigation.navigate(NavigationStrings.MyGroups);
+                    setShowModal(false);
+                  }}
                   activeOpacity={0.8}
                   style={[styles.option, {borderBottomWidth: 0}]}>
                   <Text style={styles.optionText}>My groups</Text>

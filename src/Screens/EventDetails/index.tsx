@@ -33,7 +33,7 @@ import {
 import MapView, {Marker} from 'react-native-maps';
 import {getEventDetail} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
-import {EventEmitter} from 'react-native';
+// import {EventEmitter} from 'react-native';
 const EventDetails = ({navigation, route}: any) => {
   const refRBSheet: any = useRef();
   const refComRBSheet: any = useRef();

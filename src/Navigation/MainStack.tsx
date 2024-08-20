@@ -113,6 +113,16 @@ export default function MainStack(Stack: any) {
         component={screens.CreateGroup}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.MyGroups}
+        component={screens.MyGroups}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.Scanner}
+        component={screens.Scanner}
+        options={{headerShown: false}}
+      />
     </>
   );
 }

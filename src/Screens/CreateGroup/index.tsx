@@ -53,8 +53,7 @@ const CreateGroup = ({navigation}: any) => {
   const [search, setSearch] = useState('');
   const [selectMembers, setSelectMembers] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
-  const [showStartPicker, setShowStartPicker] = useState(false);
-  const [showEndPicker, setShowEndPicker] = useState(false);
+
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [userLocation, setUserLocation] = useState(null);
@@ -73,61 +72,61 @@ const CreateGroup = ({navigation}: any) => {
   const [charges, setCharges] = useState('');
 
   const onCreate = () => {
-    if (!eventname) {
-      return showError('Enter event name ');
-    }
-    if (!value) {
-      return showError('Select event date');
-    }
-    if (phone.length < 10) {
-      return showError('Invalid phonenumber !');
-    }
-    if (!numpeople) {
-      return showError('Add a people capacity');
-    }
-    if (selectedLang.length === 0) {
-      return showError('Select languages !');
-    }
-    if (selectedMusic.length === 0) {
-      return showError('Select music type');
-    }
-    if (selectedEventType.length === 0) {
-      return showError('Select Event type');
-    }
-    if (selectedVenue.length === 0) {
-      return showError('Select venue type');
-    }
-    if (!bio) {
-      return showError('Add party description');
-    }
-    if (!address) {
-      return showError('Select address of event');
-    }
-    if (!startTime) {
-      return showError('Select start time');
-    }
-    if (!endTime) {
-      return showError('Select end time');
-    }
+    // if (!eventname) {
+    //   return showError('Enter group name ');
+    // }
+    // if (!value) {
+    //   return showError('Select event date');
+    // }
+    // if (phone.length < 10) {
+    //   return showError('Invalid phonenumber !');
+    // }
+    // if (!numpeople) {
+    //   return showError('Add a people capacity');
+    // }
+    // if (selectedLang.length === 0) {
+    //   return showError('Select languages !');
+    // }
+    // if (selectedMusic.length === 0) {
+    //   return showError('Select music type');
+    // }
+    // if (selectedEventType.length === 0) {
+    //   return showError('Select Event type');
+    // }
+    // if (selectedVenue.length === 0) {
+    //   return showError('Select venue type');
+    // }
+    // if (!bio) {
+    //   return showError('Add party description');
+    // }
+    // if (!address) {
+    //   return showError('Select address of event');
+    // }
+    // if (!startTime) {
+    //   return showError('Select start time');
+    // }
+    // if (!endTime) {
+    //   return showError('Select end time');
+    // }
 
-    const data = {
-      eventname,
-      phone,
-      numpeople,
-      bio,
-      charges,
-      address,
-      pin,
-      startTime,
-      endTime,
-      selectedLang,
-      selectedMusic,
-      selectedEventType,
-      selectedVenue,
-      value,
-    };
-    console.log(data);
-    navigation.navigate(NavigationStrings.CreateSuccess, {data: data});
+    // const data = {
+    //   eventname,
+    //   phone,
+    //   numpeople,
+    //   bio,
+    //   charges,
+    //   address,
+    //   pin,
+    //   startTime,
+    //   endTime,
+    //   selectedLang,
+    //   selectedMusic,
+    //   selectedEventType,
+    //   selectedVenue,
+    //   value,
+    // };
+    // console.log(data);
+    navigation.goBack();
   };
 
   useEffect(() => {
