@@ -1,6 +1,6 @@
 import {
   FlatList,
-  StyleSheet,
+  SafeAreaView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -10,7 +10,7 @@ import React, {useState} from 'react';
 import styles from './style';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
-import {ImageComponent, SizeBox} from '../../Utilities/Component/Helpers';
+import {ImageComponent} from '../../Utilities/Component/Helpers';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
@@ -136,112 +136,114 @@ const Tickets = ({navigation}: any) => {
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
-      <View style={styles.headerContainer}>
-        <TouchableOpacity>
-          <ImageComponent
-            source={ImagePath.ProfileImg}
-            style={styles.profileimg}
+      <SafeAreaView>
+        <View style={styles.headerContainer}>
+          <TouchableOpacity>
+            <ImageComponent
+              source={ImagePath.ProfileImg}
+              style={styles.profileimg}
+            />
+          </TouchableOpacity>
+          <Text style={styles.myticketstext}>My Tickets</Text>
+          <View></View>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingHorizontal: 20,
+            marginVertical: 20,
+          }}>
+          <Text
+            onPress={() => setColors(0)}
+            style={[
+              styles.tickets,
+              {
+                color: colors == 0 ? Colors.green : Colors.white,
+              },
+            ]}>
+            My Tickets
+          </Text>
+
+          <Text
+            onPress={() => setColors(1)}
+            style={[
+              styles.text,
+              {
+                color: colors == 1 ? Colors.green : Colors.white,
+              },
+            ]}>
+            BUY
+          </Text>
+
+          <Text
+            onPress={() => {
+              setColors(2), setSellBtn(false);
+            }}
+            style={[
+              styles.text,
+              {
+                color: colors == 2 ? Colors.green : Colors.white,
+              },
+            ]}>
+            SELL
+          </Text>
+        </View>
+        {colors == 0 ? (
+          <FlatList
+            data={data}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+            style={{marginBottom: 50}}
           />
-        </TouchableOpacity>
-        <Text style={styles.myticketstext}>My Tickets</Text>
-        <View></View>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          paddingHorizontal: 20,
-          marginVertical: 20,
-        }}>
-        <Text
-          onPress={() => setColors(0)}
-          style={[
-            styles.tickets,
-            {
-              color: colors == 0 ? Colors.green : Colors.white,
-            },
-          ]}>
-          My Tickets
-        </Text>
+        ) : null}
 
-        <Text
-          onPress={() => setColors(1)}
-          style={[
-            styles.text,
-            {
-              color: colors == 1 ? Colors.green : Colors.white,
-            },
-          ]}>
-          BUY
-        </Text>
+        {colors == 1 ? (
+          <>
+            <View style={styles.searchSection}>
+              <TextInput
+                style={styles.input}
+                placeholder="Nightclub, party, dj, promoter"
+                placeholderTextColor="#000"
+                underlineColorAndroid="transparent"
+              />
+              <VectorIcon
+                groupName="Fontisto"
+                name="search"
+                size={20}
+                color="black"
+                style={styles.searchIcon}
+              />
+            </View>
+            <FlatList data={data1} renderItem={renderItemm} />
+          </>
+        ) : null}
 
-        <Text
-          onPress={() => {
-            setColors(2), setSellBtn(false);
-          }}
-          style={[
-            styles.text,
-            {
-              color: colors == 2 ? Colors.green : Colors.white,
-            },
-          ]}>
-          SELL
-        </Text>
-      </View>
-      {colors == 0 ? (
-        <FlatList
-          data={data}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-          style={{marginBottom: 50}}
-        />
-      ) : null}
-
-      {colors == 1 ? (
-        <>
-          <View style={styles.searchSection}>
-            <TextInput
-              style={styles.input}
-              placeholder="Nightclub, party, dj, promoter"
-              placeholderTextColor="#000"
-              underlineColorAndroid="transparent"
-            />
-            <VectorIcon
-              groupName="Fontisto"
-              name="search"
-              size={20}
-              color="black"
-              style={styles.searchIcon}
-            />
-          </View>
-          <FlatList data={data1} renderItem={renderItemm} />
-        </>
-      ) : null}
-
-      {colors == 2 ? (
-        <>
-          {!sellBtn && (
-            <TouchableOpacity
-              onPress={() => setSellBtn(!sellBtn)}
-              style={styles.sytbtn}>
-              <Text style={styles.sell}>Sell your ticket</Text>
-            </TouchableOpacity>
-          )}
-          {sellBtn ? (
-            <>
-              <FlatList data={data1} renderItem={renderItems} />
-
+        {colors == 2 ? (
+          <>
+            {!sellBtn && (
               <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate(NavigationStrings.SelectTicket)
-                }
+                onPress={() => setSellBtn(!sellBtn)}
                 style={styles.sytbtn}>
-                <Text style={styles.sell}>Sell more ticket</Text>
+                <Text style={styles.sell}>Sell your ticket</Text>
               </TouchableOpacity>
-            </>
-          ) : null}
-        </>
-      ) : null}
+            )}
+            {sellBtn ? (
+              <>
+                <FlatList data={data1} renderItem={renderItems} />
+
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate(NavigationStrings.SelectTicket)
+                  }
+                  style={styles.sytbtn}>
+                  <Text style={styles.sell}>Sell more ticket</Text>
+                </TouchableOpacity>
+              </>
+            ) : null}
+          </>
+        ) : null}
+      </SafeAreaView>
     </LinearGradient>
   );
 };
