@@ -110,7 +110,24 @@ const styles = StyleSheet.create({
     justifyContent:"center",
     borderRadius:8,
     alignSelf:"center"
-  }
+  },
+  linear:{
+    width:81,
+    height:26,
+    justifyContent:"center",
+    alignItems:"center",
+    borderRadius:10
+  },
+  cancelbtn:{
+    fontSize:10,
+    fontWeight:"400",
+    color:Colors.white
+  },
+  radiobtn:{ 
+    alignItems: 'center',
+     justifyContent: 'center',
+      marginTop: 11 
+    }
 })
 
 export default styles

@@ -33,9 +33,11 @@ export default {
   ChangePass: 'ChangePass',
   DeactiveScreen: 'DeactiveScreen',
   BlockedAccount: 'BlockedAccount',
+  Tickets: 'Tickets',
   MeetPeople: 'MeetPeople',
   CreateGroup: 'CreateGroup',
   MyGroups: 'MyGroups',
   Scanner: 'Scan',
-  Tickets: 'Tickets',
+  SelectTicket:'SelectTicket',
+  UploadTicket:'UploadTicket'
 };

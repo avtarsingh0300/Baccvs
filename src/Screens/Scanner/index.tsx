@@ -1,11 +1,9 @@
 import {View, Text, SafeAreaView, Alert, ImageBackground} from 'react-native';
 import React, {useState} from 'react';
-
 import {Colors} from '../../Utilities/Styles/colors';
 import LinearGradient from 'react-native-linear-gradient';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
-
 import styles from './styles';
 import {height, width} from '../../Utilities/Styles/responsiveSize';
 import ImagePath from '../../Utilities/Constants/ImagePath';

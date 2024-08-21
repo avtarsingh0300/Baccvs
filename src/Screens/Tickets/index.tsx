@@ -1,6 +1,5 @@
 import {
   FlatList,
-  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
@@ -14,9 +13,11 @@ import {Colors} from '../../Utilities/Styles/colors';
 import {ImageComponent, SizeBox} from '../../Utilities/Component/Helpers';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 
-const Tickets = () => {
+const Tickets = ({navigation}: any) => {
   const [colors, setColors] = useState(0);
+  const [sellBtn, setSellBtn] = useState(false);
 
   const data = [
     {
@@ -64,7 +65,7 @@ const Tickets = () => {
     },
   ];
 
-  const renderItem = ({item}) => (
+  const renderItem = ({item}: any) => (
     <View style={styles.item}>
       <TouchableOpacity>
         <ImageComponent source={item.imageUrl} style={styles.profileimg} />
@@ -78,7 +79,7 @@ const Tickets = () => {
       </View>
     </View>
   );
-  const renderItemm = ({item}) => (
+  const renderItemm = ({item}: any) => (
     <View style={styles.item}>
       <TouchableOpacity>
         <ImageComponent source={item.imageUrl} style={styles.profileimgs} />
@@ -100,72 +101,104 @@ const Tickets = () => {
       </View>
     </View>
   );
+  const renderItems = ({item}: any) => (
+    <View style={styles.item}>
+      <TouchableOpacity>
+        <ImageComponent source={item.imageUrl} style={styles.profileimgs} />
+      </TouchableOpacity>
+      <View style={{flexDirection: 'row', paddingHorizontal: 7}}>
+        <View style={{width: '60%'}}>
+          <Text style={styles.title}>{item.title}</Text>
+          <Text style={styles.date}>Wed 20 Dec 2023</Text>
+        </View>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 11,
+          }}>
+          <TouchableOpacity>
+            <LinearGradient
+              colors={[Colors.LinearBlack, Colors.lightPink]}
+              style={styles.linear}>
+              <Text style={styles.cancelbtn}>Cancel</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+
+          <Text style={styles.price}>15€99</Text>
+        </View>
+      </View>
+    </View>
+  );
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
-      <SafeAreaView>
-        <View style={styles.headerContainer}>
-          <TouchableOpacity>
-            <ImageComponent
-              source={ImagePath.ProfileImg}
-              style={styles.profileimg}
-            />
-          </TouchableOpacity>
-          <Text style={styles.myticketstext}>My Tickets</Text>
-          <View></View>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingHorizontal: 20,
-            marginVertical: 20,
-          }}>
-          <Text
-            onPress={() => setColors(0)}
-            style={[
-              styles.tickets,
-              {
-                color: colors == 0 ? Colors.green : Colors.white,
-              },
-            ]}>
-            My Tickets
-          </Text>
-
-          <Text
-            onPress={() => setColors(1)}
-            style={[
-              styles.text,
-              {
-                color: colors == 1 ? Colors.green : Colors.white,
-              },
-            ]}>
-            BUY
-          </Text>
-
-          <Text
-            onPress={() => setColors(2)}
-            style={[
-              styles.text,
-              {
-                color: colors == 2 ? Colors.green : Colors.white,
-              },
-            ]}>
-            SELL
-          </Text>
-        </View>
-        {colors == 0 ? (
-          <FlatList
-            data={data}
-            renderItem={renderItem}
-            keyExtractor={item => item.id}
-            style={{marginBottom: 50}}
+      <View style={styles.headerContainer}>
+        <TouchableOpacity>
+          <ImageComponent
+            source={ImagePath.ProfileImg}
+            style={styles.profileimg}
           />
-        ) : null}
-        {colors == 1 ? (
+        </TouchableOpacity>
+        <Text style={styles.myticketstext}>My Tickets</Text>
+        <View></View>
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          paddingHorizontal: 20,
+          marginVertical: 20,
+        }}>
+        <Text
+          onPress={() => setColors(0)}
+          style={[
+            styles.tickets,
+            {
+              color: colors == 0 ? Colors.green : Colors.white,
+            },
+          ]}>
+          My Tickets
+        </Text>
+
+        <Text
+          onPress={() => setColors(1)}
+          style={[
+            styles.text,
+            {
+              color: colors == 1 ? Colors.green : Colors.white,
+            },
+          ]}>
+          BUY
+        </Text>
+
+        <Text
+          onPress={() => {
+            setColors(2), setSellBtn(false);
+          }}
+          style={[
+            styles.text,
+            {
+              color: colors == 2 ? Colors.green : Colors.white,
+            },
+          ]}>
+          SELL
+        </Text>
+      </View>
+      {colors == 0 ? (
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          style={{marginBottom: 50}}
+        />
+      ) : null}
+
+      {colors == 1 ? (
+        <>
           <View style={styles.searchSection}>
             <TextInput
               style={styles.input}
@@ -181,20 +214,34 @@ const Tickets = () => {
               style={styles.searchIcon}
             />
           </View>
-        ) : null}
-        {colors == 1 ? (
           <FlatList data={data1} renderItem={renderItemm} />
-        ) : null}
+        </>
+      ) : null}
 
-        {colors == 2 ? (
-          <>
-            <SizeBox size={20} />
-            <TouchableOpacity style={styles.sytbtn}>
+      {colors == 2 ? (
+        <>
+          {!sellBtn && (
+            <TouchableOpacity
+              onPress={() => setSellBtn(!sellBtn)}
+              style={styles.sytbtn}>
               <Text style={styles.sell}>Sell your ticket</Text>
             </TouchableOpacity>
-          </>
-        ) : null}
-      </SafeAreaView>
+          )}
+          {sellBtn ? (
+            <>
+              <FlatList data={data1} renderItem={renderItems} />
+
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate(NavigationStrings.SelectTicket)
+                }
+                style={styles.sytbtn}>
+                <Text style={styles.sell}>Sell more ticket</Text>
+              </TouchableOpacity>
+            </>
+          ) : null}
+        </>
+      ) : null}
     </LinearGradient>
   );
 };

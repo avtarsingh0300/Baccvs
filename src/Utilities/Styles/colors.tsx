@@ -21,6 +21,8 @@ export const Colors = {
   slider: '#8324C0',
   headerlinear: '#4725AB',
   appColor: '#291846',
+  grey:'#DADADA',
+  yellow: '#FFC542',
   yellow: '#FFC542',
   grey: '#DADADA',
 };
