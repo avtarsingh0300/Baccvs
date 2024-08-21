@@ -33,4 +33,5 @@ export {default as MeetPeople} from '../Screens/MeetPeople';
 export {default as CreateGroup} from '../Screens/CreateGroup';
 export {default as MyGroups} from '../Screens/MyGroups';
 export {default as Scanner} from '../Screens/Scanner';
-
+export {default as SelectTicket} from '../Screens/SelectTicket';
+export {default as UploadTicket} from '../Screens/UploadTicket';

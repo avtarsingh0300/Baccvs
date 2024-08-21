@@ -46,7 +46,6 @@ export default function MainStack(Stack: any) {
         component={screens.Messages}
         options={{headerShown: false}}
       />
-
       <Stack.Screen
         name={NavigationStrings.MyEvents}
         component={screens.MyEvents}
@@ -92,17 +91,11 @@ export default function MainStack(Stack: any) {
         component={screens.Invites}
         options={{headerShown: false}}
       />
-      <Stack.Screen
-        name={NavigationStrings.Tickets}
-        component={screens.Tickets}
-        options={{headerShown: false}}/>
-
            <Stack.Screen
         name={NavigationStrings.UserProfile}
         component={screens.UserProfile}
         options={{headerShown: false}}
       />
-
       <Stack.Screen
         name={NavigationStrings.EditProfile}
         component={screens.EditProfile}
@@ -128,6 +121,21 @@ export default function MainStack(Stack: any) {
         component={screens.Scanner}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.Tickets}
+        component={screens.Tickets}
+        options={{headerShown: false}}
+      />     
+      <Stack.Screen
+        name={NavigationStrings.SelectTicket}
+        component={screens.SelectTicket}
+        options={{headerShown: false}}
+      />     
+      <Stack.Screen
+        name={NavigationStrings.UploadTicket}
+        component={screens.UploadTicket}
+        options={{headerShown: false}}
+      />     
     </>
   );
 }

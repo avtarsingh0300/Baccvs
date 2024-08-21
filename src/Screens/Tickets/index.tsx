@@ -6,9 +6,11 @@ import { Colors } from '../../Utilities/Styles/colors'
 import { ImageComponent, SizeBox } from '../../Utilities/Component/Helpers'
 import ImagePath from '../../Utilities/Constants/ImagePath'
 import VectorIcon from '../../Utilities/Component/vectorIcons'
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings'
 
-const Tickets = () => {
+const Tickets = ({navigation}) => {
     const [colors,setColors]=useState(0);
+    const [sellBtn,setSellBtn]=useState(false);
 
     const data = [
         { id: '1', title: 'Babylone - Solum - Esposito B2B Gianni romano / Cha...',imageUrl: ImagePath.ProfileImg},
@@ -63,6 +65,36 @@ const Tickets = () => {
           </View>
         </View>
       );
+    const renderItems = ({ item }) => (
+        <View style={styles.item}>
+            <TouchableOpacity >
+            <ImageComponent
+              source={item.imageUrl}
+              style={styles.profileimgs}
+            />
+          </TouchableOpacity>
+          <View style={{flexDirection:"row",paddingHorizontal:7}}>
+            <View style={{width:"60%"}}>
+          <Text style={styles.title}>{item.title}</Text>
+          <Text style={styles.date}>Wed 20 Dec 2023</Text>
+            </View>
+            <View style={{alignItems:"center",
+                justifyContent:"center",marginTop:11
+            }}>
+              <TouchableOpacity >
+               <LinearGradient
+    colors={[Colors.LinearBlack, Colors.lightPink]}
+    style={styles.linear}
+    >
+        <Text style={styles.cancelbtn}>Cancel</Text>
+    </LinearGradient>
+      </TouchableOpacity>
+          
+          <Text style={styles.price}>15€99</Text>
+            </View>
+          </View>
+        </View>
+      );
   return (
     <LinearGradient
     colors={[Colors.LinearBlack, Colors.Linear]}
@@ -89,7 +121,7 @@ const Tickets = () => {
     <Text onPress={()=> setColors(1)} style={[styles.text,{
           color: colors==1? Colors.green:Colors.white}]}>BUY</Text>
 
-    <Text onPress={()=> setColors(2)} style={[styles.text,{
+    <Text onPress={()=>{ setColors(2),setSellBtn(false)}} style={[styles.text,{
           color: colors==2? Colors.green:Colors.white}]}>SELL</Text>
    </View>
   {colors==0?(
@@ -99,8 +131,10 @@ const Tickets = () => {
         keyExtractor={item => item.id}
         style={{marginBottom:50}}
 />):null}
-{colors==1?(
-<View style={styles.searchSection}>
+
+
+    {colors==1?(
+      <><View style={styles.searchSection}>
       <TextInput
         style={styles.input}
         placeholder="Nightclub, party, dj, promoter"
@@ -108,21 +142,38 @@ const Tickets = () => {
         underlineColorAndroid="transparent"
       />
        <VectorIcon groupName='Fontisto' name='search' size={20} color='black' style={styles.searchIcon} />
-    </View>):null}
-    {colors==1?(
+    </View>
     <FlatList
     data={data1}
     renderItem={renderItemm}
     />
+    </>
     ):null}
 
 {colors==2?(
     <>
-    <SizeBox size={20}/>
-  <TouchableOpacity style={styles.sytbtn}>
+   
+{!sellBtn && (
+  <TouchableOpacity onPress={()=>setSellBtn(!sellBtn)} style={styles.sytbtn}>
     <Text style={styles.sell}>Sell your ticket</Text>
-  </TouchableOpacity></>
+  </TouchableOpacity>
+)}
+  {sellBtn?(
+    <>
+    <FlatList
+    data={data1}
+    renderItem={renderItems}
+    />
+    
+    <TouchableOpacity  onPress={() =>navigation.navigate(NavigationStrings.SelectTicket)}  style={styles.sytbtn}>
+    <Text style={styles.sell}>Sell more ticket</Text>
+  </TouchableOpacity>
+  </>    ):null}
+  
+  </>
    ):null}
+
+
    </LinearGradient>
   )
 }

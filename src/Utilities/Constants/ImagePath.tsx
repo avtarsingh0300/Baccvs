@@ -25,4 +25,5 @@ export default {
   followProfile: require('../../Assets/images/followProfile.png'),
   SearchNewGroup: require('../../Assets/images/SearchNewGroup.png'),
   backGroundGroup: require('../../Assets/images/5383010.png'),
+  scanner: require('../../Assets/images/scanner.png'),
 };

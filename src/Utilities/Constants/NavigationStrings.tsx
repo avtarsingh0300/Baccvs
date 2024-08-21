@@ -1,4 +1,4 @@
-import Tickets from "../../Screens/Tickets";
+import Tickets from '../../Screens/Tickets';
 
 export default {
   WelcomScreen: 'WelcomScreen',
@@ -33,12 +33,11 @@ export default {
   ChangePass: 'ChangePass',
   DeactiveScreen: 'DeactiveScreen',
   BlockedAccount: 'BlockedAccount',
-
   Tickets: 'Tickets',
-
   MeetPeople: 'MeetPeople',
   CreateGroup: 'CreateGroup',
   MyGroups: 'MyGroups',
   Scanner: 'Scan',
-
+  SelectTicket:'SelectTicket',
+  UploadTicket:'UploadTicket'
 };
