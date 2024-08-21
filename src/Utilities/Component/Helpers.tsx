@@ -317,7 +317,12 @@ export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
           renderItem={({item}) => (
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate(item.name);
+                if (item?.name == 'Profile') {
+                  navigation.navigate(NavigationStrings.UserProfile);
+                } else {
+                  navigation.navigate(item?.name);
+                }
+
                 onClose();
               }}
               style={{

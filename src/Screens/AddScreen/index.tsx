@@ -272,6 +272,7 @@ const AddScreen = ({navigation}: any) => {
             resizeMode="contain"
             style={styles.backimg}>
             <TextInput
+              placeholderTextColor={Colors.greyTxt}
               style={{
                 ...commonStyles.font12Regualar2,
                 color: Colors.lightPink,
@@ -288,10 +289,17 @@ const AddScreen = ({navigation}: any) => {
           </ImageBackground>
           <SizeBox size={10} />
           <TouchableOpacity activeOpacity={0.7} style={styles.locbtn}>
-            <Text
+            <TextInput
+              value={address}
+              onChangeText={text => setAddress(text)}
+              placeholder=" Enter or Drag the marker on the map "
+              placeholderTextColor={Colors.greyTxt}
+              style={{...commonStyles.font12Regualar2, color: Colors.white}}
+            />
+            {/* <Text
               style={{...commonStyles.font12Regualar2, color: Colors.white}}>
               {address ? address : 'Drag the marker on the map'}
-            </Text>
+            </Text> */}
           </TouchableOpacity>
           <SizeBox size={5} />
           <View

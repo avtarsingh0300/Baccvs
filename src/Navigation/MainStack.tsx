@@ -95,6 +95,37 @@ export default function MainStack(Stack: any) {
       <Stack.Screen
         name={NavigationStrings.Tickets}
         component={screens.Tickets}
+        options={{headerShown: false}}/>
+
+           <Stack.Screen
+        name={NavigationStrings.UserProfile}
+        component={screens.UserProfile}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name={NavigationStrings.EditProfile}
+        component={screens.EditProfile}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.SocialPart}
+        component={screens.SocialPart}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.CreateGroup}
+        component={screens.CreateGroup}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.MyGroups}
+        component={screens.MyGroups}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.Scanner}
+        component={screens.Scanner}
         options={{headerShown: false}}
       />
     </>

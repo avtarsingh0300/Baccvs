@@ -121,8 +121,8 @@ const TabRoutes = () => {
         }}
       />
       <BottomTab.Screen
-        name={NavigationStrings.UserStack}
-        component={UserStack}
+        name={NavigationStrings.MeetPeople}
+        component={screens.MeetPeople}
         options={{
           tabBarShowLabel: true,
           tabBarIcon: ({focused}) => {

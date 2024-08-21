@@ -1375,7 +1375,7 @@
   resolved "https://registry.npmjs.org/@ptomasroos/react-native-multi-slider/-/react-native-multi-slider-2.2.2.tgz"
   integrity sha512-HWyCnRD3Z3SbHK2FLWYmBBqd1B4iXipeKv1+AK0FoY/CElEDTEixHE8hN60TsqxalPrznn798LE2Q4tHuCiyaA==
 
-"@react-native-async-storage/async-storage@^1.23.1":
+"@react-native-async-storage/async-storage@^1.13.4", "@react-native-async-storage/async-storage@^1.23.1":
   version "1.23.1"
   resolved "https://registry.npmjs.org/@react-native-async-storage/async-storage/-/async-storage-1.23.1.tgz"
   integrity sha512-Qd2kQ3yi6Y3+AcUlrHxSLlnBvpdCEMVGFlVBneVOjaFaPU61g1huc38g339ysXspwY1QZA2aNhrk/KlHGO+ewA==
@@ -5652,6 +5652,13 @@ react-native-blob-util@>=0.13.7:
     base-64 "0.1.0"
     glob "^10.3.10"
 
+react-native-camera@^4.2.1, react-native-camera@>=1.0.2:
+  version "4.2.1"
+  resolved "https://registry.npmjs.org/react-native-camera/-/react-native-camera-4.2.1.tgz"
+  integrity sha512-+Vkql24PFYQfsPRznJCvPwJQfyzCnjlcww/iZ4Ej80bgivKjL9eU0IMQIXp4yi6XCrKi4voWXxIDPMupQZKeIQ==
+  dependencies:
+    prop-types "^15.6.2"
+
 react-native-confirmation-code-field@^7.4.0:
   version "7.4.0"
   resolved "https://registry.npmjs.org/react-native-confirmation-code-field/-/react-native-confirmation-code-field-7.4.0.tgz"
@@ -5786,10 +5793,24 @@ react-native-pdf@^6.7.5:
     crypto-js "4.2.0"
     deprecated-react-native-prop-types "^2.3.0"
 
+react-native-permissions@^2.0.2:
+  version "2.2.2"
+  resolved "https://registry.npmjs.org/react-native-permissions/-/react-native-permissions-2.2.2.tgz"
+  integrity sha512-ihf4shQDSX5Oo9ChQXb9kr13mmyyNem5MaEvOpr3dCjhBOBWyEMztXm9/uPK1Qg5PsNpaYLa1KpcPZDCw87LXg==
+
 react-native-permissions@^4.1.5:
   version "4.1.5"
   resolved "https://registry.npmjs.org/react-native-permissions/-/react-native-permissions-4.1.5.tgz"
   integrity sha512-r6VMRacASmtRHS+GZ+5HQCp9p9kiE+UU9magHOZCXZLTJitdTuVHWZRrb4v4oqZGU+zAp3mZhTQftuMMv+WLUg==
+
+react-native-qrcode-scanner@^1.5.5:
+  version "1.5.5"
+  resolved "https://registry.npmjs.org/react-native-qrcode-scanner/-/react-native-qrcode-scanner-1.5.5.tgz"
+  integrity sha512-il79uStkFqUvofqXJQfOL30qgQyU17MUKxj7IGHv6oT2OxIY/vutTwuPPDbsivtv0yTMHP4dGx/79oys4eAuNw==
+  dependencies:
+    "@react-native-async-storage/async-storage" "^1.13.4"
+    prop-types "^15.5.10"
+    react-native-permissions "^2.0.2"
 
 react-native-raw-bottom-sheet@^3.0.0:
   version "3.0.0"
@@ -5915,7 +5936,7 @@ react-timer-mixin@^0.13.4:
   resolved "https://registry.npmjs.org/react-timer-mixin/-/react-timer-mixin-0.13.4.tgz"
   integrity sha512-4+ow23tp/Tv7hBM5Az5/Be/eKKF7DIvJ09voz5LyHGQaqqz9WV8YMs31eFvcYQs7d451LSg7kDJV70XYN/Ug/Q==
 
-react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", react@^16.13.1, react@^16.14.0, react@^16.3.0, "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^17 || ^18", react@^18.0, react@^18.2.0, "react@>= 17.0.1", react@>=16.4.0, react@>=16.5.1, react@>=16.8, react@>=17.0.0, react@>=18.1.0, react@16.x.x, react@18.2.0:
+react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", react@^16.13.1, react@^16.14.0, react@^16.3.0, "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^17 || ^18", react@^18.0, react@^18.2.0, "react@>= 17.0.1", react@>=16.4.0, react@>=16.5.1, react@>=16.8, react@>=16.8.6, react@>=17.0.0, react@>=18.1.0, react@16.x.x, react@18.2.0:
   version "18.2.0"
   dependencies:
     loose-envify "^1.1.0"
