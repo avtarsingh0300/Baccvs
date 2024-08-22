@@ -10,7 +10,7 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import {
   height,
@@ -20,128 +20,117 @@ import {
 import {Colors} from '../../Utilities/Styles/colors';
 import LinearGradient from 'react-native-linear-gradient';
 import ImagePath from '../../Utilities/Constants/ImagePath';
-import {CommonBtn, SizeBox, showError} from '../../Utilities/Component/Helpers';
+import {
+  CommonBtn,
+  Loadingcomponent,
+  SizeBox,
+  showError,
+} from '../../Utilities/Component/Helpers';
 import {ImageBackground} from 'react-native';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import {
+  createMeetGroup,
   getEventTypes,
   getFollowerList,
   getGroupPeople,
+  getMusicTypeList,
 } from '../../Utilities/Constants/auth';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import Modal from 'react-native-modal';
-import Geolocation from '@react-native-community/geolocation';
-import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import styles from './style';
 import ImagePicker from 'react-native-image-crop-picker';
+import languages from '../../Utilities/Constants';
+import uuid from 'react-native-uuid';
 
 const CreateGroup = ({navigation}: any) => {
-  const swiper: any = useRef();
-
-  const [value, setValue] = useState(new Date());
-  const [week, setWeek] = useState(0);
   const [musicStyle, setMusicStyle] = useState([]);
-  const [eventType, setEventType] = useState([]);
-  const [venueType, setVenueType] = useState([]);
-  const [modalVisibleLang, SetModalVisibleLang] = useState(false);
-  const [selectedLang, setSelectedLang] = useState([]);
   const [selectedMusic, setSelectedMusic] = useState([]);
-  const [selectedEventType, setselectedEventType] = useState([]);
-  const [selectedVenue, setSelectedVenue] = useState([]);
-  const [search, setSearch] = useState('');
+  const [selectedInterestType, setselectedInterestType] = useState([]);
+  const [selectedLanguage, setSelectedLanguage] = useState([]);
+  const [searchMusic, setSearchMusic] = useState('');
+  const [searchInterest, setSearchInterest] = useState('');
+  const [searchLang, setSearchLang] = useState('');
   const [selectMembers, setSelectMembers] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
-
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
-  const [userLocation, setUserLocation] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [address, setAddress] = useState('');
+  const [loader, setLoader] = useState(false);
   const [members, setMembers] = useState([]);
-  const [pin, setPin] = useState({
-    latitude: 37.78825,
-    longitude: -122.4324,
-  });
   const [eventname, setEventname] = useState('');
-  const [phone, setPhone] = useState('');
-  const [numpeople, setNumPeople] = useState('');
-
   const [bio, setBio] = useState('');
-  const [charges, setCharges] = useState('');
 
   const onCreate = () => {
-    // if (!eventname) {
-    //   return showError('Enter group name ');
-    // }
-    // if (!value) {
-    //   return showError('Select event date');
-    // }
-    // if (phone.length < 10) {
-    //   return showError('Invalid phonenumber !');
-    // }
-    // if (!numpeople) {
-    //   return showError('Add a people capacity');
-    // }
-    // if (selectedLang.length === 0) {
-    //   return showError('Select languages !');
-    // }
-    // if (selectedMusic.length === 0) {
-    //   return showError('Select music type');
-    // }
-    // if (selectedEventType.length === 0) {
-    //   return showError('Select Event type');
-    // }
-    // if (selectedVenue.length === 0) {
-    //   return showError('Select venue type');
-    // }
-    // if (!bio) {
-    //   return showError('Add party description');
-    // }
-    // if (!address) {
-    //   return showError('Select address of event');
-    // }
-    // if (!startTime) {
-    //   return showError('Select start time');
-    // }
-    // if (!endTime) {
-    //   return showError('Select end time');
-    // }
+    if (!eventname) {
+      return showError('Enter group name ');
+    }
+    if (!members) {
+      return showError('Add a members');
+    }
+    if (selectedLanguage.length === 0) {
+      return showError('Select languages !');
+    }
+    if (selectedMusic.length === 0) {
+      return showError('Select music type');
+    }
+    if (selectedInterestType.length === 0) {
+      return showError('Select Event type');
+    }
+    if (!bio) {
+      return showError('Add party description');
+    }
+    if (!bio) {
+      return showError('Add images and video');
+    }
 
-    // const data = {
-    //   eventname,
-    //   phone,
-    //   numpeople,
-    //   bio,
-    //   charges,
-    //   address,
-    //   pin,
-    //   startTime,
-    //   endTime,
-    //   selectedLang,
-    //   selectedMusic,
-    //   selectedEventType,
-    //   selectedVenue,
-    //   value,
-    // };
-    // console.log(data);
-    navigation.goBack();
+    var members = selectMembers?.map(i => {
+      return i?.id;
+    });
+
+    const data = new FormData();
+    data.append('name', eventname);
+    data.append('description', bio);
+    data.append('music_type', selectedMusic);
+    data.append('interest', selectedInterestType);
+    data.append('language', selectedLanguage);
+    data.append('members', members);
+    selectedImages.forEach((image, index) => {
+      data.append('image', {
+        uri: image.path,
+        name:
+          image?.mime === 'image/png' || image?.mime === 'image/jpeg'
+            ? `image_${image.id}.jpg`
+            : `video${image.id}.mp4`,
+        type: image?.mime,
+      });
+    });
+    setLoader(true);
+    console.log(JSON.stringify(data), 'data');
+    createMeetGroup(data)
+      .then(res => {
+        console.log(res, 'ress in createMeetGroup');
+        setLoader(false);
+        navigation.goBack();
+      })
+      .catch(err => {
+        console.log(err, 'err in createMeetGroup');
+        setLoader(false);
+      });
   };
 
   useEffect(() => {
-    getLocation();
+    setLoader(true);
     getEventsTypes();
     getFollower();
   }, []);
 
   const getEventsTypes = () => {
-    getEventTypes()
+    getMusicTypeList()
       .then(res => {
-        setMusicStyle(res?.musictype);
-        setEventType(res?.eventtype);
-        setVenueType(res?.venuetype);
+        setMusicStyle(res);
+        setLoader(false);
       })
       .catch(err => {
+        setLoader(false);
         showError(err?.message), console.log(err);
       });
   };
@@ -150,9 +139,11 @@ const CreateGroup = ({navigation}: any) => {
     getFollowerList()
       .then(res => {
         setMembers(res?.followers);
+        setLoader(false);
       })
       .catch(err => {
         showError(err?.message), console.log(err);
+        setLoader(false);
       });
   };
 
@@ -166,10 +157,11 @@ const CreateGroup = ({navigation}: any) => {
           (i: any) => i?.username != item?.username,
         );
         setSelectMembers(filterData2);
+      } else if (selectMembers?.length == 3) {
+        setSelectMembers(selectMembers);
       } else {
         setSelectMembers([...selectMembers, item]);
       }
-    } else {
     }
   };
 
@@ -184,52 +176,36 @@ const CreateGroup = ({navigation}: any) => {
   };
 
   const handleSelectItem = (item: any) => {
-    setselectedEventType((prevSelectedItems): any => {
-      if (prevSelectedItems.includes(item?._id)) {
-        return prevSelectedItems.filter(id => id !== item?._id);
-      } else if (prevSelectedItems.length < 3) {
-        return [...prevSelectedItems, item._id];
+    setselectedInterestType((prevSelectedItems): any => {
+      if (prevSelectedItems.includes(item)) {
+        return prevSelectedItems.filter(id => id !== item);
       }
-      return prevSelectedItems;
-    });
-  };
-  const handleVenueItem = (item: any) => {
-    setSelectedVenue((prevSelectedItems): any => {
-      if (prevSelectedItems.includes(item?._id)) {
-        return prevSelectedItems.filter(id => id !== item?._id);
-      } else if (prevSelectedItems.length < 2) {
-        return [...prevSelectedItems, item._id];
-      }
-      return prevSelectedItems;
+      return [...prevSelectedItems, item];
     });
   };
 
-  const getLocation = () => {
-    Geolocation.getCurrentPosition(
-      position => {
-        setUserLocation(position?.coords);
-        console.log(position, 'hghg');
-      },
-      error => {
-        console.log(error.code, error.message, 'jiwhd');
-      },
-      {
-        timeout: 15000,
-      },
-    );
+  const handleLangItem = (item: any) => {
+    setSelectedLanguage((prevSelectedItems): any => {
+      if (prevSelectedItems.includes(item)) {
+        return prevSelectedItems.filter(id => id !== item);
+      }
+      return [...prevSelectedItems, item];
+    });
   };
 
   const addImg = () => {
-    ImagePicker.openPicker({
-      width: 300,
-      height: 400,
-      mediaType: 'any',
-    }).then(image => {
-      setSelectedImages(prevImages => [
-        ...prevImages,
-        {id: prevImages.length, ...image},
-      ]);
-    });
+    if (selectedImages?.length <= 6) {
+      var id = uuid.v4();
+      ImagePicker.openPicker({
+        width: 300,
+        height: 400,
+        mediaType: 'any',
+      }).then(image => {
+        setSelectedImages(prevImages => [...prevImages, {id: id, ...image}]);
+      });
+    } else {
+      showError('Max limit of images and video is 6');
+    }
   };
 
   const removeImg = id => {
@@ -237,6 +213,41 @@ const CreateGroup = ({navigation}: any) => {
       prevImages.filter(image => image?.id !== id),
     );
   };
+
+  const interestsList = [
+    'Dining',
+    'Parties',
+    'Activities',
+    'Spontaneous meetings',
+    'Virtual meetings',
+    'Nightclubs',
+    'Cultural experiences',
+  ];
+
+  const handleSearchMusic = useCallback(() => {
+    const results = searchItems(searchMusic, musicStyle);
+    return results;
+  }, [searchMusic]);
+
+  const handleSearchInterest = useCallback(() => {
+    const results = searchItems(searchInterest, interestsList);
+    return results;
+  }, [searchInterest]);
+
+  const handleSearchLang = useCallback(() => {
+    const results = searchItems(searchLang, languages?.slice(0, 10));
+    return results;
+  }, [searchLang]);
+
+  const searchItems = (query, items) => {
+    return items.filter(item =>
+      item?.name
+        ? item?.name?.toLowerCase().includes(query?.toLowerCase())
+        : item?.toLowerCase().includes(query?.toLowerCase()),
+    );
+  };
+
+  // console.log(selectedImages, 'selectedImages');
 
   return (
     <LinearGradient
@@ -393,7 +404,8 @@ const CreateGroup = ({navigation}: any) => {
                     data={selectedImages}
                     renderItem={({item}) => (
                       <>
-                        {item?.mime === 'image/png' ? (
+                        {item?.mime === 'image/png' ||
+                        item?.mime === 'image/jpeg' ? (
                           <View
                             style={[
                               styles.imageContainer2,
@@ -488,7 +500,7 @@ const CreateGroup = ({navigation}: any) => {
               <View
                 style={{
                   width: moderateScale(230),
-                  height: moderateScaleVertical(23),
+                  height: moderateScaleVertical(33),
                   backgroundColor: Colors.white,
                   borderRadius: 15,
                   flexDirection: 'row',
@@ -499,10 +511,11 @@ const CreateGroup = ({navigation}: any) => {
                 <TextInput
                   placeholder="Search"
                   placeholderTextColor={Colors.black}
-                  value={search}
-                  onChangeText={text => setSearch(text)}
+                  value={searchMusic}
+                  onChangeText={text => setSearchMusic(text)}
                   style={{
-                    ...commonStyles.font12Regular,
+                    // flex: 1,
+                    ...commonStyles.font10Regular,
                     color: Colors.black,
                     width: '90%',
                   }}
@@ -512,7 +525,7 @@ const CreateGroup = ({navigation}: any) => {
             </View>
             <SizeBox size={5} />
             <FlatList
-              data={musicStyle}
+              data={searchMusic?.length > 0 ? handleSearchMusic() : musicStyle}
               renderItem={({item}) => {
                 if (!item || !item._id) {
                   return null;
@@ -560,7 +573,7 @@ const CreateGroup = ({navigation}: any) => {
               <View
                 style={{
                   width: moderateScale(230),
-                  height: moderateScaleVertical(23),
+                  height: moderateScaleVertical(33),
                   backgroundColor: Colors.white,
                   borderRadius: 15,
                   flexDirection: 'row',
@@ -571,10 +584,10 @@ const CreateGroup = ({navigation}: any) => {
                 <TextInput
                   placeholder="Search"
                   placeholderTextColor={Colors.black}
-                  value={search}
-                  onChangeText={text => setSearch(text)}
+                  value={searchInterest}
+                  onChangeText={text => setSearchInterest(text)}
                   style={{
-                    ...commonStyles.font12Regular,
+                    ...commonStyles.font10Regular,
                     color: Colors.black,
                     width: '90%',
                   }}
@@ -584,19 +597,23 @@ const CreateGroup = ({navigation}: any) => {
             </View>
             <SizeBox size={5} />
             <FlatList
-              data={eventType}
+              data={
+                searchInterest?.length > 0
+                  ? handleSearchInterest()
+                  : interestsList
+              }
               renderItem={({item}) => {
-                if (!item || !item._id) {
+                if (!item) {
                   return null;
                 }
                 return (
                   <TouchableOpacity
                     activeOpacity={0.8}
                     style={{
-                      borderWidth: selectedEventType.includes(item._id) ? 0 : 1,
+                      borderWidth: selectedInterestType.includes(item) ? 0 : 1,
                       borderColor: Colors.white,
                       padding: 5,
-                      backgroundColor: selectedEventType.includes(item._id)
+                      backgroundColor: selectedInterestType.includes(item)
                         ? Colors.lightPink
                         : Colors.tranparent,
                       borderRadius: 8,
@@ -607,17 +624,17 @@ const CreateGroup = ({navigation}: any) => {
                     <Text
                       style={{
                         ...commonStyles.font12Regular,
-                        color: selectedEventType.includes(item._id)
+                        color: selectedInterestType.includes(item)
                           ? Colors.black
                           : Colors.white,
                       }}>
-                      {item?.name}
+                      {item}
                     </Text>
                   </TouchableOpacity>
                 );
               }}
-              numColumns={3}
-              keyExtractor={item => item._id.toString()}
+              numColumns={2}
+              keyExtractor={(item, index) => index.toString()}
             />
             <SizeBox size={10} />
             <View
@@ -632,7 +649,7 @@ const CreateGroup = ({navigation}: any) => {
               <View
                 style={{
                   width: moderateScale(230),
-                  height: moderateScaleVertical(23),
+                  height: moderateScaleVertical(33),
                   backgroundColor: Colors.white,
                   borderRadius: 15,
                   flexDirection: 'row',
@@ -643,10 +660,10 @@ const CreateGroup = ({navigation}: any) => {
                 <TextInput
                   placeholder="Search"
                   placeholderTextColor={Colors.black}
-                  value={search}
-                  onChangeText={text => setSearch(text)}
+                  value={searchLang}
+                  onChangeText={text => setSearchLang(text)}
                   style={{
-                    ...commonStyles.font12Regular,
+                    ...commonStyles.font10Regular,
                     color: Colors.black,
                     width: '90%',
                   }}
@@ -656,30 +673,34 @@ const CreateGroup = ({navigation}: any) => {
             </View>
             <SizeBox size={5} />
             <FlatList
-              data={venueType}
+              data={
+                searchLang?.length > 0
+                  ? handleSearchLang()
+                  : languages?.slice(0, 10)
+              }
               renderItem={({item}) => {
-                if (!item || !item._id) {
+                if (!item) {
                   return null;
                 }
                 return (
                   <TouchableOpacity
                     activeOpacity={0.8}
                     style={{
-                      borderWidth: selectedVenue.includes(item._id) ? 0 : 1,
+                      borderWidth: selectedLanguage.includes(item.name) ? 0 : 1,
                       borderColor: Colors.white,
                       padding: 5,
-                      backgroundColor: selectedVenue.includes(item._id)
+                      backgroundColor: selectedLanguage.includes(item.name)
                         ? Colors.lightPink
                         : Colors.tranparent,
                       borderRadius: 8,
                       marginHorizontal: 5,
                       marginVertical: 5,
                     }}
-                    onPress={() => handleVenueItem(item)}>
+                    onPress={() => handleLangItem(item.name)}>
                     <Text
                       style={{
                         ...commonStyles.font12Regular,
-                        color: selectedVenue.includes(item._id)
+                        color: selectedLanguage.includes(item.name)
                           ? Colors.black
                           : Colors.white,
                       }}>
@@ -689,7 +710,7 @@ const CreateGroup = ({navigation}: any) => {
                 );
               }}
               numColumns={3}
-              keyExtractor={item => item._id.toString()}
+              keyExtractor={(item, index) => index.toString()}
             />
             <SizeBox size={10} />
             <CommonBtn title="Create Group" onPress={onCreate} />
@@ -767,6 +788,7 @@ const CreateGroup = ({navigation}: any) => {
             </View>
           </View>
         </Modal>
+        <Loadingcomponent isVisible={loader} />
       </SafeAreaView>
     </LinearGradient>
   );

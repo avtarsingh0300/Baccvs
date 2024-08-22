@@ -147,6 +147,7 @@ const MeetPeople = ({navigation}) => {
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
       <SafeAreaView>
+        <SizeBox size={10} />
         <View style={styles.heading}>
           <VectorIcon
             groupName="Feather"

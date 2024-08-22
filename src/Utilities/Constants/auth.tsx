@@ -5,6 +5,7 @@ import {
   BLOCKED_LIST,
   CHANGE_PASS,
   CREATE_EVENT,
+  CREATE_MEET_GROUP,
   DISLIKE_USER_PROFILE,
   EVENT_DETAIL,
   GET_ALL_MEET_GROUPS,
@@ -21,6 +22,7 @@ import {
   LIKE_USER_PROFILE,
   LOGIN,
   MAP_SEARCH,
+  MUSIC_LIST,
   OTP_MATCH,
   OTP_SEND,
   REFUSE_INVITES,
@@ -78,6 +80,11 @@ export function userDelete() {
 export function createEvent(data: object) {
   return apiPost(CREATE_EVENT, data, {'Content-Type': 'multipart/form-data'});
 }
+export function createMeetGroup(data: object) {
+  return apiPost(CREATE_MEET_GROUP, data, {
+    'Content-Type': 'multipart/form-data',
+  });
+}
 export function getUserProfile() {
   return apiGet(USER_DATA);
 }
@@ -94,6 +101,10 @@ export function getNotification() {
 
 export function getGroupPeople() {
   return apiGet(GET_GROUP_PEOPLE);
+}
+
+export function getMusicTypeList() {
+  return apiGet(MUSIC_LIST);
 }
 
 export function getEventDetail(id: any) {
