@@ -1,4 +1,4 @@
-import { ReferralCode } from '../../Navigation';
+import {ReferralCode} from '../../Navigation';
 import Tickets from '../../Screens/Tickets';
 
 export default {
@@ -39,8 +39,9 @@ export default {
   CreateGroup: 'CreateGroup',
   MyGroups: 'MyGroups',
   Scanner: 'Scan',
-  SelectTicket:'SelectTicket',
-  UploadTicket:'UploadTicket',
-  PeopleLikes:'People likes',
-  ReferralCode:'Referral Code'
+  SelectTicket: 'SelectTicket',
+  UploadTicket: 'UploadTicket',
+  PeopleLikes: 'People likes',
+  ReferralCode: 'Referral Code',
+  OtherProfiles: 'OtherProfiles',
 };

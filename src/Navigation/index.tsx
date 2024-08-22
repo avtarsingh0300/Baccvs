@@ -37,3 +37,4 @@ export {default as SelectTicket} from '../Screens/SelectTicket';
 export {default as UploadTicket} from '../Screens/UploadTicket';
 export {default as PeopleLikes} from '../Screens/PeopleLikes';
 export {default as ReferralCode} from '../Screens/ReferralCode';
+export {default as OtherProfiles} from '../Screens/OtherProfiles';

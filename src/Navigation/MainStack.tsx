@@ -91,7 +91,7 @@ export default function MainStack(Stack: any) {
         component={screens.Invites}
         options={{headerShown: false}}
       />
-           <Stack.Screen
+      <Stack.Screen
         name={NavigationStrings.UserProfile}
         component={screens.UserProfile}
         options={{headerShown: false}}
@@ -125,27 +125,33 @@ export default function MainStack(Stack: any) {
         name={NavigationStrings.Tickets}
         component={screens.Tickets}
         options={{headerShown: false}}
-      />     
+      />
       <Stack.Screen
         name={NavigationStrings.SelectTicket}
         component={screens.SelectTicket}
         options={{headerShown: false}}
-      />     
+      />
       <Stack.Screen
         name={NavigationStrings.UploadTicket}
         component={screens.UploadTicket}
         options={{headerShown: false}}
-      />     
+      />
       <Stack.Screen
         name={NavigationStrings.PeopleLikes}
         component={screens.PeopleLikes}
         options={{headerShown: false}}
-      />     
+      />
       <Stack.Screen
         name={NavigationStrings.ReferralCode}
         component={screens.ReferralCode}
         options={{headerShown: false}}
-      />     
+      />
+
+      <Stack.Screen
+        name={NavigationStrings.OtherProfiles}
+        component={screens.OtherProfiles}
+        options={{headerShown: false}}
+      />
     </>
   );
 }
