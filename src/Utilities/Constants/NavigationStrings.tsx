@@ -38,6 +38,7 @@ export default {
   CreateGroup: 'CreateGroup',
   MyGroups: 'MyGroups',
   Scanner: 'Scan',
-  SelectTicket:'SelectTicket',
-  UploadTicket:'UploadTicket'
+  SelectTicket: 'SelectTicket',
+  UploadTicket: 'UploadTicket',
+  OtherProfiles: 'OtherProfiles',
 };

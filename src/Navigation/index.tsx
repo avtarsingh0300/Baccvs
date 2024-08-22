@@ -35,3 +35,4 @@ export {default as MyGroups} from '../Screens/MyGroups';
 export {default as Scanner} from '../Screens/Scanner';
 export {default as SelectTicket} from '../Screens/SelectTicket';
 export {default as UploadTicket} from '../Screens/UploadTicket';
+export {default as OtherProfiles} from '../Screens/OtherProfiles';

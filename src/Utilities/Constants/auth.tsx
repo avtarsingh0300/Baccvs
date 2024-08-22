@@ -22,6 +22,7 @@ import {
   LIKE_USER_PROFILE,
   LOGIN,
   MAP_SEARCH,
+  MEMBER_DETAILS,
   MUSIC_LIST,
   OTP_MATCH,
   OTP_SEND,
@@ -118,6 +119,9 @@ export function getMyEvent(status: string) {
 }
 export function getAllUsers() {
   return apiGet(`${GET_ALL_USERS}`);
+}
+export function getMemberDetails(data: object) {
+  return apiGet(`${MEMBER_DETAILS}`, data);
 }
 export function getTickets() {
   return apiGet(GET_MY_TICKETS);

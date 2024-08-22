@@ -230,26 +230,34 @@ const MeetPeople = ({navigation}) => {
         ) : (
           <>
             {currentImage?.pictures ? (
-              <ImageBackground
-                borderRadius={10}
-                source={{uri: IMAGE_URL + currentImage?.pictures[0]}}
-                style={{
-                  width: width * 0.8,
-                  height: height / 1.9,
-                  alignSelf: 'center',
-                  marginBottom: 20,
-                  justifyContent: 'flex-end',
-                }}>
-                <Text
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() =>
+                  navigation.navigate(NavigationStrings.OtherProfiles, {
+                    id: currentImage?._id,
+                  })
+                }>
+                <ImageBackground
+                  borderRadius={10}
+                  source={{uri: IMAGE_URL + currentImage?.pictures[0]}}
                   style={{
-                    ...commonStyles.font14,
-                    color: Colors.white,
-                    fontWeight: '600',
-                    padding: 15,
+                    width: width * 0.8,
+                    height: height / 1.9,
+                    alignSelf: 'center',
+                    marginBottom: 20,
+                    justifyContent: 'flex-end',
                   }}>
-                  {currentImage?.username}, {currentImage?.age}
-                </Text>
-              </ImageBackground>
+                  <Text
+                    style={{
+                      ...commonStyles.font14,
+                      color: Colors.white,
+                      fontWeight: '600',
+                      padding: 15,
+                    }}>
+                    {currentImage?.username}, {currentImage?.age}
+                  </Text>
+                </ImageBackground>
+              </TouchableOpacity>
             ) : (
               <ImageBackground
                 borderRadius={10}
