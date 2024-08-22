@@ -136,6 +136,16 @@ export default function MainStack(Stack: any) {
         component={screens.UploadTicket}
         options={{headerShown: false}}
       />     
+      <Stack.Screen
+        name={NavigationStrings.PeopleLikes}
+        component={screens.PeopleLikes}
+        options={{headerShown: false}}
+      />     
+      <Stack.Screen
+        name={NavigationStrings.ReferralCode}
+        component={screens.ReferralCode}
+        options={{headerShown: false}}
+      />     
     </>
   );
 }
