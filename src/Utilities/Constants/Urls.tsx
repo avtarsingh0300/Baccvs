@@ -30,3 +30,4 @@ export const LIKE_USER_PROFILE = getApiUrl('like-user');
 export const GET_GROUP_PEOPLE = getApiUrl('get-group-people');
 export const DISLIKE_USER_PROFILE = getApiUrl('dislike-user');
 export const GET_MY_GROUPS = getApiUrl('get-my-meet-groups');
+export const GET_MY_TICKETS = getApiUrl('my-tickets');

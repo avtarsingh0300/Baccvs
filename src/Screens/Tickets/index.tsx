@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './style';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
@@ -14,11 +14,21 @@ import {ImageComponent} from '../../Utilities/Component/Helpers';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
+import {getTickets} from '../../Utilities/Constants/auth';
 
 const Tickets = ({navigation}: any) => {
   const [colors, setColors] = useState(0);
   const [sellBtn, setSellBtn] = useState(false);
 
+  useEffect(() => {
+    getMyTickets();
+  }, []);
+
+  const getMyTickets = () => {
+    getTickets()
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+  };
   const data = [
     {
       id: '1',
@@ -37,7 +47,7 @@ const Tickets = ({navigation}: any) => {
     },
     {
       id: '4',
-      title: 'Babylone - Solum - Esposito B2B Gianni romano/ Cha...',
+      title: 'Babylone - Solum - Esposito B2B Gianni romano / Cha...',
       imageUrl: ImagePath.ProfileImg,
     },
   ];
@@ -67,9 +77,8 @@ const Tickets = ({navigation}: any) => {
 
   const renderItem = ({item}: any) => (
     <View style={styles.item}>
-      <TouchableOpacity>
-        <ImageComponent source={item.imageUrl} style={styles.profileimg} />
-      </TouchableOpacity>
+      <ImageComponent source={item.imageUrl} style={styles.profileimg} />
+
       <View style={{width: '80%'}}>
         <Text style={styles.title}>{item.title}</Text>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -81,9 +90,8 @@ const Tickets = ({navigation}: any) => {
   );
   const renderItemm = ({item}: any) => (
     <View style={styles.item}>
-      <TouchableOpacity>
-        <ImageComponent source={item.imageUrl} style={styles.profileimgs} />
-      </TouchableOpacity>
+      <ImageComponent source={item.imageUrl} style={styles.profileimgs} />
+
       <View style={{flexDirection: 'row', paddingHorizontal: 7}}>
         <View style={{width: '60%'}}>
           <Text style={styles.title}>{item.title}</Text>
@@ -103,9 +111,8 @@ const Tickets = ({navigation}: any) => {
   );
   const renderItems = ({item}: any) => (
     <View style={styles.item}>
-      <TouchableOpacity>
-        <ImageComponent source={item.imageUrl} style={styles.profileimgs} />
-      </TouchableOpacity>
+      <ImageComponent source={item.imageUrl} style={styles.profileimgs} />
+
       <View style={{flexDirection: 'row', paddingHorizontal: 7}}>
         <View style={{width: '60%'}}>
           <Text style={styles.title}>{item.title}</Text>
@@ -138,14 +145,12 @@ const Tickets = ({navigation}: any) => {
       style={styles.LinearConatiner}>
       <SafeAreaView>
         <View style={styles.headerContainer}>
-          <TouchableOpacity>
-            <ImageComponent
-              source={ImagePath.ProfileImg}
-              style={styles.profileimg}
-            />
-          </TouchableOpacity>
+          <ImageComponent
+            source={ImagePath.ProfileImg}
+            style={styles.profileimg}
+          />
           <Text style={styles.myticketstext}>My Tickets</Text>
-          <View></View>
+          <View style={{width: 20}}></View>
         </View>
         <View
           style={{

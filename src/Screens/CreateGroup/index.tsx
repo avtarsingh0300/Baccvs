@@ -10,13 +10,12 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import {
   height,
   moderateScale,
   moderateScaleVertical,
-  textScale,
 } from '../../Utilities/Styles/responsiveSize';
 import {Colors} from '../../Utilities/Styles/colors';
 import LinearGradient from 'react-native-linear-gradient';
@@ -141,7 +140,6 @@ const CreateGroup = ({navigation}: any) => {
         setMusicStyle(res?.musictype);
         setEventType(res?.eventtype);
         setVenueType(res?.venuetype);
-        // console.log(res, 'ressss');
       })
       .catch(err => {
         showError(err?.message), console.log(err);
@@ -152,7 +150,6 @@ const CreateGroup = ({navigation}: any) => {
     getFollowerList()
       .then(res => {
         setMembers(res?.followers);
-        //  console.log(res);
       })
       .catch(err => {
         showError(err?.message), console.log(err);
@@ -160,9 +157,7 @@ const CreateGroup = ({navigation}: any) => {
   };
 
   const selectModalHandler = (item: any) => {
-    // setSelectMembers([]);
     if (modalVisible) {
-      //   console.log(item, 'item');
       const filterData = selectMembers?.filter(
         (i: any) => i?.username == item?.username,
       );
@@ -219,9 +214,7 @@ const CreateGroup = ({navigation}: any) => {
         console.log(error.code, error.message, 'jiwhd');
       },
       {
-        // enableHighAccuracy: true,
         timeout: 15000,
-        // maximumAge: 10000
       },
     );
   };
@@ -232,7 +225,6 @@ const CreateGroup = ({navigation}: any) => {
       height: 400,
       mediaType: 'any',
     }).then(image => {
-      //   console.log(image, 'image');
       setSelectedImages(prevImages => [
         ...prevImages,
         {id: prevImages.length, ...image},
@@ -457,53 +449,6 @@ const CreateGroup = ({navigation}: any) => {
                   />
                 ) : null}
               </View>
-              {/* {selectedImages?.map(item => (
-                <>
-                  {item?.mime === 'image/png' ? (
-                    <View
-                      style={[
-                        styles.imageContainer2,
-                        {height: height / 7, width: '25%', borderWidth: 0},
-                      ]}>
-                      <Image
-                        source={{uri: item?.path}}
-                        style={{width: '100%', height: '100%', borderRadius: 5}}
-                      />
-
-                      <VectorIcon
-                        groupName="Entypo"
-                        name="cross"
-                        color={Colors.red}
-                        size={26}
-                        onPress={() => removeImg(item.id)}
-                        style={{bottom: -15, position: 'absolute'}}
-                      />
-                    </View>
-                  ) : (
-                    <View
-                      style={[
-                        styles.imageContainer,
-                        {backgroundColor: Colors.black},
-                      ]}>
-                      <VectorIcon
-                        groupName="AntDesign"
-                        name="playcircleo"
-                        size={15}
-                        color={Colors.white}
-                      />
-
-                      <VectorIcon
-                        groupName="Entypo"
-                        name="cross"
-                        color={Colors.red}
-                        size={26}
-                        onPress={() => removeImg(item.id)}
-                        style={{bottom: -8, position: 'absolute'}}
-                      />
-                    </View>
-                  )}
-                </>
-              ))} */}
             </View>
             <SizeBox size={15} />
             <Text

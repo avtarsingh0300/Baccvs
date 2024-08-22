@@ -16,6 +16,7 @@ import {
   GET_INVITES,
   GET_MY_EVENT,
   GET_MY_GROUPS,
+  GET_MY_TICKETS,
   GET_NOTIFICATION,
   LIKE_USER_PROFILE,
   LOGIN,
@@ -106,6 +107,9 @@ export function getMyEvent(status: string) {
 }
 export function getAllUsers() {
   return apiGet(`${GET_ALL_USERS}`);
+}
+export function getTickets() {
+  return apiGet(GET_MY_TICKETS);
 }
 export function getAllMeetGroups() {
   return apiGet(`${GET_ALL_MEET_GROUPS}`);
