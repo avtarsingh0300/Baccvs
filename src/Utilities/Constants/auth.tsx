@@ -6,6 +6,7 @@ import {
   CHANGE_PASS,
   CREATE_EVENT,
   CREATE_MEET_GROUP,
+  CREATE_REF_CODE,
   DISLIKE_USER_PROFILE,
   EVENT_DETAIL,
   GET_ALL_MEET_GROUPS,
@@ -20,6 +21,7 @@ import {
   GET_MY_GROUPS,
   GET_MY_TICKETS,
   GET_NOTIFICATION,
+  GET_REF_CODE,
   GET_USER_LIKES,
   LIKE_USER_PROFILE,
   LOGIN,
@@ -109,7 +111,13 @@ export function getGroupPeople() {
 export function getMusicTypeList() {
   return apiGet(MUSIC_LIST);
 }
+export function getRefCode() {
+  return apiGet(GET_REF_CODE);
+}
 
+export function createRefCode() {
+  return apiPost(CREATE_REF_CODE);
+}
 export function getEventDetail(id: any) {
   return apiGet(`${EVENT_DETAIL}/${id}`);
 }

@@ -10,7 +10,11 @@ import React, {useEffect, useState} from 'react';
 import styles from './style';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
-import {ImageComponent} from '../../Utilities/Component/Helpers';
+import {
+  ImageComponent,
+  Loadingcomponent,
+  showError,
+} from '../../Utilities/Component/Helpers';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
@@ -37,31 +41,10 @@ const Tickets = ({navigation}: any) => {
       })
       .catch(err => {
         setLoader(false);
+        showError(err?.message);
         console.log(err, 'err in getTickets');
       });
   };
-  const data = [
-    {
-      id: '1',
-      title: 'Babylone - Solum - Esposito B2B Gianni romano / Cha...',
-      imageUrl: ImagePath.ProfileImg,
-    },
-    {
-      id: '2',
-      title: 'Babylone - Solum - Esposito B2B Gianni romano / Cha...',
-      imageUrl: ImagePath.ProfileImg,
-    },
-    {
-      id: '3',
-      title: 'Babylone - Solum - Esposito B2B Gianni romano / Cha...',
-      imageUrl: ImagePath.ProfileImg,
-    },
-    {
-      id: '4',
-      title: 'Babylone - Solum - Esposito B2B Gianni romano / Cha...',
-      imageUrl: ImagePath.ProfileImg,
-    },
-  ];
 
   const data1 = [
     {
@@ -169,6 +152,7 @@ const Tickets = ({navigation}: any) => {
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
       <SafeAreaView>
+        <Loadingcomponent isVisible={loader} />
         <View style={styles.headerContainer}>
           <ImageComponent
             source={ImagePath.ProfileImg}
@@ -220,12 +204,24 @@ const Tickets = ({navigation}: any) => {
           </Text>
         </View>
         {colors == 0 ? (
-          <FlatList
-            data={data}
-            renderItem={renderItem}
-            keyExtractor={item => item?.id}
-            style={{marginBottom: 50}}
-          />
+          <>
+            {userData ? (
+              <FlatList
+                data={userData}
+                renderItem={renderItem}
+                keyExtractor={item => item?.id}
+                style={{marginBottom: 50}}
+              />
+            ) : (
+              <Text
+                style={[
+                  styles.tickets,
+                  {color: Colors.white, alignSelf: 'center'},
+                ]}>
+                No data found ...
+              </Text>
+            )}
+          </>
         ) : null}
 
         {colors == 1 ? (

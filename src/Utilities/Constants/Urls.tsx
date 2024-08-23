@@ -36,3 +36,5 @@ export const MUSIC_LIST = getApiUrl('music-list');
 export const DISLIKE_USER_PROFILE = getApiUrl('dislike-user');
 export const GET_MY_GROUPS = getApiUrl('get-my-meet-groups');
 export const GET_MY_TICKETS = getApiUrl('my-tickets');
+export const CREATE_REF_CODE = getApiUrl('referral-code');
+export const GET_REF_CODE = getApiUrl('fetch-referral-codes');
