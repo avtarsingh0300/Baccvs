@@ -41,6 +41,12 @@ const styles = StyleSheet.create({
         fontFamily:fontFamily.bold,
         color:Colors.white,
         marginHorizontal:20
+      },
+      copiedtxt:{
+        textAlign:"center",
+        fontSize:16,
+        fontFamily:fontFamily.regular,
+        color:Colors.green
       }
 })
 

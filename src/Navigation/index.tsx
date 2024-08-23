@@ -38,3 +38,4 @@ export {default as UploadTicket} from '../Screens/UploadTicket';
 export {default as PeopleLikes} from '../Screens/PeopleLikes';
 export {default as ReferralCode} from '../Screens/ReferralCode';
 export {default as OtherProfiles} from '../Screens/OtherProfiles';
+export {default as QrCode} from '../Screens/QrCode';

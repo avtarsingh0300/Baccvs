@@ -27,4 +27,6 @@ export default {
   backGroundGroup: require('../../Assets/images/5383010.png'),
   scanner: require('../../Assets/images/scanner.png'),
   blurpic: require('../../Assets/images/blurpic.png'),
+  qrbackground: require('../../Assets/images/qrbackground.png'),
+  Qrcode: require('../../Assets/images/Qrcode.png'),
 };

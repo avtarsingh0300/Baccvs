@@ -44,4 +44,5 @@ export default {
   PeopleLikes: 'People likes',
   ReferralCode: 'Referral Code',
   OtherProfiles: 'OtherProfiles',
+  QrCode:'QrCode',
 };

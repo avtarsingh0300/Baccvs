@@ -152,6 +152,11 @@ export default function MainStack(Stack: any) {
         component={screens.OtherProfiles}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.QrCode}
+        component={screens.QrCode}
+        options={{headerShown: false}}
+      />
     </>
   );
 }
