@@ -221,7 +221,7 @@ const Tickets = ({navigation}: any) => {
         </View>
         {colors == 0 ? (
           <FlatList
-            data={userData}
+            data={data}
             renderItem={renderItem}
             keyExtractor={item => item?.id}
             style={{marginBottom: 50}}
