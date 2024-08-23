@@ -29,4 +29,5 @@ export default {
   blurpic: require('../../Assets/images/blurpic.png'),
   qrbackground: require('../../Assets/images/qrbackground.png'),
   Qrcode: require('../../Assets/images/Qrcode.png'),
+  party: require('../../Assets/images/party.png'),
 };
