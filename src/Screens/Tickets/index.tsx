@@ -22,18 +22,23 @@ const Tickets = ({navigation}: any) => {
   const [colors, setColors] = useState(0);
   const [sellBtn, setSellBtn] = useState(false);
   const [userData, setUserData] = useState([]);
-
+  const [loader, setLoader] = useState(false);
   useEffect(() => {
     getMyTickets();
   }, []);
 
   const getMyTickets = () => {
+    setLoader(true);
     getTickets()
       .then(res => {
+        setLoader(false);
         console.log(res, 'res in getTickets');
         setUserData(res?.tickets);
       })
-      .catch(err => console.log(err, 'err in getTickets'));
+      .catch(err => {
+        setLoader(false);
+        console.log(err, 'err in getTickets');
+      });
   };
   const data = [
     {
