@@ -15,10 +15,12 @@ import {
   GET_GROUP_PEOPLE,
   GET_HOME_DATA,
   GET_INVITES,
+  GET_LIKES_FOR_USER,
   GET_MY_EVENT,
   GET_MY_GROUPS,
   GET_MY_TICKETS,
   GET_NOTIFICATION,
+  GET_USER_LIKES,
   LIKE_USER_PROFILE,
   LOGIN,
   MAP_SEARCH,
@@ -120,8 +122,14 @@ export function getMyEvent(status: string) {
 export function getAllUsers() {
   return apiGet(`${GET_ALL_USERS}`);
 }
+export function getUserLikes() {
+  return apiGet(`${GET_USER_LIKES}`);
+}
+export function getUserForLike() {
+  return apiGet(`${GET_LIKES_FOR_USER}`);
+}
 export function getMemberDetails(data: object) {
-  return apiGet(`${MEMBER_DETAILS}`, data);
+  return apiPost(`${MEMBER_DETAILS}`, data);
 }
 export function getTickets() {
   return apiGet(GET_MY_TICKETS);

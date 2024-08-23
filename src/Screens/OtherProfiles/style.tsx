@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
     marginVertical: moderateScaleVertical(10),
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: Colors.Pink,
+    borderColor: Colors.lightPink,
   },
   followInfoContainer: {
     width: '70%',
@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
   followText: {
     ...commonStyles.font14,
     fontWeight: '400',
-    color: Colors.Pink,
+    color: Colors.lightPink,
     marginBottom: 5,
   },
   followInner: {
@@ -73,15 +73,13 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingHorizontal: moderateScale(10),
+    paddingHorizontal: moderateScale(16),
     marginTop: moderateScaleVertical(20),
   },
   postImage: {
     width: moderateScale(103),
     height: moderateScaleVertical(138),
-    borderWidth: 1,
     borderRadius: 10,
-    borderColor: Colors.Pink,
     marginBottom: moderateScaleVertical(20),
     marginHorizontal: moderateScale(5),
   },
@@ -112,8 +110,8 @@ export const styles = StyleSheet.create({
     width: '100%',
     height: height / 4,
     justifyContent: 'flex-end',
-    borderWidth: 1,
-    borderColor: Colors.Pink,
+    // borderWidth: 1,
+    // borderColor: Colors.lightPink,
   },
   flexinner: {
     paddingHorizontal: 15,
@@ -131,7 +129,7 @@ export const styles = StyleSheet.create({
     height: moderateScaleVertical(32),
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: Colors.Pink,
+    borderColor: Colors.lightPink,
   },
   music: {
     borderWidth: 1,
@@ -181,5 +179,60 @@ export const styles = StyleSheet.create({
   optionText: {
     ...commonStyles.font14,
     fontWeight: '600',
+  },
+  midButtonContainer: {
+    marginHorizontal: moderateScale(55),
+    marginVertical: moderateScaleVertical(20),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  midButton: {
+    borderWidth: 1,
+    borderColor: Colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+  },
+  btnText: {
+    ...commonStyles.font12Regular,
+    color: Colors.white,
+    paddingVertical: 7,
+    paddingHorizontal: moderateScale(22),
+  },
+  bioTitle: {
+    ...commonStyles.font16WhiteBold,
+    color: Colors.lightPink,
+    marginLeft: moderateScale(29),
+  },
+  bioText: {
+    ...commonStyles.font12Regular,
+    color: Colors.white,
+    marginHorizontal: moderateScale(25),
+  },
+  title: {
+    ...commonStyles.font16WhiteBold,
+    color: Colors.lightPink,
+    marginTop: moderateScaleVertical(10),
+    marginBottom: moderateScaleVertical(10),
+    marginLeft: moderateScale(42),
+  },
+  typeContainer: {
+    marginHorizontal: moderateScale(24),
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  type: {
+    paddingHorizontal: moderateScale(10),
+    paddingVertical: 6,
+    marginBottom: moderateScaleVertical(10),
+    marginRight: moderateScale(10),
+    borderWidth: 1,
+    borderColor: Colors.white,
+    borderRadius: 8,
+  },
+  typeText: {
+    ...commonStyles.font12Bold,
+    color: Colors.white,
   },
 });
