@@ -23,8 +23,10 @@ import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import FastImage from 'react-native-fast-image';
 import {
+  Header,
   ImageComponent,
   Loadingcomponent,
+  SizeBox,
   dummydata,
 } from '../../Utilities/Component/Helpers';
 import Modal from 'react-native-modal';
@@ -37,6 +39,7 @@ const OtherProfiles = ({navigation, route}: any) => {
   const [showModal, setShowModal] = useState(false);
   const [loader, setLoader] = useState(false);
   const [userData, setUserData] = useState({});
+  const [eventCount, setEventCount] = useState('');
 
   const onSocialpart = () => {
     setShowModal(false);
@@ -44,84 +47,97 @@ const OtherProfiles = ({navigation, route}: any) => {
   };
 
   useEffect(() => {
-    const _unsubscribe = navigation.addListener('focus', () => {
-      getUserData();
-    });
-    return () => {
-      _unsubscribe();
-    };
+    // const _unsubscribe = navigation.addListener('focus', () => {
+    getUserData();
+    // });
+    // return () => {
+    //   _unsubscribe();
+    // };
   }, []);
-  console.log(route?.params?.id, 'route?.params?.id');
+  //   console.log(route?.params?.id, 'route?.params?.id');
   const getUserData = async () => {
     setLoader(true);
     const data = {
       id: route?.params?.id,
     };
+    // console.log(data, 'data');
     getMemberDetails(data)
       .then(res => {
         setLoader(false);
-        console.log(res, 'res in getUserProfile');
+        // console.log(res, 'res in getMemberDetails');
         setUserData(res?.user);
+        setEventCount(res);
       })
       .catch(err => {
         setLoader(false);
-        console.log(err, 'err in getUserProfile');
+        console.log(err, 'err in getMemberDetails');
       });
   };
 
+  const musictype = [
+    'Disco / Funk / Soul',
+    'EDM / Dance music',
+    'Underground',
+    'Hip-hop / R&B',
+    'House',
+    'Tech-House',
+    'Commercial',
+    'Latin / Raggaeton',
+    'Pop / Rock',
+  ];
+
   const renderItem = ({item, index}) => (
-    <View>
-      <View style={styles.listContainer}>
-        <ImageBackground
-          source={{uri: IMAGE_URL + item}}
-          borderRadius={5}
-          style={styles.backimg}>
-          <View style={styles.flexinner}>
-            <ImageComponent
-              source={ImagePath.ProfileImg}
-              style={styles.shortimg}
-            />
-            <ImageComponent
-              source={ImagePath.ProfileImg}
-              style={[
-                styles.extraimg,
-                {
-                  marginLeft: 5,
-                },
-              ]}
-            />
-            <ImageComponent
-              source={ImagePath.ProfileImg}
-              style={[
-                styles.extraimg,
-                {
-                  right: 10,
-                },
-              ]}
-            />
-            <Text
-              style={{
-                ...commonStyles.font16Regular,
-                alignSelf: 'flex-end',
-                color: Colors.white,
-              }}>
-              +8
-            </Text>
-          </View>
-        </ImageBackground>
-        <View style={[styles.row, {justifyContent: 'center'}]}>
-          <View style={styles.music}>
-            <Text style={styles.musictxt}>Progressive</Text>
-          </View>
-          <View style={styles.music}>
-            <Text style={styles.musictxt}>Progressive</Text>
-          </View>
-          <View style={styles.music}>
-            <Text style={styles.musictxt}>Progressive</Text>
-          </View>
+    console.log(item, 'item'),
+    (
+      <View>
+        <View style={styles.listContainer}>
+          <ImageBackground
+            source={{uri: IMAGE_URL + item?.pictures[0]}}
+            style={styles.backimg}>
+            <View style={styles.flexinner}>
+              {/* <ImageComponent
+                source={{uri: IMAGE_URL + item?.members[0]?.imageUrl}}
+                style={styles.shortimg}
+              /> */}
+              {/* {item?.members[1]?.imageUrl ? (
+                <ImageComponent
+                  source={{uri: IMAGE_URL + item?.members[1]?.imageUrl}}
+                  style={[
+                    styles.extraimg,
+                    {
+                      marginLeft: 5,
+                    },
+                  ]}
+                />
+              ) : null} */}
+
+              {/* {item?.members[2]?.imageUrl ? (
+                <ImageComponent
+                  source={{uri: IMAGE_URL + item?.members[2]?.imageUrl}}
+                  style={[
+                    styles.extraimg,
+                    {
+                      right: 10,
+                    },
+                  ]}
+                />
+              ) : null} */}
+
+              {/* {item?.members?.length > 3 ? (
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    alignSelf: 'flex-end',
+                    color: Colors.white,
+                  }}>
+                  +{item?.members?.length - 3}
+                </Text>
+              ) : null} */}
+            </View>
+          </ImageBackground>
         </View>
       </View>
-    </View>
+    )
   );
 
   return (
@@ -135,9 +151,17 @@ const OtherProfiles = ({navigation, route}: any) => {
         <ScrollView
           contentContainerStyle={styles.container}
           showsVerticalScrollIndicator={false}>
+          <SizeBox size={5} />
           <View style={styles.header}>
-            <View style={{width: '10%'}} />
-            <Text style={{...commonStyles.Heading20font, color: Colors.Pink}}>
+            {/* <Image source={ImagePath.le}/> */}
+            <VectorIcon
+              groupName={'Ionicons'}
+              name={'chevron-back'}
+              size={25}
+              onPress={() => navigation.goBack()}
+            />
+            <Text
+              style={{...commonStyles.Heading20font, color: Colors.lightPink}}>
               {userData?.full_name?.charAt(0).toUpperCase() +
                 userData?.full_name?.slice(1)}
             </Text>
@@ -170,15 +194,26 @@ const OtherProfiles = ({navigation, route}: any) => {
               </Text>
             </View>
           </View>
-          <View style={styles.statusContainer}>
-            <Text style={styles.statusText}>{userData?.bio}</Text>
+          <View style={styles.midButtonContainer}>
+            <TouchableOpacity style={styles.midButton} activeOpacity={0.8}>
+              <Text style={styles.btnText}>Message</Text>
+            </TouchableOpacity>
+            <VectorIcon
+              groupName="AntDesign"
+              name="hearto"
+              color={Colors.red}
+              size={24}
+            />
+            <TouchableOpacity style={styles.midButton} activeOpacity={0.8}>
+              <Text style={styles.btnText}>Follow</Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.row}>
             <VectorIcon
               groupName="MaterialCommunityIcons"
               name="cupcake"
               size={20}
-              color={Colors.Pink}
+              color={Colors.lightPink}
             />
             <Text style={styles.rowText}>{userData?.age}</Text>
             <View
@@ -188,7 +223,10 @@ const OtherProfiles = ({navigation, route}: any) => {
                 backgroundColor: '#7D67EE',
               }}
             />
-            <Image source={ImagePath.line_height} />
+            <Image
+              source={ImagePath.line_height}
+              tintColor={Colors.lightPink}
+            />
             <Text style={styles.rowText}>{userData?.height}</Text>
             <View
               style={{
@@ -201,7 +239,7 @@ const OtherProfiles = ({navigation, route}: any) => {
               groupName="SimpleLineIcons"
               name="location-pin"
               size={20}
-              color={Colors.Pink}
+              color={Colors.lightPink}
             />
             <Text style={styles.rowText}>
               {userData?.location ? userData?.location : 'Eiffel Tower'}
@@ -217,7 +255,7 @@ const OtherProfiles = ({navigation, route}: any) => {
               groupName="MaterialCommunityIcons"
               name="zodiac-leo"
               size={20}
-              color={Colors.Pink}
+              color={Colors.lightPink}
             />
             <Text style={styles.rowText}>{userData?.zodiac_sign}</Text>
             <View
@@ -231,11 +269,11 @@ const OtherProfiles = ({navigation, route}: any) => {
               groupName="MaterialCommunityIcons"
               name="glass-cocktail"
               size={20}
-              color={Colors.Pink}
+              color={Colors.lightPink}
             />
           </View>
           <View style={styles.postContainer}>
-            {userData?.thumbnail_urls?.map((i, index) => (
+            {userData?.pictures?.map((i, index) => (
               <FastImage
                 source={{uri: IMAGE_URL + i}}
                 key={index}
@@ -243,23 +281,46 @@ const OtherProfiles = ({navigation, route}: any) => {
               />
             ))}
           </View>
-          <View style={styles.row}>
-            <View style={{width: '10%'}} />
-            <Text style={{...commonStyles.font16White}}>See more</Text>
-            <VectorIcon
-              groupName="Feather"
-              name="edit"
-              color={Colors.white}
-              size={22}
-            />
+          <Text style={{...commonStyles.font16White, alignSelf: 'center'}}>
+            See more
+          </Text>
+          <SizeBox size={10} />
+          <Text style={styles.bioTitle}>Sasha Bio</Text>
+          <SizeBox size={8} />
+          <Text style={styles.bioText}>{userData?.bio}</Text>
+          <SizeBox size={5} />
+          <Text style={styles.title}>Music type</Text>
+          <View style={styles.typeContainer}>
+            {musictype.map((i, index) => (
+              <View style={styles.type}>
+                <Text style={styles.typeText}>{i}</Text>
+              </View>
+            ))}
           </View>
+          <Text style={styles.title}>Event type</Text>
+          <View style={styles.typeContainer}>
+            {musictype.map((i, index) => (
+              <View style={styles.type}>
+                <Text style={styles.typeText}>{i}</Text>
+              </View>
+            ))}
+          </View>
+          <Text style={styles.title}>Languages</Text>
+          <View style={styles.typeContainer}>
+            {userData?.language?.map((i, index) => (
+              <View style={styles.type}>
+                <Text style={styles.typeText}>{i}</Text>
+              </View>
+            ))}
+          </View>
+          <SizeBox size={10} />
           <Text
             style={{
               ...commonStyles.font13,
               fontWeight: '700',
               marginLeft: moderateScale(31),
             }}>
-            Past events (1/11)
+            Past events (1/{eventCount?.event_count})
           </Text>
           <FlatList
             showsVerticalScrollIndicator={false}
@@ -267,7 +328,7 @@ const OtherProfiles = ({navigation, route}: any) => {
               width: width,
               alignSelf: 'center',
             }}
-            data={userData?.video_urls}
+            data={eventCount?.past_events}
             renderItem={renderItem}
           />
         </ScrollView>

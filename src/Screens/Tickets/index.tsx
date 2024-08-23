@@ -15,10 +15,13 @@ import ImagePath from '../../Utilities/Constants/ImagePath';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {getTickets} from '../../Utilities/Constants/auth';
+import {IMAGE_URL} from '../../Utilities/Constants/Urls';
+import moment from 'moment';
 
 const Tickets = ({navigation}: any) => {
   const [colors, setColors] = useState(0);
   const [sellBtn, setSellBtn] = useState(false);
+  const [userData, setUserData] = useState([]);
 
   useEffect(() => {
     getMyTickets();
@@ -26,8 +29,11 @@ const Tickets = ({navigation}: any) => {
 
   const getMyTickets = () => {
     getTickets()
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
+      .then(res => {
+        console.log(res, 'res in getTickets');
+        setUserData(res?.tickets);
+      })
+      .catch(err => console.log(err, 'err in getTickets'));
   };
   const data = [
     {
@@ -76,17 +82,30 @@ const Tickets = ({navigation}: any) => {
   ];
 
   const renderItem = ({item}: any) => (
-    <View style={styles.item}>
-      <ImageComponent source={item.imageUrl} style={styles.profileimg} />
+    console.log(item, 'item'),
+    (
+      <View style={styles.item}>
+        <ImageComponent
+          source={
+            item?.eventId?.pictures?.length > 0
+              ? {uri: IMAGE_URL + item?.eventId?.pictures[0]}
+              : ImagePath.ProfileImg
+          }
+          style={styles.profileimg}
+        />
 
-      <View style={{width: '80%'}}>
-        <Text style={styles.title}>{item.title}</Text>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Text style={styles.date}>Wed 20 Dec 2023</Text>
-          <Text style={styles.date1}>Upcoming</Text>
+        <View style={{width: '80%'}}>
+          <Text style={styles.title}>{item?.eventId?.event_name}</Text>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Text style={styles.date}>{item?.eventId?.date}</Text>
+            {moment(item?.eventId?.date).format('YYYY-MM-DD') >
+              moment(new Date()).format('YYYY-MM-DD') && (
+              <Text style={styles.date1}>Upcoming</Text>
+            )}
+          </View>
         </View>
       </View>
-    </View>
+    )
   );
   const renderItemm = ({item}: any) => (
     <View style={styles.item}>
@@ -196,7 +215,7 @@ const Tickets = ({navigation}: any) => {
         </View>
         {colors == 0 ? (
           <FlatList
-            data={data}
+            data={userData}
             renderItem={renderItem}
             keyExtractor={item => item.id}
             style={{marginBottom: 50}}

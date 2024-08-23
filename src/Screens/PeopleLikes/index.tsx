@@ -1,52 +1,124 @@
-import { FlatList, ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
-import styles from './style'
-import LinearGradient from 'react-native-linear-gradient'
-import { Colors } from '../../Utilities/Styles/colors'
-import { SizeBox } from '../../Utilities/Component/Helpers'
-import VectorIcon from '../../Utilities/Component/vectorIcons'
-import ImagePath from '../../Utilities/Constants/ImagePath'
+import {
+  FlatList,
+  ImageBackground,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import styles from './style';
+import LinearGradient from 'react-native-linear-gradient';
+import {Colors} from '../../Utilities/Styles/colors';
+import {Loadingcomponent, SizeBox} from '../../Utilities/Component/Helpers';
+import VectorIcon from '../../Utilities/Component/vectorIcons';
+import ImagePath from '../../Utilities/Constants/ImagePath';
+import {getUserForLike, getUserLikes} from '../../Utilities/Constants/auth';
+import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 
 const PeopleLikes = () => {
-    const [colors, setColors] = useState(0);
- 
-    const renderData = () => (
-        <ImageBackground source={ImagePath.ProfileImg} style={styles.imgback} borderRadius={10}>
-          <SizeBox size={3} />
-          <Text style={styles.kingson}>Kingson</Text>
+  const [colors, setColors] = useState(0);
+  const [userData, setUserData] = useState({});
+  const [loader, setLoader] = useState(false);
+
+  useEffect(() => {
+    userLikesYou();
+  }, [colors]);
+
+  const userLikesYou = () => {
+    if (colors != 1) {
+      getUserLikes()
+        .then(res => {
+          console.log(res, 'res in getUserLikes');
+          setUserData(res?.data);
+        })
+        .catch(err => {
+          console.log(err, 'err in getUserLikes');
+        });
+    } else {
+      getUserForLike()
+        .then(res => {
+          console.log(res, 'res in getUserLikes');
+          setUserData(res?.data);
+        })
+        .catch(err => {
+          console.log(err, 'err in getUserLikes');
+        });
+    }
+  };
+
+  const renderData = ({item}) => (
+    <ImageBackground
+      source={{uri: IMAGE_URL + item?.likedUserId?.pictures[0]}}
+      style={styles.imgbacks}
+      borderRadius={10}>
+      <SizeBox size={3} />
+      <Text style={styles.kingson}>{item?.likedUserId?.username}</Text>
+    </ImageBackground>
+  );
+  const renderData1 = ({item}) => (
+    // console.log(item, 'item'),
+    <ImageBackground
+      source={
+        item?.userId?.pictures?.length > 0
+          ? {uri: IMAGE_URL + item?.userId?.pictures[0]}
+          : ImagePath.ProfileImg
+      }
+      style={styles.imgbacks}
+      borderRadius={10}>
+      <SizeBox size={3} />
+      <Text style={styles.kingson}>{item?.userId?.username}</Text>
+    </ImageBackground>
+  );
+  const renderItem = ({item}) => (
+    <ImageBackground
+      source={{uri: IMAGE_URL + item?.likedUserId?.pictures[0]}}
+      style={styles.imgback}
+      borderRadius={10}>
+      <SizeBox size={3} />
+      <Text style={styles.leilani}>
+        {item?.likedUserId?.username}, {item?.likedUserId?.age}
+      </Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          position: 'absolute',
+          bottom: -1,
+        }}>
+        <ImageBackground
+          source={ImagePath.blurpic}
+          style={styles.blurimg}
+          borderBottomRightRadius={10}
+          borderBottomLeftRadius={10}>
+          <VectorIcon
+            groupName="Entypo"
+            name="cross"
+            size={25}
+            color={Colors.white}
+          />
+          <View style={styles.line}></View>
+          <VectorIcon
+            groupName="Foundation"
+            name="heart"
+            size={20}
+            color={Colors.green}
+          />
         </ImageBackground>
-      );
-      const renderData1 = () => (
-          <ImageBackground source={ImagePath.ProfileImg} style={styles.imgback} borderRadius={10}>
-          <SizeBox size={3} />
-          <Text style={styles.kingson}>Kingson</Text>
-        </ImageBackground>
-      );
-      const renderItem = () => (
-          <ImageBackground source={ImagePath.ProfileImg} style={styles.imgback} borderRadius={10}>
-            <SizeBox size={3} />
-            <Text style={styles.leilani}>Leilani, 19</Text>
-            <View style={{flexDirection:"row",justifyContent:"space-between",position:"absolute",bottom:-1}}>
-              
-         <ImageBackground
-         source={ImagePath.blurpic}
-         style={styles.blurimg}
-         borderBottomRightRadius={10}
-         borderBottomLeftRadius={10}
-         >
-                <VectorIcon groupName='Entypo' name='cross' size={25} color={Colors.white}/>
-                <View style={styles.line}></View>
-                <VectorIcon groupName='Foundation' name='heart' size={20} color={Colors.green}/>
-         </ImageBackground>
-            </View>
-          </ImageBackground>
-        );
-        const renderItem1 = () => (
-            <ImageBackground source={ImagePath.ProfileImg} style={styles.imgbacks} borderRadius={10} blurRadius={30}>
-            <SizeBox size={3} />
-          </ImageBackground>
-        );
-      
+      </View>
+    </ImageBackground>
+  );
+  const renderItem1 = ({item}) => (
+    <ImageBackground
+      source={{uri: IMAGE_URL + item?.likedUserId?.pictures[0]}}
+      style={styles.imgbacks}
+      borderRadius={10}
+      blurRadius={30}>
+      <SizeBox size={3} />
+    </ImageBackground>
+  );
+
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
@@ -55,81 +127,109 @@ const PeopleLikes = () => {
       style={styles.LinearConatiner}>
       <SafeAreaView>
         <ScrollView showsVerticalScrollIndicator={false}>
-        <SizeBox size={10}/>
-        <Text style={styles.liketxt}>Likes</Text>
-        <SizeBox size={10}/>
-        <View style={styles.likesbtn}>
-        <Text
-            onPress={() => setColors(0)}
-            style={[styles.likestxt,
-                {color: colors === 0 ? Colors.lightPink : Colors.white,},
-            ]}>
-            Likes you</Text>
-          <Text
-            onPress={() => setColors(1)}
-            style={[styles.likestxt,{color: colors === 1 ? Colors.lightPink : Colors.white,},
-            ]}>
-            You liked</Text>
-        </View>
-        {colors===1?(
-        <>
-                <SizeBox size={10}/>
-        <View style={{flexDirection:"row"}}>
-        <VectorIcon groupName='MaterialIcons' name='local-fire-department' size={25} color={Colors.white}/>
-        <Text style={styles.crushtxt}>Yours Crushs</Text>
-        </View>
-        <FlatList
-              data={[{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}]}
-              renderItem={renderData}
-              horizontal
-              style={{alignSelf: 'center'}}
-            />
-        <View style={{flexDirection:"row"}}>
-        <VectorIcon groupName='Fontisto' name='heart-alt' size={20} color={Colors.white}/>
-        <Text style={styles.crushtxt}>Other likes</Text>
-        </View>
-        <FlatList
-              data={[{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}]}
-              renderItem={renderData1}
-              numColumns={2}
-              style={{alignSelf: 'center'}}
-              /></>):(
-                    <View>
-                  <View style={{flexDirection:"row",paddingTop:15}}>
-                <VectorIcon groupName='MaterialIcons' name='local-fire-department' size={25} color={Colors.white}/>
-                <Text style={styles.crushtxt}>Crushs</Text>
-                <Text style={styles.crushtxt}>(20)</Text>
-                      </View>
-                      <FlatList
-                            data={[{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}]}
-                            renderItem={renderItem}
-                            horizontal
-                            style={{alignSelf: 'center'}}
-                            />
-             <SizeBox size={10}/>
-        <View style={{flexDirection:"row"}}>
-        <VectorIcon groupName='Fontisto' name='heart-alt' size={20} color={Colors.white}/>
-        <Text style={styles.crushtxt}>Up Next</Text>
-        <Text style={styles.crushtxt}>(32)</Text>
-        </View>
-        <SizeBox size={5}/>
-        <Text style={styles.subscribetxt}>Subscribe to see everyone who likes you</Text>
-        <FlatList
-              data={[{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}]}
-              renderItem={renderItem1}
-              numColumns={2}
-              style={{alignSelf: 'center'}}
-              
+          <SizeBox size={10} />
+          <Text style={styles.liketxt}>Likes</Text>
+          <SizeBox size={10} />
+          <View style={styles.likesbtn}>
+            <Text
+              onPress={() => setColors(0)}
+              style={[
+                styles.likestxt,
+                {color: colors === 0 ? Colors.lightPink : Colors.white},
+              ]}>
+              Likes you
+            </Text>
+            <Text
+              onPress={() => setColors(1)}
+              style={[
+                styles.likestxt,
+                {color: colors === 1 ? Colors.lightPink : Colors.white},
+              ]}>
+              You liked
+            </Text>
+          </View>
+          {colors === 1 ? (
+            <>
+              <SizeBox size={10} />
+              <View style={{flexDirection: 'row'}}>
+                <VectorIcon
+                  groupName="MaterialIcons"
+                  name="local-fire-department"
+                  size={25}
+                  color={Colors.white}
+                />
+                <Text style={styles.crushtxt}>Yours Crushs</Text>
+              </View>
+              <FlatList
+                data={userData?.crush}
+                renderItem={renderData}
+                horizontal
+                style={{alignSelf: 'center'}}
               />
-                      </View>
-            )}
+              <SizeBox size={10} />
+              <View style={{flexDirection: 'row'}}>
+                <VectorIcon
+                  groupName="Fontisto"
+                  name="heart-alt"
+                  size={20}
+                  color={Colors.white}
+                />
+                <Text style={styles.crushtxt}>Other likes</Text>
+              </View>
+              <FlatList
+                data={userData?.otherLike}
+                renderItem={renderData1}
+                numColumns={2}
+                style={{alignSelf: 'center'}}
+              />
+            </>
+          ) : (
+            <View>
+              <View style={{flexDirection: 'row', paddingTop: 15}}>
+                <VectorIcon
+                  groupName="MaterialIcons"
+                  name="local-fire-department"
+                  size={25}
+                  color={Colors.white}
+                />
+                <Text style={styles.crushtxt}>Crushs</Text>
+                <Text style={styles.crushtxt}>({userData?.crush?.length})</Text>
+              </View>
+              <FlatList
+                data={userData?.crush}
+                renderItem={renderItem}
+                horizontal
+                // style={{alignSelf: 'center'}}
+                keyExtractor={(item, index) => index?.toString()}
+              />
+              <SizeBox size={10} />
+              <View style={{flexDirection: 'row'}}>
+                <VectorIcon
+                  groupName="Fontisto"
+                  name="heart-alt"
+                  size={20}
+                  color={Colors.white}
+                />
+                <Text style={styles.crushtxt}>Up Next</Text>
+                <Text style={styles.crushtxt}>(32)</Text>
+              </View>
+              <SizeBox size={5} />
+              <Text style={styles.subscribetxt}>
+                Subscribe to see everyone who likes you
+              </Text>
+              <FlatList
+                data={userData?.otherLike}
+                renderItem={renderItem1}
+                numColumns={2}
+                style={{alignSelf: 'center'}}
+              />
+            </View>
+          )}
+        </ScrollView>
+        <Loadingcomponent isVisible={loader} />
+      </SafeAreaView>
+    </LinearGradient>
+  );
+};
 
-            </ScrollView>
-
-        </SafeAreaView>
-        </LinearGradient>
-  )
-}
-
-export default PeopleLikes
-
+export default PeopleLikes;
