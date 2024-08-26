@@ -7,7 +7,7 @@ import { SizeBox } from '../../Utilities/Component/Helpers'
 import VectorIcon from '../../Utilities/Component/vectorIcons'
 import ImagePath from '../../Utilities/Constants/ImagePath'
 import { height } from '../../Utilities/Styles/responsiveSize'
-const QrCode = () => {
+const QrCode = ({navigation,}) => {
   return (
     <LinearGradient
     colors={[Colors.LinearBlack, Colors.Linear]}
