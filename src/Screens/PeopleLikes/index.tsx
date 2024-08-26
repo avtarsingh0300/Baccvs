@@ -48,7 +48,7 @@ const PeopleLikes = () => {
     }
   };
 
-  const renderData = ({item}) => (
+  const renderData = ({item}: any) => (
     <ImageBackground
       source={{uri: IMAGE_URL + item?.likedUserId?.pictures[0]}}
       style={styles.imgbacks}
@@ -57,7 +57,7 @@ const PeopleLikes = () => {
       <Text style={styles.kingson}>{item?.likedUserId?.username}</Text>
     </ImageBackground>
   );
-  const renderData1 = ({item}) => (
+  const renderData1 = ({item}: any) => (
     // console.log(item, 'item'),
     <ImageBackground
       source={
@@ -71,9 +71,13 @@ const PeopleLikes = () => {
       <Text style={styles.kingson}>{item?.userId?.username}</Text>
     </ImageBackground>
   );
-  const renderItem = ({item}) => (
+  const renderItem = ({item}: any) => (
     <ImageBackground
-      source={{uri: IMAGE_URL + item?.likedUserId?.pictures[0]}}
+      source={
+        item?.likedUserId?.pictures?.length > 0
+          ? {uri: IMAGE_URL + item?.likedUserId?.pictures[0]}
+          : ImagePath.ProfileImg
+      }
       style={styles.imgback}
       borderRadius={10}>
       <SizeBox size={3} />
@@ -109,9 +113,13 @@ const PeopleLikes = () => {
       </View>
     </ImageBackground>
   );
-  const renderItem1 = ({item}) => (
+  const renderItem1 = ({item}: any) => (
     <ImageBackground
-      source={{uri: IMAGE_URL + item?.likedUserId?.pictures[0]}}
+      source={
+        item?.likedUserId?.pictures?.length > 0
+          ? {uri: IMAGE_URL + item?.likedUserId?.pictures[0]}
+          : ImagePath.ProfileImg
+      }
       style={styles.imgbacks}
       borderRadius={10}
       blurRadius={30}>
@@ -160,12 +168,20 @@ const PeopleLikes = () => {
                 />
                 <Text style={styles.crushtxt}>Yours Crushs</Text>
               </View>
-              <FlatList
-                data={userData?.crush}
-                renderItem={renderData}
-                horizontal
-                style={{alignSelf: 'center'}}
-              />
+              {userData?.crush.length > 0 ? (
+                <FlatList
+                  data={userData?.crush}
+                  renderItem={renderData}
+                  horizontal
+                  style={{alignSelf: 'center'}}
+                />
+              ) : (
+                <>
+                  <SizeBox size={10} />
+                  <Text style={styles.crushtxt}>No data found ..</Text>
+                  <SizeBox size={5} />
+                </>
+              )}
               <SizeBox size={10} />
               <View style={{flexDirection: 'row'}}>
                 <VectorIcon
@@ -176,12 +192,21 @@ const PeopleLikes = () => {
                 />
                 <Text style={styles.crushtxt}>Other likes</Text>
               </View>
-              <FlatList
-                data={userData?.otherLike}
-                renderItem={renderData1}
-                numColumns={2}
-                style={{alignSelf: 'center'}}
-              />
+
+              {userData?.otherLike.length > 0 ? (
+                <FlatList
+                  data={userData?.otherLike}
+                  renderItem={renderData1}
+                  numColumns={2}
+                  style={{alignSelf: 'center'}}
+                />
+              ) : (
+                <>
+                  <SizeBox size={10} />
+                  <Text style={styles.crushtxt}>No data found ..</Text>
+                  <SizeBox size={5} />
+                </>
+              )}
             </>
           ) : (
             <View>
@@ -195,13 +220,20 @@ const PeopleLikes = () => {
                 <Text style={styles.crushtxt}>Crushs</Text>
                 <Text style={styles.crushtxt}>({userData?.crush?.length})</Text>
               </View>
-              <FlatList
-                data={userData?.crush}
-                renderItem={renderItem}
-                horizontal
-                // style={{alignSelf: 'center'}}
-                keyExtractor={(item, index) => index?.toString()}
-              />
+              {userData?.crush.length > 0 ? (
+                <FlatList
+                  data={userData?.crush}
+                  renderItem={renderItem}
+                  horizontal
+                  keyExtractor={(item, index) => index?.toString()}
+                />
+              ) : (
+                <>
+                  <SizeBox size={10} />
+                  <Text style={styles.crushtxt}>No data found ..</Text>
+                  <SizeBox size={5} />
+                </>
+              )}
               <SizeBox size={10} />
               <View style={{flexDirection: 'row'}}>
                 <VectorIcon
@@ -217,12 +249,20 @@ const PeopleLikes = () => {
               <Text style={styles.subscribetxt}>
                 Subscribe to see everyone who likes you
               </Text>
-              <FlatList
-                data={userData?.otherLike}
-                renderItem={renderItem1}
-                numColumns={2}
-                style={{alignSelf: 'center'}}
-              />
+              {userData?.otherLike.length > 0 ? (
+                <FlatList
+                  data={userData?.otherLike}
+                  renderItem={renderItem1}
+                  numColumns={2}
+                  style={{alignSelf: 'center'}}
+                />
+              ) : (
+                <>
+                  <SizeBox size={10} />
+                  <Text style={styles.crushtxt}>No data found ..</Text>
+                  <SizeBox size={5} />
+                </>
+              )}
             </View>
           )}
         </ScrollView>
