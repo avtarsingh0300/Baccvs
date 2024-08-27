@@ -1,19 +1,12 @@
-import {
-  ImageBackground,
-  SafeAreaView,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
-import React from 'react';
-import styles from './style';
-import LinearGradient from 'react-native-linear-gradient';
-import {Colors} from '../../Utilities/Styles/colors';
-import {SizeBox} from '../../Utilities/Component/Helpers';
-import VectorIcon from '../../Utilities/Component/vectorIcons';
-import ImagePath from '../../Utilities/Constants/ImagePath';
-import {height} from '../../Utilities/Styles/responsiveSize';
+import { ImageBackground, SafeAreaView, Text, View ,Image, TouchableOpacity} from 'react-native'
+import React from 'react'
+import styles from './style'
+import LinearGradient from 'react-native-linear-gradient'
+import { Colors } from '../../Utilities/Styles/colors'
+import { SizeBox } from '../../Utilities/Component/Helpers'
+import VectorIcon from '../../Utilities/Component/vectorIcons'
+import ImagePath from '../../Utilities/Constants/ImagePath'
+import { height } from '../../Utilities/Styles/responsiveSize'
 const QrCode = ({navigation}: any) => {
   return (
     <LinearGradient
