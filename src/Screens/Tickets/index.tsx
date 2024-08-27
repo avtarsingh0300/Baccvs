@@ -21,12 +21,15 @@ import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {getTickets} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import moment from 'moment';
+import { height, moderateScale, moderateScaleVertical, width } from '../../Utilities/Styles/responsiveSize';
+import Modal from 'react-native-modal';
 
 const Tickets = ({navigation}: any) => {
   const [colors, setColors] = useState(0);
   const [sellBtn, setSellBtn] = useState(false);
   const [userData, setUserData] = useState([]);
   const [loader, setLoader] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   useEffect(() => {
     getMyTickets();
   }, []);
@@ -105,15 +108,11 @@ const Tickets = ({navigation}: any) => {
           <Text style={styles.title}>{item.title}</Text>
           <Text style={styles.date}>Wed 20 Dec 2023</Text>
         </View>
-        <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: 11,
-          }}>
-          <Text style={styles.date}>Early ticket</Text>
-          <Text style={styles.price}>15€99</Text>
-        </View>
+        <TouchableOpacity
+        onPress={()=> setModalVisible(!modalVisible)}
+          style={styles.buybtn}>
+        <Text style={styles.date}>Buy</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -145,6 +144,17 @@ const Tickets = ({navigation}: any) => {
       </View>
     </View>
   );
+
+  const handleBuyPress = () => {
+    setModalVisible(false);
+    console.log('Buy button pressed');
+  };
+
+  const handleCancelPress = () => {
+    setModalVisible(false);
+    console.log('Cancel button pressed');
+  };
+
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
@@ -269,7 +279,47 @@ const Tickets = ({navigation}: any) => {
             ) : null}
           </>
         ) : null}
-      </SafeAreaView>
+        <Modal
+          isVisible={modalVisible}
+          style={{
+            alignSelf:"center"
+          }}
+          onBackdropPress={() => {
+            setModalVisible(false);
+          }}
+          backdropOpacity={0.5}
+          animationIn="slideInUp"
+          animationOut="flipOutY"
+          animationInTiming={600}
+          animationOutTiming={600}
+          backdropTransitionInTiming={600}
+          backdropTransitionOutTiming={600}>
+          <View
+            style={{
+              minHeight: height / 5,
+              maxHeight: height / 3,
+              width: '95%',
+              alignSelf: 'center',
+            }}>
+
+            <LinearGradient 
+            colors={[Colors.LinearBlack, Colors.Linear]}
+            start={{x: 1.5, y:1.9}}
+            end={{x: 1.4, y: 0.4}}
+            style={styles.modalView}>
+      <Text style={styles.modalText}>Are you sure you want to buy this ticket at 120 € for [Event name]?</Text>
+      <View style={styles.brdbotm}></View>
+      <TouchableOpacity style={styles.modalButton} onPress={handleBuyPress}>
+        <Text style={styles.modalButtonText}>Buy</Text>
+      </TouchableOpacity>
+      <View style={styles.brdbotm}></View>
+      <TouchableOpacity style={styles.modalButton} onPress={handleCancelPress}>
+        <Text style={styles.modalbtnText}>Cancel</Text>
+      </TouchableOpacity>
+    </LinearGradient>
+          </View>
+        </Modal>
+        </SafeAreaView>
     </LinearGradient>
   );
 };

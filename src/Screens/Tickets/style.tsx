@@ -45,10 +45,10 @@ const styles = StyleSheet.create({
     fontFamily:fontFamily.time_regular
   },
   date:{
-    fontSize:16,
-    fontWeight:"400",
+    fontSize:10,
+    fontWeight:"700",
     fontFamily:fontFamily.time_regular,
-    color:Colors.green,
+    color:Colors.white,
   },
   date1:{
     fontSize:16,
@@ -127,6 +127,52 @@ const styles = StyleSheet.create({
     alignItems: 'center',
      justifyContent: 'center',
       marginTop: 11 
+    },
+    buybtn:{
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth:1,
+      borderRadius:8,
+      borderColor:Colors.grey,
+      width:moderateScaleVertical(77),
+      height:moderateScale(27)
+    },
+    modalView: {
+      width:"90%",
+      backgroundColor:Colors.lightPink,
+      borderRadius: 10,
+    paddingVertical:20,
+      alignItems: 'center', 
+      borderRadius:20
+    },
+    modalText: {
+      fontSize: 16,
+      marginBottom: 15,
+      textAlign: 'center',
+      color: Colors.white,
+      paddingHorizontal:20,
+      fontFamily:fontFamily.time_regular
+    },
+    modalButtonText: {
+      color: Colors.green,
+      fontWeight: "400",
+      textAlign: 'center',
+      fontSize:18,
+      fontFamily:fontFamily.time_regular,
+      paddingVertical:10
+    },
+    modalbtnText: {
+      color: Colors.white,
+      fontWeight: "400",
+      textAlign: 'center',
+      fontSize:18,
+      fontFamily:fontFamily.time_regular,
+      paddingVertical:10
+    },
+    brdbotm:{
+      borderBottomWidth:1.5,
+      borderColor:Colors.black,
+      width:width/1.3
     }
 })
 
