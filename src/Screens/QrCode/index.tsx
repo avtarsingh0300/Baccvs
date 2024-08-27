@@ -41,7 +41,7 @@ const QrCode = ({navigation}: any) => {
           <View style={styles.textscanner}>
             <Text style={styles.agoratxt}>Agora party</Text>
             <SizeBox size={3} />
-            <Text ticketprice>Early ticket - 20€</Text>
+            <Text style={styles.ticketprice}>Early ticket - 20€</Text>
             <SizeBox size={15} />
             <Image source={ImagePath.Qrcode} style={styles.qrcodeimg} />
           </View>
