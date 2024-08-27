@@ -38,3 +38,4 @@ export const GET_MY_GROUPS = getApiUrl('get-my-meet-groups');
 export const GET_MY_TICKETS = getApiUrl('my-tickets');
 export const CREATE_REF_CODE = getApiUrl('referral-code');
 export const GET_REF_CODE = getApiUrl('fetch-referral-codes');
+export const GET_BUYTICKET_LIST = getApiUrl('sell-tickets');

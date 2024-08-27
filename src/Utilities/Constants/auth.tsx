@@ -11,6 +11,7 @@ import {
   EVENT_DETAIL,
   GET_ALL_MEET_GROUPS,
   GET_ALL_USERS,
+  GET_BUYTICKET_LIST,
   GET_EVENT_TYPE,
   GET_FOLLOWER_LIST,
   GET_GROUP_PEOPLE,
@@ -141,6 +142,9 @@ export function getMemberDetails(data: object) {
 }
 export function getTickets() {
   return apiGet(GET_MY_TICKETS);
+}
+export function getBuyTicketList() {
+  return apiGet(GET_BUYTICKET_LIST);
 }
 export function getAllMeetGroups() {
   return apiGet(`${GET_ALL_MEET_GROUPS}`);

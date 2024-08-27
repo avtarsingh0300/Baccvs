@@ -18,25 +18,37 @@ import {
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
-import {getTickets} from '../../Utilities/Constants/auth';
+import {getBuyTicketList, getTickets} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import moment from 'moment';
+import {
+  height,
+  moderateScale,
+  moderateScaleVertical,
+  width,
+} from '../../Utilities/Styles/responsiveSize';
+import Modal from 'react-native-modal';
 
 const Tickets = ({navigation}: any) => {
   const [colors, setColors] = useState(0);
   const [sellBtn, setSellBtn] = useState(false);
   const [userData, setUserData] = useState([]);
+  const [buyticketdata, setBuyTicket] = useState([]);
   const [loader, setLoader] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [eventname, setEventname] = useState('');
+  const [eventprice, setEventPrice] = useState('');
   useEffect(() => {
     getMyTickets();
   }, []);
 
   const getMyTickets = () => {
     setLoader(true);
+
     getTickets()
       .then(res => {
         setLoader(false);
-        console.log(res, 'res in getTickets');
+
         setUserData(res?.tickets);
       })
       .catch(err => {
@@ -45,7 +57,21 @@ const Tickets = ({navigation}: any) => {
         console.log(err, 'err in getTickets');
       });
   };
+  const getBuyTickets = () => {
+    setLoader(true);
 
+    getBuyTicketList()
+      .then(res => {
+        setLoader(false);
+
+        setBuyTicket(res?.tickets);
+      })
+      .catch(err => {
+        setLoader(false);
+        showError(err?.message);
+        console.log(err, 'err in getbuyTickets');
+      });
+  };
   const data1 = [
     {
       id: '1',
@@ -95,27 +121,49 @@ const Tickets = ({navigation}: any) => {
       </View>
     </TouchableOpacity>
   );
-
+  const onEventDetails = (id: any) => {
+    navigation.navigate(NavigationStrings.EventDetails, {eventId: id});
+  };
   const renderItemm = ({item}: any) => (
-    <View style={styles.item}>
-      <ImageComponent source={item.imageUrl} style={styles.profileimgs} />
+    <TouchableOpacity
+      style={styles.item}
+      onPress={() => onEventDetails(item?.eventId?._id)}>
+      <ImageComponent
+        source={
+          item?.eventId?.pictures?.length > 0
+            ? {uri: IMAGE_URL + item?.eventId?.pictures[0]}
+            : ImagePath.ProfileImg
+        }
+        style={styles.profileimgs}
+      />
 
-      <View style={{flexDirection: 'row', paddingHorizontal: 7}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          paddingHorizontal: 7,
+          alignItems: 'center',
+        }}>
         <View style={{width: '60%'}}>
-          <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.date}>Wed 20 Dec 2023</Text>
+          <Text style={styles.title}>{item?.eventId?.event_name}</Text>
+          <Text style={[styles.date, {color: Colors.lightPink}]}>
+            {item?.eventId?.date}
+          </Text>
+          {moment(item?.eventId?.date).format('YYYY-MM-DD') >
+            moment(new Date()).format('YYYY-MM-DD') && (
+            <Text style={styles.date}>Upcoming</Text>
+          )}
         </View>
-        <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: 11,
-          }}>
-          <Text style={styles.date}>Early ticket</Text>
-          <Text style={styles.price}>15€99</Text>
-        </View>
+        <TouchableOpacity
+          onPress={() => {
+            setEventPrice(item?.price);
+            setEventname(item?.eventId?.event_name),
+              setModalVisible(!modalVisible);
+          }}
+          style={styles.buybtn}>
+          <Text style={styles.date}>Buy</Text>
+        </TouchableOpacity>
       </View>
-    </View>
+    </TouchableOpacity>
   );
   const renderItems = ({item}: any) => (
     <View style={styles.item}>
@@ -145,6 +193,17 @@ const Tickets = ({navigation}: any) => {
       </View>
     </View>
   );
+
+  const handleBuyPress = () => {
+    setModalVisible(false);
+    console.log('Buy button pressed');
+  };
+
+  const handleCancelPress = () => {
+    setModalVisible(false);
+    console.log('Cancel button pressed');
+  };
+
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
@@ -169,7 +228,9 @@ const Tickets = ({navigation}: any) => {
             marginVertical: 20,
           }}>
           <Text
-            onPress={() => setColors(0)}
+            onPress={() => {
+              getMyTickets(), setColors(0);
+            }}
             style={[
               styles.tickets,
               {
@@ -180,7 +241,9 @@ const Tickets = ({navigation}: any) => {
           </Text>
 
           <Text
-            onPress={() => setColors(1)}
+            onPress={() => {
+              getBuyTickets(), setColors(1);
+            }}
             style={[
               styles.text,
               {
@@ -241,7 +304,17 @@ const Tickets = ({navigation}: any) => {
                 style={styles.searchIcon}
               />
             </View>
-            <FlatList data={data1} renderItem={renderItemm} />
+            {buyticketdata.length > 0 ? (
+              <FlatList data={buyticketdata} renderItem={renderItemm} />
+            ) : (
+              <Text
+                style={[
+                  styles.tickets,
+                  {color: Colors.white, alignSelf: 'center'},
+                ]}>
+                No data found ...
+              </Text>
+            )}
           </>
         ) : null}
 
@@ -269,6 +342,48 @@ const Tickets = ({navigation}: any) => {
             ) : null}
           </>
         ) : null}
+        <Modal
+          isVisible={modalVisible}
+          style={{
+            alignSelf: 'center',
+          }}
+          onBackdropPress={() => {
+            setModalVisible(false);
+          }}
+          backdropOpacity={0.5}
+          animationIn="slideInUp"
+          animationOut="flipOutY"
+          animationInTiming={600}
+          animationOutTiming={600}
+          backdropTransitionInTiming={600}
+          backdropTransitionOutTiming={600}>
+          <View
+            style={{
+              minHeight: height / 5,
+              maxHeight: height / 3,
+              width: '95%',
+              alignSelf: 'center',
+            }}>
+            <LinearGradient
+              colors={[Colors.LinearBlack, Colors.Linear]}
+              start={{x: 1.5, y: 1.9}}
+              end={{x: 1.4, y: 0.4}}
+              style={styles.modalView}>
+              <Text style={styles.modalText}>
+                Are you sure you want to buy this ticket at €{eventprice} for{' '}
+                {eventname}?
+              </Text>
+              <View style={styles.brdbotm}></View>
+              <TouchableOpacity onPress={handleBuyPress}>
+                <Text style={styles.modalButtonText}>Buy</Text>
+              </TouchableOpacity>
+              <View style={styles.brdbotm}></View>
+              <TouchableOpacity onPress={handleCancelPress}>
+                <Text style={styles.modalbtnText}>Cancel</Text>
+              </TouchableOpacity>
+            </LinearGradient>
+          </View>
+        </Modal>
       </SafeAreaView>
     </LinearGradient>
   );
