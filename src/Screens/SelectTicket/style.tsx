@@ -83,6 +83,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 11,
   },
+  tickets: {
+    fontSize: 17,
+    fontWeight: '400',
+    fontFamily: fontFamily.time_regular,
+    color: Colors.Pink,
+  },
 });
 
 export default styles;

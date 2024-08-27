@@ -22,12 +22,7 @@ import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {getBuyTicketList, getTickets} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import moment from 'moment';
-import {
-  height,
-  moderateScale,
-  moderateScaleVertical,
-  width,
-} from '../../Utilities/Styles/responsiveSize';
+import {height} from '../../Utilities/Styles/responsiveSize';
 import Modal from 'react-native-modal';
 
 const Tickets = ({navigation}: any) => {
@@ -298,13 +293,15 @@ const Tickets = ({navigation}: any) => {
 
         {colors == 2 ? (
           <>
-          <SizeBox size={30}/>
-              <TouchableOpacity
-                onPress={() =>  navigation.navigate(NavigationStrings.SelectTicket)}
-                style={styles.sytbtn}>
-                <Text style={styles.sell}>Sell your ticket</Text>
-              </TouchableOpacity>
-          
+            <SizeBox size={30} />
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate(NavigationStrings.SelectTicket)
+              }
+              style={styles.sytbtn}>
+              <Text style={styles.sell}>Sell your ticket</Text>
+            </TouchableOpacity>
+
             {/* {sellBtn ? (
               <>
                 <FlatList data={data1} renderItem={renderItems} />

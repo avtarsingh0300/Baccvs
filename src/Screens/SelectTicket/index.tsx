@@ -10,25 +10,25 @@ import React, {useEffect, useState} from 'react';
 import styles from './style';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
-import {ImageComponent, SizeBox} from '../../Utilities/Component/Helpers';
+import {
+  ImageComponent,
+  SizeBox,
+  showError,
+} from '../../Utilities/Component/Helpers';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
-import { getTickets } from '../../Utilities/Constants/auth';
-import { IMAGE_URL } from '../../Utilities/Constants/Urls';
+import {getTickets} from '../../Utilities/Constants/auth';
+import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 
 const SelectTicket = ({navigation}: any) => {
-  const [selectedId, setSelectedId] = useState(null);
   const [buyticketdata, setBuyTicket] = useState([]);
   const [loader, setLoader] = useState(false);
+  const [selectedTicketNumber, setSelectedTicketNumber] = useState(null);
 
-  const handlePress = ({id}: any) => {
-    setSelectedId(selectedId === id ? null : id);
-  };
-useEffect(() => {
-  getMyTickets();
-},[])
-
+  useEffect(() => {
+    getMyTickets();
+  }, []);
 
   const getMyTickets = () => {
     setLoader(true);
@@ -36,7 +36,7 @@ useEffect(() => {
     getTickets()
       .then(res => {
         setLoader(false);
-   console.log(res?.tickets)
+        console.log(res?.tickets);
         setBuyTicket(res?.tickets);
       })
       .catch(err => {
@@ -45,27 +45,35 @@ useEffect(() => {
         console.log(err, 'err in getTickets');
       });
   };
-  const data = [
-    {
-      id: '1',
-      title: 'Babylone - Solum - Esposito B2B Gianni romano / Cha...',
-      imageUrl: ImagePath.ProfileImg,
-    },
-    {
-      id: '2',
-      title: 'Babylone - Solum - Esposito B2B Gianni romano / Cha...',
-      imageUrl: ImagePath.ProfileImg,
-    },
-  ];
 
+  const handlePress = (ticketNumber: any) => {
+    setSelectedTicketNumber(
+      ticketNumber === selectedTicketNumber ? null : ticketNumber,
+    );
+  };
+
+  const submitSelectedTicket = () => {
+    if (selectedTicketNumber) {
+      const tickets = [{ticketNumber: selectedTicketNumber}];
+      console.log({tickets});
+      navigation.navigate(NavigationStrings.UploadTicket);
+    } else {
+      showError('Please select ticket !');
+    }
+  };
   const renderItems = ({item}: any) => (
-    <View style={styles.item}>
-      <TouchableOpacity>
-        <ImageComponent source={item?.eventId?.pictures?.length > 0
-              ? {uri: IMAGE_URL + item?.eventId?.pictures[0]}
-              : ImagePath.ProfileImg} 
-              style={styles.profileimgs} />
-      </TouchableOpacity>
+    <TouchableOpacity
+      style={styles.item}
+      onPress={() => handlePress(item.ticketNumber)}>
+      <ImageComponent
+        source={
+          item?.eventId?.pictures?.length > 0
+            ? {uri: IMAGE_URL + item?.eventId?.pictures[0]}
+            : ImagePath.ProfileImg
+        }
+        style={styles.profileimgs}
+      />
+
       <View
         style={{
           flexDirection: 'row',
@@ -77,19 +85,19 @@ useEffect(() => {
           <Text style={styles.date}>{item?.eventId?.date}</Text>
         </View>
         <View style={styles.Radiobtn}>
-          <TouchableOpacity onPress={() => handlePress(item.id)}>
-            <VectorIcon
-              groupName="Ionicons"
-              name={
-                selectedId === item.id ? 'radio-button-on' : 'radio-button-off'
-              }
-              size={25}
-              color={selectedId === item.id ? Colors.white : Colors.grey}
-            />
-          </TouchableOpacity>
+          <VectorIcon
+            groupName="Ionicons"
+            name={
+              selectedTicketNumber === item.ticketNumber
+                ? 'radio-button-on'
+                : 'radio-button-off'
+            }
+            size={25}
+            color={Colors.white}
+          />
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -110,15 +118,25 @@ useEffect(() => {
             />
           </View>
         </View>
-        <FlatList
-          data={buyticketdata}
-          renderItem={renderItems}
-          keyExtractor={item => item.id}
-        />
-        <SizeBox size={30}/>
-        <TouchableOpacity
-          onPress={() => navigation.navigate(NavigationStrings.UploadTicket)}
-          style={styles.sytbtn}>
+        <SizeBox size={10} />
+        {buyticketdata.length > 0 ? (
+          <FlatList
+            data={buyticketdata}
+            renderItem={renderItems}
+            keyExtractor={item => item?._id}
+          />
+        ) : (
+          <Text
+            style={[
+              styles.tickets,
+              {color: Colors.white, alignSelf: 'center'},
+            ]}>
+            No data found ...
+          </Text>
+        )}
+
+        <SizeBox size={30} />
+        <TouchableOpacity onPress={submitSelectedTicket} style={styles.sytbtn}>
           <Text style={styles.sell}>Next</Text>
         </TouchableOpacity>
       </SafeAreaView>
