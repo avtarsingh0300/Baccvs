@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
         fontWeight:"400",
         fontFamily:fontFamily.time_regular,
         color:Colors.green,
-        marginHorizontal:18
+        marginHorizontal:17
     },
     partyimg:{
         width:moderateScaleVertical(300),
