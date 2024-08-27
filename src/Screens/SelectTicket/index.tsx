@@ -1,5 +1,4 @@
 import {
-  StyleSheet,
   Text,
   View,
   TextInput,
@@ -7,23 +6,45 @@ import {
   FlatList,
   SafeAreaView,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './style';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
 import {ImageComponent, SizeBox} from '../../Utilities/Component/Helpers';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
-import {black} from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
+import { getTickets } from '../../Utilities/Constants/auth';
+import { IMAGE_URL } from '../../Utilities/Constants/Urls';
 
 const SelectTicket = ({navigation}: any) => {
   const [selectedId, setSelectedId] = useState(null);
+  const [buyticketdata, setBuyTicket] = useState([]);
+  const [loader, setLoader] = useState(false);
 
   const handlePress = ({id}: any) => {
     setSelectedId(selectedId === id ? null : id);
   };
+useEffect(() => {
+  getMyTickets();
+},[])
 
+
+  const getMyTickets = () => {
+    setLoader(true);
+
+    getTickets()
+      .then(res => {
+        setLoader(false);
+   console.log(res?.tickets)
+        setBuyTicket(res?.tickets);
+      })
+      .catch(err => {
+        setLoader(false);
+        showError(err?.message);
+        console.log(err, 'err in getTickets');
+      });
+  };
   const data = [
     {
       id: '1',
@@ -40,7 +61,10 @@ const SelectTicket = ({navigation}: any) => {
   const renderItems = ({item}: any) => (
     <View style={styles.item}>
       <TouchableOpacity>
-        <ImageComponent source={item.imageUrl} style={styles.profileimgs} />
+        <ImageComponent source={item?.eventId?.pictures?.length > 0
+              ? {uri: IMAGE_URL + item?.eventId?.pictures[0]}
+              : ImagePath.ProfileImg} 
+              style={styles.profileimgs} />
       </TouchableOpacity>
       <View
         style={{
@@ -49,8 +73,8 @@ const SelectTicket = ({navigation}: any) => {
           alignItems: 'center',
         }}>
         <View style={{width: '72%'}}>
-          <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.date}>Wed 20 Dec 2023</Text>
+          <Text style={styles.title}>{item?.eventId?.event_name}</Text>
+          <Text style={styles.date}>{item?.eventId?.date}</Text>
         </View>
         <View style={styles.Radiobtn}>
           <TouchableOpacity onPress={() => handlePress(item.id)}>
@@ -87,14 +111,15 @@ const SelectTicket = ({navigation}: any) => {
           </View>
         </View>
         <FlatList
-          data={data}
+          data={buyticketdata}
           renderItem={renderItems}
           keyExtractor={item => item.id}
         />
+        <SizeBox size={30}/>
         <TouchableOpacity
           onPress={() => navigation.navigate(NavigationStrings.UploadTicket)}
           style={styles.sytbtn}>
-          <Text style={styles.sell}>Upload more tickets</Text>
+          <Text style={styles.sell}>Next</Text>
         </TouchableOpacity>
       </SafeAreaView>
     </LinearGradient>
