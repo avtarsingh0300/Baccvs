@@ -47,24 +47,18 @@ const OtherProfiles = ({navigation, route}: any) => {
   };
 
   useEffect(() => {
-    // const _unsubscribe = navigation.addListener('focus', () => {
     getUserData();
-    // });
-    // return () => {
-    //   _unsubscribe();
-    // };
   }, []);
-  //   console.log(route?.params?.id, 'route?.params?.id');
+
   const getUserData = async () => {
     setLoader(true);
     const data = {
       id: route?.params?.id,
     };
-    // console.log(data, 'data');
+
     getMemberDetails(data)
       .then(res => {
         setLoader(false);
-        // console.log(res, 'res in getMemberDetails');
         setUserData(res?.user);
         setEventCount(res);
       })
@@ -87,57 +81,15 @@ const OtherProfiles = ({navigation, route}: any) => {
   ];
 
   const renderItem = ({item, index}) => (
-    console.log(item, 'item'),
-    (
-      <View>
-        <View style={styles.listContainer}>
-          <ImageBackground
-            source={{uri: IMAGE_URL + item?.pictures[0]}}
-            style={styles.backimg}>
-            <View style={styles.flexinner}>
-              {/* <ImageComponent
-                source={{uri: IMAGE_URL + item?.members[0]?.imageUrl}}
-                style={styles.shortimg}
-              /> */}
-              {/* {item?.members[1]?.imageUrl ? (
-                <ImageComponent
-                  source={{uri: IMAGE_URL + item?.members[1]?.imageUrl}}
-                  style={[
-                    styles.extraimg,
-                    {
-                      marginLeft: 5,
-                    },
-                  ]}
-                />
-              ) : null} */}
-
-              {/* {item?.members[2]?.imageUrl ? (
-                <ImageComponent
-                  source={{uri: IMAGE_URL + item?.members[2]?.imageUrl}}
-                  style={[
-                    styles.extraimg,
-                    {
-                      right: 10,
-                    },
-                  ]}
-                />
-              ) : null} */}
-
-              {/* {item?.members?.length > 3 ? (
-                <Text
-                  style={{
-                    ...commonStyles.font16Regular,
-                    alignSelf: 'flex-end',
-                    color: Colors.white,
-                  }}>
-                  +{item?.members?.length - 3}
-                </Text>
-              ) : null} */}
-            </View>
-          </ImageBackground>
-        </View>
+    <View>
+      <View style={styles.listContainer}>
+        <ImageBackground
+          source={{uri: IMAGE_URL + item?.pictures[0]}}
+          style={styles.backimg}>
+          <View style={styles.flexinner}></View>
+        </ImageBackground>
       </View>
-    )
+    </View>
   );
 
   return (
@@ -173,12 +125,22 @@ const OtherProfiles = ({navigation, route}: any) => {
               onPress={() => setShowModal(true)}
             />
           </View>
-          <Image source={ImagePath.ProfileImg} style={styles.profileImage} />
+          {userData?.pictures?.length > 0 ? (
+            <Image
+              source={{uri: IMAGE_URL + userData?.pictures[0]}}
+              style={styles.profileImage}
+            />
+          ) : (
+            <Image
+              source={{uri: ImagePath.ProfileImg}}
+              style={styles.profileImage}
+            />
+          )}
           <View style={styles.followInfoContainer}>
             <View style={styles.followInner}>
               <Text style={styles.followText}>Events</Text>
               <Text style={[styles.followText, {color: Colors.white}]}>
-                {userData?.event_count}
+                {eventCount?.event_count}
               </Text>
             </View>
             <View style={styles.followInner}>
@@ -347,21 +309,19 @@ const OtherProfiles = ({navigation, route}: any) => {
               activeOpacity={0.8}
               style={styles.option}
               onPress={() => {
-                navigation.navigate(NavigationStrings.EditProfile);
+                navigation.goBack();
                 setShowModal(false);
               }}>
-              <Text style={styles.optionText}>Edit profile</Text>
+              <Text style={styles.optionText}>Block</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={onSocialpart}
+              onPress={() => {
+                navigation.goBack();
+                setShowModal(false);
+              }}
               activeOpacity={0.8}
               style={styles.option}>
-              <Text style={styles.optionText}>Edit Social part</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={[styles.option, {borderBottomWidth: 0}]}>
-              <Text style={styles.optionText}>Turn profile to public</Text>
+              <Text style={styles.optionText}>Report</Text>
             </TouchableOpacity>
           </View>
         </Modal>

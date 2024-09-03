@@ -67,28 +67,6 @@ const EventDetails = ({navigation, route}: any) => {
   const onReport = () => {
     navigation.navigate(NavigationStrings.Report);
   };
-  const likeData = [
-    {
-      id: 0,
-      name: 'Julie C.',
-    },
-    {
-      id: 1,
-      name: 'Anonymous',
-    },
-    {
-      id: 2,
-      name: 'Julius O.',
-    },
-    {
-      id: 3,
-      name: 'Esteban I.',
-    },
-    {
-      id: 4,
-      name: 'Lucia E.',
-    },
-  ];
 
   useEffect(() => {
     getEvent();
@@ -331,7 +309,12 @@ const EventDetails = ({navigation, route}: any) => {
               />
               <Text style={styles.bottomBarText}>Comments</Text>
             </TouchableOpacity>
-            <View
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate(NavigationStrings.OtherProfiles, {
+                  id: eventData?.user?.id,
+                })
+              }
               style={[
                 styles.likebtn,
                 {
@@ -341,15 +324,15 @@ const EventDetails = ({navigation, route}: any) => {
               <Image
                 source={
                   thumbnailUrl
-                    ? {uri: IMAGE_URL + thumbnailUrl}
+                    ? {uri: IMAGE_URL + eventData?.user?.image}
                     : ImagePath.ProfileImg
                 }
                 style={styles.profileimg}
               />
               <Text style={[styles.bottomBarText, {fontSize: textScale(14)}]}>
-                Kingson
+                {eventData?.user?.name}
               </Text>
-            </View>
+            </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.8}
               style={styles.likebtn}

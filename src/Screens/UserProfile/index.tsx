@@ -36,7 +36,7 @@ const UserProfile = ({navigation}: any) => {
   const [showModal, setShowModal] = useState(false);
   const [loader, setLoader] = useState(false);
   const [userData, setUserData] = useState({});
-
+  const [eventCount, setEventCount] = useState([]);
   const onSocialpart = () => {
     setShowModal(false);
     navigation.navigate(NavigationStrings.SocialPart);
@@ -58,6 +58,7 @@ const UserProfile = ({navigation}: any) => {
         setLoader(false);
         console.log(res, 'res in getUserProfile');
         setUserData(res?.user);
+        setEventCount(res);
       })
       .catch(err => {
         setLoader(false);
@@ -69,11 +70,11 @@ const UserProfile = ({navigation}: any) => {
     <View>
       <View style={styles.listContainer}>
         <ImageBackground
-          source={{uri: IMAGE_URL + item}}
+          source={{uri: IMAGE_URL + item?.pictures[0]}}
           borderRadius={5}
           style={styles.backimg}>
           <View style={styles.flexinner}>
-            <ImageComponent
+            {/* <ImageComponent
               source={ImagePath.ProfileImg}
               style={styles.shortimg}
             />
@@ -102,10 +103,10 @@ const UserProfile = ({navigation}: any) => {
                 color: Colors.white,
               }}>
               +8
-            </Text>
+            </Text> */}
           </View>
         </ImageBackground>
-        <View style={[styles.row, {justifyContent: 'center'}]}>
+        {/* <View style={[styles.row, {justifyContent: 'center'}]}>
           <View style={styles.music}>
             <Text style={styles.musictxt}>Progressive</Text>
           </View>
@@ -115,7 +116,7 @@ const UserProfile = ({navigation}: any) => {
           <View style={styles.music}>
             <Text style={styles.musictxt}>Progressive</Text>
           </View>
-        </View>
+        </View> */}
       </View>
     </View>
   );
@@ -150,7 +151,7 @@ const UserProfile = ({navigation}: any) => {
             <View style={styles.followInner}>
               <Text style={styles.followText}>Events</Text>
               <Text style={[styles.followText, {color: Colors.white}]}>
-                {userData?.event_count}
+                {eventCount?.event_count}
               </Text>
             </View>
             <View style={styles.followInner}>
@@ -255,7 +256,7 @@ const UserProfile = ({navigation}: any) => {
               fontWeight: '700',
               marginLeft: moderateScale(31),
             }}>
-            Past events (1/11)
+            Past events (1/{eventCount?.event_count})
           </Text>
           <FlatList
             showsVerticalScrollIndicator={false}
@@ -263,7 +264,7 @@ const UserProfile = ({navigation}: any) => {
               width: width,
               alignSelf: 'center',
             }}
-            data={userData?.video_urls}
+            data={eventCount?.past_events}
             renderItem={renderItem}
           />
         </ScrollView>

@@ -14,12 +14,19 @@ import {
   ImageComponent,
   Loadingcomponent,
   showError,
+  showSuccess,
   SizeBox,
 } from '../../Utilities/Component/Helpers';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
-import {getBuyTicketList, getTickets} from '../../Utilities/Constants/auth';
+import {
+  buyTicket,
+  cancelSellTicket,
+  getBuyTicketList,
+  getSellTickets,
+  getTickets,
+} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import moment from 'moment';
 import {height} from '../../Utilities/Styles/responsiveSize';
@@ -30,12 +37,14 @@ const Tickets = ({navigation}: any) => {
   const [sellBtn, setSellBtn] = useState(false);
   const [userData, setUserData] = useState([]);
   const [buyticketdata, setBuyTicket] = useState([]);
+  const [sellticketdata, setSellTicket] = useState([]);
   const [loader, setLoader] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [eventname, setEventname] = useState('');
-  const [eventprice, setEventPrice] = useState('');
+
+  const [buyItem, setBuyItem] = useState('');
   useEffect(() => {
     getMyTickets();
+    getSellTick();
   }, []);
 
   const getMyTickets = () => {
@@ -66,6 +75,53 @@ const Tickets = ({navigation}: any) => {
         setLoader(false);
         showError(err?.message);
         console.log(err, 'err in getbuyTickets');
+      });
+  };
+  const getSellTick = () => {
+    setLoader(true);
+    getSellTickets()
+      .then(res => {
+        setLoader(false);
+        setSellTicket(res?.tickets);
+      })
+      .catch(err => {
+        setLoader(false);
+        showError(err?.message);
+        console.log(err, 'err in getsellTickets');
+      });
+  };
+  const cancelTick = (ticket: any) => {
+    const data = {
+      ticketNumber: ticket,
+    };
+    cancelSellTicket(data)
+      .then(res => {
+        showSuccess('Ticket cancel successfully!!');
+        getSellTick();
+      })
+      .catch(err => {
+        setLoader(false);
+        showError(err?.message);
+        console.log(err, 'err in getsellTickets');
+      });
+  };
+  const buyTick = () => {
+    const randomSixDigit = Math.floor(100000 + Math.random() * 900000);
+    const data = {
+      eventId: buyItem?.eventId?._id,
+      ticketNumber: `TICKET${randomSixDigit}`,
+      price: buyItem?.price,
+    };
+    console.log(data);
+    buyTicket(data)
+      .then(res => {
+        showSuccess('Ticket buy successfully!!');
+        getBuyTickets();
+      })
+      .catch(err => {
+        setLoader(false);
+        showError(err?.message);
+        console.log(err, 'err in getsellTickets');
       });
   };
   const renderItem = ({item}: any) => (
@@ -128,9 +184,8 @@ const Tickets = ({navigation}: any) => {
         </View>
         <TouchableOpacity
           onPress={() => {
-            setEventPrice(item?.price);
-            setEventname(item?.eventId?.event_name),
-              setModalVisible(!modalVisible);
+            setBuyItem(item);
+            setModalVisible(!modalVisible);
           }}
           style={styles.buybtn}>
           <Text style={styles.date}>Buy</Text>
@@ -138,43 +193,54 @@ const Tickets = ({navigation}: any) => {
       </View>
     </TouchableOpacity>
   );
-  // const renderItems = ({item}: any) => (
-  //   <View style={styles.item}>
-  //     <ImageComponent source={item.imageUrl} style={styles.profileimgs} />
+  const renderItems = ({item}: any) => (
+    <View style={styles.item}>
+      <ImageComponent
+        source={
+          item?.eventId?.pictures?.length > 0
+            ? {uri: IMAGE_URL + item?.eventId?.pictures[0]}
+            : ImagePath.ProfileImg
+        }
+        style={styles.profileimgs}
+      />
 
-  //     <View style={{flexDirection: 'row', paddingHorizontal: 7}}>
-  //       <View style={{width: '60%'}}>
-  //         <Text style={styles.title}>{item.title}</Text>
-  //         <Text style={styles.date}>Wed 20 Dec 2023</Text>
-  //       </View>
-  //       <View
-  //         style={{
-  //           alignItems: 'center',
-  //           justifyContent: 'center',
-  //           marginTop: 11,
-  //         }}>
-  //         <TouchableOpacity>
-  //           <LinearGradient
-  //             colors={[Colors.LinearBlack, Colors.lightPink]}
-  //             style={styles.linear}>
-  //             <Text style={styles.cancelbtn}>Cancel</Text>
-  //           </LinearGradient>
-  //         </TouchableOpacity>
+      <View
+        style={{
+          flexDirection: 'row',
+          paddingHorizontal: 7,
+          alignItems: 'center',
+        }}>
+        <View style={{width: '60%'}}>
+          <Text style={styles.title}>{item?.eventId?.event_name}</Text>
+          <Text style={styles.date}>{item?.eventId?.date}</Text>
+        </View>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 11,
+          }}>
+          <TouchableOpacity onPress={() => cancelTick(item?.ticketNumber)}>
+            <LinearGradient
+              colors={[Colors.LinearBlack, Colors.lightPink]}
+              style={styles.linear}>
+              <Text style={styles.cancelbtn}>Cancel</Text>
+            </LinearGradient>
+          </TouchableOpacity>
 
-  //         <Text style={styles.price}>15€99</Text>
-  //       </View>
-  //     </View>
-  //   </View>
-  // );
+          <Text style={styles.price}>{item?.price}€</Text>
+        </View>
+      </View>
+    </View>
+  );
 
   const handleBuyPress = () => {
     setModalVisible(false);
-    console.log('Buy button pressed');
+    buyTick();
   };
 
   const handleCancelPress = () => {
     setModalVisible(false);
-    console.log('Cancel button pressed');
   };
 
   return (
@@ -228,7 +294,7 @@ const Tickets = ({navigation}: any) => {
 
           <Text
             onPress={() => {
-              setColors(2), setSellBtn(false);
+              setColors(2), getSellTick();
             }}
             style={[
               styles.text,
@@ -241,7 +307,7 @@ const Tickets = ({navigation}: any) => {
         </View>
         {colors == 0 ? (
           <>
-            {userData ? (
+            {userData.length > 0 ? (
               <FlatList
                 data={userData}
                 renderItem={renderItem}
@@ -293,6 +359,17 @@ const Tickets = ({navigation}: any) => {
 
         {colors == 2 ? (
           <>
+            {sellticketdata.length > 0 ? (
+              <FlatList data={sellticketdata} renderItem={renderItems} />
+            ) : (
+              <Text
+                style={[
+                  styles.tickets,
+                  {color: Colors.white, alignSelf: 'center'},
+                ]}>
+                No data found ...
+              </Text>
+            )}
             <SizeBox size={30} />
             <TouchableOpacity
               onPress={() =>
@@ -301,20 +378,6 @@ const Tickets = ({navigation}: any) => {
               style={styles.sytbtn}>
               <Text style={styles.sell}>Sell your ticket</Text>
             </TouchableOpacity>
-
-            {/* {sellBtn ? (
-              <>
-                <FlatList data={data1} renderItem={renderItems} />
-
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate(NavigationStrings.SelectTicket)
-                  }
-                  style={styles.sytbtn}>
-                  <Text style={styles.sell}>Sell more ticket</Text>
-                </TouchableOpacity>
-              </>
-            ) : null} */}
           </>
         ) : null}
         <Modal
@@ -345,8 +408,8 @@ const Tickets = ({navigation}: any) => {
               end={{x: 1.4, y: 0.4}}
               style={styles.modalView}>
               <Text style={styles.modalText}>
-                Are you sure you want to buy this ticket at €{eventprice} for{' '}
-                {eventname}?
+                Are you sure you want to buy this ticket at €{buyItem?.price}{' '}
+                for {buyItem?.eventId?.event_name}?
               </Text>
               <View style={styles.brdbotm}></View>
               <TouchableOpacity onPress={handleBuyPress}>

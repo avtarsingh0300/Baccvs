@@ -12,6 +12,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
 import {
   ImageComponent,
+  Loadingcomponent,
   SizeBox,
   showError,
 } from '../../Utilities/Component/Helpers';
@@ -24,8 +25,8 @@ import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 const SelectTicket = ({navigation}: any) => {
   const [buyticketdata, setBuyTicket] = useState([]);
   const [loader, setLoader] = useState(false);
-  const [selectedTicketNumber, setSelectedTicketNumber] = useState(null);
-
+  const [selectedTicketNumber, setSelectedTicketNumber] = useState('');
+  const [price, setPrice] = useState('');
   useEffect(() => {
     getMyTickets();
   }, []);
@@ -36,7 +37,6 @@ const SelectTicket = ({navigation}: any) => {
     getTickets()
       .then(res => {
         setLoader(false);
-        console.log(res?.tickets);
         setBuyTicket(res?.tickets);
       })
       .catch(err => {
@@ -46,25 +46,26 @@ const SelectTicket = ({navigation}: any) => {
       });
   };
 
-  const handlePress = (ticketNumber: any) => {
-    setSelectedTicketNumber(
-      ticketNumber === selectedTicketNumber ? null : ticketNumber,
-    );
+  const handlePress = (item: any) => {
+    setSelectedTicketNumber(item?.ticketNumber);
+    setPrice(item?.price);
   };
 
   const submitSelectedTicket = () => {
     if (selectedTicketNumber) {
-      const tickets = [{ticketNumber: selectedTicketNumber}];
-      console.log({tickets});
-      navigation.navigate(NavigationStrings.UploadTicket);
+      navigation.navigate(NavigationStrings.UploadTicket, {
+        price: price,
+        ticketdata: selectedTicketNumber,
+      });
     } else {
       showError('Please select ticket !');
     }
   };
   const renderItems = ({item}: any) => (
     <TouchableOpacity
+      activeOpacity={0.6}
       style={styles.item}
-      onPress={() => handlePress(item.ticketNumber)}>
+      onPress={() => handlePress(item)}>
       <ImageComponent
         source={
           item?.eventId?.pictures?.length > 0
@@ -107,9 +108,11 @@ const SelectTicket = ({navigation}: any) => {
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
       <SafeAreaView>
+        <Loadingcomponent isVisible={loader} />
         <View>
           <SizeBox size={10} />
           <Text style={styles.myticketstext}>Select event</Text>
+          <SizeBox size={10} />
           <View style={styles.searchSection}>
             <TextInput
               style={styles.input}

@@ -244,7 +244,12 @@ export function CommonInputBtn({title, onPress}: CommonBtnProps) {
     </TouchableOpacity>
   );
 }
-export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
+export function Drawer({
+  onClose,
+  isVisible,
+  onBackdropPress,
+  username,
+}: DrawerProps) {
   const navigation = useNavigation();
 
   return (
@@ -280,7 +285,7 @@ export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
             ...commonStyles.font14Center,
             color: Colors.white,
           }}>
-          Kathrin Down
+          {username}
         </Text>
 
         <FlatList

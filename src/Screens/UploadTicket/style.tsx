@@ -1,9 +1,7 @@
 import {StyleSheet} from 'react-native';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import {Colors} from '../../Utilities/Styles/colors';
-import {
-  moderateScaleVertical,
-} from '../../Utilities/Styles/responsiveSize';
+import {moderateScaleVertical} from '../../Utilities/Styles/responsiveSize';
 
 const styles = StyleSheet.create({
   LinearConatiner: {flex: 1, paddingHorizontal: 20},
@@ -36,39 +34,46 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontFamily: fontFamily.time_regular,
   },
-  originalcon:{
-    flexDirection:"row",
-    justifyContent:"space-between",
-    alignItems:"center"
+  originalcon: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  ticketimg:{
-    width:24,
-    height:24,
-    tintColor:Colors.white
+  ticketimg: {
+    width: 24,
+    height: 24,
+    tintColor: Colors.white,
   },
-  earlytxt:{
-    fontSize:14,
-    fontWeight:"500",
-    fontFamily:fontFamily.time_regular,
-    color:Colors.white,
-    marginHorizontal:15,
-    alignSelf:"center"
+  earlytxt: {
+    fontSize: 14,
+    fontWeight: '500',
+    fontFamily: fontFamily.time_regular,
+    color: Colors.white,
+    marginHorizontal: 15,
+    alignSelf: 'center',
   },
-  pricecontainer:{
-    width:77,
-    height:35,
-    borderWidth:1,
-    borderColor:Colors.grey,
-    borderRadius:10,
-    justifyContent:"center",
-    alignItems:"center"
+  pricecontainer: {
+    width: 77,
+    height: 35,
+    borderWidth: 1,
+    borderColor: Colors.grey,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  pricetext:{
-    fontSize:12,
-    fontWeight:"500",
-    fontFamily:fontFamily.time_regular,
-    color:Colors.white
-  }
+  pricetext: {
+    fontSize: 12,
+    fontWeight: '500',
+    fontFamily: fontFamily.time_regular,
+    color: Colors.white,
+  },
+  input: {
+    fontSize: 12,
+    fontFamily: fontFamily.time_regular,
+    color: Colors.white,
+    width: '100%',
+    textAlign: 'center',
+  },
 });
 
 export default styles;

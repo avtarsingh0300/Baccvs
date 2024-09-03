@@ -3,6 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   ACCEPT_INVITES,
   BLOCKED_LIST,
+  BUY_TICKET,
+  CANCEL_SELL_TICKET,
   CHANGE_PASS,
   CREATE_EVENT,
   CREATE_MEET_GROUP,
@@ -23,6 +25,7 @@ import {
   GET_MY_TICKETS,
   GET_NOTIFICATION,
   GET_REF_CODE,
+  GET_SELL_TICKETS,
   GET_USER_LIKES,
   LIKE_USER_PROFILE,
   LOGIN,
@@ -33,6 +36,7 @@ import {
   OTP_SEND,
   REFUSE_INVITES,
   REGISTER_USER,
+  SELL_TICKET,
   UN_BLOCKED_USER,
   UPDATE_USER_PROFILE,
   USER_DATA,
@@ -73,6 +77,9 @@ export function changePass(data: object) {
 }
 export function unBlockUser(data: object) {
   return apiPost(UN_BLOCKED_USER, data);
+}
+export function sellTicket(data: object) {
+  return apiPost(SELL_TICKET, data);
 }
 export function inviteAccpet(data: object) {
   return apiPost(ACCEPT_INVITES, data);
@@ -154,6 +161,15 @@ export function getMyGroups() {
 }
 export function getInvitesList() {
   return apiGet(GET_INVITES);
+}
+export function getSellTickets() {
+  return apiGet(GET_SELL_TICKETS);
+}
+export function cancelSellTicket(data: object) {
+  return apiPost(CANCEL_SELL_TICKET, data);
+}
+export function buyTicket(data: object) {
+  return apiPost(BUY_TICKET, data);
 }
 export function registerUser(data: object) {
   return apiPost(REGISTER_USER, data, {'Content-Type': 'multipart/form-data'});

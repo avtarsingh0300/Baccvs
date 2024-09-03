@@ -37,6 +37,8 @@ import Geolocation from '@react-native-community/geolocation';
 import {getHomedata} from '../../Utilities/Constants/auth';
 import Modal from 'react-native-modal';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
+import {saveUserData} from '../../Redux/Action/auth';
+import {useSelector} from 'react-redux';
 const HomeScreen = ({navigation}: any) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [location, setLocation] = useState(null);
@@ -50,6 +52,7 @@ const HomeScreen = ({navigation}: any) => {
   const [selectedOption, setSelectedOption] = useState('all');
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
+  const user = useSelector((data: object) => data?.auth?.userData?.user);
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -126,7 +129,11 @@ const HomeScreen = ({navigation}: any) => {
         setLat(position.coords.latitude);
         setLon(position.coords.longitude);
         setTimeout(() => {
-          getdata(position.coords.latitude, position.coords.longitude);
+          getdata(
+            position.coords.latitude,
+            position.coords.longitude,
+            'selectedOption',
+          );
         }, 500);
       },
       error => {
@@ -415,6 +422,7 @@ const HomeScreen = ({navigation}: any) => {
           </Text>
         )}
         <Drawer
+          username={user?.username}
           isVisible={modalVisible}
           onBackdropPress={showDrawer}
           onClose={showDrawer}

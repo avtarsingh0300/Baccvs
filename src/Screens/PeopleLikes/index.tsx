@@ -168,7 +168,7 @@ const PeopleLikes = () => {
                 />
                 <Text style={styles.crushtxt}>Yours Crushs</Text>
               </View>
-              {userData?.crush.length > 0 ? (
+              {userData?.crush?.length > 0 ? (
                 <FlatList
                   data={userData?.crush}
                   renderItem={renderData}
@@ -193,7 +193,7 @@ const PeopleLikes = () => {
                 <Text style={styles.crushtxt}>Other likes</Text>
               </View>
 
-              {userData?.otherLike.length > 0 ? (
+              {userData?.otherLike?.length > 0 ? (
                 <FlatList
                   data={userData?.otherLike}
                   renderItem={renderData1}
@@ -220,7 +220,7 @@ const PeopleLikes = () => {
                 <Text style={styles.crushtxt}>Crushs</Text>
                 <Text style={styles.crushtxt}>({userData?.crush?.length})</Text>
               </View>
-              {userData?.crush.length > 0 ? (
+              {userData?.crush?.length > 0 ? (
                 <FlatList
                   data={userData?.crush}
                   renderItem={renderItem}
@@ -249,7 +249,7 @@ const PeopleLikes = () => {
               <Text style={styles.subscribetxt}>
                 Subscribe to see everyone who likes you
               </Text>
-              {userData?.otherLike.length > 0 ? (
+              {userData?.otherLike?.length > 0 ? (
                 <FlatList
                   data={userData?.otherLike}
                   renderItem={renderItem1}
