@@ -30,5 +30,6 @@ export default {
   qrbackground: require('../../Assets/images/qrbackground.png'),
   Qrcode: require('../../Assets/images/Qrcode.png'),
   party: require('../../Assets/images/party.png'),
-  fire:require('../../Assets/images/Fire.png'),
+  fire: require('../../Assets/images/Fire.png'),
+  openSheet: require('../../Assets/images/opensheet.png'),
 };

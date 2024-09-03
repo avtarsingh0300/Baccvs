@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
     paddingVertical: moderateScaleVertical(15),
     width: '100%',
     paddingHorizontal: moderateScale(20),
-    backgroundColor: Colors.LinearBlack,
+    // backgroundColor: Colors.LinearBlack,
   },
   headerTxt: {
     ...commonStyles.font20White,
@@ -44,14 +44,17 @@ export const styles = StyleSheet.create({
     paddingVertical: moderateScaleVertical(5),
     paddingHorizontal: moderateScale(15),
     borderWidth: 1,
+    height: moderateScaleVertical(36),
     borderRadius: 10,
-    borderColor: Colors.green,
+    borderColor: Colors.white,
+    backgroundColor: Colors.LinearBlack,
     flexDirection: 'row',
+    alignItems: 'center',
   },
   ticketPrice: {
     ...commonStyles.font16Regular,
     fontWeight: '400',
-    color: Colors.green,
+    color: Colors.white,
   },
   distanceText: {
     ...commonStyles.font14,
@@ -60,18 +63,20 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
   },
   bottomBar: {
-    height: moderateScaleVertical(55),
-    padding: 15,
-    width: '90%',
-    alignSelf: 'center',
+    height: moderateScaleVertical(200),
+
+    // width: '90%',
+    // alignSelf: 'center',
+
     borderRadius: 8,
-    backgroundColor: Colors.Linear,
-    position: 'absolute',
-    bottom: Platform.OS === 'android' ? height / 30 : height / 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    backgroundColor: Colors.LinearBlack,
+    // position: 'absolute',
+    // bottom: Platform.OS === 'android' ? height / 30 : height / 10,
+    // flexDirection: 'row',
+
     alignItems: 'center',
     //   width:
+    paddingHorizontal: 10,
   },
   bottomBarText: {
     fontSize: textScale(8),
@@ -137,5 +142,14 @@ export const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
+  },
+  abview: {
+    position: 'absolute',
+    bottom: Platform.OS === 'android' ? height / 8 : height / 6.5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    width: '90%',
+    alignSelf: 'center',
   },
 });

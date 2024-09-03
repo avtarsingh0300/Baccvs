@@ -3,6 +3,7 @@ import {
   FlatList,
   Image,
   ImageBackground,
+  Platform,
   SafeAreaView,
   Share,
   Text,
@@ -234,13 +235,13 @@ const EventDetails = ({navigation, route}: any) => {
             />
             <Text style={styles.headerTxt}>{eventData?.event_name}</Text>
             <View style={{flexDirection: 'row'}}>
-              <VectorIcon
+              {/* <VectorIcon
                 groupName={'MaterialCommunityIcons'}
                 name={'share-outline'}
                 size={25}
                 color={Colors.white}
                 onPress={onShare}
-              />
+              /> */}
               <TouchableOpacity
                 style={{marginLeft: 10, justifyContent: 'center'}}
                 activeOpacity={0.8}
@@ -250,13 +251,14 @@ const EventDetails = ({navigation, route}: any) => {
                     width: moderateScale(16),
                     height: moderateScaleVertical(18),
                     alignSelf: 'center',
+                    tintColor: Colors.white,
                   }}
                   source={ImagePath.Security_Rules}
                 />
               </TouchableOpacity>
             </View>
           </View>
-          <LinearGradient
+          {/* <LinearGradient
             colors={[Colors.headerlinear, Colors.Linear]}
             start={{x: 0, y: 0}}
             end={{x: 1.3, y: 0.9}}
@@ -279,88 +281,136 @@ const EventDetails = ({navigation, route}: any) => {
               <Text style={styles.distanceText}>{eventData?.distance}</Text>
               <Image source={ImagePath.Pin_alt} />
             </TouchableOpacity>
-          </LinearGradient>
-
-          <View style={styles.bottomBar}>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={[styles.likebtn]}
-              onPress={() => {
-                refRBSheet.current.open();
-              }}>
-              <Image
-                source={ImagePath.likes}
-                resizeMode="contain"
-                style={{width: 24, height: 24}}
-              />
-              <Text style={styles.bottomBarText}>Likes</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.likebtn}
-              activeOpacity={0.8}
-              onPress={() => {
-                refComRBSheet.current.open();
-              }}>
+          </LinearGradient> */}
+          <View style={styles.abview}>
+            <View style={styles.bottomBar}>
+              <SizeBox size={5} />
               <VectorIcon
-                groupName="Ionicons"
-                name="chatbubble-ellipses-outline"
-                size={24}
+                groupName={'MaterialCommunityIcons'}
+                name={'share-outline'}
+                size={25}
                 color={Colors.white}
+                onPress={onShare}
               />
-              <Text style={styles.bottomBarText}>Comments</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate(NavigationStrings.OtherProfiles, {
-                  id: eventData?.user?.id,
-                })
-              }
-              style={[
-                styles.likebtn,
-                {
-                  bottom: moderateScaleVertical(10),
-                },
-              ]}>
-              <Image
-                source={
-                  thumbnailUrl
-                    ? {uri: IMAGE_URL + eventData?.user?.image}
-                    : ImagePath.ProfileImg
+              <SizeBox size={5} />
+              <TouchableOpacity
+                style={{flexDirection: 'row'}}
+                onPress={() => {
+                  refMapRBSheet.current.open();
+                }}>
+                {/* <Text style={styles.distanceText}>{eventData?.distance}</Text> */}
+                <Image source={ImagePath.Pin_alt} />
+              </TouchableOpacity>
+              <SizeBox size={5} />
+              <TouchableOpacity
+                style={styles.likebtn}
+                activeOpacity={0.8}
+                onPress={() => {
+                  refComRBSheet.current.open();
+                }}>
+                <VectorIcon
+                  groupName="Ionicons"
+                  name="chatbubble-ellipses-outline"
+                  size={24}
+                  color={Colors.white}
+                />
+                <Text style={styles.bottomBarText}>
+                  {eventData?.comments?.length}
+                </Text>
+              </TouchableOpacity>
+
+              {/* <TouchableOpacity
+                activeOpacity={0.8}
+                style={styles.likebtn}
+                onPress={() => {
+                  refPeopleRBSheet.current.open();
+                }}>
+                <Image
+                  source={ImagePath.userprofile}
+                  resizeMode="contain"
+                  style={{width: 24, height: 24}}
+                />
+                <Text style={styles.bottomBarText}>people</Text>
+              </TouchableOpacity> */}
+              {/* <TouchableOpacity
+                activeOpacity={0.8}
+                style={styles.likebtn}
+                onPress={() => {
+                  refInfoRBSheet.current.open();
+                }}>
+                <Image
+                  source={ImagePath.infoIcon}
+                  resizeMode="contain"
+                  style={{width: 24, height: 24}}
+                />
+                <Text style={styles.bottomBarText}>info</Text>
+              </TouchableOpacity> */}
+              <SizeBox size={5} />
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={[styles.likebtn]}
+                onPress={() => {
+                  refRBSheet.current.open();
+                }}>
+                <Image
+                  source={ImagePath.likes}
+                  resizeMode="contain"
+                  style={{width: 24, height: 24}}
+                />
+                <Text style={styles.bottomBarText}>
+                  {eventData?.likes?.length}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate(NavigationStrings.OtherProfiles, {
+                    id: eventData?.user?.id,
+                  })
                 }
-                style={styles.profileimg}
-              />
-              <Text style={[styles.bottomBarText, {fontSize: textScale(14)}]}>
-                {eventData?.user?.name}
-              </Text>
-            </TouchableOpacity>
+                style={[
+                  styles.likebtn,
+                  {
+                    bottom: moderateScaleVertical(-10),
+                  },
+                ]}>
+                <Image
+                  source={
+                    thumbnailUrl
+                      ? {uri: IMAGE_URL + eventData?.user?.image}
+                      : ImagePath.ProfileImg
+                  }
+                  style={styles.profileimg}
+                />
+                <Text style={[styles.bottomBarText, {fontSize: textScale(14)}]}>
+                  {eventData?.user?.name}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
             <TouchableOpacity
               activeOpacity={0.8}
-              style={styles.likebtn}
-              onPress={() => {
-                refPeopleRBSheet.current.open();
-              }}>
+              style={styles.ticketContainer}>
               <Image
-                source={ImagePath.userprofile}
-                resizeMode="contain"
-                style={{width: 24, height: 24}}
+                source={ImagePath.Ticket}
+                style={{tintColor: Colors.white}}
               />
-              <Text style={styles.bottomBarText}>people</Text>
+              <Text style={styles.ticketPrice}> €{eventData?.price_type}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.8}
-              style={styles.likebtn}
               onPress={() => {
                 refInfoRBSheet.current.open();
               }}>
               <Image
-                source={ImagePath.infoIcon}
-                resizeMode="contain"
-                style={{width: 24, height: 24}}
+                source={ImagePath.openSheet}
+                style={{
+                  resizeMode: 'contain',
+                  width: moderateScale(40),
+                  height: moderateScaleVertical(40),
+                }}
               />
-              <Text style={styles.bottomBarText}>info</Text>
             </TouchableOpacity>
           </View>
-
           <RBSheet
             ref={refRBSheet}
             closeOnPressMask={true}
@@ -377,7 +427,7 @@ const EventDetails = ({navigation, route}: any) => {
               },
             }}>
             <LinearGradient
-              colors={[Colors.LinearBlack, Colors.Linear]}
+              colors={[Colors.LinearBlack, Colors.LinearBlack]}
               start={{x: 0, y: 0}}
               end={{x: 1.3, y: 0.9}}
               style={styles.sheetContent}>
@@ -423,7 +473,7 @@ const EventDetails = ({navigation, route}: any) => {
               },
             }}>
             <LinearGradient
-              colors={[Colors.LinearBlack, Colors.Linear]}
+              colors={[Colors.LinearBlack, Colors.LinearBlack]}
               start={{x: 0, y: 0}}
               end={{x: 1.3, y: 0.9}}
               style={styles.sheetContent}>
@@ -477,7 +527,7 @@ const EventDetails = ({navigation, route}: any) => {
               },
             }}>
             <LinearGradient
-              colors={[Colors.LinearBlack, Colors.Linear]}
+              colors={[Colors.LinearBlack, Colors.LinearBlack]}
               start={{x: 0, y: 0}}
               end={{x: 1.3, y: 0.9}}
               style={styles.sheetContent}>
@@ -576,7 +626,7 @@ const EventDetails = ({navigation, route}: any) => {
               },
             }}>
             <LinearGradient
-              colors={[Colors.LinearBlack, Colors.Linear]}
+              colors={[Colors.LinearBlack, Colors.LinearBlack]}
               start={{x: 0, y: 0}}
               end={{x: 1.3, y: 0.9}}
               style={styles.sheetContent}>
@@ -638,7 +688,7 @@ const EventDetails = ({navigation, route}: any) => {
               },
             }}>
             <LinearGradient
-              colors={[Colors.LinearBlack, Colors.Linear]}
+              colors={[Colors.LinearBlack, Colors.LinearBlack]}
               start={{x: 0, y: 0}}
               end={{x: 1.3, y: 0.9}}
               style={styles.sheetContent}>
