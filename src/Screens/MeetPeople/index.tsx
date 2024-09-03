@@ -15,7 +15,12 @@ import commonStyles from '../../Utilities/Styles/commonStyles';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import {Loadingcomponent, SizeBox} from '../../Utilities/Component/Helpers';
 import {TouchableWithoutFeedback} from 'react-native';
-import {height, width} from '../../Utilities/Styles/responsiveSize';
+import {
+  height,
+  moderateScale,
+  moderateScaleVertical,
+  width,
+} from '../../Utilities/Styles/responsiveSize';
 import {
   disLikeUser,
   getAllMeetGroups,
@@ -34,7 +39,7 @@ const MeetPeople = ({navigation}) => {
   const [loader, setLoader] = useState(false);
   const swiper = useRef(null);
   const [userData, setUserData] = useState([]);
-  const [groupData, setGroupData] = useState();
+  const [groupData, setGroupData] = useState([]);
   const user = useSelector((data: object) => data?.auth?.userData);
   const [showModal, setShowModal] = useState(false);
   const [activeIndexModal, setActiveIndexModal] = useState(0);
@@ -142,23 +147,30 @@ const MeetPeople = ({navigation}) => {
   // console.log(currentImage, 'currentImage');
   return (
     <LinearGradient
-      colors={[Colors.LinearBlack, Colors.Linear]}
+      colors={[Colors.backgroundNew, Colors.backgroundNew]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
       <SafeAreaView>
         <SizeBox size={10} />
         <View style={styles.heading}>
-          <VectorIcon
-            groupName="Feather"
-            name="menu"
-            size={25}
-            color={Colors.tranparent}
-            style={{paddingLeft: 15}}
-          />
-          <Text style={{...commonStyles.font20White, alignSelf: 'center'}}>
-            Meet people
-          </Text>
+          <View style={styles.invw}>
+            <VectorIcon
+              groupName="FontAwesome"
+              name="angle-left"
+              size={25}
+              color={Colors.white}
+              style={{paddingLeft: 15}}
+            />
+            <Text
+              style={{
+                ...commonStyles.font20White,
+                alignSelf: 'center',
+                marginLeft: 20,
+              }}>
+              Meet people
+            </Text>
+          </View>
           <View style={styles.invw}>
             <VectorIcon
               groupName="FontAwesome"
@@ -189,7 +201,7 @@ const MeetPeople = ({navigation}) => {
             onPress={() => setButton('online')}
             style={{
               ...commonStyles.font16Regular,
-              color: button == 'online' ? Colors.Pink : Colors.Linear,
+              color: button == 'online' ? Colors.Pink : Colors.white,
             }}>
             Discover
           </Text>
@@ -198,64 +210,189 @@ const MeetPeople = ({navigation}) => {
             style={{
               ...commonStyles.font16Regular,
               color: button == 'group' ? Colors.Pink : Colors.white,
+              marginLeft: moderateScale(25),
             }}>
-            Groups
+            Teams
           </Text>
         </View>
         <SizeBox size={10} />
         {button == 'group' ? (
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            bounces={false}
-            data={groupData}
-            style={{alignSelf: 'center', marginBottom: 100}}
-            renderItem={({item}) => (
-              <ImageBackground
-                borderRadius={10}
-                source={{uri: IMAGE_URL + item?.image[0]}}
-                style={styles.imgbck}>
-                <Text
-                  style={{
-                    ...commonStyles.font14,
-                    color: Colors.white,
-                    fontWeight: '600',
-                    padding: 10,
-                  }}>
-                  {item?.name}
-                </Text>
-              </ImageBackground>
-            )}
-            numColumns={2}
-          />
+          <>
+            <ImageBackground
+              source={ImagePath.Rectangle_new}
+              style={styles.nameHeader}
+              resizeMode="contain">
+              <Text style={{...commonStyles.font12Bold, color: Colors.white}}>
+                Team name
+              </Text>
+            </ImageBackground>
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              bounces={false}
+              data={groupData.slice(0, 4)}
+              style={{alignSelf: 'center', marginBottom: 100}}
+              renderItem={({item}) => (
+                <ImageBackground
+                  borderRadius={10}
+                  source={{uri: IMAGE_URL + item?.image[0]}}
+                  style={styles.imgbck}>
+                  <Text
+                    style={{
+                      ...commonStyles.font12Bold,
+                      color: Colors.white,
+                      fontWeight: '600',
+                      padding: 10,
+                    }}>
+                    {item?.name}
+                  </Text>
+                </ImageBackground>
+              )}
+              numColumns={2}
+            />
+            <View style={[styles.invw, {alignSelf: 'center'}]}>
+              <TouchableOpacity activeOpacity={0.8} style={styles.bottomBtn}>
+                <Image source={ImagePath.sent} />
+              </TouchableOpacity>
+              <TouchableOpacity activeOpacity={0.8} style={styles.bottomBtn}>
+                <VectorIcon
+                  groupName="Entypo"
+                  name="cross"
+                  color={Colors.red}
+                  size={20}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity activeOpacity={0.8} style={styles.bottomBtn}>
+                <Image source={ImagePath.FireLike} />
+              </TouchableOpacity>
+              <TouchableOpacity activeOpacity={0.8} style={styles.bottomBtn}>
+                <VectorIcon
+                  groupName="Feather"
+                  name="heart"
+                  color={Colors.green}
+                  size={20}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={[
+                  styles.bottomBtn,
+                  {backgroundColor: Colors.tranparent},
+                ]}>
+                <Image
+                  source={ImagePath.openSheet}
+                  style={{height: 40, width: 40}}
+                />
+              </TouchableOpacity>
+            </View>
+          </>
         ) : (
           <>
             {currentImage?.pictures ? (
               <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={() =>
-                  navigation.navigate(NavigationStrings.OtherProfiles, {
-                    id: currentImage?._id,
-                  })
-                }>
+                // onPress={() =>
+                //   navigation.navigate(NavigationStrings.OtherProfiles, {
+                //     id: currentImage?._id,
+                //   })
+                // }
+              >
                 <ImageBackground
                   borderRadius={10}
                   source={{uri: IMAGE_URL + currentImage?.pictures[0]}}
                   style={{
-                    width: width * 0.8,
-                    height: height / 1.9,
+                    width: width * 0.9,
+                    height: height / 1.4,
                     alignSelf: 'center',
                     marginBottom: 20,
-                    justifyContent: 'flex-end',
                   }}>
+                  <View
+                    style={{
+                      alignSelf: 'center',
+                      flexDirection: 'row',
+                      marginTop: moderateScaleVertical(20),
+                    }}>
+                    <View
+                      style={{
+                        ...styles.bar,
+                        backgroundColor: Colors.white,
+                      }}
+                    />
+                    <View
+                      style={{
+                        ...styles.bar,
+                        backgroundColor: Colors.Pink,
+                      }}
+                    />
+                    <View
+                      style={{
+                        ...styles.bar,
+                        backgroundColor: Colors.white,
+                      }}
+                    />
+                    <View
+                      style={{
+                        ...styles.bar,
+                        backgroundColor: Colors.white,
+                      }}
+                    />
+                  </View>
                   <Text
                     style={{
                       ...commonStyles.font14,
                       color: Colors.white,
                       fontWeight: '600',
-                      padding: 15,
+                      paddingHorizontal: 23,
+                      paddingVertical: 20,
                     }}>
                     {currentImage?.username}, {currentImage?.age}
                   </Text>
+                  <View
+                    style={[
+                      styles.invw,
+                      {position: 'absolute', bottom: 20, alignSelf: 'center'},
+                    ]}>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      style={styles.bottomBtn}>
+                      <Image source={ImagePath.sent} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      style={styles.bottomBtn}>
+                      <VectorIcon
+                        groupName="Entypo"
+                        name="cross"
+                        color={Colors.red}
+                        size={20}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      style={styles.bottomBtn}>
+                      <Image source={ImagePath.FireLike} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      style={styles.bottomBtn}>
+                      <VectorIcon
+                        groupName="Feather"
+                        name="heart"
+                        color={Colors.green}
+                        size={20}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      style={[
+                        styles.bottomBtn,
+                        {backgroundColor: Colors.tranparent},
+                      ]}>
+                      <Image
+                        source={ImagePath.openSheet}
+                        style={{height: 40, width: 40}}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </ImageBackground>
               </TouchableOpacity>
             ) : (
@@ -263,107 +400,54 @@ const MeetPeople = ({navigation}) => {
                 borderRadius={10}
                 source={ImagePath.ProfileImg}
                 style={{
-                  width: width * 0.8,
-                  height: height / 1.9,
+                  width: width * 0.9,
+                  height: height / 1.6,
                   alignSelf: 'center',
                   marginBottom: 20,
-                  justifyContent: 'flex-end',
                 }}>
+                <View
+                  style={{
+                    alignSelf: 'center',
+                    flexDirection: 'row',
+                    marginTop: moderateScaleVertical(20),
+                  }}>
+                  <View
+                    style={{
+                      ...styles.bar,
+                      backgroundColor: Colors.white,
+                    }}
+                  />
+                  <View
+                    style={{
+                      ...styles.bar,
+                      backgroundColor: Colors.Pink,
+                    }}
+                  />
+                  <View
+                    style={{
+                      ...styles.bar,
+                      backgroundColor: Colors.white,
+                    }}
+                  />
+                  <View
+                    style={{
+                      ...styles.bar,
+                      backgroundColor: Colors.white,
+                    }}
+                  />
+                </View>
                 <Text
                   style={{
                     ...commonStyles.font14,
                     color: Colors.white,
                     fontWeight: '600',
-                    padding: 15,
+                    paddingHorizontal: 23,
+                    paddingVertical: 20,
                   }}>
                   {currentImage?.username}, {currentImage?.age}
                 </Text>
               </ImageBackground>
             )}
-            <View style={styles.main}>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={styles.fire}
-                onPress={() => {
-                  disLikeUserProfileHanlder(
-                    currentImage?.isLiked ? 'like' : 'superlike',
-                  );
-                }}>
-                <VectorIcon
-                  groupName="Entypo"
-                  name="cross"
-                  size={30}
-                  color={Colors.red}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={styles.heart}
-                onPress={() => {
-                  likeUserProfileHanlder('like');
-                }}>
-                <VectorIcon
-                  groupName="Fontisto"
-                  name={currentImage?.isLiked ? 'heart' : 'heart-alt'}
-                  size={28}
-                  color={Colors.green}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={styles.fire}
-                onPress={() => {
-                  likeUserProfileHanlder('superlike');
-                }}>
-                <VectorIcon
-                  groupName={
-                    currentImage?.isSuperliked
-                      ? 'Fontisto'
-                      : 'MaterialCommunityIcons'
-                  }
-                  name={'fire'}
-                  size={29}
-                  color={Colors.Linear}
-                />
-              </TouchableOpacity>
-            </View>
-            <SizeBox size={8} />
-            <FlatList
-              data={userData}
-              horizontal
-              ref={flatListRef}
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({item}) => (
-                // console.log(item, 'item'),
-                <TouchableWithoutFeedback onPress={() => setCurrentImage(item)}>
-                  {item?.pictures[0] ? (
-                    <Image
-                      source={{uri: `${IMAGE_URL}${item?.pictures[0]}`}}
-                      style={{
-                        width: 51,
-                        height: 67,
-                        marginLeft: 10,
-                        borderRadius: 10,
-                      }}
-                    />
-                  ) : (
-                    <Image
-                      source={ImagePath.ProfileImg}
-                      style={{
-                        width: 51,
-                        height: 67,
-                        marginLeft: 10,
-                        borderRadius: 10,
-                      }}
-                    />
-                  )}
-                </TouchableWithoutFeedback>
-              )}
-              onMomentumScrollEnd={handleScrollEnd}
-              snapToInterval={width * 0.2 + 10}
-              decelerationRate="fast"
-            />
           </>
         )}
         <Modal
@@ -376,10 +460,13 @@ const MeetPeople = ({navigation}) => {
           style={{flex: 1, margin: 0, justifyContent: 'flex-start'}}
           isVisible={showModal}
           backdropOpacity={0.2}>
-          <View
+          <LinearGradient
+            colors={[Colors.backgroundNew, Colors.backgroundNew]}
+            start={{x: 0, y: 0}}
+            end={{x: 1.3, y: 0.9}}
             style={[
               styles.optionContainer,
-              {width: activeIndexModal == 0 ? '45%' : '60%'},
+              {width: activeIndexModal == 0 ? '55%' : '60%'},
             ]}>
             {activeIndexModal == 0 ? (
               <>
@@ -390,7 +477,37 @@ const MeetPeople = ({navigation}) => {
                     navigation.navigate(NavigationStrings.CreateGroup);
                     setShowModal(false);
                   }}>
-                  <Text style={styles.optionText}>New group</Text>
+                  <Text style={styles.optionText}>New team</Text>
+                  <VectorIcon
+                    groupName="FontAwesome"
+                    name="question-circle-o"
+                    size={18}
+                    color={Colors.Pink}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.option}
+                  onPress={() => {
+                    navigation.navigate(NavigationStrings.CreateGroup);
+                    setShowModal(false);
+                  }}>
+                  <Text style={styles.optionText}>Select group</Text>
+                  <VectorIcon
+                    groupName="FontAwesome"
+                    name="question-circle-o"
+                    size={18}
+                    color={Colors.Pink}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate(NavigationStrings.MyGroups);
+                    setShowModal(false);
+                  }}
+                  activeOpacity={0.8}
+                  style={[styles.option, {borderBottomWidth: 1}]}>
+                  <Text style={styles.optionText}>My groups</Text>
                   <VectorIcon
                     groupName="FontAwesome"
                     name="question-circle-o"
@@ -405,7 +522,7 @@ const MeetPeople = ({navigation}) => {
                   }}
                   activeOpacity={0.8}
                   style={[styles.option, {borderBottomWidth: 0}]}>
-                  <Text style={styles.optionText}>My groups</Text>
+                  <Text style={styles.optionText}>Edit social part</Text>
                   <VectorIcon
                     groupName="FontAwesome"
                     name="question-circle-o"
@@ -469,7 +586,7 @@ const MeetPeople = ({navigation}) => {
                 </TouchableOpacity>
               </>
             )}
-          </View>
+          </LinearGradient>
         </Modal>
         <Loadingcomponent isVisible={loader} />
       </SafeAreaView>

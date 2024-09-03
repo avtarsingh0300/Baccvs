@@ -32,4 +32,7 @@ export default {
   party: require('../../Assets/images/party.png'),
   fire: require('../../Assets/images/Fire.png'),
   openSheet: require('../../Assets/images/opensheet.png'),
+  sent: require('../../Assets/images/sent.png'),
+  FireLike: require('../../Assets/images/FireLike.png'),
+  Rectangle_new: require('../../Assets/images/Rectangle_new.png'),
 };
