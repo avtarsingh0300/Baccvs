@@ -24,4 +24,7 @@ export const Colors = {
   grey: '#DADADA',
   yellow: '#FFC542',
   txtsel: '#979797',
+  lightorange:'#FFB49C',
+  lightgreen:'#C2FFAD',
+  lightpink2:'#A890EC'
 };

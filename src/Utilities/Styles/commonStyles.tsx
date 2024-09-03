@@ -12,7 +12,7 @@ export const hitSlopProp = {
 export default StyleSheet.create({
   font16Regular: {
     fontSize: textScale(16),
-    fontWeight: '400',
+    fontWeight: '700',
     fontFamily: fontFamily.time_regular,
   },
   font16White: {
@@ -46,15 +46,15 @@ export default StyleSheet.create({
     alignSelf: 'center',
   },
   font14Center: {
-    fontSize: textScale(14),
-    fontWeight: '400',
+    fontSize: textScale(11),
+    fontWeight: '700',
     color: Colors.white,
     fontFamily: fontFamily.time_regular,
     alignSelf: 'center',
   },
   font14: {
-    fontSize: textScale(14),
-    fontWeight: '400',
+    fontSize: textScale(16),
+    fontWeight: '700',
     color: Colors.white,
   },
   font12: {
@@ -68,8 +68,8 @@ export default StyleSheet.create({
     color: Colors.white,
   },
   font12Regular: {
-    fontSize: textScale(12),
-    fontWeight: '500',
+    fontSize: textScale(10),
+    fontWeight: '700',
     fontFamily: fontFamily.time_regular,
   },
   font12Bold: {

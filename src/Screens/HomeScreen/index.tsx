@@ -8,6 +8,7 @@ import {
   FlatList,
   Platform,
   PermissionsAndroid,
+  Image,
 } from 'react-native';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
@@ -25,6 +26,7 @@ import ImagePath from '../../Utilities/Constants/ImagePath';
 import {
   height,
   moderateScale,
+  moderateScaleVertical,
   width,
 } from '../../Utilities/Styles/responsiveSize';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
@@ -166,36 +168,26 @@ const HomeScreen = ({navigation}: any) => {
       <View>
         <View style={styles.listContainer}>
           <View style={styles.backContainer}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <ImageComponent
-                source={ImagePath.priceTag}
-                resizeMode="contain"
-                style={styles.tag}
-              />
-              <Text
-                style={{
-                  ...commonStyles.font14,
-                  fontFamily: fontFamily.time_bold,
-                }}>
-                {` `}FREE
-              </Text>
-            </View>
+            <View/>
             <Text
               style={{
                 ...commonStyles.font16Regular,
-                color: Colors.Pink,
+                color: Colors.white,
               }}>
               {item?.event_name}
             </Text>
-            <Text style={styles.ontxt}>
-              Ongoing{` `}
-              <Text
-                style={{
-                  color: Colors.white,
-                }}>
-                - {item?.duration}
-              </Text>
+            <View style={styles.flex}>
+            <Text
+              style={{
+                ...commonStyles.font12Regular,
+                color: Colors.white,
+              }}>
+              {item?.distance}
+              {` `}
             </Text>
+            <VectorIcon groupName="Feather" name="map-pin" size={15} />
+          </View>
+            
           </View>
           <ImageBackground
             source={{uri: IMAGE_URL + item?.thumbnail_urls[0]}}
@@ -240,27 +232,46 @@ const HomeScreen = ({navigation}: any) => {
                 </Text>
               ) : null}
             </View>
+        <TouchableOpacity style={styles.liktxtcon}>
+          <Text style={styles.likestxt}>287 Likes  </Text>
+          <Image source={ImagePath.likes} style={styles.likeimg}/>
+        </TouchableOpacity>
           </ImageBackground>
         </View>
         <SizeBox size={14} />
-        <FlatList
-          data={item.music_type}
-          horizontal
-          style={{alignSelf: 'center'}}
-          renderItem={({item}) => (
-            <View style={styles.music}>
-              <Text style={styles.musictxt}>{item}</Text>
+        <View style={{paddingHorizontal:15}}>
+        <View style={{justifyContent:"space-between",flexDirection:"row"}}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <ImageComponent
+                source={ImagePath.priceTag}
+                resizeMode="contain"
+                style={styles.tag}
+              />
+              <Text
+                style={{
+                  ...commonStyles.font14,
+                  fontFamily: fontFamily.time_bold,
+                }}>
+                {` `}10 €
+              </Text>
             </View>
-          )}
-        />
-
+            <Text style={styles.ontxt}>
+              Ongoing{` `}
+              <Text
+                style={{
+                  color: Colors.white,
+                }}>
+                - {item?.duration}
+              </Text>
+            </Text>
+            </View>
         <View style={styles.backContainer}>
           <View style={styles.flex}>
             <VectorIcon groupName="Feather" name="users" size={15} />
             <Text
               style={{
                 ...commonStyles.font12Regular,
-                color: Colors.red,
+                color: Colors.lightorange,
               }}>
               {` `}
               {item?.spot} spots
@@ -273,28 +284,25 @@ const HomeScreen = ({navigation}: any) => {
             }}>
             Party - Afterparty
           </Text>
-          <View style={styles.flex}>
-            <Text
-              style={{
-                ...commonStyles.font12Regular,
-                color: Colors.white,
-              }}>
-              {item?.distance}
-              {` `}
-            </Text>
-            <VectorIcon groupName="Feather" name="map-pin" size={15} />
           </View>
         </View>
+          <FlatList
+          data={item.music_type}
+          horizontal
+          style={{paddingHorizontal:15}}
+          renderItem={({item}) => (
+            <View style={styles.music}>
+              <Text style={styles.musictxt}>{item}</Text>
+            </View>
+          )}
+        />
       </View>
     </TouchableOpacity>
   );
 
   return (
-    <LinearGradient
-      colors={[Colors.LinearBlack, Colors.Linear]}
-      start={{x: 0, y: 0}}
-      end={{x: 1.3, y: 0.9}}
-      style={styles.LinearConatiner}>
+    <View
+     style={styles.LinearConatiner}>
       <SafeAreaView>
         <Loadingcomponent isVisible={loading} />
         <View style={styles.headerContainer}>
@@ -364,7 +372,7 @@ const HomeScreen = ({navigation}: any) => {
                       }}>
                       <LinearGradient
                         colors={[
-                          isActive ? Colors.Pink : Colors.calenderback,
+                          isActive ? Colors.Pink :"#151d28",
                           isActive ? Colors.LinearBlack : Colors.calenderback,
                         ]}
                         style={styles.btn}>
@@ -392,18 +400,17 @@ const HomeScreen = ({navigation}: any) => {
             ))}
           </Swiper>
         </View>
-        <LinearGradient
-          colors={[Colors.Linear, Colors.LinearBlack]}
+          <View
           style={styles.datevw}>
           <Text style={styles.date}>
             {moment(value).format('DD MMMM YYYY')} ({eventData?.length})
           </Text>
           <TouchableOpacity style={styles.allBtn} onPress={toggleModal}>
-            <Text style={{color: Colors.red, ...commonStyles.font12Regular}}>
+            <Text style={{color: Colors.white, ...commonStyles.font12Regular}}>
               {selectedOption}
             </Text>
           </TouchableOpacity>
-        </LinearGradient>
+          </View>
         {eventData?.length > 0 ? (
           <FlatList
             showsVerticalScrollIndicator={false}
@@ -443,11 +450,11 @@ const HomeScreen = ({navigation}: any) => {
               onPress={() => toggleStatus('all')}>
               <Text
                 style={{
-                  color: Colors.red,
+                  color: Colors.white,
                   ...commonStyles.font12Regular,
                   alignSelf: 'center',
                 }}>
-                All
+               All
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -489,7 +496,7 @@ const HomeScreen = ({navigation}: any) => {
           </View>
         </Modal>
       </SafeAreaView>
-    </LinearGradient>
+     </View>
   );
 };
 

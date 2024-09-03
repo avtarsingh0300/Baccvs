@@ -3,7 +3,7 @@ import {
   createBottomTabNavigator,
   BottomTabBar,
 } from '@react-navigation/bottom-tabs';
-import {Platform, StyleSheet, View} from 'react-native';
+import {Image, Platform, StyleSheet, View} from 'react-native';
 import * as screens from './index';
 import {
   moderateScale,
@@ -17,6 +17,7 @@ import ImagePath from '../Utilities/Constants/ImagePath';
 import {ImageComponent} from '../Utilities/Component/Helpers';
 import UserStack from './UserStack';
 
+
 const BottomTab = createBottomTabNavigator();
 
 const TabRoutes = () => {
@@ -26,7 +27,7 @@ const TabRoutes = () => {
         <>
           <View style={{backgroundColor: Colors.Linear}}>
             <LinearGradient
-              colors={[Colors.Linear, Colors.LinearBlack]}
+              colors={[Colors.black, Colors.black]}
               start={{x: 0.4, y: 0}}
               end={{x: 0.4, y: 1.2}}
               style={{
@@ -92,11 +93,12 @@ const TabRoutes = () => {
           tabBarShowLabel: true,
           tabBarIcon: ({focused}) => {
             return (
-              <ImageComponent
+              <Image
                 source={ImagePath.PlusIcon}
                 style={{
-                  height: moderateScaleVertical(50),
-                  width: moderateScale(50),
+                  height: moderateScaleVertical(35),
+                  width: moderateScale(35),
+                  tintColor:focused ? Colors.Pink : Colors.white
                 }}
               />
             );
@@ -127,12 +129,14 @@ const TabRoutes = () => {
           tabBarShowLabel: true,
           tabBarIcon: ({focused}) => {
             return (
-              <VectorIcon
-                groupName="Feather"
-                name="users"
-                size={28}
-                color={focused ? Colors.Pink : Colors.white}
-              />
+              <Image
+              source={ImagePath.fire}
+              style={{
+                height: moderateScaleVertical(35),
+                width: moderateScale(35),
+                tintColor:focused ? Colors.Pink : Colors.white
+              }}
+            />
             );
           },
         }}

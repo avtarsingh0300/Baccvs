@@ -10,7 +10,7 @@ import {Colors} from '../../Utilities/Styles/colors';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 const styles = StyleSheet.create({
-  LinearConatiner: {flex: 1, paddingHorizontal: 20},
+  LinearConatiner: {flex: 1, paddingHorizontal: 20,backgroundColor:"#000D1A"},
   headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -76,17 +76,16 @@ const styles = StyleSheet.create({
     marginTop: moderateScaleVertical(10),
   },
   allBtn: {
-    paddingVertical: moderateScale(3),
-    paddingHorizontal: moderateScale(25),
-    borderTopWidth: 1,
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    borderRadius: 10,
-    borderColor: Colors.white,
+    paddingVertical: moderateScale(2),
+    paddingHorizontal: moderateScale(26),
+    borderWidth:1,
+    borderRadius: 5,
+    borderColor: Colors.inputborder,
     marginLeft: moderateScale(14),
+    width:moderateScale(72),
+    height:moderateScaleVertical(21)
   },
   listContainer: {
-    backgroundColor: Colors.black,
     justifyContent: 'center',
     paddingHorizontal: moderateScale(10),
     marginTop: moderateScaleVertical(40),
@@ -96,29 +95,29 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: moderateScaleVertical(10),
-    paddingHorizontal: 15,
+    marginVertical: moderateScaleVertical(10),
+
   },
   tag: {
-    width: moderateScale(15),
-    height: moderateScaleVertical(15),
+    width: moderateScale(19),
+    height: moderateScaleVertical(17),
   },
   ontxt: {
     fontSize: 12,
-    color: Colors.red,
+    color: Colors.lightgreen,
     fontFamily: fontFamily.time_regular,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   backimg: {
     width: '100%',
-    height: height / 4,
-    top: moderateScaleVertical(15),
-    justifyContent: 'flex-end',
+    height: height / 3.5,
+    // justifyContent: 'flex-end',
   },
   flexinner: {
     paddingHorizontal: 15,
     paddingVertical: moderateScaleVertical(19),
     flexDirection: 'row',
+    top:-45
   },
   shortimg: {
     width: moderateScale(56),
@@ -132,24 +131,25 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   music: {
-    borderWidth: 1,
+    borderWidth: 0.6,
     padding: 5,
-    borderColor: Colors.white,
+    borderColor: Colors.lightpink2,
     alignSelf: 'center',
-    borderRadius: 20,
+    borderRadius: 2,
     paddingHorizontal: moderateScale(10),
   },
   musictxt: {
     color: Colors.white,
-    fontSize: textScale(8),
-    fontFamily: fontFamily.time_bold,
+    fontSize: textScale(12),
+    fontWeight:"400",
+    fontFamily: fontFamily.regular,
   },
   flex: {flexDirection: 'row', alignItems: 'center'},
   date: {
     color: Colors.white,
     fontFamily: fontFamily.regular,
     fontWeight: '500',
-    fontSize: textScale(13),
+    fontSize: textScale(18),
   },
   optionContainer: {
     width: '35%',
@@ -172,6 +172,24 @@ const styles = StyleSheet.create({
     ...commonStyles.font14,
     fontWeight: '600',
   },
+  likestxt:{
+    fontSize:10,
+    fontFamily:fontFamily.regular,
+    fontWeight:"600",
+    color:Colors.white,
+    alignSelf:'center',
+  },
+  liktxtcon:{
+    flexDirection:"row",
+    position:"absolute",
+    bottom:15,
+    right:15,
+  },
+  likeimg:{
+    width:moderateScale(25),
+    height:moderateScaleVertical(25),
+    resizeMode:"contain",
+  }
 });
 
 export default styles;
