@@ -38,7 +38,7 @@ const ReferalCode = (props: any) => {
         <View style={styles.inputHolder}>
           <TextInput
             placeholder="Enter referral code"
-            placeholderTextColor={Colors.Pink}
+            placeholderTextColor={Colors.white}
             style={styles.input}
           />
         </View>

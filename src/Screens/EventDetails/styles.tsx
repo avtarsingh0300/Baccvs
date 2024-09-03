@@ -133,11 +133,9 @@ export const styles = StyleSheet.create({
   allBtn: {
     paddingVertical: moderateScale(3),
     paddingHorizontal: moderateScale(10),
-    borderTopWidth: 1,
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
+    borderWidth:1,
     borderRadius: 10,
-    borderColor: Colors.green,
+    borderColor: Colors.white,
     marginLeft: moderateScale(14),
   },
   map: {

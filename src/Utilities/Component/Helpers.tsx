@@ -120,7 +120,7 @@ export function SizeBox({size}: SizeBoxProps) {
 export function CommonBtn({onPress, title}: CommonBtnProps) {
   return (
     <LinearGradient
-      colors={[Colors.btnLinear1, Colors.btnLinear2]}
+      colors={[Colors.white, Colors.white]}
       start={{x: 1, y: 0}}
       end={{x: 1, y: 1}}
       style={{

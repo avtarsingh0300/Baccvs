@@ -26,5 +26,8 @@ export const Colors = {
   txtsel: '#979797',
   lightorange:'#FFB49C',
   lightgreen:'#C2FFAD',
-  lightpink2:'#A890EC'
+  lightpink2:'#A890EC',
+  memberaccess:'#5F09AF',
+  brown:'#b04341',
+  lightbrown:'763033'
 };
