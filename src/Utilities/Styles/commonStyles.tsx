@@ -14,6 +14,7 @@ export default StyleSheet.create({
     fontSize: textScale(16),
     fontWeight: '700',
     fontFamily: fontFamily.time_regular,
+    color:Colors.white
   },
   font16White: {
     fontSize: textScale(16),
@@ -35,7 +36,7 @@ export default StyleSheet.create({
   font20W400: {
     fontSize: textScale(18),
     fontWeight: '400',
-    color: Colors.white,
+    color: Colors.LinearBlack,
     fontFamily: fontFamily.regular,
   },
   font18W700Center: {
@@ -71,6 +72,7 @@ export default StyleSheet.create({
     fontSize: textScale(10),
     fontWeight: '700',
     fontFamily: fontFamily.time_regular,
+    color:Colors.white
   },
   font12Bold: {
     fontSize: textScale(12),

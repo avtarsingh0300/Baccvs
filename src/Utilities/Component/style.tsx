@@ -22,19 +22,19 @@ const styles = StyleSheet.create({
   },
   cbtn: {
     padding: 15,
-    backgroundColor: Colors.btnBackground,
+    backgroundColor: Colors.white,
     borderRadius: 8,
     alignItems: 'center',
   },
   select: {
-    backgroundColor: Colors.Pink,
+    backgroundColor: Colors.brown,
     height: 5,
     alignSelf: 'center',
     borderRadius: 5,
     marginLeft: 10,
   },
   unsel: {
-    backgroundColor: Colors.Linear,
+    backgroundColor: Colors.lightbrown,
     height: 5,
     alignSelf: 'center',
     borderRadius: 5,

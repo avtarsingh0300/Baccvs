@@ -5,6 +5,7 @@ import {
   ImageBackground,
   Platform,
   SafeAreaView,
+  ScrollView,
   Share,
   Text,
   TouchableOpacity,
@@ -34,6 +35,7 @@ import {
 import MapView, {Marker} from 'react-native-maps';
 import {getEventDetail} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
+import commonStyles from '../../Utilities/Styles/commonStyles';
 // import {EventEmitter} from 'react-native';
 const EventDetails = ({navigation, route}: any) => {
   const refRBSheet: any = useRef();
@@ -213,6 +215,24 @@ const EventDetails = ({navigation, route}: any) => {
     </View>
   );
   const thumbnailUrl = eventData.thumbnail_urls?.[0];
+  const renderHost=({item,index}:any)=>(
+    <View style={{paddingHorizontal:15,alignItems:"center"}}>
+      <Image source={ImagePath.ProfileImg} style={{width:44,height:50,borderRadius:5}}/>
+      <Text style={{...commonStyles.font12Regular,paddingTop:5}}>Bensatii</Text>
+    </View>
+  );
+  const renderLineUp=({item,index}:any)=>(
+    <View style={{paddingHorizontal:15,alignItems:"center"}}>
+      <Image source={ImagePath.ProfileImg} style={{width:44,height:50,borderRadius:5}}/>
+      <Text style={{...commonStyles.font12Regular,paddingTop:5}}>Bensatii</Text>
+    </View>
+  );
+  const renderParticipants=({item,index}:any)=>(
+    <View style={{paddingHorizontal:15,alignItems:"center"}}>
+      <Image source={ImagePath.ProfileImg} style={{width:44,height:50,borderRadius:5}}/>
+      <Text style={{...commonStyles.font12Regular,paddingTop:5}}>Bensatii</Text>
+    </View>
+  );
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
@@ -318,33 +338,6 @@ const EventDetails = ({navigation, route}: any) => {
                   {eventData?.comments?.length}
                 </Text>
               </TouchableOpacity>
-
-              {/* <TouchableOpacity
-                activeOpacity={0.8}
-                style={styles.likebtn}
-                onPress={() => {
-                  refPeopleRBSheet.current.open();
-                }}>
-                <Image
-                  source={ImagePath.userprofile}
-                  resizeMode="contain"
-                  style={{width: 24, height: 24}}
-                />
-                <Text style={styles.bottomBarText}>people</Text>
-              </TouchableOpacity> */}
-              {/* <TouchableOpacity
-                activeOpacity={0.8}
-                style={styles.likebtn}
-                onPress={() => {
-                  refInfoRBSheet.current.open();
-                }}>
-                <Image
-                  source={ImagePath.infoIcon}
-                  resizeMode="contain"
-                  style={{width: 24, height: 24}}
-                />
-                <Text style={styles.bottomBarText}>info</Text>
-              </TouchableOpacity> */}
               <SizeBox size={5} />
               <TouchableOpacity
                 activeOpacity={0.8}
@@ -501,20 +494,13 @@ const EventDetails = ({navigation, route}: any) => {
                 keyExtractor={item => item?.id?.toString()}
                 renderItem={comItem}
               />
-
-              {/* <TextInput
-                placeholder="Add a comment... "
-                multiline
-                placeholderTextColor={Colors.white}
-                style={styles.cmtinpt}
-              /> */}
               <SizeBox size={10} />
             </LinearGradient>
           </RBSheet>
           <RBSheet
             ref={refInfoRBSheet}
             closeOnPressMask={true}
-            height={height / 1.5}
+            height={height / 1.2}
             customStyles={{
               wrapper: {
                 backgroundColor: 'transparent',
@@ -531,6 +517,7 @@ const EventDetails = ({navigation, route}: any) => {
               start={{x: 0, y: 0}}
               end={{x: 1.3, y: 0.9}}
               style={styles.sheetContent}>
+                <ScrollView showsVerticalScrollIndicator={false}>
               <View style={{paddingHorizontal: 15}}>
                 <VectorIcon
                   groupName="Fontisto"
@@ -540,32 +527,25 @@ const EventDetails = ({navigation, route}: any) => {
                   style={{alignSelf: 'flex-end', top: 10}}
                   onPress={() => refInfoRBSheet.current.close()}
                 />
-                <Text style={[styles.timeText, styles.onelife]}>
-                  {eventData?.event_name}
-                </Text>
-                <SizeBox size={10} />
-                <Text style={[styles.cmttxt, {fontSize: textScale(10)}]}>
-                  {eventData?.description}
-                </Text>
-                <Text style={[styles.cmttxt, {fontSize: textScale(10)}]}>
-                  Free entry, be respectful of others.
-                </Text>
-                <SizeBox size={90} />
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <VectorIcon
-                    groupName="Fontisto"
-                    name="stopwatch"
-                    size={25}
-                    color={Colors.white}
-                  />
-                  <Text style={[styles.timeText, {color: Colors.green}]}>
-                    {`  `}
-                    {calculateDuration(
-                      eventData?.start_time,
-                      eventData?.end_time,
-                    )}
-                  </Text>
+                <SizeBox size={10}/>
+                <View style={{flexDirection:"row",justifyContent:"space-between",paddingHorizontal:8}}>
+                  <Text style={{...commonStyles.font16Regular}}>Event details</Text>
+                  <Image
+                  style={{
+                    width: moderateScale(16),
+                    height: moderateScaleVertical(18),
+                    alignSelf: 'center',
+                    tintColor: Colors.white,
+                  }}
+                  source={ImagePath.Security_Rules}
+                />
                 </View>
+                <SizeBox size={10} />
+                <Text style={{...commonStyles.font12Regular,paddingHorizontal:5}}>This party about having fun, bring your stuff and come enjoy the moment with us.
+                </Text>
+                <Text style={{...commonStyles.font12Regular,paddingHorizontal:3}}> Free entry, be respectful of others.</Text>
+                <SizeBox size={10} />
+                <Text style={{...commonStyles.font16Regular,paddingHorizontal:5}}>Details</Text>
                 <SizeBox size={10} />
                 <View style={{flexDirection: 'row'}}>
                   <VectorIcon
@@ -594,24 +574,59 @@ const EventDetails = ({navigation, route}: any) => {
                   </Text>
                 </View>
               </View>
-              <SizeBox size={30} />
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={[
-                  styles.ticketContainer,
-                  {width: '30%', alignSelf: 'center'},
-                ]}>
-                <Image source={ImagePath.Ticket} />
-                <Text style={styles.ticketPrice}>
-                  {' '}
-                  €{eventData?.price_type}
-                </Text>
-              </TouchableOpacity>
+                    <SizeBox size={10} />
+                <View style={{flexDirection: 'row', alignItems: 'center',paddingHorizontal:17}}>
+                  <VectorIcon
+                    groupName="Fontisto"
+                    name="stopwatch"
+                    size={25}
+                    color={Colors.white}
+                  />
+                  <Text style={[styles.timeText, {color: Colors.white}]}>
+                    {`  `}
+                    {calculateDuration(
+                      eventData?.start_time,
+                      eventData?.end_time,
+                    )}
+                  </Text>
+                </View>
+                    <SizeBox size={10} />
+                    <Text style={{...commonStyles.font16Regular,marginLeft:18}}>Hosted by</Text>
+                    <SizeBox size={10}/>
+                    <FlatList 
+                    data={[{id:1},{id:1}]}
+                    showsHorizontalScrollIndicator={false}
+                    horizontal
+                    renderItem={renderHost}
+                    />
+                    <SizeBox size={10} />
+                    <Text style={{...commonStyles.font16Regular,marginLeft:18}}>Line Up</Text>
+                    <SizeBox size={10}/>
+                    <FlatList 
+                    data={[{id:1},{id:1}]}
+                    showsHorizontalScrollIndicator={false}
+                    horizontal
+                    renderItem={renderLineUp}
+                    />
+                    <SizeBox size={10}/>
+                    <View style={{flexDirection:"row",alignItems:"center"}}>
+                    <Text style={{...commonStyles.font16Regular,marginLeft:18}}>Participants{' '}</Text>
+                    <VectorIcon groupName='Octicons' name='dot-fill' size={20} color={Colors.white}/>
+                    <Text style={{...commonStyles.font16Regular}}>{' '}18</Text>
+                    </View>
+                    <SizeBox size={10}/>
+                    <FlatList 
+                    data={[{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1}]}
+                    showsHorizontalScrollIndicator={false}
+                    horizontal
+                    renderItem={renderParticipants}
+                    />
+                    <SizeBox size={10}/>
+              </ScrollView>
             </LinearGradient>
           </RBSheet>
           <RBSheet
             ref={refPeopleRBSheet}
-            // closeOnDragDown={true}
             closeOnPressMask={true}
             height={height / 1.7}
             customStyles={{

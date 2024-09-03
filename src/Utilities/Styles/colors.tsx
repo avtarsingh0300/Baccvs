@@ -24,8 +24,11 @@ export const Colors = {
   grey: '#DADADA',
   yellow: '#FFC542',
   txtsel: '#979797',
+  backgroundNew: '#000D1A',
   lightorange: '#FFB49C',
   lightgreen: '#C2FFAD',
   lightpink2: '#A890EC',
-  backgroundNew: '#000D1A',
+  memberaccess: '#5F09AF',
+  brown: '#b04341',
+  lightbrown: '763033',
 };
