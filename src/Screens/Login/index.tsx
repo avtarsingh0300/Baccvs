@@ -77,6 +77,7 @@ const Login = ({navigation}: any) => {
               placeholderTextColor={Colors.Pink}
               style={styles.input}
               value={username}
+              autoCapitalize="none"
               onChangeText={text => handleChangeUser(text)}
             />
           </View>
@@ -87,6 +88,7 @@ const Login = ({navigation}: any) => {
               placeholderTextColor={Colors.Pink}
               style={styles.input}
               value={password}
+              autoCapitalize="none"
               onChangeText={text => handleChangePass(text)}
             />
           </View>
