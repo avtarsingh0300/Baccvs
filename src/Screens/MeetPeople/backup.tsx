@@ -288,26 +288,130 @@ const MeetPeople = ({navigation}) => {
           </>
         ) : (
           <>
-            {dummy.length > 0 ? (
-              <View>
-                {dummy?.map((i, index) => (
+            {currentImage?.pictures ? (
+              <>
+                {userData?.map((i, index) => (
+                  // console.log(i, 'iii'),
                   <TinderCard
                     onSwipe={onSwipe}
-                    // onCardLeftScreen={() => onCardLeftScreen('fooBar')}
+                    key={index}
+                    swipeRequirementType="position"
+                    swipeThreshold={0.8}
                     preventSwipe={['right', 'left']}>
                     <ImageBackground
                       borderRadius={10}
-                      // source={{uri: IMAGE_URL + i?.pictures[0]}}
-                      source={ImagePath.ProfileImg}
+                      source={{uri: IMAGE_URL + i?.pictures[0]}}
+                      // source={ImagePath.ProfileImg}
                       style={{
                         width: width * 0.9,
                         height: height / 1.4,
                         alignSelf: 'center',
                         marginBottom: 20,
-                      }}></ImageBackground>
+                      }}>
+                      <View
+                        style={{
+                          alignSelf: 'center',
+                          flexDirection: 'row',
+                          marginTop: moderateScaleVertical(20),
+                        }}>
+                        <View
+                          style={{
+                            ...styles.bar,
+                            backgroundColor: Colors.white,
+                          }}
+                        />
+                        <View
+                          style={{
+                            ...styles.bar,
+                            backgroundColor: Colors.Pink,
+                          }}
+                        />
+                        <View
+                          style={{
+                            ...styles.bar,
+                            backgroundColor: Colors.white,
+                          }}
+                        />
+                        <View
+                          style={{
+                            ...styles.bar,
+                            backgroundColor: Colors.white,
+                          }}
+                        />
+                      </View>
+                      <Text
+                        style={{
+                          ...commonStyles.font14,
+                          color: Colors.white,
+                          fontWeight: '600',
+                          paddingHorizontal: 23,
+                          paddingVertical: 20,
+                        }}>
+                        {currentImage?.username}, {currentImage?.age}
+                      </Text>
+                      <View
+                        style={[
+                          styles.invw,
+                          {
+                            position: 'absolute',
+                            bottom: 20,
+                            alignSelf: 'center',
+                          },
+                        ]}>
+                        <TouchableOpacity
+                          activeOpacity={0.8}
+                          style={styles.bottomBtn}>
+                          <Image source={ImagePath.sent} />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          activeOpacity={0.8}
+                          style={styles.bottomBtn}>
+                          <VectorIcon
+                            groupName="Entypo"
+                            name="cross"
+                            color={Colors.red}
+                            size={20}
+                          />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          activeOpacity={0.8}
+                          style={styles.bottomBtn}>
+                          <Image source={ImagePath.FireLike} />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          activeOpacity={0.8}
+                          style={styles.bottomBtn}>
+                          <VectorIcon
+                            groupName="Feather"
+                            name="heart"
+                            color={Colors.green}
+                            size={20}
+                          />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          activeOpacity={0.8}
+                          onPress={() =>
+                            navigation.navigate(
+                              NavigationStrings.OtherProfiles,
+                              // {
+                              //   id: currentImage?._id,
+                              // },
+                            )
+                          }
+                          style={[
+                            styles.bottomBtn,
+                            {backgroundColor: Colors.tranparent},
+                          ]}>
+                          <Image
+                            source={ImagePath.openSheet}
+                            style={{height: 40, width: 40}}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    </ImageBackground>
                   </TinderCard>
                 ))}
-              </View>
+              </>
             ) : (
               <View
                 style={{

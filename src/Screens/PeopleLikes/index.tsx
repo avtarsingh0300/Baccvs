@@ -17,7 +17,7 @@ import ImagePath from '../../Utilities/Constants/ImagePath';
 import {getUserForLike, getUserLikes} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 
-const PeopleLikes = () => {
+const PeopleLikes = ({navigation}: any) => {
   const [colors, setColors] = useState(0);
   const [userData, setUserData] = useState({});
   const [loader, setLoader] = useState(false);
@@ -126,7 +126,9 @@ const PeopleLikes = () => {
       <SizeBox size={3} />
     </ImageBackground>
   );
-
+  const onbackPress = () => {
+    navigation.goBack();
+  };
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
@@ -136,7 +138,16 @@ const PeopleLikes = () => {
       <SafeAreaView>
         <ScrollView showsVerticalScrollIndicator={false}>
           <SizeBox size={10} />
-          <Text style={styles.liketxt}>Likes</Text>
+
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <VectorIcon
+              groupName={'Ionicons'}
+              name={'chevron-back'}
+              size={25}
+              onPress={onbackPress}
+            />
+            <Text style={styles.liketxt}>Likes</Text>
+          </View>
           <SizeBox size={10} />
           <View style={styles.likesbtn}>
             <Text
@@ -151,11 +162,16 @@ const PeopleLikes = () => {
               onPress={() => setColors(1)}
               style={[
                 styles.likestxt,
-                {color: colors === 1 ? Colors.lightPink : Colors.white},
+
+                {
+                  color: colors === 1 ? Colors.lightPink : Colors.white,
+                  paddingLeft: 20,
+                },
               ]}>
               You liked
             </Text>
           </View>
+          <SizeBox size={10} />
           {colors === 1 ? (
             <>
               <SizeBox size={10} />
@@ -166,7 +182,7 @@ const PeopleLikes = () => {
                   size={25}
                   color={Colors.white}
                 />
-                <Text style={styles.crushtxt}>Yours Crushs</Text>
+                <Text style={styles.crushtxt}>Crushs</Text>
               </View>
               {userData?.crush?.length > 0 ? (
                 <FlatList
@@ -190,7 +206,7 @@ const PeopleLikes = () => {
                   size={20}
                   color={Colors.white}
                 />
-                <Text style={styles.crushtxt}>Other likes</Text>
+                <Text style={styles.crushtxt}>Likes</Text>
               </View>
 
               {userData?.otherLike?.length > 0 ? (
@@ -242,8 +258,10 @@ const PeopleLikes = () => {
                   size={20}
                   color={Colors.white}
                 />
-                <Text style={styles.crushtxt}>Up Next</Text>
-                <Text style={styles.crushtxt}>(32)</Text>
+                <Text style={styles.crushtxt}>Likes</Text>
+                <Text style={styles.crushtxt}>
+                  ( {userData?.otherLike?.length})
+                </Text>
               </View>
               <SizeBox size={5} />
               <Text style={styles.subscribetxt}>

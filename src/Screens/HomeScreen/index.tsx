@@ -59,7 +59,6 @@ const HomeScreen = ({navigation}: any) => {
     setModalVisible(!isModalVisible);
   };
   const toggleStatus = (status: any) => {
-    console.log(status);
     getdata(lat, lon, status);
     setSelectedOption(status);
     setModalVisible(!isModalVisible);
@@ -151,7 +150,6 @@ const HomeScreen = ({navigation}: any) => {
     SetLoading(true);
     getHomedata(lat, long, status ? status : selectedOption)
       .then(res => {
-        // console.log(JSON.stringify(res), 'resss');
         SetLoading(false);
         SetEventData(res.events);
         SetMemberData(res.events.members);
@@ -168,7 +166,7 @@ const HomeScreen = ({navigation}: any) => {
       <View>
         <View style={styles.listContainer}>
           <View style={styles.backContainer}>
-            <View/>
+            <View />
             <Text
               style={{
                 ...commonStyles.font16Regular,
@@ -177,17 +175,16 @@ const HomeScreen = ({navigation}: any) => {
               {item?.event_name}
             </Text>
             <View style={styles.flex}>
-            <Text
-              style={{
-                ...commonStyles.font12Regular,
-                color: Colors.white,
-              }}>
-              {item?.distance}
-              {` `}
-            </Text>
-            <VectorIcon groupName="Feather" name="map-pin" size={15} />
-          </View>
-            
+              <Text
+                style={{
+                  ...commonStyles.font12Regular,
+                  color: Colors.white,
+                }}>
+                {item?.distance}
+                {` `}
+              </Text>
+              <VectorIcon groupName="Feather" name="map-pin" size={15} />
+            </View>
           </View>
           <ImageBackground
             source={{uri: IMAGE_URL + item?.thumbnail_urls[0]}}
@@ -232,16 +229,18 @@ const HomeScreen = ({navigation}: any) => {
                 </Text>
               ) : null}
             </View>
-        <TouchableOpacity style={styles.liktxtcon}>
-          <Text style={styles.likestxt}>287 Likes  </Text>
-          <Image source={ImagePath.likes} style={styles.likeimg}/>
-        </TouchableOpacity>
+            <TouchableOpacity style={styles.liktxtcon}>
+              <Text style={styles.likestxt}>
+                {item?.like_count > 0 ? item?.like_count : '0'} Likes{' '}
+              </Text>
+              <Image source={ImagePath.likes} style={styles.likeimg} />
+            </TouchableOpacity>
           </ImageBackground>
         </View>
         <SizeBox size={14} />
-        <View style={{paddingHorizontal:15}}>
-        <View style={{justifyContent:"space-between",flexDirection:"row"}}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={{paddingHorizontal: 15}}>
+          <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <ImageComponent
                 source={ImagePath.priceTag}
                 resizeMode="contain"
@@ -252,7 +251,8 @@ const HomeScreen = ({navigation}: any) => {
                   ...commonStyles.font14,
                   fontFamily: fontFamily.time_bold,
                 }}>
-                {` `}10 €
+                {` `}
+                {item?.early_price} €
               </Text>
             </View>
             <Text style={styles.ontxt}>
@@ -264,32 +264,32 @@ const HomeScreen = ({navigation}: any) => {
                 - {item?.duration}
               </Text>
             </Text>
+          </View>
+          <View style={styles.backContainer}>
+            <View style={styles.flex}>
+              <VectorIcon groupName="Feather" name="users" size={15} />
+              <Text
+                style={{
+                  ...commonStyles.font12Regular,
+                  color: Colors.lightorange,
+                }}>
+                {` `}
+                {item?.spot} spots
+              </Text>
             </View>
-        <View style={styles.backContainer}>
-          <View style={styles.flex}>
-            <VectorIcon groupName="Feather" name="users" size={15} />
             <Text
               style={{
-                ...commonStyles.font12Regular,
-                color: Colors.lightorange,
+                ...commonStyles.font14Center,
+                color: Colors.white,
               }}>
-              {` `}
-              {item?.spot} spots
+              Party - Afterparty
             </Text>
           </View>
-          <Text
-            style={{
-              ...commonStyles.font14Center,
-              color: Colors.white,
-            }}>
-            Party - Afterparty
-          </Text>
-          </View>
         </View>
-          <FlatList
+        <FlatList
           data={item.music_type}
           horizontal
-          style={{paddingHorizontal:15}}
+          style={{paddingHorizontal: 15}}
           renderItem={({item}) => (
             <View style={styles.music}>
               <Text style={styles.musictxt}>{item}</Text>
@@ -301,8 +301,7 @@ const HomeScreen = ({navigation}: any) => {
   );
 
   return (
-    <View
-     style={styles.LinearConatiner}>
+    <View style={styles.LinearConatiner}>
       <SafeAreaView>
         <Loadingcomponent isVisible={loading} />
         <View style={styles.headerContainer}>
@@ -372,7 +371,7 @@ const HomeScreen = ({navigation}: any) => {
                       }}>
                       <LinearGradient
                         colors={[
-                          isActive ? Colors.Pink :"#151d28",
+                          isActive ? Colors.Pink : '#151d28',
                           isActive ? Colors.LinearBlack : Colors.calenderback,
                         ]}
                         style={styles.btn}>
@@ -400,8 +399,7 @@ const HomeScreen = ({navigation}: any) => {
             ))}
           </Swiper>
         </View>
-          <View
-          style={styles.datevw}>
+        <View style={styles.datevw}>
           <Text style={styles.date}>
             {moment(value).format('DD MMMM YYYY')} ({eventData?.length})
           </Text>
@@ -410,7 +408,7 @@ const HomeScreen = ({navigation}: any) => {
               {selectedOption}
             </Text>
           </TouchableOpacity>
-          </View>
+        </View>
         {eventData?.length > 0 ? (
           <FlatList
             showsVerticalScrollIndicator={false}
@@ -454,7 +452,7 @@ const HomeScreen = ({navigation}: any) => {
                   ...commonStyles.font12Regular,
                   alignSelf: 'center',
                 }}>
-               All
+                All
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -496,7 +494,7 @@ const HomeScreen = ({navigation}: any) => {
           </View>
         </Modal>
       </SafeAreaView>
-     </View>
+    </View>
   );
 };
 

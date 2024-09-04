@@ -20,7 +20,6 @@ export const styles = StyleSheet.create({
     paddingVertical: moderateScaleVertical(15),
     width: '100%',
     paddingHorizontal: moderateScale(20),
-    // backgroundColor: Colors.LinearBlack,
   },
   headerTxt: {
     ...commonStyles.font20White,
@@ -65,17 +64,11 @@ export const styles = StyleSheet.create({
   bottomBar: {
     height: moderateScaleVertical(200),
 
-    // width: '90%',
-    // alignSelf: 'center',
-
     borderRadius: 8,
-    backgroundColor: Colors.LinearBlack,
-    // position: 'absolute',
-    // bottom: Platform.OS === 'android' ? height / 30 : height / 10,
-    // flexDirection: 'row',
+    backgroundColor: Colors.backgroundNew,
 
     alignItems: 'center',
-    //   width:
+
     paddingHorizontal: 10,
   },
   bottomBarText: {

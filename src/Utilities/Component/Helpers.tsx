@@ -298,10 +298,10 @@ export function Drawer({
               img: ImagePath.userprofile,
             },
             {id: 2, name: 'Invites', group: 'Feather', vector: 'mail'},
-            {id: 3, name: 'People likes', img: ImagePath.likes},
+            {id: 3, name: 'Likes', img: ImagePath.likes},
             {
               id: 4,
-              name: 'Events',
+              name: 'My Events',
               group: 'MaterialIcons',
               vector: 'event',
             },
@@ -324,6 +324,10 @@ export function Drawer({
               onPress={() => {
                 if (item?.name == 'Profile') {
                   navigation.navigate(NavigationStrings.UserProfile);
+                } else if (item?.name == 'My Events') {
+                  navigation.navigate(NavigationStrings.MyEvents);
+                } else if (item?.name == 'Likes') {
+                  navigation.navigate(NavigationStrings.PeopleLikes);
                 } else {
                   navigation.navigate(item?.name);
                 }

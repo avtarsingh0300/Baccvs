@@ -201,17 +201,6 @@ const EventDetails = ({navigation, route}: any) => {
           {item?.name}
         </Text>
       </View>
-      {/* <TouchableOpacity activeOpacity={0.8}>
-        <LinearGradient
-          colors={[Colors.LinearBlack, Colors.Pink]}
-          style={{
-            padding: 10,
-            paddingHorizontal: 20,
-            borderRadius: 10,
-          }}>
-          <Text style={styles.timeText}>Follow</Text>
-        </LinearGradient>
-      </TouchableOpacity> */}
     </View>
   );
   const thumbnailUrl = eventData.thumbnail_urls?.[0];
@@ -250,7 +239,7 @@ const EventDetails = ({navigation, route}: any) => {
   );
   return (
     <LinearGradient
-      colors={[Colors.LinearBlack, Colors.Linear]}
+      colors={[Colors.backgroundNew, Colors.backgroundNew]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
@@ -402,7 +391,10 @@ const EventDetails = ({navigation, route}: any) => {
                 source={ImagePath.Ticket}
                 style={{tintColor: Colors.white}}
               />
-              <Text style={styles.ticketPrice}> €{eventData?.price_type}</Text>
+              <Text style={styles.ticketPrice}>
+                {' '}
+                €{eventData?.regular_price}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.8}
@@ -435,7 +427,7 @@ const EventDetails = ({navigation, route}: any) => {
               },
             }}>
             <LinearGradient
-              colors={[Colors.LinearBlack, Colors.LinearBlack]}
+              colors={[Colors.backgroundNew, Colors.backgroundNew]}
               start={{x: 0, y: 0}}
               end={{x: 1.3, y: 0.9}}
               style={styles.sheetContent}>
@@ -481,7 +473,7 @@ const EventDetails = ({navigation, route}: any) => {
               },
             }}>
             <LinearGradient
-              colors={[Colors.LinearBlack, Colors.LinearBlack]}
+              colors={[Colors.backgroundNew, Colors.backgroundNew]}
               start={{x: 0, y: 0}}
               end={{x: 1.3, y: 0.9}}
               style={styles.sheetContent}>
@@ -528,7 +520,7 @@ const EventDetails = ({navigation, route}: any) => {
               },
             }}>
             <LinearGradient
-              colors={[Colors.LinearBlack, Colors.LinearBlack]}
+              colors={[Colors.backgroundNew, Colors.backgroundNew]}
               start={{x: 0, y: 0}}
               end={{x: 1.3, y: 0.9}}
               style={styles.sheetContent}>
@@ -699,7 +691,7 @@ const EventDetails = ({navigation, route}: any) => {
               },
             }}>
             <LinearGradient
-              colors={[Colors.LinearBlack, Colors.LinearBlack]}
+              colors={[Colors.backgroundNew, Colors.backgroundNew]}
               start={{x: 0, y: 0}}
               end={{x: 1.3, y: 0.9}}
               style={styles.sheetContent}>
@@ -761,7 +753,7 @@ const EventDetails = ({navigation, route}: any) => {
               },
             }}>
             <LinearGradient
-              colors={[Colors.LinearBlack, Colors.LinearBlack]}
+              colors={[Colors.backgroundNew, Colors.backgroundNew]}
               start={{x: 0, y: 0}}
               end={{x: 1.3, y: 0.9}}
               style={styles.sheetContent}>

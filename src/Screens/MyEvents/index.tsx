@@ -4,6 +4,8 @@ import {
   SafeAreaView,
   FlatList,
   ImageBackground,
+  TouchableOpacity,
+  Image,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Colors} from '../../Utilities/Styles/colors';
@@ -18,12 +20,7 @@ import {
   showError,
 } from '../../Utilities/Component/Helpers';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
-import {
-  height,
-  moderateScale,
-  moderateScaleVertical,
-  width,
-} from '../../Utilities/Styles/responsiveSize';
+import {height, width} from '../../Utilities/Styles/responsiveSize';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import {getMyEvent} from '../../Utilities/Constants/auth';
@@ -68,52 +65,38 @@ const MyEvents = ({navigation}: any) => {
     navigation.goBack();
   };
   const renderItem = ({item}: any) => (
-    <View>
-      <View style={styles.listContainer}>
-        <SizeBox size={5} />
-        <View style={styles.buttonGroup}>
-          <Text
-            style={{
-              ...commonStyles.font14Center,
-              color: Colors.red,
-            }}>
-            Ongoing
-          </Text>
-          <Text
-            style={{
-              ...commonStyles.font14Center,
-            }}>
-            Agora
-          </Text>
-          <Text
-            style={{
-              ...commonStyles.font14Center,
-              color: Colors.red,
-            }}>
-            Host
-          </Text>
-        </View>
-
-        <SizeBox size={5} />
-        <ImageBackground
-          source={{uri: IMAGE_URL + item?.thumbnail_urls[0]}}
-          borderRadius={5}
-          style={styles.backimg}>
-          <View style={styles.icon}>
-            <VectorIcon
-              groupName="MaterialCommunityIcons"
-              name="dots-vertical"
-              size={25}
-            />
+    <TouchableOpacity activeOpacity={0.8}>
+      <View>
+        <View style={styles.listContainer}>
+          <View style={styles.backContainer}>
+            <View />
+            <Text
+              style={{
+                ...commonStyles.font16Regular,
+                color: Colors.white,
+              }}>
+              {item?.event_name}
+            </Text>
+            <View style={styles.flex}>
+              <Text
+                style={{
+                  ...commonStyles.font12Regular,
+                  color: Colors.white,
+                }}>
+                {item?.distance}
+                {` `}
+              </Text>
+              <VectorIcon groupName="Feather" name="map-pin" size={15} />
+            </View>
           </View>
-          <View style={styles.positionVw}>
+          <ImageBackground
+            source={{uri: IMAGE_URL + item?.thumbnail_urls[0]}}
+            style={styles.backimg}>
             <View style={styles.flexinner}>
-              {item?.members[0]?.imageUrl ? (
-                <ImageComponent
-                  source={{uri: IMAGE_URL + item?.members[0]?.imageUrl}}
-                  style={styles.shortimg}
-                />
-              ) : null}
+              <ImageComponent
+                source={{uri: IMAGE_URL + item?.members[0]?.imageUrl}}
+                style={styles.shortimg}
+              />
               {item?.members[1]?.imageUrl ? (
                 <ImageComponent
                   source={{uri: IMAGE_URL + item?.members[1]?.imageUrl}}
@@ -137,39 +120,85 @@ const MyEvents = ({navigation}: any) => {
                   ]}
                 />
               ) : null}
-              {item.members.length > 3 ? (
+
+              {item?.members?.length > 3 ? (
                 <Text
                   style={{
                     ...commonStyles.font16Regular,
                     alignSelf: 'flex-end',
                     color: Colors.white,
                   }}>
-                  +{item.members.length - 3}
+                  +{item?.members?.length - 3}
                 </Text>
               ) : null}
             </View>
-            <View style={styles.priceVw}>
+            <TouchableOpacity style={styles.liktxtcon}>
+              <Text style={styles.likestxt}>{item.like_count} Likes </Text>
+              <Image source={ImagePath.likes} style={styles.likeimg} />
+            </TouchableOpacity>
+          </ImageBackground>
+        </View>
+        <SizeBox size={14} />
+        <View style={{paddingHorizontal: 15}}>
+          <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <ImageComponent
                 source={ImagePath.priceTag}
                 resizeMode="contain"
-                style={{
-                  width: moderateScale(15),
-                  height: moderateScaleVertical(15),
-                }}
+                style={styles.tag}
               />
               <Text
                 style={{
                   ...commonStyles.font14,
-                  fontFamily: fontFamily.time_regular,
-                  color: Colors.white,
+                  fontFamily: fontFamily.time_bold,
                 }}>
-                {` `}Free
+                {` `}
+                {item?.regular_price} €
               </Text>
             </View>
+            <Text style={styles.ontxt}>
+              Ongoing{` `}
+              <Text
+                style={{
+                  color: Colors.white,
+                }}>
+                - {item?.duration}
+              </Text>
+            </Text>
           </View>
-        </ImageBackground>
+          <View style={styles.backContainer}>
+            <View style={styles.flex}>
+              <VectorIcon groupName="Feather" name="users" size={15} />
+              <Text
+                style={{
+                  ...commonStyles.font12Regular,
+                  color: Colors.lightorange,
+                }}>
+                {` `}
+                {item?.spot} spots
+              </Text>
+            </View>
+            <Text
+              style={{
+                ...commonStyles.font14Center,
+                color: Colors.white,
+              }}>
+              Party - Afterparty
+            </Text>
+          </View>
+        </View>
+        <FlatList
+          data={item.music_type}
+          horizontal
+          style={{paddingHorizontal: 15}}
+          renderItem={({item}) => (
+            <View style={styles.music}>
+              <Text style={styles.musictxt}>{item}</Text>
+            </View>
+          )}
+        />
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
