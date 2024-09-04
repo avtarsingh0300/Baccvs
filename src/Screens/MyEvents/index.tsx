@@ -174,7 +174,7 @@ const MyEvents = ({navigation}: any) => {
 
   return (
     <LinearGradient
-      colors={[Colors.LinearBlack, Colors.Linear]}
+      colors={[Colors.backgroundNew, Colors.backgroundNew]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
@@ -182,13 +182,22 @@ const MyEvents = ({navigation}: any) => {
         <Loadingcomponent isVisible={loading} />
         <SizeBox size={10} />
         <View style={styles.header}>
-          <VectorIcon
-            groupName={'Ionicons'}
-            name={'chevron-back'}
-            size={25}
-            onPress={onbackPress}
-          />
-          <Text style={{...commonStyles.Heading20font}}>My Events</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <VectorIcon
+              groupName={'Ionicons'}
+              name={'chevron-back'}
+              size={25}
+              onPress={onbackPress}
+            />
+            <Text
+              style={{
+                ...commonStyles.Heading20font,
+                fontFamily: fontFamily.regular,
+                paddingLeft: 15,
+              }}>
+              My Events
+            </Text>
+          </View>
           <VectorIcon
             groupName="Ionicons"
             name="search"
@@ -202,8 +211,9 @@ const MyEvents = ({navigation}: any) => {
             <Text
               onPress={() => handleButton('missed')}
               style={{
-                ...commonStyles.font14Center,
-                color: button === 'missed' ? Colors.green : Colors.white,
+                ...commonStyles.font16White,
+                fontWeight: '700',
+                color: button === 'missed' ? Colors.lightPink : Colors.white,
               }}>
               Past
             </Text>
@@ -216,16 +226,18 @@ const MyEvents = ({navigation}: any) => {
           <Text
             onPress={() => handleButton('ongoing')}
             style={{
-              ...commonStyles.font14Center,
-              color: button === 'ongoing' ? Colors.green : Colors.white,
+              ...commonStyles.font16White,
+              fontWeight: '700',
+              color: button === 'ongoing' ? Colors.lightPink : Colors.white,
             }}>
             Today
           </Text>
           <Text
             onPress={() => handleButton('upcoming')}
             style={{
-              ...commonStyles.font14Center,
-              color: button === 'upcoming' ? Colors.green : Colors.white,
+              ...commonStyles.font16White,
+              fontWeight: '700',
+              color: button === 'upcoming' ? Colors.lightPink : Colors.white,
             }}>
             Future
           </Text>

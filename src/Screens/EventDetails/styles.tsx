@@ -133,7 +133,7 @@ export const styles = StyleSheet.create({
   allBtn: {
     paddingVertical: moderateScale(3),
     paddingHorizontal: moderateScale(10),
-    borderWidth:1,
+    borderWidth: 1,
     borderRadius: 10,
     borderColor: Colors.white,
     marginLeft: moderateScale(14),

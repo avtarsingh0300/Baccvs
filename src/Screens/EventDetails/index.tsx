@@ -26,7 +26,7 @@ import {
 } from '../../Utilities/Styles/responsiveSize';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
-import {TextInput} from 'react-native';
+
 import {
   Loadingcomponent,
   SizeBox,
@@ -36,7 +36,7 @@ import MapView, {Marker} from 'react-native-maps';
 import {getEventDetail} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import commonStyles from '../../Utilities/Styles/commonStyles';
-// import {EventEmitter} from 'react-native';
+
 const EventDetails = ({navigation, route}: any) => {
   const refRBSheet: any = useRef();
   const refComRBSheet: any = useRef();
@@ -215,22 +215,37 @@ const EventDetails = ({navigation, route}: any) => {
     </View>
   );
   const thumbnailUrl = eventData.thumbnail_urls?.[0];
-  const renderHost=({item,index}:any)=>(
-    <View style={{paddingHorizontal:15,alignItems:"center"}}>
-      <Image source={ImagePath.ProfileImg} style={{width:44,height:50,borderRadius:5}}/>
-      <Text style={{...commonStyles.font12Regular,paddingTop:5}}>Bensatii</Text>
+  const renderHost = ({item, index}: any) => (
+    <View style={{paddingHorizontal: 15, alignItems: 'center'}}>
+      <Image
+        source={ImagePath.ProfileImg}
+        style={{width: 44, height: 50, borderRadius: 5}}
+      />
+      <Text style={{...commonStyles.font12Regular, paddingTop: 5}}>
+        Bensatii
+      </Text>
     </View>
   );
-  const renderLineUp=({item,index}:any)=>(
-    <View style={{paddingHorizontal:15,alignItems:"center"}}>
-      <Image source={ImagePath.ProfileImg} style={{width:44,height:50,borderRadius:5}}/>
-      <Text style={{...commonStyles.font12Regular,paddingTop:5}}>Bensatii</Text>
+  const renderLineUp = ({item, index}: any) => (
+    <View style={{paddingHorizontal: 15, alignItems: 'center'}}>
+      <Image
+        source={ImagePath.ProfileImg}
+        style={{width: 44, height: 50, borderRadius: 5}}
+      />
+      <Text style={{...commonStyles.font12Regular, paddingTop: 5}}>
+        Bensatii
+      </Text>
     </View>
   );
-  const renderParticipants=({item,index}:any)=>(
-    <View style={{paddingHorizontal:15,alignItems:"center"}}>
-      <Image source={ImagePath.ProfileImg} style={{width:44,height:50,borderRadius:5}}/>
-      <Text style={{...commonStyles.font12Regular,paddingTop:5}}>Bensatii</Text>
+  const renderParticipants = ({item, index}: any) => (
+    <View style={{paddingHorizontal: 15, alignItems: 'center'}}>
+      <Image
+        source={ImagePath.ProfileImg}
+        style={{width: 44, height: 50, borderRadius: 5}}
+      />
+      <Text style={{...commonStyles.font12Regular, paddingTop: 5}}>
+        Bensatii
+      </Text>
     </View>
   );
   return (
@@ -517,65 +532,88 @@ const EventDetails = ({navigation, route}: any) => {
               start={{x: 0, y: 0}}
               end={{x: 1.3, y: 0.9}}
               style={styles.sheetContent}>
-                <ScrollView showsVerticalScrollIndicator={false}>
-              <View style={{paddingHorizontal: 15}}>
-                <VectorIcon
-                  groupName="Fontisto"
-                  name="close-a"
-                  size={15}
-                  color={Colors.white}
-                  style={{alignSelf: 'flex-end', top: 10}}
-                  onPress={() => refInfoRBSheet.current.close()}
-                />
-                <SizeBox size={10}/>
-                <View style={{flexDirection:"row",justifyContent:"space-between",paddingHorizontal:8}}>
-                  <Text style={{...commonStyles.font16Regular}}>Event details</Text>
-                  <Image
-                  style={{
-                    width: moderateScale(16),
-                    height: moderateScaleVertical(18),
-                    alignSelf: 'center',
-                    tintColor: Colors.white,
-                  }}
-                  source={ImagePath.Security_Rules}
-                />
-                </View>
-                <SizeBox size={10} />
-                <Text style={{...commonStyles.font12Regular,paddingHorizontal:5}}>This party about having fun, bring your stuff and come enjoy the moment with us.
-                </Text>
-                <Text style={{...commonStyles.font12Regular,paddingHorizontal:3}}> Free entry, be respectful of others.</Text>
-                <SizeBox size={10} />
-                <Text style={{...commonStyles.font16Regular,paddingHorizontal:5}}>Details</Text>
-                <SizeBox size={10} />
-                <View style={{flexDirection: 'row'}}>
-                  <VectorIcon
-                    groupName="Feather"
-                    name="speaker"
-                    size={25}
-                    color={Colors.white}
-                  />
-                  <FlatList
-                    showsHorizontalScrollIndicator={false}
-                    horizontal
-                    data={eventData?.music_type}
-                    renderItem={({item}) => (
-                      <TouchableOpacity style={styles.allBtn}>
-                        <Text style={styles.timeText}>{item}</Text>
-                      </TouchableOpacity>
-                    )}
-                  />
-                </View>
-                <SizeBox size={10} />
-                <View style={{flexDirection: 'row'}}>
-                  <Image source={ImagePath.Pin_alt} />
-                  <Text style={styles.distanceText}>
-                    {`  `}
-                    {eventData?.distance}
+              <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={{paddingHorizontal: 15}}>
+                  <SizeBox size={10} />
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      paddingHorizontal: 8,
+                    }}>
+                    <Text style={{...commonStyles.font16Regular}}>
+                      Event details
+                    </Text>
+                    <Image
+                      style={{
+                        width: moderateScale(16),
+                        height: moderateScaleVertical(18),
+                        alignSelf: 'center',
+                        tintColor: Colors.white,
+                      }}
+                      source={ImagePath.Security_Rules}
+                    />
+                  </View>
+                  <SizeBox size={10} />
+                  <Text
+                    style={{
+                      ...commonStyles.font12Regular,
+                      paddingHorizontal: 5,
+                    }}>
+                    This party about having fun, bring your stuff and come enjoy
+                    the moment with us.
                   </Text>
+                  <Text
+                    style={{
+                      ...commonStyles.font12Regular,
+                      paddingHorizontal: 3,
+                    }}>
+                    {' '}
+                    Free entry, be respectful of others.
+                  </Text>
+                  <SizeBox size={10} />
+                  <Text
+                    style={{
+                      ...commonStyles.font16Regular,
+                      paddingHorizontal: 5,
+                    }}>
+                    Details
+                  </Text>
+                  <SizeBox size={10} />
+                  <View style={{flexDirection: 'row'}}>
+                    <VectorIcon
+                      groupName="Feather"
+                      name="speaker"
+                      size={25}
+                      color={Colors.white}
+                    />
+                    <FlatList
+                      showsHorizontalScrollIndicator={false}
+                      horizontal
+                      data={eventData?.music_type}
+                      renderItem={({item}) => (
+                        <TouchableOpacity style={styles.allBtn}>
+                          <Text style={styles.timeText}>{item}</Text>
+                        </TouchableOpacity>
+                      )}
+                    />
+                  </View>
+                  <SizeBox size={10} />
+                  <View style={{flexDirection: 'row'}}>
+                    <Image source={ImagePath.Pin_alt} />
+                    <Text style={styles.distanceText}>
+                      {`  `}
+                      {eventData?.distance}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-                    <SizeBox size={10} />
-                <View style={{flexDirection: 'row', alignItems: 'center',paddingHorizontal:17}}>
+                <SizeBox size={10} />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingHorizontal: 17,
+                  }}>
                   <VectorIcon
                     groupName="Fontisto"
                     name="stopwatch"
@@ -590,38 +628,58 @@ const EventDetails = ({navigation, route}: any) => {
                     )}
                   </Text>
                 </View>
-                    <SizeBox size={10} />
-                    <Text style={{...commonStyles.font16Regular,marginLeft:18}}>Hosted by</Text>
-                    <SizeBox size={10}/>
-                    <FlatList 
-                    data={[{id:1},{id:1}]}
-                    showsHorizontalScrollIndicator={false}
-                    horizontal
-                    renderItem={renderHost}
-                    />
-                    <SizeBox size={10} />
-                    <Text style={{...commonStyles.font16Regular,marginLeft:18}}>Line Up</Text>
-                    <SizeBox size={10}/>
-                    <FlatList 
-                    data={[{id:1},{id:1}]}
-                    showsHorizontalScrollIndicator={false}
-                    horizontal
-                    renderItem={renderLineUp}
-                    />
-                    <SizeBox size={10}/>
-                    <View style={{flexDirection:"row",alignItems:"center"}}>
-                    <Text style={{...commonStyles.font16Regular,marginLeft:18}}>Participants{' '}</Text>
-                    <VectorIcon groupName='Octicons' name='dot-fill' size={20} color={Colors.white}/>
-                    <Text style={{...commonStyles.font16Regular}}>{' '}18</Text>
-                    </View>
-                    <SizeBox size={10}/>
-                    <FlatList 
-                    data={[{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1}]}
-                    showsHorizontalScrollIndicator={false}
-                    horizontal
-                    renderItem={renderParticipants}
-                    />
-                    <SizeBox size={10}/>
+                <SizeBox size={10} />
+                <Text style={{...commonStyles.font16Regular, marginLeft: 18}}>
+                  Hosted by
+                </Text>
+                <SizeBox size={10} />
+                <FlatList
+                  data={[{id: 1}, {id: 1}]}
+                  showsHorizontalScrollIndicator={false}
+                  horizontal
+                  renderItem={renderHost}
+                />
+                <SizeBox size={10} />
+                <Text style={{...commonStyles.font16Regular, marginLeft: 18}}>
+                  Line Up
+                </Text>
+                <SizeBox size={10} />
+                <FlatList
+                  data={[{id: 1}, {id: 1}]}
+                  showsHorizontalScrollIndicator={false}
+                  horizontal
+                  renderItem={renderLineUp}
+                />
+                <SizeBox size={10} />
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text style={{...commonStyles.font16Regular, marginLeft: 18}}>
+                    Participants{' '}
+                  </Text>
+                  <VectorIcon
+                    groupName="Octicons"
+                    name="dot-fill"
+                    size={20}
+                    color={Colors.white}
+                  />
+                  <Text style={{...commonStyles.font16Regular}}> 18</Text>
+                </View>
+                <SizeBox size={10} />
+                <FlatList
+                  data={[
+                    {id: 1},
+                    {id: 1},
+                    {id: 1},
+                    {id: 1},
+                    {id: 1},
+                    {id: 1},
+                    {id: 1},
+                    {id: 1},
+                  ]}
+                  showsHorizontalScrollIndicator={false}
+                  horizontal
+                  renderItem={renderParticipants}
+                />
+                <SizeBox size={10} />
               </ScrollView>
             </LinearGradient>
           </RBSheet>

@@ -30,5 +30,5 @@ export const Colors = {
   lightpink2: '#A890EC',
   memberaccess: '#5F09AF',
   brown: '#b04341',
-  lightbrown: '763033',
+  lightbrown: '#763033',
 };

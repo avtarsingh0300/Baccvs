@@ -17,7 +17,6 @@ import ImagePath from '../Utilities/Constants/ImagePath';
 import {ImageComponent} from '../Utilities/Component/Helpers';
 import UserStack from './UserStack';
 
-
 const BottomTab = createBottomTabNavigator();
 
 const TabRoutes = () => {
@@ -98,7 +97,7 @@ const TabRoutes = () => {
                 style={{
                   height: moderateScaleVertical(35),
                   width: moderateScale(35),
-                  tintColor:focused ? Colors.Pink : Colors.white
+                  tintColor: focused ? Colors.Pink : Colors.white,
                 }}
               />
             );
@@ -130,13 +129,13 @@ const TabRoutes = () => {
           tabBarIcon: ({focused}) => {
             return (
               <Image
-              source={ImagePath.fire}
-              style={{
-                height: moderateScaleVertical(35),
-                width: moderateScale(35),
-                tintColor:focused ? Colors.Pink : Colors.white
-              }}
-            />
+                source={ImagePath.fire}
+                style={{
+                  height: moderateScaleVertical(35),
+                  width: moderateScale(35),
+                  tintColor: focused ? Colors.Pink : Colors.white,
+                }}
+              />
             );
           },
         }}
@@ -148,7 +147,7 @@ const TabRoutes = () => {
 const styles = StyleSheet.create({
   customBottomtabsStyle: {
     paddingTop: moderateScaleVertical(15),
-    backgroundColor: Colors.LinearBlack,
+    backgroundColor: Colors.backgroundNew,
     borderTopStartRadius: 20,
     borderTopEndRadius: 20,
     shadowColor: Colors.tranparent,
