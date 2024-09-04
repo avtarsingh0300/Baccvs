@@ -1,5 +1,3 @@
-import {ReferralCode} from '../../Navigation';
-import Tickets from '../../Screens/Tickets';
 
 export default {
   WelcomScreen: 'WelcomScreen',
@@ -45,4 +43,7 @@ export default {
   ReferralCode: 'Referral Code',
   OtherProfiles: 'OtherProfiles',
   QrCode:'QrCode',
+  ChooseRoles:'ChooseRoles',
+  ProfessionalInfo:'ProfessionalInfo',
+  Commitments:'Commitments',
 };

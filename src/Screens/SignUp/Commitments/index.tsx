@@ -11,13 +11,13 @@ import {
 } from '../../../Utilities/Component/Helpers';
 import NavigationStrings from '../../../Utilities/Constants/NavigationStrings';
 
-const ReferalCode = (props: any) => {
+const Commitments = (props: any) => {
   const onBack = () => {
     props.navigation.goBack();
   };
-  // const onContinue = () => {
-  //   props.navigation.navigate(NavigationStrings.PhoneNumber);
-  // };
+  const onContinue = () => {
+    props.navigation.navigate(NavigationStrings.RegisterScreen);
+  };
   return (
     <LinearGradient
       colors={[Colors.backgroundNew, Colors.backgroundNew]}
@@ -28,7 +28,7 @@ const ReferalCode = (props: any) => {
         <ProgressHeader onPress={onBack} value={1} />
         <SizeBox size={15} />
         <Text style={{...commonStyles.font18W700Center}}>
-          What’s your referral code?
+        Our Commitments
         </Text>
         <SizeBox size={10} />
         <Text style={{...commonStyles.font14Center, color: Colors.greyTxt,textAlign:"center"}}>
@@ -43,10 +43,10 @@ const ReferalCode = (props: any) => {
           />
         </View>
         <SizeBox size={40} />
-        <CommonBtn onPress={()=>props.navigation.navigate("Commitments")} title={'Continue'} />
+        <CommonBtn onPress={onContinue} title={'Continue'} />
       </SafeAreaView>
     </LinearGradient>
   );
 };
 
-export default ReferalCode;
+export default Commitments;

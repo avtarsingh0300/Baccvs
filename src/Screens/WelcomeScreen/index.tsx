@@ -16,8 +16,8 @@ const WelcomeScreen = (props: any) => {
   const onMemberPress = () => {
     props.navigation.navigate(NavigationStrings.LoginScreen);
   };
-  const onApplyMem = () => {
-    props.navigation.navigate(NavigationStrings.ReferalCode);
+  const onRoleClick = () => {
+    props.navigation.navigate(NavigationStrings.ChooseRoles);
   };
   return (
     <LinearGradient
@@ -36,7 +36,7 @@ const WelcomeScreen = (props: any) => {
           resizeMode={'contain'}
         />
         <View style={{marginTop: moderateScaleVertical(25)}}>
-          <TouchableOpacity onPress={onApplyMem} style={styles.buttons}>
+          <TouchableOpacity onPress={onRoleClick} style={styles.buttons}>
               <Text
                 style={[
                   styles.btnText,

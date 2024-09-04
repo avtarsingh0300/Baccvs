@@ -46,6 +46,21 @@ export default function AuthStack(Stack: any) {
         component={screens?.Invites}
         options={{headerShown: false}}
       />
+       <Stack.Screen
+        name={NavigationStrings.ChooseRoles}
+        component={screens.ChooseRoles}
+        options={{headerShown: false}}
+      />
+       <Stack.Screen
+        name={NavigationStrings.ProfessionalInfo}
+        component={screens.ProfessionalInfo}
+        options={{headerShown: false}}
+      />
+       <Stack.Screen
+        name={NavigationStrings.Commitments}
+        component={screens.Commitments}
+        options={{headerShown: false}}
+      />
     </>
   );
 }

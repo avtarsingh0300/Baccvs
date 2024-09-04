@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   cbtn: {
     padding: 15,
     backgroundColor: Colors.white,
-    borderRadius: 8,
+    borderRadius: 30,
     alignItems: 'center',
   },
   select: {

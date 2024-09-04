@@ -98,7 +98,7 @@ const RegisterScreen = (props: any) => {
 
   return (
     <LinearGradient
-      colors={[Colors.LinearBlack, Colors.Linear]}
+      colors={[Colors.backgroundNew, Colors.backgroundNew]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1.3, y: 0.9 }}
       style={styles.LinearConatiner}>
@@ -112,25 +112,28 @@ const RegisterScreen = (props: any) => {
           showsHorizontalScrollIndicator={false}
           ref={ref => (scrollRef.current = ref)}>
           <SizeBox size={15} />
-          <Text style={{ ...commonStyles.font18W700Center }}>Sign up</Text>
+          <Text style={{ ...commonStyles.font20W400,color:Colors.white,fontFamily:fontFamily.time_regular,textAlign:"center" }}>Personalize your profile</Text>
           <SizeBox size={10} />
           <Text
             style={{
               ...commonStyles.font14Center,
               color: Colors.greyTxt,
               textAlign: 'center',
-              width: '70%',
+              width: '60%',
             }}>
             Please fill out the form carefully to complete your registration.
           </Text>
           <SizeBox size={10} />
+          <Text style={{...commonStyles.font12,color:Colors.greyTxt,paddingLeft:20}}>Full name</Text>
+          <SizeBox size={5}/>
           <CommonInput
             placeholder="Fullname"
             value={fullName}
             onChangeText={(e: string) => setFullName(e)}
           />
           <SizeBox size={10} />
-
+          <Text style={{...commonStyles.font12,color:Colors.greyTxt,paddingLeft:20}}>Email Address</Text>
+          <SizeBox size={5}/>
           <CommonInput
             placeholder="Email Address"
             keyboardType="email-address"
@@ -138,32 +141,38 @@ const RegisterScreen = (props: any) => {
             onChangeText={(e: string) => setEmail(e?.trim())}
           />
           <SizeBox size={10} />
+          <Text style={{...commonStyles.font12,color:Colors.greyTxt,paddingLeft:20}}>Date of Birth</Text>
+          <SizeBox size={5}/>
           <CommonInputBtn
             title={date ? moment(date).format('YYYY-MM-DD') : 'Date of Birth'}
             onPress={() => setOpen(true)}
           />
           <SizeBox size={10} />
+          <Text style={{...commonStyles.font12,color:Colors.greyTxt,paddingLeft:20}}>Connect your instagram</Text>
+          <SizeBox size={5}/>
           <CommonInput
-            placeholder="Choose your username"
+            placeholder="@johndoe"
             value={userName}
             onChangeText={(e: string) => setUserName(e)}
           />
           <SizeBox size={10} />
           <Text
             style={{
-              color: Colors.lightGrey,
+              color: Colors.lightPink,
               fontFamily: fontFamily.time_regular,
             }}>
             Please use an instagram account that is most representative of your
             online identity as it will be used for verification purposes.
           </Text>
           <SizeBox size={15} />
+              <Text style={{...commonStyles.font12,color:Colors.greyTxt,paddingLeft:20}}>Select your gender</Text>
+              <SizeBox size={5}/>
           <View>
             <CommonInputBtn
               title={
                 selectedGender?.length > 0
-                  ? selectedGender
-                  : 'Select your gender'
+                ? selectedGender
+                : 'Select your gender'
               }
               onPress={() => setModalVisible(true)}
             />
@@ -200,19 +209,19 @@ const RegisterScreen = (props: any) => {
                       );
                       return (
                         <TouchableOpacity
-                          activeOpacity={0.8}
-                          onPress={() => {
-                            selectModalHandler(item);
-                          }}
-                          style={[
-                            {
-                              borderBottomWidth:
-                                index ==
-                                  (modalLanguageVisible
-                                    ? languages?.length - 1
-                                    : genders?.length - 1)
-                                  ? 0
-                                  : 1,
+                        activeOpacity={0.8}
+                        onPress={() => {
+                          selectModalHandler(item);
+                        }}
+                        style={[
+                          {
+                            borderBottomWidth:
+                            index ==
+                            (modalLanguageVisible
+                              ? languages?.length - 1
+                              : genders?.length - 1)
+                              ? 0
+                              : 1,
                             },
                             styles.mondaInvw,
                           ]}>
@@ -229,9 +238,9 @@ const RegisterScreen = (props: any) => {
                             groupName="MaterialCommunityIcons"
                             name={
                               (selectedGender || filterData[0]) ==
-                                (item?.name ? item?.name : item)
-                                ? 'radiobox-marked'
-                                : 'radiobox-blank'
+                              (item?.name ? item?.name : item)
+                              ? 'radiobox-marked'
+                              : 'radiobox-blank'
                             }
                             size={18}
                           />
@@ -245,7 +254,7 @@ const RegisterScreen = (props: any) => {
           </View>
           <SizeBox size={10} />
           <Text style={styles.biotxt}>Bio</Text>
-          <SizeBox size={10} />
+          <SizeBox size={5} />
           <CommonInput
             multiline={true}
             placeholder="Write a little bio to make people know you better."
@@ -253,29 +262,31 @@ const RegisterScreen = (props: any) => {
             onChangeText={(e: string) => setUserBio(e)}
           />
           <SizeBox size={10} />
+          <Text style={{...commonStyles.font12,color:Colors.greyTxt,paddingLeft:20}}>Languages </Text>
+          <SizeBox size={5}/>
           {selectedLang?.length > 0 ? (
             <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => setModalLanguageVisible(true)}
-              style={styles.langContainer}>
+            activeOpacity={0.8}
+            onPress={() => setModalLanguageVisible(true)}
+            style={styles.langContainer}>
               {selectedLang?.map(item => (
                 <TouchableOpacity
-                  style={styles.langItem}
-                  activeOpacity={0.8}
-                  onPress={() => {
-                    const filterData2 = selectedLang?.filter(
-                      (i: any) => i != item,
-                    );
-                    setSelectedLang(filterData2);
-                  }}>
+                style={styles.langItem}
+                activeOpacity={0.8}
+                onPress={() => {
+                  const filterData2 = selectedLang?.filter(
+                    (i: any) => i != item,
+                  );
+                  setSelectedLang(filterData2);
+                }}>
                   <Text style={styles.langItemText}>{item} &#x2715;</Text>
                 </TouchableOpacity>
               ))}
             </TouchableOpacity>
           ) : (
             <CommonInputBtn
-              title="Languages"
-              onPress={() => setModalLanguageVisible(true)}
+            title="Languages"
+            onPress={() => setModalLanguageVisible(true)}
             />
           )}
           <SizeBox size={10} />
