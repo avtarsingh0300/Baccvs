@@ -125,7 +125,7 @@ export function CommonBtn({onPress, title}: CommonBtnProps) {
       end={{x: 1, y: 1}}
       style={{
         padding: 1,
-        borderRadius: 8,
+        borderRadius:30,
       }}>
       <TouchableOpacity
         activeOpacity={0.8}

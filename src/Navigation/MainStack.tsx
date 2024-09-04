@@ -3,6 +3,7 @@ import React from 'react';
 import NavigationStrings from '../Utilities/Constants/NavigationStrings';
 import TabRoutes from './TabRoutes';
 import * as screens from './index';
+import ChooseRoles from '../Screens/SignUp/ChooseRoles';
 export default function MainStack(Stack: any) {
   return (
     <>
@@ -156,7 +157,7 @@ export default function MainStack(Stack: any) {
         name={NavigationStrings.QrCode}
         component={screens.QrCode}
         options={{headerShown: false}}
-      />
+      />    
     </>
   );
 }
