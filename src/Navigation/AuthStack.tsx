@@ -61,6 +61,11 @@ export default function AuthStack(Stack: any) {
         component={screens.Commitments}
         options={{headerShown: false}}
       />
+       <Stack.Screen
+        name={NavigationStrings.ActivateLocation}
+        component={screens.ActivateLocation}
+        options={{headerShown: false}}
+      />
     </>
   );
 }

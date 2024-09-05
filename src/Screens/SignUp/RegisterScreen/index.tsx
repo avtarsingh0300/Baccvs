@@ -103,7 +103,7 @@ const RegisterScreen = (props: any) => {
       end={{ x: 1.3, y: 0.9 }}
       style={styles.LinearConatiner}>
       <SafeAreaView>
-        <ProgressHeader onPress={onBack} value={4} />
+        <ProgressHeader onPress={onBack} value={6} />
         <KeyboardAwareScrollView
           keyboardShouldPersistTaps="handled"
           style={{ flexGrow: 1, marginBottom: 50 }}

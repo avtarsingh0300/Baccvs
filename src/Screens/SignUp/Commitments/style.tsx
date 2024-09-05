@@ -21,5 +21,21 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
   },
+  valuetxt:{
+    fontSize:12,
+    fontWeight:"700",
+    fontFamily:fontFamily.bold,
+    color:Colors.white,
+    width:"80%",
+    lineHeight:16
+  },
+  respecttxt:{
+    fontSize:14,
+    fontWeight:"800",
+    fontFamily:fontFamily.regular,
+    color:Colors.white,
+    paddingLeft:37
+  },
+
 });
 export default styles;

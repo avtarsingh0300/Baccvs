@@ -1,4 +1,4 @@
-import {SafeAreaView, Text, TextInput, View} from 'react-native';
+import {Image, SafeAreaView, Text, View} from 'react-native';
 import React from 'react';
 import styles from './style';
 import LinearGradient from 'react-native-linear-gradient';
@@ -10,13 +10,15 @@ import {
   SizeBox,
 } from '../../../Utilities/Component/Helpers';
 import NavigationStrings from '../../../Utilities/Constants/NavigationStrings';
+import ImagePath from '../../../Utilities/Constants/ImagePath';
 
-const ReferalCode = (props: any) => {
+
+const ActivateLocation = (props: any) => {
   const onBack = () => {
     props.navigation.goBack();
   };
   const onContinue = () => {
-    props.navigation.navigate(NavigationStrings.PhoneNumber);
+    props.navigation.navigate(NavigationStrings.RegisterScreen);
   };
   return (
     <LinearGradient
@@ -25,28 +27,24 @@ const ReferalCode = (props: any) => {
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
       <SafeAreaView>
-        <ProgressHeader onPress={onBack} value={1} />
+        <ProgressHeader onPress={onBack} value={5} />
         <SizeBox size={15} />
-        <Text style={{...commonStyles.font18W700Center}}>
-          What’s your referral code?
+         <Text style={{...commonStyles.font18W700Center}}>
+         Activate your location         
         </Text>
-        <SizeBox size={10} />
-        <Text style={{...commonStyles.font14Center, color: Colors.greyTxt,textAlign:"center"}}>
-          Please write your referral code.
+        <SizeBox size={5} />
+        <Text style={styles.enabletxt}>
+        Enable your location to explore nearby events, connect with the hottest spots in real-time.
         </Text>
-        <SizeBox size={20} />
-        <View style={styles.inputHolder}>
-          <TextInput
-            placeholder="Enter referral code"
-            placeholderTextColor={Colors.white}
-            style={styles.input}
-          />
+        <SizeBox size={30}/>
+        <View style={{alignItems:"center"}}>
+        <Image source={ImagePath.Activelocation} style={{width:150,height:150}}/>
         </View>
         <SizeBox size={40} />
-        <CommonBtn onPress={onContinue} title={'Continue'} />
+        <CommonBtn onPress={onContinue} title={'Activate my location'} />
       </SafeAreaView>
     </LinearGradient>
   );
 };
 
-export default ReferalCode;
+export default ActivateLocation;

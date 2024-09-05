@@ -46,4 +46,5 @@ export default {
   ChooseRoles:'ChooseRoles',
   ProfessionalInfo:'ProfessionalInfo',
   Commitments:'Commitments',
+  ActivateLocation:'ActivateLocation',
 };
