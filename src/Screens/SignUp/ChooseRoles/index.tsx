@@ -1,17 +1,17 @@
-import {SafeAreaView, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {
+  SafeAreaView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import styles from './style';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../../Utilities/Styles/colors';
 import commonStyles from '../../../Utilities/Styles/commonStyles';
-import {
-  CommonBtn,
-  ProgressHeader,
-  SizeBox,
-} from '../../../Utilities/Component/Helpers';
+import {ProgressHeader, SizeBox} from '../../../Utilities/Component/Helpers';
 import NavigationStrings from '../../../Utilities/Constants/NavigationStrings';
-import { moderateScale, moderateScaleVertical } from '../../../Utilities/Styles/responsiveSize';
-import fontFamily from '../../../Utilities/Styles/fontFamily';
 
 const ChooseRoles = (props: any) => {
   const onBack = () => {
@@ -32,20 +32,26 @@ const ChooseRoles = (props: any) => {
       <SafeAreaView>
         <ProgressHeader onPress={onBack} value={0} />
         <SizeBox size={15} />
-        <Text style={{...commonStyles.font18W700Center}}>
-        SIGN UP 
-        </Text>
+        <Text style={{...commonStyles.font18W700Center}}>SIGN UP</Text>
         <SizeBox size={20} />
-        <TouchableOpacity style={styles.professionalbtn} onPress={onProfessionalInfo}>
+        <TouchableOpacity
+          style={styles.professionalbtn}
+          onPress={onProfessionalInfo}>
           <Text style={styles.professiontxt}>I AM A PROFESSIONAL</Text>
-          <SizeBox size={2}/>
-          <Text style={styles.loremtxt}>Lorem ipsum dolor sit amet consectetur. Venenatis luctus turpis arcu mauris. </Text>
+          <SizeBox size={2} />
+          <Text style={styles.loremtxt}>
+            Lorem ipsum dolor sit amet consectetur. Venenatis luctus turpis arcu
+            mauris.{' '}
+          </Text>
         </TouchableOpacity>
         <SizeBox size={20} />
         <TouchableOpacity style={styles.professionalbtn} onPress={onContinue}>
           <Text style={styles.professiontxt}>I AM A MEMBER</Text>
-          <SizeBox size={2}/>
-          <Text style={styles.loremtxt}>Lorem ipsum dolor sit amet consectetur. Venenatis luctus turpis arcu mauris. </Text>
+          <SizeBox size={2} />
+          <Text style={styles.loremtxt}>
+            Lorem ipsum dolor sit amet consectetur. Venenatis luctus turpis arcu
+            mauris.{' '}
+          </Text>
         </TouchableOpacity>
       </SafeAreaView>
     </LinearGradient>
