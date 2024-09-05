@@ -44,3 +44,4 @@ export {default as ProfessionalInfo} from '../Screens/SignUp/ProfessionalInfo';
 export {default as Commitments} from '../Screens/SignUp/Commitments';
 export {default as ActivateLocation} from '../Screens/SignUp/ActivateLocation';
 export {default as FollowingScreen} from '../Screens/FollowingScreen';
+export {default as MeetPeopleFilter} from '../Screens/MeetPeopleFilter/MeetPeopleFilter';

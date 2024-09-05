@@ -36,4 +36,5 @@ export default {
   FireLike: require('../../Assets/images/FireLike.png'),
   Rectangle_new: require('../../Assets/images/Rectangle_new.png'),
   Activelocation: require('../../Assets/images/Activatelocation.png'),
+  Arrow_Left_2: require('../../Assets/images/Arrow_Left_2.png'),
 };

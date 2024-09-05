@@ -1,4 +1,3 @@
-
 export default {
   WelcomScreen: 'WelcomScreen',
   LoginScreen: 'LoginScreen',
@@ -42,10 +41,11 @@ export default {
   PeopleLikes: 'People likes',
   ReferralCode: 'Referral Code',
   OtherProfiles: 'OtherProfiles',
-  QrCode:'QrCode',
-  ChooseRoles:'ChooseRoles',
-  ProfessionalInfo:'ProfessionalInfo',
-  Commitments:'Commitments',
-  ActivateLocation:'ActivateLocation',
-  FollowingScreen:'FollowingScreen',
+  QrCode: 'QrCode',
+  ChooseRoles: 'ChooseRoles',
+  ProfessionalInfo: 'ProfessionalInfo',
+  Commitments: 'Commitments',
+  ActivateLocation: 'ActivateLocation',
+  FollowingScreen: 'FollowingScreen',
+  MeetPeopleFilter: 'MeetPeopleFilter',
 };

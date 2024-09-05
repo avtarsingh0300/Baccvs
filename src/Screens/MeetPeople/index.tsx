@@ -5,8 +5,10 @@ import {
   ImageBackground,
   Image,
   TouchableOpacity,
+  Animated,
+  PanResponder,
 } from 'react-native';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
@@ -31,7 +33,8 @@ import {useSelector} from 'react-redux';
 import Modal from 'react-native-modal';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import ImagePath from '../../Utilities/Constants/ImagePath';
-import TinderCard from 'react-tinder-card';
+import Carousel from 'react-native-reanimated-carousel';
+import MeetPeopleCard from '../../Utilities/Component/MeetPeopleCard';
 
 const MeetPeople = ({navigation}) => {
   const [button, setButton] = useState('online');
@@ -43,7 +46,11 @@ const MeetPeople = ({navigation}) => {
   const user = useSelector((data: object) => data?.auth?.userData);
   const [showModal, setShowModal] = useState(false);
   const [activeIndexModal, setActiveIndexModal] = useState(0);
+  const [imageIndex, setImageIndex] = useState(0);
   // console.log(user, 'user');
+
+  const swipe = useRef(new Animated.ValueXY()).current;
+  const rotate = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     if (button == 'online') {
@@ -58,7 +65,7 @@ const MeetPeople = ({navigation}) => {
   const getAllUserHandler = () => {
     getAllUsers()
       .then(res => {
-        console.log(JSON.stringify(res), 'res in getAllUsers');
+        // console.log(JSON.stringify(res), 'res in getAllUsers');
         setUserData(res?.data);
         if (userData?.length == 0) {
           setCurrentImage(res?.data[0]);
@@ -111,9 +118,9 @@ const MeetPeople = ({navigation}) => {
     const data = {
       userId: user?.user?.id,
       likedUserId: currentImage?._id,
-      type: type,
+      // type: type,
     };
-    console.log(type, 'type');
+    // console.log(type, 'type');
     disLikeUser(data)
       .then(res => {
         console.log(res, 'res in disLikeUser');
@@ -125,25 +132,103 @@ const MeetPeople = ({navigation}) => {
       });
   };
 
-  const onSwipe = direction => {
-    console.log('You swiped: ' + direction);
+  const panResponser = PanResponder.create({
+    onMoveShouldSetPanResponder: () => true,
+    onPanResponderMove: (_, {dx, dy}) => {
+      if (dx < -20) {
+        //  setTextFlag(false);
+      }
+      if (dx > 20) {
+        //  setTextFlag(false);
+      }
+      // console.log('dx:' + dx + ' dy:' + dy);
+      if (dx > 45) {
+        swipe.setValue({x: dx, y: dy});
+      } else if (dx < -90) {
+        swipe.setValue({x: dx, y: dy});
+      } else {
+        if (dy < -200) {
+          swipe.setValue({x: dx, y: dy});
+        }
+      }
+    },
+
+    onPanResponderRelease: (_, {dx, dy}) => {
+      // console.log('dx:' + dx + ' dy:' + dy);
+      let direction = Math.sign(dx);
+      let isActionActive = Math.abs(dx) > 200;
+      if (direction == 1) {
+        //  setTextFlag(true);
+        if (dx < 200 && dy < -450) {
+          //  getPropertiesDetailsHnadler();
+          console.log('swipe up');
+        } else {
+          if (dx > 200) {
+            console.log('Right Swipe');
+          }
+        }
+      } else {
+        //  setTextFlag(true);
+        if (dx < 200 && dy < -450) {
+          //  getPropertiesDetailsHnadler();
+        } else {
+          if (dx < -200) {
+            console.log('left swipe');
+          }
+        }
+      }
+
+      if (isActionActive) {
+        //  setTextFlag(false);
+        // if (dx > 0 && dy > 0) {
+        Animated.timing(swipe, {
+          toValue: {x: 500 * dx, y: dy},
+          useNativeDriver: true,
+          duration: 500,
+        }).start(() => {
+          removeCard(); // Remove the card after the animation completes
+        });
+        // handleNext();
+        // }
+      } else {
+        // setTextFlag(true);
+        // if (dx < -200 && dy < -150 && dx > 200 && dy < -200) {
+        Animated.spring(swipe, {
+          toValue: {x: 0, y: 0},
+          useNativeDriver: true,
+          friction: 5,
+        }).start();
+        // }
+      }
+    },
+  });
+
+  const handleNext = () => {
+    if (imageIndex < userData?.length - 1) {
+      setImageIndex(imageIndex + 1);
+    } else {
+      setImageIndex(0);
+    }
   };
 
-  const dummy = [
-    {id: 0},
-    {id: 1},
-    {id: 2},
-    {id: 3},
-    {id: 4},
-    {id: 5},
-    {id: 6},
-    {id: 7},
-    {id: 8},
-    {id: 9},
-    {id: 10},
-  ];
+  const removeCard = useCallback(() => {
+    // setData(prepState => prepState.slice(1));
+    if (userData.length > 0) {
+      setUserData(prevState => prevState.slice(1)); // Remove the first card from the list
+      swipe.setValue({x: 0, y: 0}); // Reset swipe position
+    }
+  }, [swipe, userData]);
 
-  console.log(currentImage?.pictures, 'currentImage');
+  const handelSelection = useCallback(
+    direction => {
+      Animated.timing(swipe, {
+        toValue: {x: direction * 500, y: 0},
+        useNativeDriver: true,
+        duration: 500,
+      }).start(removeCard);
+    },
+    [removeCard],
+  );
 
   return (
     <LinearGradient
@@ -181,6 +266,7 @@ const MeetPeople = ({navigation}) => {
               onPress={() => {
                 setShowModal(true);
                 setActiveIndexModal(1);
+                navigation.navigate(NavigationStrings.MeetPeopleFilter);
               }}
             />
             <VectorIcon
@@ -188,7 +274,7 @@ const MeetPeople = ({navigation}) => {
               name="menu"
               size={25}
               color={Colors.white}
-              style={{paddingLeft: 10}}
+              style={{marginLeft: 10}}
               onPress={() => {
                 setShowModal(true);
                 setActiveIndexModal(0);
@@ -288,25 +374,34 @@ const MeetPeople = ({navigation}) => {
           </>
         ) : (
           <>
-            {dummy.length > 0 ? (
-              <View>
-                {dummy?.map((i, index) => (
-                  <TinderCard
-                    onSwipe={onSwipe}
-                    // onCardLeftScreen={() => onCardLeftScreen('fooBar')}
-                    preventSwipe={['right', 'left']}>
-                    <ImageBackground
-                      borderRadius={10}
-                      // source={{uri: IMAGE_URL + i?.pictures[0]}}
-                      source={ImagePath.ProfileImg}
-                      style={{
-                        width: width * 0.9,
-                        height: height / 1.4,
-                        alignSelf: 'center',
-                        marginBottom: 20,
-                      }}></ImageBackground>
-                  </TinderCard>
-                ))}
+            {currentImage?.pictures ? (
+              <View style={{flex: 1}}>
+                {userData
+                  ?.slice(0) // Prevent mutation by creating a copy
+                  ?.map((item: YourItemType, index: number) => {
+                    const isFirst: boolean = index === 0;
+                    const dragHandlers = isFirst
+                      ? panResponser?.panHandlers
+                      : {};
+                    // console.log(item, 'item');
+                    return (
+                      <MeetPeopleCard
+                        isFirst={isFirst}
+                        item={item}
+                        key={index}
+                        index={index}
+                        // setImageIndex={setImageIndex}
+                        // setLoader={setLoader}
+                        // handleNext={handleNext}
+                        likeUserProfileHanlder={likeUserProfileHanlder}
+                        disLikeUserProfileHanlder={disLikeUserProfileHanlder}
+                        // rotate={rotate}
+                        swipe={swipe}
+                        {...dragHandlers}
+                      />
+                    );
+                  })
+                  .reverse()}
               </View>
             ) : (
               <View
