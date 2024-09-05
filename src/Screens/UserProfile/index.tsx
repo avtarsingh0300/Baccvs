@@ -41,7 +41,9 @@ const UserProfile = ({navigation}: any) => {
     setShowModal(false);
     navigation.navigate(NavigationStrings.SocialPart);
   };
-
+    const onContinue = () => {
+      navigation.navigate(NavigationStrings.FollowingScreen)
+    }
   useEffect(() => {
     const _unsubscribe = navigation.addListener('focus', () => {
       getUserData();
@@ -123,7 +125,7 @@ const UserProfile = ({navigation}: any) => {
 
   return (
     <LinearGradient
-      colors={[Colors.LinearBlack, Colors.Linear]}
+      colors={[Colors.backgroundNew, Colors.backgroundNew]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={{flex: 1}}>
@@ -154,18 +156,18 @@ const UserProfile = ({navigation}: any) => {
                 {eventCount?.event_count}
               </Text>
             </View>
-            <View style={styles.followInner}>
+            <TouchableOpacity style={styles.followInner} onPress={onContinue}>
               <Text style={styles.followText}>Followers</Text>
               <Text style={[styles.followText, {color: Colors.white}]}>
                 {userData?.followers?.length}
               </Text>
-            </View>
-            <View style={styles.followInner}>
+            </TouchableOpacity >
+            <TouchableOpacity style={styles.followInner} onPress={onContinue}>
               <Text style={styles.followText}>Following</Text>
               <Text style={[styles.followText, {color: Colors.white}]}>
                 {userData?.following?.length ? userData?.following?.lengt : 0}
               </Text>
-            </View>
+            </TouchableOpacity>
           </View>
           <View style={styles.statusContainer}>
             <Text style={styles.statusText}>{userData?.bio}</Text>

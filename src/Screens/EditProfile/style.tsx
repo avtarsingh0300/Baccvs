@@ -26,10 +26,26 @@ export const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         // paddingVertical: moderateScaleVertical(10),
-        alignItems: "center"
+        alignItems: "center",
+    },
+    iptContainer: {
+        width: "90%",
+        alignSelf: "center",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingRight:35,
+        
+    },
+    profiletxt:{
+        fontSize:16,
+        fontWeight:"400",
+        fontFamily:fontFamily.regular,
+        color:Colors.greyTxt,
+        paddingLeft:40
     },
     input: {
-        height: moderateScaleVertical(40),
+        height: moderateScaleVertical(30),
         paddingLeft: moderateScale(10),
         width: "100%",
         borderWidth: 1,
@@ -40,9 +56,9 @@ export const styles = StyleSheet.create({
     },
     label: {
         ...commonStyles.font14,
-        color: Colors.Pink,
+        color: Colors.white,
         fontWeight: "400",
-        marginLeft: moderateScale(70),
+        marginLeft: moderateScale(38),
     },
     modalContainer: {
         padding: 15,
@@ -88,6 +104,79 @@ export const styles = StyleSheet.create({
         padding: 0,
         fontWeight: '400',
         fontSize: textScale(14),
+    },
+    editedimg:{
+        width:moderateScale(139),
+        height:moderateScaleVertical(156),
+        borderRadius:5,
+    },
+    editvci:{
+        position:"absolute",
+        top:-10,
+        right:0,
+    },
+    selecttxt:{
+        font:10,
+        fontWeight:"300",
+        fontFamily:fontFamily.regular,
+        color:Colors.greyTxt,
+        paddingLeft:36
+    },
+    inputHolder: {
+        padding: 10,
+        borderWidth: 0.25,
+        borderLeftWidth: 0.25,
+        borderColor: Colors.greyTxt,
+        borderRadius: 2,
+        alignItems:"center"
+      },
+    inptHolder: {
+        padding: 10,
+        borderWidth: 0.25,
+        borderLeftWidth: 0.25,
+        borderColor: Colors.greyTxt,
+        borderRadius: 2,
+        alignItems:"center",
+        width:moderateScale(134)
+      },
+    iptHolder: {
+        padding: 10,
+        borderWidth: 0.25,
+        borderLeftWidth: 0.25,
+        borderColor: Colors.greyTxt,
+        borderRadius: 2,
+        // width:moderateScale(91)
+      },
+    iptHold: {
+        padding: 10,
+        borderWidth: 0.25,
+        borderLeftWidth: 0.25,
+        borderColor: Colors.greyTxt,
+        borderRadius: 2,
+        width:moderateScale(98),
+      },
+    itHolder: {
+        padding: 10,
+        borderWidth: 0.25,
+        borderLeftWidth: 0.25,
+        borderColor: Colors.greyTxt,
+        borderRadius: 2,
+        width:"50%",
+        marginHorizontal:5
+      },
+      inpt: {
+        color: Colors.greyTxt,
+        fontFamily: fontFamily.time_regular,
+        padding: 0,
+        fontWeight: '400',
+        fontSize: textScale(14),
+        width: '100%',
+        textAlign:"center"
+      },
+      langcon:{
+        flexDirection:"row",
+        justifyContent:"space-between",
+        paddingHorizontal:35
     }
 });
 

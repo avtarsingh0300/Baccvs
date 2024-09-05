@@ -158,6 +158,11 @@ export default function MainStack(Stack: any) {
         component={screens.QrCode}
         options={{headerShown: false}}
       />    
+      <Stack.Screen
+        name={NavigationStrings.FollowingScreen}
+        component={screens.FollowingScreen}
+        options={{headerShown: false}}
+      />    
     </>
   );
 }

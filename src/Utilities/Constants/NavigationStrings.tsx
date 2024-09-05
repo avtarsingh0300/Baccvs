@@ -47,4 +47,5 @@ export default {
   ProfessionalInfo:'ProfessionalInfo',
   Commitments:'Commitments',
   ActivateLocation:'ActivateLocation',
+  FollowingScreen:'FollowingScreen',
 };

@@ -21,6 +21,7 @@ import {
 } from '../../Utilities/Component/Helpers';
 import {
   height,
+  moderateScale,
   moderateScaleVertical,
 } from '../../Utilities/Styles/responsiveSize';
 import Modal from 'react-native-modal';
@@ -134,7 +135,7 @@ const EditProfile = ({navigation}: any) => {
 
   return (
     <LinearGradient
-      colors={[Colors.LinearBlack, Colors.Linear]}
+      colors={[Colors.backgroundNew, Colors.backgroundNew]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={{flex: 1}}>
@@ -143,103 +144,138 @@ const EditProfile = ({navigation}: any) => {
           contentContainerStyle={styles.container}
           showsVerticalScrollIndicator={false}>
           <Loadingcomponent isVisible={loading} />
-          <Header title="Edit profile" onPress={() => navigation.goBack()} />
-          <SizeBox size={10} />
-          <Text style={styles.label}>Name</Text>
-          <SizeBox size={5} />
-          <View style={styles.inputContainer}>
-            <VectorIcon
-              groupName="MaterialIcons"
-              name="drive-file-rename-outline"
-              color={Colors.white}
-              size={21}
-            />
-            <View style={{width: '90%'}}>
-              <CommonInput
-                value={Name}
-                onChangeText={(e: string) => setName(e.trim())}
-                placeholder="Name"
-              />
-            </View>
+          <Header title="Profile Edit" onPress={() => navigation.goBack()} />
+         <SizeBox size={10}/>
+         <Text style={styles.profiletxt}>Profile picture </Text>
+         <SizeBox size={15}/>
+         <View style={{alignItems:"center",width:"43%",alignSelf:"center"}}>
+          <Image source={ImagePath.ProfileImg} style={styles.editedimg}/>
+          <VectorIcon groupName='Feather' name='edit' size={20} style={styles.editvci}/>
+         </View>
+         <SizeBox size={10}/>
+         <Text style={styles.profiletxt}>Pictures & Videos </Text>
+         <SizeBox size={10} />
+          <Text style={styles.label}>Music Type</Text>
+         <SizeBox size={2} />
+          <Text style={styles.selecttxt}>Select music type</Text>
+          <SizeBox size={5}/>
+          <View>
+          <View style={{width:"100%"}}>
+          <View style={styles.langcon}>
+            <TouchableOpacity style={styles.itHolder}>
+              <Text style={styles.inpt}>
+              Disco / Funk / Soul
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.itHolder}>
+              <Text style={styles.inpt}>
+              EDM / Dance music
+              </Text>
+            </TouchableOpacity>
           </View>
-          <SizeBox size={10} />
-          <Text style={styles.label}>Gender</Text>
-          <SizeBox size={5} />
-          <View style={styles.inputContainer}>
-            <VectorIcon
-              groupName="MaterialCommunityIcons"
-              name="gender-male-female"
-              color={Colors.white}
-              size={21}
-            />
-            <View style={{width: '90%'}}>
-              <CommonInputBtn
-                title={selectedGender?.length > 0 ? selectedGender : 'Gender'}
-                onPress={() => setModalVisible(true)}
-              />
-            </View>
+          <SizeBox size={10}/>
+          <View style={styles.langcon}>
+            <TouchableOpacity style={styles.itHolder}>
+              <Text style={styles.inpt}>
+              Underground
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.itHolder}>
+              <Text style={styles.inpt}>
+              Underground
+              </Text>
+            </TouchableOpacity>
           </View>
-          <SizeBox size={10} />
-          <Text style={styles.label}>Height</Text>
-          <SizeBox size={5} />
-          <View style={styles.inputContainer}>
-            <Image source={ImagePath.line_height} tintColor={Colors.white} />
-            <View style={{width: '90%'}}>
-              <CommonInput
-                placeholder="Height"
-                keyboardType="number-pad"
-                value={userHeight}
-                onChangeText={(e: string) => setUserHeight(e?.trim())}
-              />
-            </View>
           </View>
-          <SizeBox size={10} />
-          <Text style={styles.label}>Age</Text>
-          <SizeBox size={5} />
-          <View style={styles.inputContainer}>
-            <VectorIcon
-              groupName="MaterialCommunityIcons"
-              name="cupcake"
-              color={Colors.white}
-              size={21}
-            />
-            <View style={{width: '90%'}}>
-              <CommonInput
-                placeholder="Age"
-                keyboardType="number-pad"
-                value={userAge}
-                onChangeText={(e: string) => setUserAge(e?.trim())}
-              />
-            </View>
+         <SizeBox size={10} />
+          <View style={styles.langcon}>
+            <TouchableOpacity style={styles.iptHolder}>
+              <Text style={styles.inpt}>
+              House
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iptHold}>
+              <Text style={styles.inpt}>
+              Tech-House
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iptHold}>
+              <Text style={styles.inpt}>
+              Commercial
+              </Text>
+            </TouchableOpacity>
           </View>
-          <SizeBox size={10} />
-          <Text style={styles.label}>Zodiac sign</Text>
+          </View>
+          <SizeBox size={10}/>
+          <Text style={styles.label}>Event Type</Text>
+         <SizeBox size={2} />
+          <Text style={styles.selecttxt}>Select event type</Text>
+          <SizeBox size={5}/>
+          <View>
+          <View>
+          <View style={styles.langcon}>
+            <TouchableOpacity style={styles.iptHolder}>
+              <Text style={styles.inpt}>
+              Private
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iptHolder}>
+              <Text style={styles.inpt}>
+              Corporate
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iptHold}>
+              <Text style={styles.inpt}>
+              Small events
+              </Text>
+            </TouchableOpacity>
+          </View>
+          </View>
+         <SizeBox size={10} />
+          <View style={styles.langcon}>
+            <TouchableOpacity style={styles.iptHolder}>
+              <Text style={styles.inpt}>
+              Festivals
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iptHolder}>
+              <Text style={styles.inpt}>
+              Bars
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iptHold}>
+              <Text style={styles.inpt}>
+              Nightclubs
+              </Text>
+            </TouchableOpacity>
+          </View>
+          </View>
+          <SizeBox size={10}/>
+          <Text style={styles.label}>Languages</Text>
           <SizeBox size={5} />
-          <View style={styles.inputContainer}>
-            <VectorIcon
-              groupName="MaterialCommunityIcons"
-              name="zodiac-cancer"
-              color={Colors.white}
-              size={21}
-            />
-            <View style={{width: '90%'}}>
-              <CommonInput
-                placeholder="Zodiac sign"
-                value={sign}
-                onChangeText={(e: string) => setSign(e?.trim())}
-              />
-            </View>
+          <View>
+          <View style={styles.langcon}>
+            <TouchableOpacity style={styles.iptHolder}>
+              <Text style={styles.inpt}>
+             English
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iptHolder}>
+              <Text style={styles.inpt}>
+             Spanish
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iptHolder}>
+              <Text style={styles.inpt}>
+             French
+              </Text>
+            </TouchableOpacity>
+          </View>
           </View>
           <SizeBox size={10} />
           <Text style={styles.label}>Job title</Text>
           <SizeBox size={5} />
           <View style={styles.inputContainer}>
-            <VectorIcon
-              groupName="MaterialIcons"
-              name="work-outline"
-              color={Colors.white}
-              size={21}
-            />
             <View style={{width: '90%'}}>
               <CommonInput
                 placeholder="Job title"
@@ -252,12 +288,6 @@ const EditProfile = ({navigation}: any) => {
           <Text style={styles.label}>Location</Text>
           <SizeBox size={5} />
           <View style={styles.inputContainer}>
-            <VectorIcon
-              groupName="Ionicons"
-              name="location-outline"
-              color={Colors.white}
-              size={21}
-            />
             <View style={{width: '90%'}}>
               <CommonInput
                 placeholder="Add your area"
@@ -267,90 +297,32 @@ const EditProfile = ({navigation}: any) => {
             </View>
           </View>
           <SizeBox size={10} />
-          <Text style={styles.label}>Languages</Text>
+          <Text style={styles.label}>Drinking</Text>
           <SizeBox size={5} />
-          <View style={styles.inputContainer}>
-            <VectorIcon
-              groupName="Entypo"
-              name="language"
-              color={Colors.white}
-              size={21}
-            />
-            <View style={{width: '90%'}}>
-              {selectedLang?.length > 0 ? (
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() => setModalVisibleLang(true)}
-                  style={styles.langContainer}>
-                  {selectedLang?.map(item => (
-                    <TouchableOpacity
-                      style={styles.langItem}
-                      activeOpacity={0.8}
-                      onPress={() => {
-                        const filterData2 = selectedLang?.filter(
-                          (i: any) => i != item,
-                        );
-                        setSelectedLang(filterData2);
-                      }}>
-                      <Text style={styles.langItemText}>{item} &#x2715;</Text>
-                    </TouchableOpacity>
-                  ))}
-                </TouchableOpacity>
-              ) : (
-                <CommonInputBtn
-                  title="Select all languages you speak"
-                  onPress={() => setModalVisibleLang(true)}
-                />
-              )}
-            </View>
-          </View>
-          <SizeBox size={10} />
-          <Text style={styles.label}>Drink</Text>
-          <SizeBox size={5} />
-          <View style={styles.inputContainer}>
-            <VectorIcon
-              groupName="MaterialCommunityIcons"
-              name="glass-cocktail"
-              color={Colors.white}
-              size={21}
-            />
-            <View style={{width: '90%'}}>
-              <CommonInputBtn
-                title={selectedDrink?.length > 0 ? selectedDrink : 'Drink'}
-                onPress={() => setModalVisibleDrink(true)}
-              />
-            </View>
+          <View style={styles.iptContainer}> 
+            <TouchableOpacity style={styles.inptHolder} activeOpacity={0.8}>
+                <Text style={styles.inpt}>Prefer not to say</Text>
+              </TouchableOpacity>
+            <TouchableOpacity style={styles.inputHolder} activeOpacity={0.8}>
+                <Text style={styles.inpt}>Yes</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.inputHolder}activeOpacity={0.8} >
+                <Text style={styles.inpt}>No</Text>
+              </TouchableOpacity>
           </View>
           <SizeBox size={10} />
           <Text style={styles.label}>Smoking</Text>
           <SizeBox size={5} />
-          <View style={styles.inputContainer}>
-            <VectorIcon
-              groupName="MaterialCommunityIcons"
-              name="cigar"
-              color={Colors.white}
-              size={21}
-            />
-            <View style={{width: '90%'}}>
-              <CommonInputBtn
-                title={selectedSmoke?.length > 0 ? selectedSmoke : 'Smoking'}
-                onPress={() => setModalVisibleSmoking(true)}
-              />
-            </View>
-          </View>
-          <SizeBox size={10} />
-          <Text style={styles.label}>Bio</Text>
-          <SizeBox size={5} />
-          <View style={styles.inputContainer}>
-            <View style={{width: '10%'}} />
-            <View style={{width: '90%'}}>
-              <CommonInput
-                placeholder="Bio"
-                multiline={true}
-                value={userBio}
-                onChangeText={(e: string) => setUserBio(e)}
-              />
-            </View>
+          <View style={styles.iptContainer}>
+            <TouchableOpacity style={styles.inptHolder} activeOpacity={0.8}>
+                <Text style={styles.inpt}>Prefer not to say</Text>
+              </TouchableOpacity>
+            <TouchableOpacity style={styles.inputHolder} activeOpacity={0.8}>
+                <Text style={styles.inpt}>Yes</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.inputHolder} activeOpacity={0.8} >
+                <Text style={styles.inpt}>No</Text>
+              </TouchableOpacity>
           </View>
           <View
             style={{
@@ -358,8 +330,7 @@ const EditProfile = ({navigation}: any) => {
               alignSelf: 'center',
               marginTop: moderateScaleVertical(30),
             }}>
-            <CommonBtn onPress={updateProfileHandler} title="Edit Profile" />
-          </View>
+            </View>
         </KeyboardAwareScrollView>
         <Modal
           isVisible={
