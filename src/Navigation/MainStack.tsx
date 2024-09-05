@@ -157,7 +157,12 @@ export default function MainStack(Stack: any) {
         name={NavigationStrings.QrCode}
         component={screens.QrCode}
         options={{headerShown: false}}
-      />    
+      />
+      <Stack.Screen
+        name={NavigationStrings.MeetPeopleFilter}
+        component={screens.MeetPeopleFilter}
+        options={{headerShown: false}}
+      />
     </>
   );
 }

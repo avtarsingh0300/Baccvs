@@ -42,3 +42,4 @@ export {default as QrCode} from '../Screens/QrCode';
 export {default as ChooseRoles} from '../Screens/SignUp/ChooseRoles';
 export {default as ProfessionalInfo} from '../Screens/SignUp/ProfessionalInfo';
 export {default as Commitments} from '../Screens/SignUp/Commitments';
+export {default as MeetPeopleFilter} from '../Screens/MeetPeopleFilter/MeetPeopleFilter';

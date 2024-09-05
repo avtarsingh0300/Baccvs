@@ -4227,6 +4227,9 @@ fs-minipass@^3.0.0, fs-minipass@^3.0.3:
 fs.realpath@^1.0.0:
   version "1.0.0"
 
+fsevents@^2.3.2:
+  version "2.3.3"
+
 function-bind@^1.1.2:
   version "1.1.2"
 
@@ -6353,11 +6356,6 @@ p-map@^4.0.0:
   dependencies:
     aggregate-error "^3.0.0"
 
-p-sleep@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/p-sleep/-/p-sleep-1.1.0.tgz"
-  integrity sha512-bwP3GKZirBUYMtiUuBrheLUQdRXVeE/pmHOaLpNJzNfAD4b5AjDn6l823brXcQFade4G/g7GMNQ3KV86E8EaEw==
-
 p-try@^2.0.0:
   version "2.2.0"
 
@@ -7126,13 +7124,6 @@ react-timer-mixin@^0.13.4:
   version "0.13.4"
   resolved "https://registry.npmjs.org/react-timer-mixin/-/react-timer-mixin-0.13.4.tgz"
   integrity sha512-4+ow23tp/Tv7hBM5Az5/Be/eKKF7DIvJ09voz5LyHGQaqqz9WV8YMs31eFvcYQs7d451LSg7kDJV70XYN/Ug/Q==
-
-react-tinder-card@^1.6.4:
-  version "1.6.4"
-  resolved "https://registry.npmjs.org/react-tinder-card/-/react-tinder-card-1.6.4.tgz"
-  integrity sha512-IC6YXoBZ+51jm7XsT8i+8G/ov8rvAob+kBRdp9unQyjsLc7jmuYb1cNfu95Q3mdFDgwE0AzTIyl1o2Klm61+aQ==
-  dependencies:
-    p-sleep "^1.1.0"
 
 react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", react@^16.13.1, react@^16.14.0, react@^16.3.0, "react@^16.8.0  || >=17.0.0 || >=18.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^17 || ^18", react@^18.0, react@^18.2.0, "react@>= 17.0.1", react@>=16.3.0, react@>=16.4.0, react@>=16.5.1, react@>=16.8, react@>=16.8.0, react@>=16.8.6, react@>=17.0.0, react@>=18.1.0, "react@16.9.0 || 16.11.0 || 16.13.1 || 17.0.1 || 17.0.2 || 18.0.0 || 18.1.0 || 18.2.0", react@16.x.x, react@18.2.0:
   version "18.2.0"

@@ -35,4 +35,5 @@ export default {
   sent: require('../../Assets/images/sent.png'),
   FireLike: require('../../Assets/images/FireLike.png'),
   Rectangle_new: require('../../Assets/images/Rectangle_new.png'),
+  Arrow_Left_2: require('../../Assets/images/Arrow_Left_2.png'),
 };
