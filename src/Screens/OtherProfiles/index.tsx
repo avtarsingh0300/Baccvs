@@ -61,24 +61,13 @@ const OtherProfiles = ({navigation, route}: any) => {
         setLoader(false);
         setUserData(res?.user);
         setEventCount(res);
+        console.log(res?.user);
       })
       .catch(err => {
         setLoader(false);
         console.log(err, 'err in getMemberDetails');
       });
   };
-
-  const musictype = [
-    'Disco / Funk / Soul',
-    'EDM / Dance music',
-    'Underground',
-    'Hip-hop / R&B',
-    'House',
-    'Tech-House',
-    'Commercial',
-    'Latin / Raggaeton',
-    'Pop / Rock',
-  ];
 
   const renderItem = ({item, index}) => (
     <View>
@@ -94,7 +83,7 @@ const OtherProfiles = ({navigation, route}: any) => {
 
   return (
     <LinearGradient
-      colors={[Colors.LinearBlack, Colors.Linear]}
+      colors={[Colors.backgroundNew, Colors.backgroundNew]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={{flex: 1}}>
@@ -105,18 +94,17 @@ const OtherProfiles = ({navigation, route}: any) => {
           showsVerticalScrollIndicator={false}>
           <SizeBox size={5} />
           <View style={styles.header}>
-            {/* <Image source={ImagePath.le}/> */}
-            <VectorIcon
-              groupName={'Ionicons'}
-              name={'chevron-back'}
-              size={25}
-              onPress={() => navigation.goBack()}
-            />
-            <Text
-              style={{...commonStyles.Heading20font, color: Colors.lightPink}}>
-              {userData?.full_name?.charAt(0).toUpperCase() +
-                userData?.full_name?.slice(1)}
-            </Text>
+            <View style={{flexDirection: 'row'}}>
+              {/* <Image source={ImagePath.le}/> */}
+              <VectorIcon
+                groupName={'Ionicons'}
+                name={'chevron-back'}
+                size={25}
+                onPress={() => navigation.goBack()}
+              />
+              <Text style={styles.liketxt}>Profile</Text>
+            </View>
+
             <VectorIcon
               groupName="Entypo"
               name="dots-three-horizontal"
@@ -125,16 +113,23 @@ const OtherProfiles = ({navigation, route}: any) => {
               onPress={() => setShowModal(true)}
             />
           </View>
+          <Text
+            style={{
+              ...commonStyles.font16Regular,
+              color: Colors.white,
+              textAlign: 'left',
+              paddingLeft: 30,
+              textTransform: 'capitalize',
+            }}>
+            {userData?.full_name}
+          </Text>
           {userData?.pictures?.length > 0 ? (
             <Image
               source={{uri: IMAGE_URL + userData?.pictures[0]}}
               style={styles.profileImage}
             />
           ) : (
-            <Image
-              source={{uri: ImagePath.ProfileImg}}
-              style={styles.profileImage}
-            />
+            <Image source={ImagePath.ProfileImg} style={styles.profileImage} />
           )}
           <View style={styles.followInfoContainer}>
             <View style={styles.followInner}>
@@ -166,6 +161,7 @@ const OtherProfiles = ({navigation, route}: any) => {
               color={Colors.red}
               size={24}
             />
+            {}
             <TouchableOpacity style={styles.midButton} activeOpacity={0.8}>
               <Text style={styles.btnText}>Follow</Text>
             </TouchableOpacity>
@@ -175,63 +171,63 @@ const OtherProfiles = ({navigation, route}: any) => {
               groupName="MaterialCommunityIcons"
               name="cupcake"
               size={20}
-              color={Colors.lightPink}
+              color={Colors.lightGrey}
             />
             <Text style={styles.rowText}>{userData?.age}</Text>
             <View
               style={{
                 height: moderateScaleVertical(25),
                 paddingHorizontal: 0.5,
-                backgroundColor: '#7D67EE',
+                backgroundColor: Colors.lightGrey,
               }}
             />
             <Image
               source={ImagePath.line_height}
-              tintColor={Colors.lightPink}
+              tintColor={Colors.lightGrey}
             />
             <Text style={styles.rowText}>{userData?.height}</Text>
-            <View
+            {/* <View
               style={{
                 height: moderateScaleVertical(25),
                 paddingHorizontal: 0.5,
-                backgroundColor: '#7D67EE',
+                backgroundColor: Colors.lightGrey,
               }}
             />
             <VectorIcon
               groupName="SimpleLineIcons"
               name="location-pin"
               size={20}
-              color={Colors.lightPink}
+              color={Colors.lightGrey}
             />
             <Text style={styles.rowText}>
               {userData?.location ? userData?.location : 'Eiffel Tower'}
-            </Text>
+            </Text> */}
             <View
               style={{
                 height: moderateScaleVertical(25),
                 paddingHorizontal: 0.5,
-                backgroundColor: '#7D67EE',
+                backgroundColor: Colors.lightGrey,
               }}
             />
             <VectorIcon
               groupName="MaterialCommunityIcons"
               name="zodiac-leo"
               size={20}
-              color={Colors.lightPink}
+              color={Colors.lightGrey}
             />
             <Text style={styles.rowText}>{userData?.zodiac_sign}</Text>
             <View
               style={{
                 height: moderateScaleVertical(25),
                 paddingHorizontal: 0.5,
-                backgroundColor: '#7D67EE',
+                backgroundColor: Colors.lightGrey,
               }}
             />
             <VectorIcon
               groupName="MaterialCommunityIcons"
               name="glass-cocktail"
               size={20}
-              color={Colors.lightPink}
+              color={Colors.lightGrey}
             />
           </View>
           <View style={styles.postContainer}>
@@ -243,25 +239,34 @@ const OtherProfiles = ({navigation, route}: any) => {
               />
             ))}
           </View>
-          <Text style={{...commonStyles.font16White, alignSelf: 'center'}}>
+          {/* <Text style={{...commonStyles.font16White, alignSelf: 'center'}}>
             See more
-          </Text>
-          <SizeBox size={10} />
-          <Text style={styles.bioTitle}>Sasha Bio</Text>
-          <SizeBox size={8} />
+          </Text> */}
+
+          {userData?.bio ? (
+            <>
+              <SizeBox size={10} />
+              <Text style={[styles.title, {textTransform: 'capitalize'}]}>
+                {userData?.full_name}'s Bio
+              </Text>
+              <Text style={styles.title}>{userData?.bio}</Text>
+              <SizeBox size={8} />
+            </>
+          ) : null}
+
           <Text style={styles.bioText}>{userData?.bio}</Text>
           <SizeBox size={5} />
-          <Text style={styles.title}>Music type</Text>
+          <Text style={styles.title}>Music Type</Text>
           <View style={styles.typeContainer}>
-            {musictype.map((i, index) => (
+            {userData?.music_type?.map((i, index) => (
               <View style={styles.type}>
                 <Text style={styles.typeText}>{i}</Text>
               </View>
             ))}
           </View>
-          <Text style={styles.title}>Event type</Text>
+          <Text style={styles.title}>Event Type</Text>
           <View style={styles.typeContainer}>
-            {musictype.map((i, index) => (
+            {userData?.event_type?.map((i, index) => (
               <View style={styles.type}>
                 <Text style={styles.typeText}>{i}</Text>
               </View>
@@ -276,23 +281,20 @@ const OtherProfiles = ({navigation, route}: any) => {
             ))}
           </View>
           <SizeBox size={10} />
-          <Text
-            style={{
-              ...commonStyles.font13,
-              fontWeight: '700',
-              marginLeft: moderateScale(31),
-            }}>
-            Past events (1/{eventCount?.event_count})
-          </Text>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            style={{
-              width: width,
-              alignSelf: 'center',
-            }}
-            data={eventCount?.past_events}
-            renderItem={renderItem}
-          />
+          {eventCount?.past_events ? (
+            <>
+              <Text style={styles.title}>Past events</Text>
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                style={{
+                  width: width,
+                  alignSelf: 'center',
+                }}
+                data={eventCount?.past_events}
+                renderItem={renderItem}
+              />
+            </>
+          ) : null}
         </ScrollView>
         <Modal
           useNativeDriver={true}

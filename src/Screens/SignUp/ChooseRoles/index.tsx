@@ -13,15 +13,15 @@ import commonStyles from '../../../Utilities/Styles/commonStyles';
 import {ProgressHeader, SizeBox} from '../../../Utilities/Component/Helpers';
 import NavigationStrings from '../../../Utilities/Constants/NavigationStrings';
 
-const ChooseRoles = (props: any) => {
+const ChooseRoles = ({navigation}: any) => {
   const onBack = () => {
-    props.navigation.goBack();
+    navigation.goBack();
   };
   const onContinue = () => {
-    props.navigation.navigate(NavigationStrings.ReferalCode);
+    navigation.navigate(NavigationStrings.ReferalCode);
   };
   const onProfessionalInfo = () => {
-    props.navigation.navigate(NavigationStrings.ProfessionalInfo);
+    navigation.navigate(NavigationStrings.ProfessionalInfo);
   };
   return (
     <LinearGradient
@@ -30,7 +30,8 @@ const ChooseRoles = (props: any) => {
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
       <SafeAreaView>
-        <ProgressHeader onPress={onBack} value={0} />
+        <ProgressHeader onPress={onBack} value={1} />
+
         <SizeBox size={15} />
         <Text style={{...commonStyles.font18W700Center}}>SIGN UP</Text>
         <SizeBox size={20} />

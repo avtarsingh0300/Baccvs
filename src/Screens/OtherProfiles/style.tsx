@@ -19,11 +19,11 @@ export const styles = StyleSheet.create({
     paddingVertical: moderateScaleVertical(10),
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: moderateScale(30),
+    paddingHorizontal: moderateScale(10),
   },
   profileImage: {
-    width: moderateScale(86),
-    height: moderateScaleVertical(91),
+    width: '90%',
+    height: moderateScaleVertical(200),
     alignSelf: 'center',
     marginVertical: moderateScaleVertical(10),
     borderRadius: 10,
@@ -39,9 +39,9 @@ export const styles = StyleSheet.create({
     marginTop: moderateScaleVertical(10),
   },
   followText: {
-    ...commonStyles.font14,
-    fontWeight: '400',
-    color: Colors.lightPink,
+    ...commonStyles.font12,
+    fontWeight: '600',
+    color: Colors.white,
     marginBottom: 5,
   },
   followInner: {
@@ -189,10 +189,10 @@ export const styles = StyleSheet.create({
   },
   midButton: {
     borderWidth: 1,
-    borderColor: Colors.white,
+    borderColor: Colors.lightGrey,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: 5,
   },
   btnText: {
     ...commonStyles.font12Regular,
@@ -200,22 +200,19 @@ export const styles = StyleSheet.create({
     paddingVertical: 7,
     paddingHorizontal: moderateScale(22),
   },
-  bioTitle: {
-    ...commonStyles.font16WhiteBold,
-    color: Colors.lightPink,
-    marginLeft: moderateScale(29),
-  },
+
   bioText: {
     ...commonStyles.font12Regular,
     color: Colors.white,
     marginHorizontal: moderateScale(25),
   },
   title: {
-    ...commonStyles.font16WhiteBold,
-    color: Colors.lightPink,
+    fontSize: 16,
+    fontWeight: '700',
+    color: Colors.white,
     marginTop: moderateScaleVertical(10),
     marginBottom: moderateScaleVertical(10),
-    marginLeft: moderateScale(42),
+    marginLeft: moderateScale(15),
   },
   typeContainer: {
     marginHorizontal: moderateScale(24),
@@ -228,11 +225,22 @@ export const styles = StyleSheet.create({
     marginBottom: moderateScaleVertical(10),
     marginRight: moderateScale(10),
     borderWidth: 1,
-    borderColor: Colors.white,
-    borderRadius: 8,
+
+    borderRadius: 5,
+    backgroundColor: Colors.lightPink,
   },
   typeText: {
-    ...commonStyles.font12Bold,
+    ...commonStyles.font12,
     color: Colors.white,
+    fontFamily: fontFamily.regular,
+  },
+  liketxt: {
+    fontSize: 20,
+    fontWeight: '700',
+    alignItems: 'center',
+    textAlign: 'center',
+    color: Colors.white,
+    fontFamily: fontFamily.regular,
+    paddingLeft: 15,
   },
 });

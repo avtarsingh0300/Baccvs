@@ -43,3 +43,4 @@ export const SELL_TICKET = getApiUrl('sell-ticket');
 export const GET_SELL_TICKETS = getApiUrl('sell-tickets-data');
 export const CANCEL_SELL_TICKET = getApiUrl('cancel-ticket');
 export const BUY_TICKET = getApiUrl('buy-ticket');
+export const CANCEL_INVITES = getApiUrl('cancel-invite');

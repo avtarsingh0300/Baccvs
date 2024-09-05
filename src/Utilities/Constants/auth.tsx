@@ -4,6 +4,7 @@ import {
   ACCEPT_INVITES,
   BLOCKED_LIST,
   BUY_TICKET,
+  CANCEL_INVITES,
   CANCEL_SELL_TICKET,
   CHANGE_PASS,
   CREATE_EVENT,
@@ -86,6 +87,9 @@ export function inviteAccpet(data: object) {
 }
 export function inviteRefuse(data: object) {
   return apiPost(REFUSE_INVITES, data);
+}
+export function cancelInvites(data: object) {
+  return apiPost(CANCEL_INVITES, data);
 }
 export function userDelete() {
   return apiPost(USER_DELETE);
