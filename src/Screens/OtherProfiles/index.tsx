@@ -8,6 +8,7 @@ import {
   ScrollView,
   ImageBackground,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 
@@ -28,19 +29,30 @@ import {
   Loadingcomponent,
   SizeBox,
   dummydata,
+  showError,
+  showSuccess,
 } from '../../Utilities/Component/Helpers';
 import Modal from 'react-native-modal';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
-import {getMemberDetails, getUserProfile} from '../../Utilities/Constants/auth';
+import {
+  blockUser,
+  followUser,
+  getMemberDetails,
+  getUserProfile,
+  reportUser,
+  unFollowUser,
+} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import {styles} from './style';
+import {useSelector} from 'react-redux';
 
 const OtherProfiles = ({navigation, route}: any) => {
   const [showModal, setShowModal] = useState(false);
   const [loader, setLoader] = useState(false);
   const [userData, setUserData] = useState({});
   const [eventCount, setEventCount] = useState('');
-
+  const user = useSelector((data: object) => data?.auth?.userData);
+  // console.log(user?.user?.id);
   const onSocialpart = () => {
     setShowModal(false);
     navigation.navigate(NavigationStrings.SocialPart);
@@ -61,15 +73,135 @@ const OtherProfiles = ({navigation, route}: any) => {
         setLoader(false);
         setUserData(res?.user);
         setEventCount(res);
-        console.log(res?.user);
+        console.log(res);
       })
       .catch(err => {
         setLoader(false);
+        showError(err?.message);
         console.log(err, 'err in getMemberDetails');
       });
   };
+  const getUserData2 = async () => {
+    const data = {
+      id: route?.params?.id,
+    };
 
-  const renderItem = ({item, index}) => (
+    getMemberDetails(data)
+      .then(res => {
+        setLoader(false);
+        setUserData(res?.user);
+        setEventCount(res);
+        console.log(res);
+      })
+      .catch(err => {
+        setLoader(false);
+        showError(err?.message);
+        console.log(err, 'err in getMemberDetails');
+      });
+  };
+  const onFollow = async () => {
+    const data = {
+      userId: user?.user?.id,
+      targetUserId: userData?.id,
+    };
+    followUser(data)
+      .then(res => {
+        getUserData2();
+      })
+      .catch(err => {
+        setLoader(false);
+        showError(err?.message);
+        console.log(err, 'err in getMemberDetails');
+      });
+  };
+  const onUnfollow = async () => {
+    const data = {
+      userId: user?.user?.id,
+      targetUserId: userData?.id,
+    };
+
+    unFollowUser(data)
+      .then(res => {
+        getUserData2();
+      })
+      .catch(err => {
+        setLoader(false);
+        showError(err?.message);
+        console.log(err, 'err in getMemberDetails');
+      });
+  };
+  const onBlock = async () => {
+    const data = {
+      userId: user?.user?.id,
+      blockUserId: userData?.id,
+    };
+    blockUser(data)
+      .then(res => {
+        showSuccess('Accound Blocked!');
+        navigation.goBack();
+      })
+      .catch(err => {
+        setLoader(false);
+        showError(err?.message);
+        console.log(err, 'err in block');
+      });
+  };
+  const onReport = async () => {
+    const data = {
+      userid: userData?.id,
+    };
+    console.log(data);
+    reportUser(data)
+      .then(res => {
+        showSuccess('Account reported!');
+        navigation.goBack();
+      })
+      .catch(err => {
+        setLoader(false);
+        showError(err?.message);
+        console.log(err, 'err in report');
+      });
+  };
+
+  const showBlockUserAlert = () => {
+    Alert.alert(
+      'Block account',
+      'Are you sure you want to block this account?',
+      [
+        {
+          text: 'No',
+          onPress: () => console.log('No Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Block',
+          onPress: () => onBlock(),
+          style: 'destructive',
+        },
+      ],
+      {cancelable: true},
+    );
+  };
+  const showReportUserAlert = () => {
+    Alert.alert(
+      'Report account',
+      'Are you sure you want to report this account?',
+      [
+        {
+          text: 'No',
+          onPress: () => console.log('No Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Report',
+          onPress: () => onReport(),
+          style: 'destructive',
+        },
+      ],
+      {cancelable: true},
+    );
+  };
+  const renderItem = ({item, index}: any) => (
     <View>
       <View style={styles.listContainer}>
         <ImageBackground
@@ -95,7 +227,6 @@ const OtherProfiles = ({navigation, route}: any) => {
           <SizeBox size={5} />
           <View style={styles.header}>
             <View style={{flexDirection: 'row'}}>
-              {/* <Image source={ImagePath.le}/> */}
               <VectorIcon
                 groupName={'Ionicons'}
                 name={'chevron-back'}
@@ -141,13 +272,13 @@ const OtherProfiles = ({navigation, route}: any) => {
             <View style={styles.followInner}>
               <Text style={styles.followText}>Followers</Text>
               <Text style={[styles.followText, {color: Colors.white}]}>
-                {userData?.followers?.length}
+                {userData?.followers_count}
               </Text>
             </View>
             <View style={styles.followInner}>
               <Text style={styles.followText}>Following</Text>
               <Text style={[styles.followText, {color: Colors.white}]}>
-                {userData?.following?.length ? userData?.following?.lengt : 0}
+                {userData?.following_count}
               </Text>
             </View>
           </View>
@@ -161,10 +292,21 @@ const OtherProfiles = ({navigation, route}: any) => {
               color={Colors.red}
               size={24}
             />
-            {}
-            <TouchableOpacity style={styles.midButton} activeOpacity={0.8}>
-              <Text style={styles.btnText}>Follow</Text>
-            </TouchableOpacity>
+            {eventCount?.already_follower == false ? (
+              <TouchableOpacity
+                style={styles.midButton}
+                activeOpacity={0.8}
+                onPress={onFollow}>
+                <Text style={styles.btnText}>Follow</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={styles.midButton}
+                activeOpacity={0.8}
+                onPress={onUnfollow}>
+                <Text style={styles.btnText}>Following</Text>
+              </TouchableOpacity>
+            )}
           </View>
           <View style={styles.row}>
             <VectorIcon
@@ -249,37 +391,50 @@ const OtherProfiles = ({navigation, route}: any) => {
               <Text style={[styles.title, {textTransform: 'capitalize'}]}>
                 {userData?.full_name}'s Bio
               </Text>
-              <Text style={styles.title}>{userData?.bio}</Text>
+              <Text style={styles.bioText}>{userData?.bio}</Text>
               <SizeBox size={8} />
             </>
           ) : null}
 
-          <Text style={styles.bioText}>{userData?.bio}</Text>
           <SizeBox size={5} />
-          <Text style={styles.title}>Music Type</Text>
-          <View style={styles.typeContainer}>
-            {userData?.music_type?.map((i, index) => (
-              <View style={styles.type}>
-                <Text style={styles.typeText}>{i}</Text>
+          {userData?.music_type?.length > 0 ? (
+            <>
+              <Text style={styles.title}>Music Type</Text>
+              <View style={styles.typeContainer}>
+                {userData?.music_type?.map((i, index) => (
+                  <View style={styles.type}>
+                    <Text style={styles.typeText}>{i}</Text>
+                  </View>
+                ))}
               </View>
-            ))}
-          </View>
-          <Text style={styles.title}>Event Type</Text>
-          <View style={styles.typeContainer}>
-            {userData?.event_type?.map((i, index) => (
-              <View style={styles.type}>
-                <Text style={styles.typeText}>{i}</Text>
+            </>
+          ) : null}
+
+          {userData?.event_type?.length > 0 ? (
+            <>
+              <Text style={styles.title}>Event Type</Text>
+              <View style={styles.typeContainer}>
+                {userData?.event_type?.map((i, index) => (
+                  <View style={styles.type}>
+                    <Text style={styles.typeText}>{i}</Text>
+                  </View>
+                ))}
               </View>
-            ))}
-          </View>
-          <Text style={styles.title}>Languages</Text>
-          <View style={styles.typeContainer}>
-            {userData?.language?.map((i, index) => (
-              <View style={styles.type}>
-                <Text style={styles.typeText}>{i}</Text>
+            </>
+          ) : null}
+          {userData?.language?.length > 0 ? (
+            <>
+              <Text style={styles.title}>Languages</Text>
+              <View style={styles.typeContainer}>
+                {userData?.language?.map((i, index) => (
+                  <View style={styles.type}>
+                    <Text style={styles.typeText}>{i}</Text>
+                  </View>
+                ))}
               </View>
-            ))}
-          </View>
+            </>
+          ) : null}
+
           <SizeBox size={10} />
           {eventCount?.past_events ? (
             <>
@@ -311,15 +466,15 @@ const OtherProfiles = ({navigation, route}: any) => {
               activeOpacity={0.8}
               style={styles.option}
               onPress={() => {
-                navigation.goBack();
                 setShowModal(false);
+                showBlockUserAlert();
               }}>
               <Text style={styles.optionText}>Block</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                navigation.goBack();
                 setShowModal(false);
+                showReportUserAlert();
               }}
               activeOpacity={0.8}
               style={styles.option}>

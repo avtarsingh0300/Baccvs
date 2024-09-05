@@ -44,3 +44,7 @@ export const GET_SELL_TICKETS = getApiUrl('sell-tickets-data');
 export const CANCEL_SELL_TICKET = getApiUrl('cancel-ticket');
 export const BUY_TICKET = getApiUrl('buy-ticket');
 export const CANCEL_INVITES = getApiUrl('cancel-invite');
+export const FOLLOW_USER = getApiUrl('follow-user');
+export const UN_FOLLOW_USER = getApiUrl('unfollow-user');
+export const BLOCK_USER = getApiUrl('block-user');
+export const REPORT_USER = getApiUrl('report-user');

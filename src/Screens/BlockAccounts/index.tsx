@@ -77,55 +77,66 @@ const BlockAccount = ({navigation}: any) => {
         <Loadingcomponent isVisible={loader} />
         <Header title="Blocked Accounts" onPress={onbackPress} />
         <SizeBox size={15} />
-        <FlatList
-          data={blockedlist}
-          renderItem={({item}) => (
-            <View style={styles.flatvw}>
-              <View style={styles.innervw}>
-                {item?.image_url ? (
-                  <Image
-                    source={{uri: IMAGE_URL + item?.image_url}}
-                    style={{
-                      borderRadius: 5,
-                      width: moderateScale(52),
-                      height: moderateScaleVertical(62),
-                    }}
-                  />
-                ) : (
-                  <Image
-                    source={ImagePath.ProfileImg}
-                    style={{
-                      borderRadius: 5,
-                      width: moderateScale(52),
-                      height: moderateScaleVertical(62),
-                    }}
-                  />
-                )}
-                <Text
-                  style={{
-                    ...commonStyles.font16Regular,
-                    color: Colors.white,
-                    paddingLeft: 8,
-                  }}>
-                  {item?.username}
-                </Text>
-              </View>
-              <TouchableOpacity onPress={() => onBlockuser(item?.id)}>
-                <LinearGradient
-                  colors={[Colors.LinearBlack, Colors.Pink]}
-                  style={styles.btn}>
+        {blockedlist?.length > 0 ? (
+          <FlatList
+            data={blockedlist}
+            renderItem={({item}) => (
+              <View style={styles.flatvw}>
+                <View style={styles.innervw}>
+                  {item?.image_url ? (
+                    <Image
+                      source={{uri: IMAGE_URL + item?.image_url}}
+                      style={{
+                        borderRadius: 5,
+                        width: moderateScale(52),
+                        height: moderateScaleVertical(62),
+                      }}
+                    />
+                  ) : (
+                    <Image
+                      source={ImagePath.ProfileImg}
+                      style={{
+                        borderRadius: 5,
+                        width: moderateScale(52),
+                        height: moderateScaleVertical(62),
+                      }}
+                    />
+                  )}
                   <Text
                     style={{
-                      ...commonStyles.font12Regular,
+                      ...commonStyles.font16Regular,
                       color: Colors.white,
+                      paddingLeft: 8,
                     }}>
-                    Unblock
+                    {item?.username}
                   </Text>
-                </LinearGradient>
-              </TouchableOpacity>
-            </View>
-          )}
-        />
+                </View>
+                <TouchableOpacity onPress={() => onBlockuser(item?.id)}>
+                  <LinearGradient
+                    colors={[Colors.LinearBlack, Colors.Pink]}
+                    style={styles.btn}>
+                    <Text
+                      style={{
+                        ...commonStyles.font12Regular,
+                        color: Colors.white,
+                      }}>
+                      Unblock
+                    </Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+            )}
+          />
+        ) : (
+          <Text
+            style={{
+              ...commonStyles.font16Regular,
+              color: Colors.white,
+              paddingLeft: 8,
+            }}>
+            No blocked account...
+          </Text>
+        )}
         <SizeBox size={20} />
       </SafeAreaView>
     </LinearGradient>

@@ -36,6 +36,7 @@ import MapView, {Marker} from 'react-native-maps';
 import {getEventDetail} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import commonStyles from '../../Utilities/Styles/commonStyles';
+import {useSelector} from 'react-redux';
 
 const EventDetails = ({navigation, route}: any) => {
   const refRBSheet: any = useRef();
@@ -45,7 +46,7 @@ const EventDetails = ({navigation, route}: any) => {
   const refMapRBSheet: any = useRef();
   const [loading, setLoading] = useState(false);
   const [eventData, setEventData] = useState({});
-
+  const user = useSelector((data: object) => data?.auth?.userData);
   const onPressBack = () => {
     navigation.goBack();
   };
@@ -359,10 +360,20 @@ const EventDetails = ({navigation, route}: any) => {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate(NavigationStrings.OtherProfiles, {
-                    id: eventData?.user?.id,
-                  })
+                onPress={
+                  () => {
+                    if (eventData?.user?.id === user?.user?.id) {
+                      navigation.navigate(NavigationStrings.UserProfile);
+                    } else {
+                      navigation.navigate(NavigationStrings.OtherProfiles, {
+                        id: eventData?.user?.id,
+                      });
+                    }
+                  }
+                  // console.log(eventData?.user?.id, user?.user?.id)
+                  // navigation.navigate(NavigationStrings.OtherProfiles, {
+                  //   id: eventData?.user?.id,
+                  // })
                 }
                 style={[
                   styles.likebtn,

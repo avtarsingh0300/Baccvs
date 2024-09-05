@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   ACCEPT_INVITES,
   BLOCKED_LIST,
+  BLOCK_USER,
   BUY_TICKET,
   CANCEL_INVITES,
   CANCEL_SELL_TICKET,
@@ -12,6 +13,7 @@ import {
   CREATE_REF_CODE,
   DISLIKE_USER_PROFILE,
   EVENT_DETAIL,
+  FOLLOW_USER,
   GET_ALL_MEET_GROUPS,
   GET_ALL_USERS,
   GET_BUYTICKET_LIST,
@@ -37,8 +39,10 @@ import {
   OTP_SEND,
   REFUSE_INVITES,
   REGISTER_USER,
+  REPORT_USER,
   SELL_TICKET,
   UN_BLOCKED_USER,
+  UN_FOLLOW_USER,
   UPDATE_USER_PROFILE,
   USER_DATA,
   USER_DELETE,
@@ -78,6 +82,12 @@ export function changePass(data: object) {
 }
 export function unBlockUser(data: object) {
   return apiPost(UN_BLOCKED_USER, data);
+}
+export function blockUser(data: object) {
+  return apiPost(BLOCK_USER, data);
+}
+export function reportUser(data: object) {
+  return apiPost(REPORT_USER, data);
 }
 export function sellTicket(data: object) {
   return apiPost(SELL_TICKET, data);
@@ -174,6 +184,12 @@ export function cancelSellTicket(data: object) {
 }
 export function buyTicket(data: object) {
   return apiPost(BUY_TICKET, data);
+}
+export function followUser(data: object) {
+  return apiPost(FOLLOW_USER, data);
+}
+export function unFollowUser(data: object) {
+  return apiPost(UN_FOLLOW_USER, data);
 }
 export function registerUser(data: object) {
   return apiPost(REGISTER_USER, data, {'Content-Type': 'multipart/form-data'});
