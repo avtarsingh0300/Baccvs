@@ -21,7 +21,7 @@ import {Colors} from '../../Utilities/Styles/colors';
 import LinearGradient from 'react-native-linear-gradient';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import {
-  CommonBtn,
+  CommonInput,
   Loadingcomponent,
   SizeBox,
   showError,
@@ -45,6 +45,7 @@ import uuid from 'react-native-uuid';
 
 const CreateGroup = ({navigation}: any) => {
   const [musicStyle, setMusicStyle] = useState([]);
+  const [interestType, setInterestType] = useState([]);
   const [selectedMusic, setSelectedMusic] = useState([]);
   const [selectedInterestType, setselectedInterestType] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState([]);
@@ -82,7 +83,7 @@ const CreateGroup = ({navigation}: any) => {
       return showError('Add images and video');
     }
 
-    var members = selectMembers?.map(i => {
+    var membersFilter = selectMembers?.map(i => {
       return i?.id;
     });
 
@@ -92,7 +93,7 @@ const CreateGroup = ({navigation}: any) => {
     data.append('music_type', selectedMusic);
     data.append('interest', selectedInterestType);
     data.append('language', selectedLanguage);
-    data.append('members', members);
+    data.append('members', membersFilter);
     selectedImages.forEach((image, index) => {
       data.append('image', {
         uri: image.path,
@@ -124,9 +125,10 @@ const CreateGroup = ({navigation}: any) => {
   }, []);
 
   const getEventsTypes = () => {
-    getMusicTypeList()
+    getEventTypes()
       .then(res => {
-        setMusicStyle(res);
+        setMusicStyle(res?.musictype);
+        setInterestType(res?.interesttype);
         setLoader(false);
       })
       .catch(err => {
@@ -230,7 +232,7 @@ const CreateGroup = ({navigation}: any) => {
   }, [searchMusic]);
 
   const handleSearchInterest = useCallback(() => {
-    const results = searchItems(searchInterest, interestsList);
+    const results = searchItems(searchInterest, interestType);
     return results;
   }, [searchInterest]);
 
@@ -265,8 +267,10 @@ const CreateGroup = ({navigation}: any) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <View style={{width: '15%'}} />
-            <Text style={{...commonStyles.Heading20font}}>New group</Text>
+            <TouchableOpacity activeOpacity={0.8}>
+              <Image source={ImagePath.Arrow_Left_2} />
+            </TouchableOpacity>
+            <Text style={{...commonStyles.Heading20font}}>New Team</Text>
             <VectorIcon
               groupName="Entypo"
               name="menu"
@@ -276,7 +280,7 @@ const CreateGroup = ({navigation}: any) => {
           </View>
           <SizeBox size={10} />
           <ImageBackground
-            source={ImagePath.newGroupBack}
+            source={ImagePath.Rectangle_new}
             resizeMode="contain"
             style={styles.backimg}>
             <TextInput
@@ -304,7 +308,7 @@ const CreateGroup = ({navigation}: any) => {
                   color: Colors.white,
                   marginLeft: 10,
                 }}>
-                Add Members (3 max.)
+                Invite Friends (3 max.)
               </Text>
             </View>
             <SizeBox size={5} />
@@ -366,7 +370,7 @@ const CreateGroup = ({navigation}: any) => {
                   color: Colors.white,
                   marginLeft: 10,
                 }}>
-                Videos & Pictures (6 max.)
+                Pictures & Videos (6 max.)
               </Text>
             </View>
             <SizeBox size={5} />
@@ -468,25 +472,16 @@ const CreateGroup = ({navigation}: any) => {
                 ...commonStyles.font12Regular,
                 color: Colors.white,
               }}>
-              Group Bio
+              Who are we?
             </Text>
             <SizeBox size={10} />
-            <LinearGradient
-              colors={[Colors.Linear, Colors.lightPink]}
-              style={{
-                minHeight: moderateScaleVertical(150),
-                borderRadius: 10,
-                padding: 10,
-              }}>
-              <TextInput
-                placeholder=""
-                placeholderTextColor={Colors.white}
-                multiline={true}
-                value={bio}
-                onChangeText={text => setBio(text)}
-                style={{...commonStyles.font12Regular, color: Colors.white}}
-              />
-            </LinearGradient>
+            <CommonInput
+              multiline={true}
+              placeholder=""
+              value={bio}
+              onChangeText={(text: string) => setBio(text)}
+              styless={styles.multiInput}
+            />
             <SizeBox size={15} />
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -540,7 +535,7 @@ const CreateGroup = ({navigation}: any) => {
                       backgroundColor: selectedMusic.includes(item._id)
                         ? Colors.lightPink
                         : Colors.tranparent,
-                      borderRadius: 8,
+                      borderRadius: 2,
                       marginHorizontal: 5,
                       marginVertical: 5,
                     }}
@@ -548,9 +543,7 @@ const CreateGroup = ({navigation}: any) => {
                     <Text
                       style={{
                         ...commonStyles.font12Regular,
-                        color: selectedMusic.includes(item._id)
-                          ? Colors.black
-                          : Colors.white,
+                        color: Colors.white,
                       }}>
                       {item?.name}
                     </Text>
@@ -600,7 +593,7 @@ const CreateGroup = ({navigation}: any) => {
               data={
                 searchInterest?.length > 0
                   ? handleSearchInterest()
-                  : interestsList
+                  : interestType
               }
               renderItem={({item}) => {
                 if (!item) {
@@ -616,7 +609,7 @@ const CreateGroup = ({navigation}: any) => {
                       backgroundColor: selectedInterestType.includes(item)
                         ? Colors.lightPink
                         : Colors.tranparent,
-                      borderRadius: 8,
+                      borderRadius: 2,
                       marginHorizontal: 5,
                       marginVertical: 5,
                     }}
@@ -624,11 +617,9 @@ const CreateGroup = ({navigation}: any) => {
                     <Text
                       style={{
                         ...commonStyles.font12Regular,
-                        color: selectedInterestType.includes(item)
-                          ? Colors.black
-                          : Colors.white,
+                        color: Colors.white,
                       }}>
-                      {item}
+                      {item?.name}
                     </Text>
                   </TouchableOpacity>
                 );
@@ -692,7 +683,7 @@ const CreateGroup = ({navigation}: any) => {
                       backgroundColor: selectedLanguage.includes(item.name)
                         ? Colors.lightPink
                         : Colors.tranparent,
-                      borderRadius: 8,
+                      borderRadius: 4,
                       marginHorizontal: 5,
                       marginVertical: 5,
                     }}
@@ -700,9 +691,7 @@ const CreateGroup = ({navigation}: any) => {
                     <Text
                       style={{
                         ...commonStyles.font12Regular,
-                        color: selectedLanguage.includes(item.name)
-                          ? Colors.black
-                          : Colors.white,
+                        color: Colors.white,
                       }}>
                       {item?.name}
                     </Text>
@@ -713,7 +702,12 @@ const CreateGroup = ({navigation}: any) => {
               keyExtractor={(item, index) => index.toString()}
             />
             <SizeBox size={10} />
-            <CommonBtn title="Create Group" onPress={onCreate} />
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.btn}
+              onPress={() => onCreate()}>
+              <Text style={styles.btnText}>Create Team</Text>
+            </TouchableOpacity>
             <SizeBox size={15} />
           </View>
         </KeyboardAwareScrollView>

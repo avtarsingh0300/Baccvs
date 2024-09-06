@@ -1,9 +1,12 @@
+import {ViewStyle} from 'react-native';
+
 interface CommonInputProps {
   placeholder: string;
   multiline?: boolean;
   secureTextEntry?: boolean;
   value?: string;
   onChangeText?: Function;
+  styless: ViewStyle;
   keyboardType?:
     | 'default'
     | 'email-address'

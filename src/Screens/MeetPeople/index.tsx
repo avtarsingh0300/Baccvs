@@ -16,12 +16,7 @@ import styles from './style';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import {Loadingcomponent, SizeBox} from '../../Utilities/Component/Helpers';
-import {
-  height,
-  moderateScale,
-  moderateScaleVertical,
-  width,
-} from '../../Utilities/Styles/responsiveSize';
+import {height, moderateScale} from '../../Utilities/Styles/responsiveSize';
 import {
   disLikeUser,
   getAllMeetGroups,
@@ -33,14 +28,12 @@ import {useSelector} from 'react-redux';
 import Modal from 'react-native-modal';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import ImagePath from '../../Utilities/Constants/ImagePath';
-import Carousel from 'react-native-reanimated-carousel';
 import MeetPeopleCard from '../../Utilities/Component/MeetPeopleCard';
 
 const MeetPeople = ({navigation}) => {
   const [button, setButton] = useState('online');
   const [currentImage, setCurrentImage] = useState({});
   const [loader, setLoader] = useState(false);
-  const swiper = useRef(null);
   const [userData, setUserData] = useState([]);
   const [groupData, setGroupData] = useState([]);
   const user = useSelector((data: object) => data?.auth?.userData);
@@ -66,6 +59,7 @@ const MeetPeople = ({navigation}) => {
     getAllUsers()
       .then(res => {
         // console.log(JSON.stringify(res), 'res in getAllUsers');
+        setUserData([]);
         setUserData(res?.data);
         if (userData?.length == 0) {
           setCurrentImage(res?.data[0]);
@@ -213,14 +207,22 @@ const MeetPeople = ({navigation}) => {
 
   const removeCard = useCallback(() => {
     // setData(prepState => prepState.slice(1));
-    if (userData.length > 0) {
+    if (userData.length > 1) {
       setUserData(prevState => prevState.slice(1)); // Remove the first card from the list
       swipe.setValue({x: 0, y: 0}); // Reset swipe position
+    } else {
+      // console.log('working');
     }
   }, [swipe, userData]);
 
+  useEffect(() => {
+    if (userData?.length == 0) {
+      console.log('working');
+    }
+  }, [userData, swipe]);
+
   const handelSelection = useCallback(
-    direction => {
+    (direction: any) => {
       Animated.timing(swipe, {
         toValue: {x: direction * 500, y: 0},
         useNativeDriver: true,
@@ -264,8 +266,8 @@ const MeetPeople = ({navigation}) => {
               size={20}
               color={Colors.white}
               onPress={() => {
-                setShowModal(true);
-                setActiveIndexModal(1);
+                // setShowModal(true);
+                // setActiveIndexModal(1);
                 navigation.navigate(NavigationStrings.MeetPeopleFilter);
               }}
             />
@@ -378,12 +380,12 @@ const MeetPeople = ({navigation}) => {
               <View style={{flex: 1}}>
                 {userData
                   ?.slice(0) // Prevent mutation by creating a copy
-                  ?.map((item: YourItemType, index: number) => {
+                  ?.map((item, index: number) => {
                     const isFirst: boolean = index === 0;
                     const dragHandlers = isFirst
                       ? panResponser?.panHandlers
                       : {};
-                    // console.log(item, 'item');
+                    console.log(index, 'index');
                     return (
                       <MeetPeopleCard
                         isFirst={isFirst}
@@ -434,7 +436,7 @@ const MeetPeople = ({navigation}) => {
               styles.optionContainer,
               {width: activeIndexModal == 0 ? '55%' : '60%'},
             ]}>
-            {activeIndexModal == 0 ? (
+            {activeIndexModal == 0 && (
               <>
                 <TouchableOpacity
                   activeOpacity={0.8}
@@ -483,7 +485,7 @@ const MeetPeople = ({navigation}) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate(NavigationStrings.MyGroups);
+                    navigation.navigate(NavigationStrings.EditSocialProfile);
                     setShowModal(false);
                   }}
                   activeOpacity={0.8}
@@ -497,61 +499,62 @@ const MeetPeople = ({navigation}) => {
                   />
                 </TouchableOpacity>
               </>
-            ) : (
-              <>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  style={styles.option}
-                  onPress={() => {
-                    // navigation.navigate(NavigationStrings.EditProfile);
-                    // setShowModal(false);
-                  }}>
-                  <Text style={styles.optionText}>Group capacity 2-4</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  style={styles.option}
-                  onPress={() => {
-                    // navigation.navigate(NavigationStrings.EditProfile);
-                    // setShowModal(false);
-                  }}>
-                  <Text style={styles.optionText}>Gender : M-F-Mixed</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  style={styles.option}
-                  onPress={() => {
-                    // navigation.navigate(NavigationStrings.EditProfile);
-                    // setShowModal(false);
-                  }}>
-                  <Text style={styles.optionText}>Age range</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  style={styles.option}
-                  onPress={() => {
-                    // navigation.navigate(NavigationStrings.EditProfile);
-                    // setShowModal(false);
-                  }}>
-                  <Text style={styles.optionText}>Distance</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  style={styles.option}
-                  onPress={() => {
-                    // navigation.navigate(NavigationStrings.EditProfile);
-                    // setShowModal(false);
-                  }}>
-                  <Text style={styles.optionText}>Languages</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  // onPress={}
-                  activeOpacity={0.8}
-                  style={[styles.option, {borderBottomWidth: 0}]}>
-                  <Text style={styles.optionText}>New groups</Text>
-                </TouchableOpacity>
-              </>
             )}
+            {/* // ) : (
+            //   <>
+            //     <TouchableOpacity
+            //       activeOpacity={0.8}
+            //       style={styles.option}
+            //       onPress={() => {
+            //         // navigation.navigate(NavigationStrings.EditProfile);
+            //         // setShowModal(false);
+            //       }}>
+            //       <Text style={styles.optionText}>Group capacity 2-4</Text>
+            //     </TouchableOpacity>
+            //     <TouchableOpacity
+            //       activeOpacity={0.8}
+            //       style={styles.option}
+            //       onPress={() => {
+            //         // navigation.navigate(NavigationStrings.EditProfile);
+            //         // setShowModal(false);
+            //       }}>
+            //       <Text style={styles.optionText}>Gender : M-F-Mixed</Text>
+            //     </TouchableOpacity>
+            //     <TouchableOpacity
+            //       activeOpacity={0.8}
+            //       style={styles.option}
+            //       onPress={() => {
+            //         // navigation.navigate(NavigationStrings.EditProfile);
+            //         // setShowModal(false);
+            //       }}>
+            //       <Text style={styles.optionText}>Age range</Text>
+            //     </TouchableOpacity>
+            //     <TouchableOpacity
+            //       activeOpacity={0.8}
+            //       style={styles.option}
+            //       onPress={() => {
+            //         // navigation.navigate(NavigationStrings.EditProfile);
+            //         // setShowModal(false);
+            //       }}>
+            //       <Text style={styles.optionText}>Distance</Text>
+            //     </TouchableOpacity>
+            //     <TouchableOpacity
+            //       activeOpacity={0.8}
+            //       style={styles.option}
+            //       onPress={() => {
+            //         // navigation.navigate(NavigationStrings.EditProfile);
+            //         // setShowModal(false);
+            //       }}>
+            //       <Text style={styles.optionText}>Languages</Text>
+            //     </TouchableOpacity>
+            //     <TouchableOpacity
+            //       // onPress={}
+            //       activeOpacity={0.8}
+            //       style={[styles.option, {borderBottomWidth: 0}]}>
+            //       <Text style={styles.optionText}>New groups</Text>
+            //     </TouchableOpacity>
+            //   </>
+            // )} */}
           </LinearGradient>
         </Modal>
         <Loadingcomponent isVisible={loader} />

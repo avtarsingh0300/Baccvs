@@ -23,12 +23,12 @@ import VectorIcon from '../../../Utilities/Component/vectorIcons';
 import NavigationStrings from '../../../Utilities/Constants/NavigationStrings';
 import ImagePicker from 'react-native-image-crop-picker';
 import {registerUser, setDataHandler} from '../../../Utilities/Constants/auth';
+import {saveUserData} from '../../../Redux/Action/auth';
 
 const UploadImage = (props: any) => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [loader, setLoader] = useState(false);
   const [data, setData] = useState(props.route.params.data);
-  console.log(props.route.params.key);
   const onBack = () => {
     props.navigation.goBack();
   };
@@ -71,17 +71,15 @@ const UploadImage = (props: any) => {
       pictures: pictures,
       videos: pictures,
     };
-
-    // console.log(props.route.params.key === 'profess' ? data : formData);
-
     registerUser(props.route.params.key === 'profess' ? formData2 : formData)
       .then(res => {
         setLoader(false),
           showSuccess('User create successfully!!'),
+          props.navigation.navigate(NavigationStrings.TabRoutes);
+        setTimeout(() => {
           setDataHandler(res);
-        props.navigation.replace(NavigationStrings.TabRoutes, {
-          screen: NavigationStrings.HomeScreen,
-        });
+          saveUserData(res);
+        }, 1000);
       })
       .catch(err => {
         setLoader(false), showError(err?.message);
@@ -101,7 +99,7 @@ const UploadImage = (props: any) => {
     });
   };
 
-  const removeImg = id => {
+  const removeImg = (id: any) => {
     setSelectedImages(prevImages =>
       prevImages.filter(image => image.id !== id),
     );

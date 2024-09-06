@@ -210,6 +210,7 @@ export function CommonInput({
   value,
   onChangeText,
   secureTextEntry,
+  styless,
 }: CommonInputProps) {
   return (
     <View
@@ -220,6 +221,7 @@ export function CommonInput({
             ? moderateScaleVertical(120)
             : moderateScaleVertical(50),
         },
+        styless,
       ]}>
       <TextInput
         multiline={multiline}
