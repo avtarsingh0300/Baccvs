@@ -48,4 +48,5 @@ export default {
   ActivateLocation: 'ActivateLocation',
   FollowingScreen: 'FollowingScreen',
   MeetPeopleFilter: 'MeetPeopleFilter',
+  EditSocialProfile: 'EditSocialProfile',
 };

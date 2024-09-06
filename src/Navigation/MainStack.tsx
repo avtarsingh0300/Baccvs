@@ -168,6 +168,11 @@ export default function MainStack(Stack: any) {
         component={screens.MeetPeopleFilter}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.EditSocialProfile}
+        component={screens.EditSocialProfile}
+        options={{headerShown: false}}
+      />
     </>
   );
 }
