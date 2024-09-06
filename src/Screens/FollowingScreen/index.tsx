@@ -14,15 +14,14 @@ import {SizeBox} from '../../Utilities/Component/Helpers';
 import styles from './style';
 import {FlatList} from 'react-native-gesture-handler';
 import ImagePath from '../../Utilities/Constants/ImagePath';
-import fontFamily from '../../Utilities/Styles/fontFamily';
 
 const FollowingScreen = ({navigation}: any) => {
-  const [colors, setColors] = useState('');
+  const [colors, setColors] = useState(0);
 
   const onbackPress = () => {
     navigation.goBack();
   };
-  const renderFollower = ({item}) => (
+  const renderFollower = ({item}: any) => (
     <View style={styles.ftcontainer}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Image

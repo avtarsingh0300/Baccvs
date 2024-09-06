@@ -70,13 +70,12 @@ const styles = StyleSheet.create({
   inputHolder: {
     padding: 15,
     paddingLeft: 18,
-    borderWidth: 0.25,
-    borderLeftWidth: 0.25,
+    borderWidth: 1,
     borderColor: Colors.greyTxt,
     borderRadius: 2,
   },
   input: {
-    color: Colors.greyTxt,
+    color: Colors.white,
     fontFamily: fontFamily.time_regular,
     padding: 0,
     fontWeight: '400',

@@ -28,6 +28,7 @@ const UploadImage = (props: any) => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [loader, setLoader] = useState(false);
   const [data, setData] = useState(props.route.params.data);
+  console.log(props.route.params.key);
   const onBack = () => {
     props.navigation.goBack();
   };
@@ -53,7 +54,27 @@ const UploadImage = (props: any) => {
       videos: pictures,
     };
 
-    registerUser(formData)
+    const formData2 = {
+      full_name: data?.fullName,
+      email: data?.email,
+      dob: data?.date,
+      bio: data?.servicesDescription,
+      language: data?.language,
+      password: data?.password,
+      type: data?.selectedProfession,
+      business_name: data?.businessName,
+      business_address: data?.businessAddress,
+      website: data?.websiteOptional,
+      social_links: data?.socialMedia,
+      social_description: data?.servicesDescription,
+      phone_number: data.phoneNumber,
+      pictures: pictures,
+      videos: pictures,
+    };
+
+    // console.log(props.route.params.key === 'profess' ? data : formData);
+
+    registerUser(props.route.params.key === 'profess' ? formData2 : formData)
       .then(res => {
         setLoader(false),
           showSuccess('User create successfully!!'),
