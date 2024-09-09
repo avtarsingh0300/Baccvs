@@ -363,6 +363,9 @@ const MeetPeople = ({navigation}) => {
               </TouchableOpacity>
               <TouchableOpacity
                 activeOpacity={0.8}
+                onPress={() => {
+                  navigation.navigate(NavigationStrings.GrroupDeatils);
+                }}
                 style={[
                   styles.bottomBtn,
                   {backgroundColor: Colors.tranparent},
@@ -457,7 +460,9 @@ const MeetPeople = ({navigation}) => {
                   activeOpacity={0.8}
                   style={styles.option}
                   onPress={() => {
-                    navigation.navigate(NavigationStrings.CreateGroup);
+                    navigation.navigate(NavigationStrings.MyGroups, {
+                      name: 'Select team',
+                    });
                     setShowModal(false);
                   }}>
                   <Text style={styles.optionText}>Select group</Text>
@@ -500,61 +505,6 @@ const MeetPeople = ({navigation}) => {
                 </TouchableOpacity>
               </>
             )}
-            {/* // ) : (
-            //   <>
-            //     <TouchableOpacity
-            //       activeOpacity={0.8}
-            //       style={styles.option}
-            //       onPress={() => {
-            //         // navigation.navigate(NavigationStrings.EditProfile);
-            //         // setShowModal(false);
-            //       }}>
-            //       <Text style={styles.optionText}>Group capacity 2-4</Text>
-            //     </TouchableOpacity>
-            //     <TouchableOpacity
-            //       activeOpacity={0.8}
-            //       style={styles.option}
-            //       onPress={() => {
-            //         // navigation.navigate(NavigationStrings.EditProfile);
-            //         // setShowModal(false);
-            //       }}>
-            //       <Text style={styles.optionText}>Gender : M-F-Mixed</Text>
-            //     </TouchableOpacity>
-            //     <TouchableOpacity
-            //       activeOpacity={0.8}
-            //       style={styles.option}
-            //       onPress={() => {
-            //         // navigation.navigate(NavigationStrings.EditProfile);
-            //         // setShowModal(false);
-            //       }}>
-            //       <Text style={styles.optionText}>Age range</Text>
-            //     </TouchableOpacity>
-            //     <TouchableOpacity
-            //       activeOpacity={0.8}
-            //       style={styles.option}
-            //       onPress={() => {
-            //         // navigation.navigate(NavigationStrings.EditProfile);
-            //         // setShowModal(false);
-            //       }}>
-            //       <Text style={styles.optionText}>Distance</Text>
-            //     </TouchableOpacity>
-            //     <TouchableOpacity
-            //       activeOpacity={0.8}
-            //       style={styles.option}
-            //       onPress={() => {
-            //         // navigation.navigate(NavigationStrings.EditProfile);
-            //         // setShowModal(false);
-            //       }}>
-            //       <Text style={styles.optionText}>Languages</Text>
-            //     </TouchableOpacity>
-            //     <TouchableOpacity
-            //       // onPress={}
-            //       activeOpacity={0.8}
-            //       style={[styles.option, {borderBottomWidth: 0}]}>
-            //       <Text style={styles.optionText}>New groups</Text>
-            //     </TouchableOpacity>
-            //   </>
-            // )} */}
           </LinearGradient>
         </Modal>
         <Loadingcomponent isVisible={loader} />

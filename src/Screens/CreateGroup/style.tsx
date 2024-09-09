@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   imageContainer2: {
     backgroundColor: Colors.dashBordervw,
     height: height / 6,
-    width: '30%',
+    width: moderateScale(80),
     marginLeft: 10,
     alignSelf: 'center',
     borderRadius: 15,

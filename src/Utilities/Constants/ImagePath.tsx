@@ -37,4 +37,5 @@ export default {
   Rectangle_new: require('../../Assets/images/Rectangle_new.png'),
   Activelocation: require('../../Assets/images/Activatelocation.png'),
   Arrow_Left_2: require('../../Assets/images/Arrow_Left_2.png'),
+  link_backward: require('../../Assets/images/link_backward.png'),
 };

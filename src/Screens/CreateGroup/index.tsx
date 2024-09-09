@@ -267,7 +267,9 @@ const CreateGroup = ({navigation}: any) => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <TouchableOpacity activeOpacity={0.8}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => navigation.goBack()}>
               <Image source={ImagePath.Arrow_Left_2} />
             </TouchableOpacity>
             <Text style={{...commonStyles.Heading20font}}>New Team</Text>
@@ -312,55 +314,67 @@ const CreateGroup = ({navigation}: any) => {
               </Text>
             </View>
             <SizeBox size={5} />
-            <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity
-                onPress={() => setModalVisible(true)}
-                style={[styles.imageContainer2, {height: height / 7}]}>
-                <ImageBackground
-                  source={ImagePath.backGroundGroup}
-                  style={{
-                    flex: 1,
-                    width: '100%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                  borderRadius={15}>
-                  <View style={styles.innerCon}>
+            <View
+              style={{
+                // flexDirection: 'row',
+                height: height / 6.3,
+                width: '100%',
+              }}>
+              <ScrollView
+                horizontal
+                // contentContainerStyle={{flexGrow: 1}}
+                // style={{width: '100%', height: '100%'}}
+                // contentContainerStyle={{width: '100%', height: '100%'}}
+              >
+                {selectMembers?.map(item => (
+                  <View
+                    style={[
+                      styles.imageContainer2,
+                      {height: height / 7, borderWidth: 0},
+                    ]}>
+                    <Image
+                      source={{uri: item?.image}}
+                      style={{width: '100%', height: '100%', borderRadius: 5}}
+                    />
+
                     <VectorIcon
-                      groupName="Feather"
-                      name="plus-square"
-                      size={40}
-                      color="#B69CFF"
+                      groupName="Entypo"
+                      name="cross"
+                      color={Colors.red}
+                      size={26}
+                      onPress={() => {
+                        const filterData2 = selectMembers?.filter(
+                          (i: any) => i != item,
+                        );
+                        setSelectMembers(filterData2);
+                      }}
+                      style={{bottom: -15, position: 'absolute'}}
                     />
                   </View>
-                </ImageBackground>
-              </TouchableOpacity>
-              {selectMembers?.map(item => (
-                <View
-                  style={[
-                    styles.imageContainer2,
-                    {height: height / 7, width: '25%', borderWidth: 0},
-                  ]}>
-                  <Image
-                    source={{uri: item?.image}}
-                    style={{width: '100%', height: '100%', borderRadius: 5}}
-                  />
-
-                  <VectorIcon
-                    groupName="Entypo"
-                    name="cross"
-                    color={Colors.red}
-                    size={26}
-                    onPress={() => {
-                      const filterData2 = selectMembers?.filter(
-                        (i: any) => i != item,
-                      );
-                      setSelectMembers(filterData2);
+                ))}
+                <TouchableOpacity
+                  onPress={() => setModalVisible(true)}
+                  style={[styles.imageContainer2, {height: height / 7}]}>
+                  <ImageBackground
+                    source={ImagePath.backGroundGroup}
+                    style={{
+                      flex: 1,
+                      width: '100%',
+                      justifyContent: 'center',
+                      alignItems: 'center',
                     }}
-                    style={{bottom: -15, position: 'absolute'}}
-                  />
-                </View>
-              ))}
+                    borderRadius={15}>
+                    <View style={styles.innerCon}>
+                      <VectorIcon
+                        groupName="Feather"
+                        name="plus-square"
+                        size={40}
+                        color="#B69CFF"
+                      />
+                    </View>
+                  </ImageBackground>
+                </TouchableOpacity>
+              </ScrollView>
             </View>
             <SizeBox size={15} />
             <View style={styles.camerarow}>
@@ -374,38 +388,107 @@ const CreateGroup = ({navigation}: any) => {
               </Text>
             </View>
             <SizeBox size={5} />
-            <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity
-                onPress={() => addImg()}
-                style={[styles.imageContainer2, {height: height / 7}]}>
-                <LinearGradient
-                  colors={[Colors.lightPink, '#21005D']}
-                  style={{
-                    borderRadius: 10,
-                    padding: 10,
-                    flex: 1,
-                    width: '100%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <View style={styles.innerCon}>
-                    <VectorIcon
-                      groupName="Feather"
-                      name="plus-square"
-                      size={40}
-                      color="#CD3AFF"
-                    />
-                  </View>
-                </LinearGradient>
-              </TouchableOpacity>
-              <View style={styles.flatbox}>
+            <View
+              style={{
+                // flexDirection: 'row',
+                height: height / 6.3,
+                width: '100%',
+              }}>
+              <ScrollView
+                horizontal
+                // contentContainerStyle={{flexGrow: 1}}
+                // style={{width: '100%', height: '100%'}}
+                // contentContainerStyle={{width: '100%', height: '100%'}}
+              >
+                <TouchableOpacity
+                  onPress={() => addImg()}
+                  style={[styles.imageContainer2, {height: height / 7}]}>
+                  <LinearGradient
+                    colors={[Colors.lightPink, '#21005D']}
+                    style={{
+                      borderRadius: 10,
+                      padding: 10,
+                      flex: 1,
+                      width: '100%',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <View style={styles.innerCon}>
+                      <VectorIcon
+                        groupName="Feather"
+                        name="plus-square"
+                        size={40}
+                        color="#CD3AFF"
+                      />
+                    </View>
+                  </LinearGradient>
+                </TouchableOpacity>
+                {selectedImages.map((item, index) => (
+                  <>
+                    {item?.mime === 'image/png' ||
+                    item?.mime === 'image/jpeg' ? (
+                      <View
+                        key={index}
+                        style={[
+                          styles.imageContainer2,
+                          {
+                            height: height / 7,
+                            borderWidth: 0,
+                          },
+                        ]}>
+                        <Image
+                          source={{uri: item?.path}}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            borderRadius: 5,
+                          }}
+                        />
+
+                        <VectorIcon
+                          groupName="Entypo"
+                          name="cross"
+                          color={Colors.red}
+                          size={26}
+                          onPress={() => removeImg(item.id)}
+                          style={{bottom: -15, position: 'absolute'}}
+                        />
+                      </View>
+                    ) : (
+                      <View
+                        style={[
+                          styles.imageContainer,
+                          {backgroundColor: Colors.black},
+                        ]}>
+                        <VectorIcon
+                          groupName="AntDesign"
+                          name="playcircleo"
+                          size={15}
+                          color={Colors.white}
+                        />
+
+                        <VectorIcon
+                          groupName="Entypo"
+                          name="cross"
+                          color={Colors.red}
+                          size={26}
+                          onPress={() => removeImg(item.id)}
+                          style={{bottom: -8, position: 'absolute'}}
+                        />
+                      </View>
+                    )}
+                  </>
+                ))}
+              </ScrollView>
+            </View>
+            {/* <View style={styles.flatbox}>
                 {selectedImages?.length ? (
                   <FlatList
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     bounces={false}
-                    showsVerticalScrollIndicator={false}
                     data={selectedImages}
+                    // contentContainerStyle={{flexGrow: 1}}
                     renderItem={({item}) => (
                       <>
                         {item?.mime === 'image/png' ||
@@ -464,8 +547,8 @@ const CreateGroup = ({navigation}: any) => {
                     )}
                   />
                 ) : null}
-              </View>
-            </View>
+              </View> */}
+            {/* </View> */}
             <SizeBox size={15} />
             <Text
               style={{

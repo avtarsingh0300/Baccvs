@@ -18,7 +18,7 @@ export default StyleSheet.create({
   },
   font16White: {
     fontSize: textScale(16),
-    fontWeight: '400',
+    fontWeight: '600',
     color: Colors.white,
     fontFamily: fontFamily.regular,
   },
@@ -62,6 +62,17 @@ export default StyleSheet.create({
   font14: {
     fontSize: textScale(16),
     fontWeight: '700',
+    color: Colors.white,
+  },
+  font14Bold: {
+    fontSize: textScale(16),
+    fontFamily: fontFamily.bold,
+    fontWeight: '700',
+    color: Colors.white,
+  },
+  font14Regular: {
+    fontSize: textScale(14),
+    fontWeight: '400',
     color: Colors.white,
   },
   font12: {
