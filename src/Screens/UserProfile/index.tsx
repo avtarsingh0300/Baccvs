@@ -23,8 +23,10 @@ import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import FastImage from 'react-native-fast-image';
 import {
+  Header,
   ImageComponent,
   Loadingcomponent,
+  SizeBox,
   dummydata,
 } from '../../Utilities/Component/Helpers';
 import Modal from 'react-native-modal';
@@ -67,6 +69,9 @@ const UserProfile = ({navigation}: any) => {
         console.log(err, 'err in getUserProfile');
       });
   };
+  const onBack = () => {
+    navigation.goBack();
+  };
 
   const renderItem = ({item, index}) => (
     <View>
@@ -76,53 +81,32 @@ const UserProfile = ({navigation}: any) => {
           borderRadius={5}
           style={styles.backimg}>
           <View style={styles.flexinner}>
-            {/* <ImageComponent
-              source={ImagePath.ProfileImg}
-              style={styles.shortimg}
-            />
-            <ImageComponent
-              source={ImagePath.ProfileImg}
-              style={[
-                styles.extraimg,
-                {
-                  marginLeft: 5,
-                },
-              ]}
-            />
-            <ImageComponent
-              source={ImagePath.ProfileImg}
-              style={[
-                styles.extraimg,
-                {
-                  right: 10,
-                },
-              ]}
-            />
-            <Text
-              style={{
-                ...commonStyles.font16Regular,
-                alignSelf: 'flex-end',
-                color: Colors.white,
-              }}>
-              +8
-            </Text> */}
-          </View>
-        </ImageBackground>
-        {/* <View style={[styles.row, {justifyContent: 'center'}]}>
-          <View style={styles.music}>
-            <Text style={styles.musictxt}>Progressive</Text>
-          </View>
-          <View style={styles.music}>
-            <Text style={styles.musictxt}>Progressive</Text>
-          </View>
-          <View style={styles.music}>
-            <Text style={styles.musictxt}>Progressive</Text>
-          </View>
-        </View> */}
+            </View>
+            </ImageBackground>
       </View>
     </View>
   );
-
+  const renderMusicType = ({item,index}) => (
+    <View style={{paddingLeft:10,marginVertical:8}}>
+      <TouchableOpacity style={styles.musicbtn}>
+        <Text style={styles.discotext}>Disco/Funk/Soul </Text>
+      </TouchableOpacity>
+    </View>
+  );
+  const renderEventType = ({item,index}) => (
+    <View style={{paddingLeft:10,marginVertical:8}}>
+      <TouchableOpacity style={styles.eventbtn}>
+        <Text style={styles.discotext}>Small events </Text>
+      </TouchableOpacity>
+    </View>
+  );
+  const renderLanguages = ({item,index}) => (
+    <View style={{paddingLeft:10,marginVertical:8}}>
+      <TouchableOpacity style={styles.eventbtn}>
+        <Text style={styles.discotext}>English</Text>
+      </TouchableOpacity>
+    </View>
+  );
   return (
     <LinearGradient
       colors={[Colors.backgroundNew, Colors.backgroundNew]}
@@ -134,19 +118,31 @@ const UserProfile = ({navigation}: any) => {
         <ScrollView
           contentContainerStyle={styles.container}
           showsVerticalScrollIndicator={false}>
+      <View style={styles.headerRow}>
+        <View style={{flexDirection:"row"}}>
+      <VectorIcon
+        groupName={'Ionicons'}
+        name={'chevron-back'}
+        size={25}
+        onPress={onBack}
+      />
+      <Text style={styles.headerTxt}> Profile</Text>
+      </View>
+        <VectorIcon
+          groupName="Entypo"
+          name="dots-three-horizontal"
+          size={30}
+          color={Colors.white}
+          onPress={() => setShowModal(true)}
+          style={styles.threedots}
+        />
+    </View>
+            
           <View style={styles.header}>
-            <View style={{width: '10%'}} />
-            <Text style={{...commonStyles.Heading20font, color: Colors.Pink}}>
+            <Text style={{...commonStyles.Heading20font, color: Colors.white}}>
               {userData?.full_name?.charAt(0).toUpperCase() +
                 userData?.full_name?.slice(1)}
             </Text>
-            <VectorIcon
-              groupName="Entypo"
-              name="dots-three-horizontal"
-              size={30}
-              color={Colors.white}
-              onPress={() => setShowModal(true)}
-            />
           </View>
           <Image source={ImagePath.ProfileImg} style={styles.profileImage} />
           <View style={styles.followInfoContainer}>
@@ -169,6 +165,16 @@ const UserProfile = ({navigation}: any) => {
               </Text>
             </TouchableOpacity>
           </View>
+          <SizeBox size={15}/>
+          <View style={{flexDirection:"row",justifyContent:"space-between",paddingHorizontal:40}}>
+            <TouchableOpacity style={styles.msgbtn}>
+              <Text style={styles.msgtxt}>Message</Text>
+            </TouchableOpacity>
+            <Image source={ImagePath.VectorLike}/>
+            <TouchableOpacity style={styles.msgbtn}>
+              <Text style={styles.msgtxt}>Follow</Text>
+            </TouchableOpacity>
+          </View>
           <View style={styles.statusContainer}>
             <Text style={styles.statusText}>{userData?.bio}</Text>
           </View>
@@ -177,30 +183,19 @@ const UserProfile = ({navigation}: any) => {
               groupName="MaterialCommunityIcons"
               name="cupcake"
               size={20}
-              color={Colors.Pink}
             />
             <Text style={styles.rowText}>{userData?.age}</Text>
             <View
               style={{
                 height: moderateScaleVertical(25),
                 paddingHorizontal: 0.5,
-                backgroundColor: '#7D67EE',
-              }}
-            />
-            <Image source={ImagePath.line_height} />
-            <Text style={styles.rowText}>{userData?.height}</Text>
-            <View
-              style={{
-                height: moderateScaleVertical(25),
-                paddingHorizontal: 0.5,
-                backgroundColor: '#7D67EE',
+                backgroundColor: Colors.white,
               }}
             />
             <VectorIcon
               groupName="SimpleLineIcons"
               name="location-pin"
               size={20}
-              color={Colors.Pink}
             />
             <Text style={styles.rowText}>
               {userData?.location ? userData?.location : 'Eiffel Tower'}
@@ -209,28 +204,35 @@ const UserProfile = ({navigation}: any) => {
               style={{
                 height: moderateScaleVertical(25),
                 paddingHorizontal: 0.5,
-                backgroundColor: '#7D67EE',
+                backgroundColor: Colors.white,
               }}
             />
             <VectorIcon
               groupName="MaterialCommunityIcons"
               name="zodiac-leo"
               size={20}
-              color={Colors.Pink}
             />
             <Text style={styles.rowText}>{userData?.zodiac_sign}</Text>
             <View
               style={{
                 height: moderateScaleVertical(25),
                 paddingHorizontal: 0.5,
-                backgroundColor: '#7D67EE',
+                backgroundColor: Colors.white,
+              }}
+            />
+            <Image source={ImagePath.line_height} style={{tintColor:Colors.white}}/>
+            <Text style={styles.rowText}>{userData?.height}</Text>
+            <View
+              style={{
+                height: moderateScaleVertical(25),
+                paddingHorizontal: 0.5,
+                backgroundColor:Colors.white,
               }}
             />
             <VectorIcon
               groupName="MaterialCommunityIcons"
               name="glass-cocktail"
               size={20}
-              color={Colors.Pink}
             />
           </View>
           <View style={styles.postContainer}>
@@ -242,24 +244,6 @@ const UserProfile = ({navigation}: any) => {
               />
             ))}
           </View>
-          <View style={styles.row}>
-            <View style={{width: '10%'}} />
-            <Text style={{...commonStyles.font16White}}>See more</Text>
-            <VectorIcon
-              groupName="Feather"
-              name="edit"
-              color={Colors.white}
-              size={22}
-            />
-          </View>
-          <Text
-            style={{
-              ...commonStyles.font13,
-              fontWeight: '700',
-              marginLeft: moderateScale(31),
-            }}>
-            Past events (1/{eventCount?.event_count})
-          </Text>
           <FlatList
             showsVerticalScrollIndicator={false}
             style={{
@@ -267,8 +251,46 @@ const UserProfile = ({navigation}: any) => {
               alignSelf: 'center',
             }}
             data={eventCount?.past_events}
+            numColumns={3}
             renderItem={renderItem}
           />
+          <SizeBox size={20}/>
+          <Text style={styles.bensbio}>Ben’s Bio</Text>
+          <SizeBox size={20}/>
+          <Text style={styles.bensbio}>Music Type</Text>
+          <SizeBox size={5}/>
+          <FlatList
+          data={[{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},]}
+          renderItem={renderMusicType}
+          numColumns={2}
+          style={{paddingHorizontal:10}}
+          />
+          <SizeBox size={10}/>
+          <Text style={styles.bensbio}>Event Type</Text>
+          <SizeBox size={5}/>
+          <FlatList
+          data={[{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},]}
+          renderItem={renderEventType}
+          numColumns={2}
+          style={{paddingHorizontal:10}}
+          />
+          <SizeBox size={10}/>
+          <Text style={styles.bensbio}>Languages</Text>
+          <SizeBox size={5}/>
+          <FlatList
+          data={[{id:1},{id:1},{id:1}]}
+          renderItem={renderLanguages}
+          numColumns={3}
+          style={{paddingHorizontal:10}}
+          />
+          <SizeBox size={10}/>
+          <View style={{flexDirection:"row",justifyContent:"space-between",paddingHorizontal:20}}>
+            <Text style={styles.pastevents}>Past Events </Text>
+            <TouchableOpacity style={styles.seeallbtn} activeOpacity={0.8}>
+              <Text style={styles.seetxt}>See all</Text>
+            </TouchableOpacity>
+          </View>
+          
         </ScrollView>
         <Modal
           useNativeDriver={true}
