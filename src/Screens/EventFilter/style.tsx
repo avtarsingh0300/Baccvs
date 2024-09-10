@@ -4,6 +4,7 @@ import {
   moderateScale,
   moderateScaleVertical,
   textScale,
+  width,
 } from '../../Utilities/Styles/responsiveSize';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import commonStyles from '../../Utilities/Styles/commonStyles';
@@ -39,10 +40,10 @@ const styles = StyleSheet.create({
   },
   flex: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '90%',
-    alignSelf: 'center',
+    width:"100%",
+    alignItems:"center",
+    justifyContent:"center",
+    alignSelf:"center"
   },
   boxcontainer: {
     paddingHorizontal: 10,
@@ -60,22 +61,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    paddingLeft:15
   },
-  flatbox: {
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: Colors.white,
-    borderRadius: 8,
-    width: '90%',
-    marginLeft: 10,
-    alignSelf: 'center',
-    paddingVertical: moderateScaleVertical(10),
-  },
+  // flatbox: {
+  //   // paddingHorizontal: 10,
+  //   // borderWidth: 1,
+  //   // borderColor: Colors.white,
+  //   // borderRadius: 8,
+  //   // width: '90%',
+  //   // marginLeft: 10,
+  //   // alignSelf: 'center',
+  //   paddingVertical: moderateScaleVertical(10),
+  // },
   flatcon: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: moderateScale(20),
-    paddingTop: moderateScaleVertical(5),
+    borderWidth:1,
+    backgroundColor:Colors.lightPink,
+    width:"40%",
+    justifyContent:"center",
+    alignItems:"center",
+    height:moderateScaleVertical(28),
+    borderRadius:2
   },
   flatcon2: {
     flexDirection: 'row',
@@ -167,13 +172,24 @@ const styles = StyleSheet.create({
     width: '30%',
   },
   button: {
-    backgroundColor: Colors.LinearBlack,
+    backgroundColor: Colors.backgroundNew,
     borderRadius: 7,
     height: 50,
     justifyContent: 'center',
   },
   text: {
     ...commonStyles.font14Center,
+  },
+  eventCon: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+    justifyContent:"space-between",
+    width: '100%',
+  },
+  eventtxt: {
+    fontSize: 20,
+    fontWeight: '700',
+    fontFamily: fontFamily.regular,
   },
 });
 
