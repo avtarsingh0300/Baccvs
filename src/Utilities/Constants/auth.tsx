@@ -30,6 +30,7 @@ import {
   GET_REF_CODE,
   GET_SELL_TICKETS,
   GET_USER_LIKES,
+  GROUP_DETAILS,
   LIKE_USER_PROFILE,
   LOGIN,
   MAP_SEARCH,
@@ -41,6 +42,8 @@ import {
   REGISTER_USER,
   REPORT_USER,
   SELL_TICKET,
+  SOLO_FILTER_DATA,
+  TEAM_FILTER_DATA,
   UN_BLOCKED_USER,
   UN_FOLLOW_USER,
   UPDATE_USER_PROFILE,
@@ -74,6 +77,10 @@ export function disLikeUser(data: object) {
   return apiPost(DISLIKE_USER_PROFILE, data);
 }
 
+export function teamsDetails(data: object) {
+  return apiGet(GROUP_DETAILS, data);
+}
+
 export function getMapData() {
   return apiPost(MAP_SEARCH);
 }
@@ -100,6 +107,12 @@ export function inviteRefuse(data: object) {
 }
 export function cancelInvites(data: object) {
   return apiPost(CANCEL_INVITES, data);
+}
+export function soloFilterData(data: object) {
+  return apiPost(SOLO_FILTER_DATA, data);
+}
+export function teamFilterData(data: object) {
+  return apiPost(TEAM_FILTER_DATA, data);
 }
 export function userDelete() {
   return apiPost(USER_DELETE);

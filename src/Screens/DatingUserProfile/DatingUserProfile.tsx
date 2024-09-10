@@ -122,7 +122,9 @@ const DatingUserProfile = ({navigation}: any) => {
           <Loadingcomponent isVisible={false} />
           <SizeBox size={10} />
           <View style={styles.header}>
-            <TouchableOpacity activeOpacity={0.8}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => navigation.goBack()}>
               <Image source={ImagePath.Arrow_Left_2} />
             </TouchableOpacity>
             <Text style={styles.headerText}>Team name</Text>

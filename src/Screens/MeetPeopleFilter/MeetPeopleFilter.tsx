@@ -1,5 +1,7 @@
 import {
   Image,
+  PermissionsAndroid,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -20,17 +22,25 @@ import commonStyles from '../../Utilities/Styles/commonStyles';
 import {showError, SizeBox} from '../../Utilities/Component/Helpers';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import ToggleSwitch from 'toggle-switch-react-native';
-import {getMusicTypeList} from '../../Utilities/Constants/auth';
+import {getMusicTypeList, soloFilterData} from '../../Utilities/Constants/auth';
+import Geolocation from '@react-native-community/geolocation';
 
 const MeetPeopleFilter = ({navigation}: any) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedDistance, setSelectedDistance] = useState([1]);
   const [musicStyle, setMusicStyle] = useState([]);
+  const [musicType, setMusicType] = useState({});
   const [selectedAge, setselectedAge] = useState([1, 25]);
   const [selectedIntersted, setSelectedIntersted] = useState(false);
-  const [selectedSmoke, setSelectedSmoke] = useState(false);
-  const [selectedDrink, setSelectedDrink] = useState(false);
+  const [selectedSmoke, setSelectedSmoke] = useState('Sometimes');
+  const [selectedDrink, setSelectedDrink] = useState('Sometimes');
+  const [selectedGender, setSelectedGender] = useState('Everyone');
+  const [selectedLanguage, setSelectedLanguage] = useState('English');
+  const [selectedSign, setSelectedSign] = useState('English');
   const [selectedTeam, setSelectedTeam] = useState(false);
+  const [lat, setLat] = useState(0);
+  const [lon, setLon] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getEventsTypes();
@@ -50,6 +60,8 @@ const MeetPeopleFilter = ({navigation}: any) => {
       });
   };
 
+  console.log(musicType);
+
   const signData = [
     'Aries',
     'Taurus',
@@ -68,6 +80,78 @@ const MeetPeopleFilter = ({navigation}: any) => {
     'Pisces',
   ];
 
+  useEffect(() => {
+    const requestLocationPermission = async () => {
+      if (Platform.OS === 'android') {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            {
+              title: 'Location Permission',
+              message: 'This app needs access to your location',
+              buttonNeutral: 'Ask Me Later',
+              buttonNegative: 'Cancel',
+              buttonPositive: 'OK',
+            },
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            getLocation();
+          } else {
+            console.log('Location permission denied');
+          }
+        } catch (err) {
+          console.warn(err);
+        }
+      } else if (Platform.OS === 'ios') {
+        // Geolocation.requestAuthorization();
+        getLocation();
+      }
+    };
+
+    requestLocationPermission();
+  }, []);
+
+  const getLocation = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        setLoading(true);
+        setLat(position.coords.latitude);
+        setLon(position.coords.longitude);
+      },
+      error => {
+        setLoading(false);
+        console.log(error.code, error.message);
+      },
+      {
+        timeout: 15000,
+      },
+    );
+  };
+
+  const soloFilterHandler = () => {
+    const data = {
+      userLatitude: lat.toString(),
+      userLongitude: lon.toString(),
+      max_distance: selectedDistance[0],
+      gender: selectedGender,
+      min_age: selectedAge[0],
+      max_age: selectedAge[1],
+      smoking: selectedSmoke,
+      drinking: selectedDrink,
+      zodiac_sign: selectedSign,
+      music_type: musicType?._id,
+      language: selectedLanguage,
+    };
+    console.log(data, 'data');
+    soloFilterData(data)
+      .then(res => {
+        console.log(res, 'res in soloFilterData');
+      })
+      .catch(err => {
+        console.log(err, 'err in soloFilterData');
+      });
+  };
+
   return (
     <LinearGradient
       colors={[Colors.backgroundNew, Colors.backgroundNew]}
@@ -75,7 +159,7 @@ const MeetPeopleFilter = ({navigation}: any) => {
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
       <SafeAreaView>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
             <TouchableOpacity
               activeOpacity={0.8}
@@ -192,7 +276,7 @@ const MeetPeopleFilter = ({navigation}: any) => {
           <SizeBox size={10} />
           <View style={[styles.row, {}]}>
             <Text style={styles.label}>Interested in</Text>
-            <View style={{flexDirection: 'row'}}>
+            {/* <View style={{flexDirection: 'row'}}>
               <Text style={[commonStyles.font12, {marginRight: 5}]}>
                 Open to date everyone
               </Text>
@@ -208,26 +292,50 @@ const MeetPeopleFilter = ({navigation}: any) => {
                 size="small"
                 onToggle={() => setSelectedIntersted(!selectedIntersted)}
               />
-            </View>
+            </View> */}
           </View>
           <SizeBox size={10} />
           <View style={[styles.row, {marginHorizontal: moderateScale(35)}]}>
             <TouchableOpacity
               activeOpacity={0.8}
+              onPress={() => setSelectedGender('Everyone')}
               style={[
                 styles.selectContainer,
-                {backgroundColor: Colors.lightPink},
+                {
+                  backgroundColor:
+                    selectedGender == 'Everyone'
+                      ? Colors.lightPink
+                      : Colors.tranparent,
+                },
               ]}>
               <Text style={styles.selectText}>Everyone</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.8}
-              style={[styles.selectContainer]}>
+              onPress={() => setSelectedGender('Male')}
+              style={[
+                styles.selectContainer,
+                {
+                  backgroundColor:
+                    selectedGender == 'Male'
+                      ? Colors.lightPink
+                      : Colors.tranparent,
+                },
+              ]}>
               <Text style={styles.selectText}>Male</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.8}
-              style={[styles.selectContainer]}>
+              onPress={() => setSelectedGender('Female')}
+              style={[
+                styles.selectContainer,
+                {
+                  backgroundColor:
+                    selectedGender == 'Female'
+                      ? Colors.lightPink
+                      : Colors.tranparent,
+                },
+              ]}>
               <Text style={styles.selectText}>Female</Text>
             </TouchableOpacity>
           </View>
@@ -255,23 +363,6 @@ const MeetPeopleFilter = ({navigation}: any) => {
           <SizeBox size={5} />
           <View style={[styles.row, {}]}>
             <Text style={styles.label}>Smoking</Text>
-            <View style={{flexDirection: 'row'}}>
-              <Text style={[commonStyles.font12, {marginRight: 5}]}>
-                Open to date everyone
-              </Text>
-              <ToggleSwitch
-                isOn={selectedSmoke}
-                onColor={Colors.lightPink}
-                offColor={Colors.white}
-                trackOffStyle={{
-                  backgroundColor: Colors.backgroundNew,
-                  borderWidth: 1,
-                  borderColor: Colors.white,
-                }}
-                size="small"
-                onToggle={() => setSelectedSmoke(!selectedSmoke)}
-              />
-            </View>
           </View>
           <SizeBox size={12} />
           <View
@@ -284,45 +375,52 @@ const MeetPeopleFilter = ({navigation}: any) => {
             ]}>
             <TouchableOpacity
               activeOpacity={0.8}
+              onPress={() => setSelectedSmoke('Yes')}
               style={[
                 styles.selectContainer,
-                {backgroundColor: Colors.lightPink},
+                {
+                  backgroundColor:
+                    selectedSmoke == 'Yes'
+                      ? Colors.lightPink
+                      : Colors.tranparent,
+                },
               ]}>
               <Text style={styles.selectText}>Yes</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.8}
-              style={[styles.selectContainer]}>
+              onPress={() => setSelectedSmoke('No')}
+              style={[
+                styles.selectContainer,
+                {
+                  backgroundColor:
+                    selectedSmoke == 'No'
+                      ? Colors.lightPink
+                      : Colors.tranparent,
+                },
+              ]}>
               <Text style={styles.selectText}>No</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.8}
-              style={[styles.selectContainer]}>
+              onPress={() => setSelectedSmoke('Sometimes')}
+              style={[
+                styles.selectContainer,
+                {
+                  backgroundColor:
+                    selectedSmoke == 'Sometimes'
+                      ? Colors.lightPink
+                      : Colors.tranparent,
+                },
+              ]}>
               <Text style={styles.selectText}>Sometimes</Text>
             </TouchableOpacity>
           </View>
           <SizeBox size={15} />
           <View style={[styles.row, {}]}>
             <Text style={styles.label}>Drinking</Text>
-            <View style={{flexDirection: 'row'}}>
-              <Text style={[commonStyles.font12, {marginRight: 5}]}>
-                Open to date everyone
-              </Text>
-              <ToggleSwitch
-                isOn={selectedDrink}
-                onColor={Colors.lightPink}
-                offColor={Colors.white}
-                trackOffStyle={{
-                  backgroundColor: Colors.backgroundNew,
-                  borderWidth: 1,
-                  borderColor: Colors.white,
-                }}
-                size="small"
-                onToggle={() => setSelectedDrink(!selectedDrink)}
-              />
-            </View>
           </View>
-          <SizeBox size={12} />
+          <SizeBox size={7} />
           <View
             style={[
               styles.row,
@@ -333,28 +431,52 @@ const MeetPeopleFilter = ({navigation}: any) => {
             ]}>
             <TouchableOpacity
               activeOpacity={0.8}
+              onPress={() => setSelectedDrink('Yes')}
               style={[
                 styles.selectContainer,
-                {backgroundColor: Colors.lightPink},
+                {
+                  backgroundColor:
+                    selectedDrink == 'Yes'
+                      ? Colors.lightPink
+                      : Colors.tranparent,
+                },
               ]}>
               <Text style={styles.selectText}>Yes</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.8}
-              style={[styles.selectContainer]}>
+              onPress={() => setSelectedDrink('No')}
+              style={[
+                styles.selectContainer,
+                {
+                  backgroundColor:
+                    selectedDrink == 'No'
+                      ? Colors.lightPink
+                      : Colors.tranparent,
+                },
+              ]}>
               <Text style={styles.selectText}>No</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.8}
-              style={[styles.selectContainer]}>
+              onPress={() => setSelectedDrink('Sometimes')}
+              style={[
+                styles.selectContainer,
+                {
+                  backgroundColor:
+                    selectedDrink == 'Sometimes'
+                      ? Colors.lightPink
+                      : Colors.tranparent,
+                },
+              ]}>
               <Text style={styles.selectText}>Sometimes</Text>
             </TouchableOpacity>
           </View>
-          <SizeBox size={15} />
+          <SizeBox size={10} />
           <View style={[styles.row, {}]}>
             <Text style={styles.label}>Music Type</Text>
           </View>
-          <SizeBox size={12} />
+          <SizeBox size={7} />
           <View
             style={[
               styles.row,
@@ -364,11 +486,14 @@ const MeetPeopleFilter = ({navigation}: any) => {
               <TouchableOpacity
                 key={index}
                 activeOpacity={0.8}
+                onPress={() => setMusicType(item)}
                 style={[
                   styles.selectContainer,
                   {
                     backgroundColor:
-                      index == 0 ? Colors.lightPink : Colors.backgroundNew,
+                      musicType?.name == item?.name
+                        ? Colors.lightPink
+                        : Colors.backgroundNew,
                     marginBottom: 10,
                   },
                 ]}>
@@ -376,45 +501,68 @@ const MeetPeopleFilter = ({navigation}: any) => {
               </TouchableOpacity>
             ))}
           </View>
-          <SizeBox size={15} />
+          <SizeBox size={10} />
           <View style={[styles.row, {}]}>
             <Text style={styles.label}>Languages</Text>
           </View>
-          <SizeBox size={12} />
+          <SizeBox size={7} />
           <View
             style={[
               styles.row,
               {
                 marginHorizontal: moderateScale(35),
-                // justifyContent: 'flex-start',
               },
             ]}>
             <TouchableOpacity
               activeOpacity={0.8}
+              onPress={() => setSelectedLanguage('English')}
               style={[
                 styles.selectContainer,
-                {backgroundColor: Colors.lightPink},
+                {
+                  backgroundColor:
+                    selectedLanguage == 'English'
+                      ? Colors.lightPink
+                      : Colors.tranparent,
+                },
               ]}>
               <Text style={styles.selectText}>English</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.8}
-              style={[styles.selectContainer]}>
+              onPress={() => setSelectedLanguage('French')}
+              style={[
+                styles.selectContainer,
+                {
+                  backgroundColor:
+                    selectedLanguage == 'French'
+                      ? Colors.lightPink
+                      : Colors.tranparent,
+                },
+              ]}>
               <Text style={styles.selectText}>French</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.8}
-              style={[styles.selectContainer]}>
+              onPress={() => setSelectedLanguage('Spanish')}
+              style={[
+                styles.selectContainer,
+                {
+                  backgroundColor:
+                    selectedLanguage == 'Spanish'
+                      ? Colors.lightPink
+                      : Colors.tranparent,
+                },
+              ]}>
               <Text style={styles.selectText}>Spanish</Text>
             </TouchableOpacity>
           </View>
-          <SizeBox size={12} />
+          <SizeBox size={10} />
           {activeIndex == 0 && (
             <>
               <View style={[styles.row, {}]}>
                 <Text style={styles.label}>Astro Sign</Text>
               </View>
-              <SizeBox size={12} />
+              <SizeBox size={7} />
               <View
                 style={[
                   styles.row,
@@ -424,11 +572,14 @@ const MeetPeopleFilter = ({navigation}: any) => {
                   <TouchableOpacity
                     key={index}
                     activeOpacity={0.8}
+                    onPress={() => setSelectedSign(item)}
                     style={[
                       styles.selectContainer,
                       {
                         backgroundColor:
-                          index == 0 ? Colors.lightPink : Colors.backgroundNew,
+                          selectedSign == item
+                            ? Colors.lightPink
+                            : Colors.tranparent,
                         marginBottom: 10,
                       },
                     ]}>
@@ -441,7 +592,10 @@ const MeetPeopleFilter = ({navigation}: any) => {
           <SizeBox size={10} />
           <View style={styles.row}>
             <View />
-            <TouchableOpacity activeOpacity={0.8} style={styles.btn}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.btn}
+              onPress={() => soloFilterHandler()}>
               <Text style={{...commonStyles.font16Regular, color: Colors.Pink}}>
                 Apply
               </Text>
