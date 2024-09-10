@@ -136,7 +136,7 @@ const EditSocialProfile = () => {
             />
           </View>
           <SizeBox size={15} />
-          <Text style={styles.label}>Profil picture</Text>
+          <Text style={styles.label}>Profile picture</Text>
           <SizeBox size={7} />
           <ImageBackground
             style={styles.profileImg}

@@ -173,6 +173,16 @@ export default function MainStack(Stack: any) {
         component={screens.EditSocialProfile}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.GrroupDeatils}
+        component={screens.GrroupDeatils}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.DatingUserProfile}
+        component={screens.DatingUserProfile}
+        options={{headerShown: false}}
+      />
     </>
   );
 }

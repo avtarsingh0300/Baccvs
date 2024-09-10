@@ -1,4 +1,4 @@
-import { Platform, StyleSheet } from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 
 import {
   height,
@@ -6,7 +6,7 @@ import {
   moderateScaleVertical,
   textScale,
 } from '../../Utilities/Styles/responsiveSize';
-import { Colors } from '../../Utilities/Styles/colors';
+import {Colors} from '../../Utilities/Styles/colors';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 
@@ -15,12 +15,15 @@ export const styles = StyleSheet.create({
     paddingBottom: moderateScaleVertical(20),
   },
   header: {
-    alignItems:"flex-start",
-    paddingHorizontal: moderateScale(40),
+    width: '100%',
+    paddingVertical: moderateScaleVertical(10),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: moderateScale(10),
   },
   profileImage: {
-    width: "90%",
-    height: height/4,
+    width: '90%',
+    height: height / 4,
     alignSelf: 'center',
     marginVertical: moderateScaleVertical(10),
     borderRadius: 10,
@@ -83,12 +86,7 @@ export const styles = StyleSheet.create({
     marginBottom: moderateScaleVertical(20),
     marginHorizontal: moderateScale(5),
   },
-  listContainer: {
-    width: '90%',
-    alignSelf: 'center',
-    justifyContent: 'center',
-    marginTop: moderateScaleVertical(10),
-  },
+
   backContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -107,9 +105,9 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
   },
   backimg: {
-    width: moderateScale(103),
-    height:moderateScaleVertical(138),
-    marginHorizontal:7
+    width: '100%',
+    height: moderateScaleVertical(200),
+    marginHorizontal: 7,
   },
   flexinner: {
     paddingHorizontal: 15,
@@ -183,78 +181,125 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginVertical: moderateScaleVertical(15),
-    marginHorizontal:20
+    marginHorizontal: 20,
   },
   headerTxt: {
     ...commonStyles.font20White,
     textAlign: 'center',
     fontFamily: fontFamily.regular,
   },
-  threedots:{
-    marginTop:10
+  threedots: {
+    marginTop: 10,
   },
-  msgbtn:{
-    width:moderateScale(96),
-    height:moderateScaleVertical(28),
-    borderWidth:0.25,
-    borderColor:Colors.greyTxt,
-    borderRadius:2,
-    justifyContent:"center",
-    alignItems:"center"
+  msgbtn: {
+    width: moderateScale(96),
+    height: moderateScaleVertical(28),
+    borderWidth: 0.25,
+    borderColor: Colors.greyTxt,
+    borderRadius: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  msgtxt:{
-    fontSize:12,
-    fontWeight:"300",
-    fontFamily:fontFamily.regular,
-    color:Colors.white
+  msgtxt: {
+    fontSize: 12,
+    fontWeight: '300',
+    fontFamily: fontFamily.regular,
+    color: Colors.white,
   },
-  bensbio:{
-    fontSize:16,
-    fontWeight:"600",
-    fontFamily:fontFamily.regular,
-    color:Colors.white,
-    paddingLeft:20
+  bensbio: {
+    fontSize: 16,
+    fontWeight: '600',
+    fontFamily: fontFamily.regular,
+    color: Colors.white,
+    paddingLeft: 20,
   },
-  musicbtn:{
-    width:moderateScale(120),
-    height:moderateScaleVertical(28),
-    borderWidth:0.25,
-    borderRadius:2,
-    backgroundColor:Colors.lightPink,
-    justifyContent:"center",
-    alignItems:"center"
+  musicbtn: {
+    width: moderateScale(120),
+    height: moderateScaleVertical(28),
+    borderWidth: 0.25,
+    borderRadius: 2,
+    backgroundColor: Colors.lightPink,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  eventbtn:{
-    width:moderateScale(100),
-    height:moderateScaleVertical(28),
-    borderWidth:0.25,
-    borderRadius:2,
-    backgroundColor:Colors.lightPink,
-    justifyContent:"center",
-    alignItems:"center",
+  eventbtn: {
+    width: moderateScale(100),
+    height: moderateScaleVertical(28),
+    borderWidth: 0.25,
+    borderRadius: 2,
+    backgroundColor: Colors.lightPink,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  pastevents:{
-    fontSize:16,
-    fontWeight:"700",
-    fontFamily:fontFamily.bold,
-    color:Colors.white,
+  pastevents: {
+    fontSize: 16,
+    fontWeight: '700',
+    fontFamily: fontFamily.bold,
+    color: Colors.white,
   },
-  seeallbtn:{
-    borderBottomWidth:1,
-    borderColor:Colors.white,
-    width:moderateScale(55),
-    alignItems:"center"
+  seeallbtn: {
+    borderBottomWidth: 1,
+    borderColor: Colors.white,
+    width: moderateScale(55),
+    alignItems: 'center',
   },
-  seetxt:{
-    color:Colors.white,
-    fontSize:16,
-    fontFamily:fontFamily.regular,
-    fontWeight:"400"
+  seetxt: {
+    color: Colors.white,
+    fontSize: 16,
+    fontFamily: fontFamily.regular,
+    fontWeight: '400',
   },
-  discotext:{
-    fontSize:12,
-    fontWeight:"400",
-    fontFamily:fontFamily.regular,
-    color:Colors.white
-  }
+  discotext: {
+    fontSize: 12,
+    fontWeight: '400',
+    fontFamily: fontFamily.regular,
+    color: Colors.white,
+  },
+  liketxt: {
+    fontSize: 20,
+    fontWeight: '700',
+    alignItems: 'center',
+    textAlign: 'center',
+    color: Colors.white,
+    fontFamily: fontFamily.regular,
+    paddingLeft: 15,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: Colors.white,
+    marginTop: moderateScaleVertical(10),
+    marginBottom: moderateScaleVertical(10),
+    marginLeft: moderateScale(15),
+  },
+  typeText: {
+    ...commonStyles.font12,
+    color: Colors.white,
+    fontFamily: fontFamily.regular,
+  },
+  typeContainer: {
+    marginHorizontal: moderateScale(24),
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  type: {
+    paddingHorizontal: moderateScale(10),
+    paddingVertical: 6,
+    marginBottom: moderateScaleVertical(10),
+    marginRight: moderateScale(10),
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: Colors.lightPink,
+  },
+  listContainer: {
+    width: '90%',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginTop: moderateScaleVertical(10),
+  },
+  bioText: {
+    ...commonStyles.font12Regular,
+    color: Colors.white,
+    marginHorizontal: moderateScale(25),
+  },
 });

@@ -163,7 +163,7 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() =>
-                  navigation.navigate(NavigationStrings.OtherProfiles, {
+                  navigation.navigate(NavigationStrings.DatingUserProfile, {
                     id: item?._id,
                   })
                 }

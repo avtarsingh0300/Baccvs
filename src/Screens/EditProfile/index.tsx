@@ -145,132 +145,74 @@ const EditProfile = ({navigation}: any) => {
           showsVerticalScrollIndicator={false}>
           <Loadingcomponent isVisible={loading} />
           <Header title="Profile Edit" onPress={() => navigation.goBack()} />
-         <SizeBox size={10}/>
-         <Text style={styles.profiletxt}>Profile picture </Text>
-         <SizeBox size={15}/>
-         <View style={{alignItems:"center",width:"43%",alignSelf:"center"}}>
-          <Image source={ImagePath.ProfileImg} style={styles.editedimg}/>
-          <VectorIcon groupName='Feather' name='edit' size={20} style={styles.editvci}/>
-         </View>
-         <SizeBox size={10}/>
-         <Text style={styles.profiletxt}>Pictures & Videos </Text>
-         <SizeBox size={10} />
+          <SizeBox size={10} />
+          <Text style={styles.profiletxt}>Profile picture </Text>
+          <SizeBox size={15} />
+          <View
+            style={{alignItems: 'center', width: '43%', alignSelf: 'center'}}>
+            <Image source={ImagePath.ProfileImg} style={styles.editedimg} />
+            <VectorIcon
+              groupName="Feather"
+              name="edit"
+              size={20}
+              style={styles.editvci}
+            />
+          </View>
+          <SizeBox size={10} />
+          <Text style={styles.profiletxt}>Pictures & Videos </Text>
+          <SizeBox size={10} />
           <Text style={styles.label}>Music Type</Text>
-         <SizeBox size={2} />
+          <SizeBox size={2} />
           <Text style={styles.selecttxt}>Select music type</Text>
-          <SizeBox size={5}/>
-          <View>
-          <View style={{width:"100%"}}>
-          <View style={styles.langcon}>
-            <TouchableOpacity style={styles.itHolder}>
-              <Text style={styles.inpt}>
-              Disco / Funk / Soul
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.itHolder}>
-              <Text style={styles.inpt}>
-              EDM / Dance music
-              </Text>
-            </TouchableOpacity>
+          <SizeBox size={5} />
+
+          <View style={{width: '100%'}}>
+            {userData?.music_type?.map((i, index) => (
+              <View style={styles.langcon}>
+                <TouchableOpacity style={styles.itHolder}>
+                  <Text style={styles.inpt}>{i}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.itHolder}>
+                  <Text style={styles.inpt}>EDM / Dance music</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+
+            <SizeBox size={10} />
           </View>
-          <SizeBox size={10}/>
-          <View style={styles.langcon}>
-            <TouchableOpacity style={styles.itHolder}>
-              <Text style={styles.inpt}>
-              Underground
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.itHolder}>
-              <Text style={styles.inpt}>
-              Underground
-              </Text>
-            </TouchableOpacity>
-          </View>
-          </View>
-         <SizeBox size={10} />
-          <View style={styles.langcon}>
-            <TouchableOpacity style={styles.iptHolder}>
-              <Text style={styles.inpt}>
-              House
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.iptHold}>
-              <Text style={styles.inpt}>
-              Tech-House
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.iptHold}>
-              <Text style={styles.inpt}>
-              Commercial
-              </Text>
-            </TouchableOpacity>
-          </View>
-          </View>
-          <SizeBox size={10}/>
+
+          <SizeBox size={10} />
           <Text style={styles.label}>Event Type</Text>
-         <SizeBox size={2} />
+          <SizeBox size={2} />
           <Text style={styles.selecttxt}>Select event type</Text>
-          <SizeBox size={5}/>
-          <View>
-          <View>
+          <SizeBox size={5} />
+
           <View style={styles.langcon}>
             <TouchableOpacity style={styles.iptHolder}>
-              <Text style={styles.inpt}>
-              Private
-              </Text>
+              <Text style={styles.inpt}>Private</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.iptHolder}>
-              <Text style={styles.inpt}>
-              Corporate
-              </Text>
+              <Text style={styles.inpt}>Corporate</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.iptHold}>
-              <Text style={styles.inpt}>
-              Small events
-              </Text>
+              <Text style={styles.inpt}>Small events</Text>
             </TouchableOpacity>
           </View>
-          </View>
-         <SizeBox size={10} />
-          <View style={styles.langcon}>
-            <TouchableOpacity style={styles.iptHolder}>
-              <Text style={styles.inpt}>
-              Festivals
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.iptHolder}>
-              <Text style={styles.inpt}>
-              Bars
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.iptHold}>
-              <Text style={styles.inpt}>
-              Nightclubs
-              </Text>
-            </TouchableOpacity>
-          </View>
-          </View>
-          <SizeBox size={10}/>
+          <SizeBox size={10} />
           <Text style={styles.label}>Languages</Text>
           <SizeBox size={5} />
           <View>
-          <View style={styles.langcon}>
-            <TouchableOpacity style={styles.iptHolder}>
-              <Text style={styles.inpt}>
-             English
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.iptHolder}>
-              <Text style={styles.inpt}>
-             Spanish
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.iptHolder}>
-              <Text style={styles.inpt}>
-             French
-              </Text>
-            </TouchableOpacity>
-          </View>
+            <View style={styles.langcon}>
+              <TouchableOpacity style={styles.iptHolder}>
+                <Text style={styles.inpt}>English</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.iptHolder}>
+                <Text style={styles.inpt}>Spanish</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.iptHolder}>
+                <Text style={styles.inpt}>French</Text>
+              </TouchableOpacity>
+            </View>
           </View>
           <SizeBox size={10} />
           <Text style={styles.label}>Job title</Text>
@@ -299,38 +241,37 @@ const EditProfile = ({navigation}: any) => {
           <SizeBox size={10} />
           <Text style={styles.label}>Drinking</Text>
           <SizeBox size={5} />
-          <View style={styles.iptContainer}> 
+          <View style={styles.iptContainer}>
             <TouchableOpacity style={styles.inptHolder} activeOpacity={0.8}>
-                <Text style={styles.inpt}>Prefer not to say</Text>
-              </TouchableOpacity>
+              <Text style={styles.inpt}>Prefer not to say</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.inputHolder} activeOpacity={0.8}>
-                <Text style={styles.inpt}>Yes</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.inputHolder}activeOpacity={0.8} >
-                <Text style={styles.inpt}>No</Text>
-              </TouchableOpacity>
+              <Text style={styles.inpt}>Yes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.inputHolder} activeOpacity={0.8}>
+              <Text style={styles.inpt}>No</Text>
+            </TouchableOpacity>
           </View>
           <SizeBox size={10} />
           <Text style={styles.label}>Smoking</Text>
           <SizeBox size={5} />
           <View style={styles.iptContainer}>
             <TouchableOpacity style={styles.inptHolder} activeOpacity={0.8}>
-                <Text style={styles.inpt}>Prefer not to say</Text>
-              </TouchableOpacity>
+              <Text style={styles.inpt}>Prefer not to say</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.inputHolder} activeOpacity={0.8}>
-                <Text style={styles.inpt}>Yes</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.inputHolder} activeOpacity={0.8} >
-                <Text style={styles.inpt}>No</Text>
-              </TouchableOpacity>
+              <Text style={styles.inpt}>Yes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.inputHolder} activeOpacity={0.8}>
+              <Text style={styles.inpt}>No</Text>
+            </TouchableOpacity>
           </View>
           <View
             style={{
               width: '90%',
               alignSelf: 'center',
               marginTop: moderateScaleVertical(30),
-            }}>
-            </View>
+            }}></View>
         </KeyboardAwareScrollView>
         <Modal
           isVisible={

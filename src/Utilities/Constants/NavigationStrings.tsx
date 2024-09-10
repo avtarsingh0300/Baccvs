@@ -49,4 +49,6 @@ export default {
   FollowingScreen: 'FollowingScreen',
   MeetPeopleFilter: 'MeetPeopleFilter',
   EditSocialProfile: 'EditSocialProfile',
+  GrroupDeatils: 'GrroupDeatils',
+  DatingUserProfile: 'DatingUserProfile',
 };
