@@ -27,6 +27,7 @@ import commonStyles from '../../Utilities/Styles/commonStyles';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import {getEventTypes, teamsDetails} from '../../Utilities/Constants/auth';
 import languages from '../../Utilities/Constants';
+import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 
 const GrroupDeatils = ({navigation, route}: any) => {
   const [musicStyle, setMusicStyle] = useState([]);
@@ -34,9 +35,8 @@ const GrroupDeatils = ({navigation, route}: any) => {
   const [selectedMusic, setSelectedMusic] = useState([]);
   const [selectedInterestType, setselectedInterestType] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState([]);
+  const [teamData, setTeamData] = useState([]);
   const [loader, setLoader] = useState(false);
-
-  console.log(route.params?.data?._id, 'jbghjgg');
 
   useEffect(() => {
     setLoader(true);
@@ -61,11 +61,12 @@ const GrroupDeatils = ({navigation, route}: any) => {
 
   const getDetails = () => {
     const data = {
-      GroupId: route.params?.data?._id,
+      groupId: route.params?.data?._id,
     };
     teamsDetails(data)
       .then(res => {
-        console.log(res, 'res in teamsDetails');
+        console.log(JSON.stringify(res), 'res in teamsDetails');
+        setTeamData(res?.data);
         setLoader(false);
       })
       .catch(err => {
@@ -83,8 +84,8 @@ const GrroupDeatils = ({navigation, route}: any) => {
         // paddingHorizontal: moderateScale(22),
       }}>
       <SafeAreaView>
-        <ScrollView>
-          <Loadingcomponent isVisible={false} />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Loadingcomponent isVisible={loader} />
           <SizeBox size={10} />
           <View style={styles.header}>
             <TouchableOpacity
@@ -93,13 +94,13 @@ const GrroupDeatils = ({navigation, route}: any) => {
               <Image source={ImagePath.Arrow_Left_2} />
             </TouchableOpacity>
             <View style={styles.headerInnerBox}>
-              <Text style={styles.headerText}>Team name</Text>
+              <Text style={styles.headerText}>{teamData?.name}</Text>
             </View>
             <SizeBox size={5} />
           </View>
           <SizeBox size={10} />
           <FlatList
-            data={[{id: 0}, {id: 1}, {id: 2}, {id: 3}]}
+            data={teamData?.members}
             horizontal
             renderItem={({item, index}) => (
               <ImageBackground
@@ -107,9 +108,13 @@ const GrroupDeatils = ({navigation, route}: any) => {
                   styles.topImages,
                   {marginRight: index == 3 ? 0 : moderateScale(15)},
                 ]}
-                source={ImagePath.ProfileImg}
+                source={
+                  item?.picture
+                    ? {uri: `${IMAGE_URL}${item?.picture}`}
+                    : ImagePath.ProfileImg
+                }
                 borderRadius={10}>
-                <Text style={styles.nameTopImg}>Name</Text>
+                <Text style={styles.nameTopImg}>{item?.fullName}</Text>
               </ImageBackground>
             )}
             contentContainerStyle={{justifyContent: 'center', width: '100%'}}
@@ -121,13 +126,9 @@ const GrroupDeatils = ({navigation, route}: any) => {
           <SizeBox size={15} />
           <Text style={styles.label}>Who are we?</Text>
           <SizeBox size={6} />
-          <Text style={styles.description}>
-            DJ Hmida is the “Go TO” party DJ. She plays an eclectic mix of music
-            and enjoys working with her clients to create the perfect atmosphere
-            ...
-          </Text>
+          <Text style={styles.description}>{teamData?.description}</Text>
           <SizeBox size={5} />
-          <View style={styles.loactionContainer}>
+          {/* <View style={styles.loactionContainer}>
             <VectorIcon
               groupName="Ionicons"
               name="location-outline"
@@ -137,19 +138,19 @@ const GrroupDeatils = ({navigation, route}: any) => {
             <Text style={{...commonStyles.font14Bold, marginLeft: 10}}>
               The closest is 2 km away
             </Text>
-          </View>
+          </View> */}
           <SizeBox size={10} />
           <Text style={styles.label}>Music Type</Text>
           <SizeBox size={10} />
           <FlatList
-            data={musicStyle}
+            data={teamData?.music_type}
             contentContainerStyle={{
               justifyContent: 'center',
               width: '100%',
               paddingHorizontal: moderateScale(20),
             }}
             renderItem={({item}) => {
-              if (!item || !item._id) {
+              if (!item) {
                 return null;
               }
               return (
@@ -168,13 +169,13 @@ const GrroupDeatils = ({navigation, route}: any) => {
                       ...commonStyles.font12Regular,
                       color: Colors.white,
                     }}>
-                    {item?.name}
+                    {item}
                   </Text>
                 </View>
               );
             }}
             numColumns={3}
-            keyExtractor={item => item._id.toString()}
+            keyExtractor={(item, index) => index.toString()}
           />
           <SizeBox size={10} />
           <Text style={styles.label}>Event Type</Text>
@@ -187,7 +188,7 @@ const GrroupDeatils = ({navigation, route}: any) => {
               paddingHorizontal: moderateScale(20),
             }}
             renderItem={({item}) => {
-              if (!item || !item._id) {
+              if (!item) {
                 return null;
               }
               return (
@@ -218,7 +219,7 @@ const GrroupDeatils = ({navigation, route}: any) => {
           <Text style={styles.label}>Languages</Text>
           <SizeBox size={10} />
           <FlatList
-            data={languages.slice(0, 4)}
+            data={teamData?.language}
             contentContainerStyle={{
               justifyContent: 'center',
               width: '100%',
@@ -244,7 +245,7 @@ const GrroupDeatils = ({navigation, route}: any) => {
                       ...commonStyles.font12Regular,
                       color: Colors.white,
                     }}>
-                    {item?.name}
+                    {item}
                   </Text>
                 </View>
               );

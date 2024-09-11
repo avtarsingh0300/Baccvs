@@ -25,26 +25,27 @@ import {
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
-import {getEventTypes} from '../../Utilities/Constants/auth';
+import {getEventTypes, getMemberDetails} from '../../Utilities/Constants/auth';
 import languages from '../../Utilities/Constants';
+import Swiper from 'react-native-swiper';
+import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 
-const DatingUserProfile = ({navigation}: any) => {
+const DatingUserProfile = ({navigation, route}: any) => {
   const [musicStyle, setMusicStyle] = useState([]);
   const [interestType, setInterestType] = useState([]);
-  const [selectedMusic, setSelectedMusic] = useState([]);
-  const [selectedInterestType, setselectedInterestType] = useState([]);
-  const [selectedLanguage, setSelectedLanguage] = useState([]);
   const [loader, setLoader] = useState(false);
+  const [userData, setUserData] = useState({});
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     setLoader(true);
     getEventsTypes();
+    getMemberData();
   }, []);
 
   const getEventsTypes = () => {
     getEventTypes()
       .then(res => {
-        console.log(res, 'res');
         setMusicStyle(res?.musictype);
         setInterestType(res?.interesttype);
         setLoader(false);
@@ -53,6 +54,22 @@ const DatingUserProfile = ({navigation}: any) => {
         setLoader(false);
         showError(err?.message);
         console.log(err);
+      });
+  };
+
+  const getMemberData = () => {
+    const data = {
+      id: route?.params?.id,
+    };
+    getMemberDetails(data)
+      .then(res => {
+        setUserData(res?.user);
+        // console.log(res, 'res in getMemberDetails');
+        setLoader(false);
+      })
+      .catch(err => {
+        setLoader(false);
+        console.log(err, 'err in getMemberDetails');
       });
   };
 
@@ -127,21 +144,74 @@ const DatingUserProfile = ({navigation}: any) => {
               onPress={() => navigation.goBack()}>
               <Image source={ImagePath.Arrow_Left_2} />
             </TouchableOpacity>
-            <Text style={styles.headerText}>Team name</Text>
+            <Text style={styles.headerText}>{userData?.full_name}</Text>
             <SizeBox size={5} />
           </View>
           <SizeBox size={10} />
           <Text style={[styles.label, {}]}>Pictures & Videos</Text>
           <SizeBox size={10} />
-          <Image source={ImagePath.ProfileImg} style={styles.midImage} />
+          {userData?.pictures && (
+            <Swiper
+              // showsButtons={false}
+              loop={true}
+              autoplay
+              // autoplayDirection={true}
+              autoplayTimeout={2000}
+              // scrollEnabled={false}
+              showsPagination={false}
+              height={height / 3}
+              width={width}
+              style={{
+                borderRadius: 10,
+              }}
+              containerStyle={{borderRadius: 10}}
+              contentContainerStyle={{borderRadius: 10}}
+              // index={activeIndex}
+              onIndexChanged={index => {
+                setActiveIndex(index);
+              }}>
+              {userData?.pictures?.map((i, ind) => (
+                <ImageBackground
+                  borderRadius={10}
+                  source={{uri: IMAGE_URL + i}}
+                  // source={ImagePath.ProfileImg}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    alignSelf: 'center',
+                    borderWidth: 1,
+                    borderColor: Colors.Pink,
+                    borderRadius: 10,
+                    // marginBottom: 20,
+                  }}>
+                  <View
+                    style={{
+                      alignSelf: 'center',
+                      flexDirection: 'row',
+                      marginTop: moderateScaleVertical(20),
+                    }}>
+                    {userData?.pictures?.map((i, ind) => (
+                      <TouchableOpacity
+                        activeOpacity={0.8}
+                        style={{paddingVertical: 5}}>
+                        <View
+                          style={{
+                            ...styles.bar,
+                            backgroundColor:
+                              activeIndex === ind ? Colors.Pink : Colors.white,
+                          }}
+                        />
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </ImageBackground>
+              ))}
+            </Swiper>
+          )}
           <SizeBox size={15} />
           <Text style={styles.label}>About Kingson</Text>
           <SizeBox size={6} />
-          <Text style={styles.description}>
-            DJ Hmida is the “Go TO” party DJ. She plays an eclectic mix of music
-            and enjoys working with her clients to create the perfect atmosphere
-            ...
-          </Text>
+          <Text style={styles.description}>{userData?.bio}</Text>
           <SizeBox size={5} />
           <View style={styles.loactionContainer}>
             <VectorIcon
@@ -203,7 +273,7 @@ const DatingUserProfile = ({navigation}: any) => {
               paddingHorizontal: moderateScale(20),
             }}
             renderItem={({item}) => {
-              if (!item || !item._id) {
+              if (!item) {
                 return null;
               }
               return (
@@ -432,5 +502,10 @@ const styles = StyleSheet.create({
   dateText: {
     ...commonStyles.font14,
     marginLeft: moderateScale(7),
+  },
+  bar: {
+    width: 59,
+    height: 1,
+    marginRight: 10,
   },
 });
