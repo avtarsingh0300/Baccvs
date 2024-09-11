@@ -183,6 +183,11 @@ export default function MainStack(Stack: any) {
         component={screens.DatingUserProfile}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.HomeNight}
+        component={screens.HomeNight}
+        options={{headerShown: false}}
+      />
     </>
   );
 }

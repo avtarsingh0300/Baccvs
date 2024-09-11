@@ -576,7 +576,7 @@ const AddScreen = ({navigation}: any) => {
                 );
               }}
               numColumns={3}
-              keyExtractor={item => item._id.toString()}
+              tractor={item => item._id.toString()}
             />
             <SizeBox size={10} />
             <Text
