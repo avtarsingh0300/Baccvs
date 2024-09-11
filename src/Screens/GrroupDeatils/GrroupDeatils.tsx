@@ -25,10 +25,10 @@ import {
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
-import {getEventTypes} from '../../Utilities/Constants/auth';
+import {getEventTypes, teamsDetails} from '../../Utilities/Constants/auth';
 import languages from '../../Utilities/Constants';
 
-const GrroupDeatils = ({navigation}: any) => {
+const GrroupDeatils = ({navigation, route}: any) => {
   const [musicStyle, setMusicStyle] = useState([]);
   const [interestType, setInterestType] = useState([]);
   const [selectedMusic, setSelectedMusic] = useState([]);
@@ -36,17 +36,36 @@ const GrroupDeatils = ({navigation}: any) => {
   const [selectedLanguage, setSelectedLanguage] = useState([]);
   const [loader, setLoader] = useState(false);
 
+  console.log(route.params?.data?._id, 'jbghjgg');
+
   useEffect(() => {
     setLoader(true);
     getEventsTypes();
+    getDetails();
   }, []);
 
   const getEventsTypes = () => {
     getEventTypes()
       .then(res => {
-        console.log(res, 'res');
+        // console.log(res, 'res');
         setMusicStyle(res?.musictype);
         setInterestType(res?.interesttype);
+        setLoader(false);
+      })
+      .catch(err => {
+        setLoader(false);
+        showError(err?.message);
+        console.log(err);
+      });
+  };
+
+  const getDetails = () => {
+    const data = {
+      GroupId: route.params?.data?._id,
+    };
+    teamsDetails(data)
+      .then(res => {
+        console.log(res, 'res in teamsDetails');
         setLoader(false);
       })
       .catch(err => {
@@ -68,7 +87,9 @@ const GrroupDeatils = ({navigation}: any) => {
           <Loadingcomponent isVisible={false} />
           <SizeBox size={10} />
           <View style={styles.header}>
-            <TouchableOpacity activeOpacity={0.8}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => navigation.goBack()}>
               <Image source={ImagePath.Arrow_Left_2} />
             </TouchableOpacity>
             <View style={styles.headerInnerBox}>

@@ -9,6 +9,7 @@ import {
   FlatList,
   TextInput,
   Alert,
+  ImageBackground,
 } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import commonStyles from '../../Utilities/Styles/commonStyles';
@@ -26,7 +27,6 @@ import {
   SizeBox,
   showError,
 } from '../../Utilities/Component/Helpers';
-import {ImageBackground} from 'react-native';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import {
   createMeetGroup,
@@ -42,6 +42,7 @@ import styles from './style';
 import ImagePicker from 'react-native-image-crop-picker';
 import languages from '../../Utilities/Constants';
 import uuid from 'react-native-uuid';
+import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 
 const CreateGroup = ({navigation}: any) => {
   const [musicStyle, setMusicStyle] = useState([]);
@@ -86,12 +87,15 @@ const CreateGroup = ({navigation}: any) => {
     var membersFilter = selectMembers?.map(i => {
       return i?.id;
     });
+    var interestFilter = selectedInterestType?.map(i => {
+      return i?.id;
+    });
 
     const data = new FormData();
     data.append('name', eventname);
     data.append('description', bio);
     data.append('music_type', selectedMusic);
-    data.append('interest', selectedInterestType);
+    data.append('interest', interestFilter);
     data.append('language', selectedLanguage);
     data.append('members', membersFilter);
     selectedImages.forEach((image, index) => {
@@ -216,16 +220,6 @@ const CreateGroup = ({navigation}: any) => {
     );
   };
 
-  const interestsList = [
-    'Dining',
-    'Parties',
-    'Activities',
-    'Spontaneous meetings',
-    'Virtual meetings',
-    'Nightclubs',
-    'Cultural experiences',
-  ];
-
   const handleSearchMusic = useCallback(() => {
     const results = searchItems(searchMusic, musicStyle);
     return results;
@@ -248,8 +242,6 @@ const CreateGroup = ({navigation}: any) => {
         : item?.toLowerCase().includes(query?.toLowerCase()),
     );
   };
-
-  // console.log(selectedImages, 'selectedImages');
 
   return (
     <LinearGradient
@@ -326,32 +318,40 @@ const CreateGroup = ({navigation}: any) => {
                 // style={{width: '100%', height: '100%'}}
                 // contentContainerStyle={{width: '100%', height: '100%'}}
               >
-                {selectMembers?.map(item => (
-                  <View
-                    style={[
-                      styles.imageContainer2,
-                      {height: height / 7, borderWidth: 0},
-                    ]}>
-                    <Image
-                      source={{uri: item?.image}}
-                      style={{width: '100%', height: '100%', borderRadius: 5}}
-                    />
-
-                    <VectorIcon
-                      groupName="Entypo"
-                      name="cross"
-                      color={Colors.red}
-                      size={26}
-                      onPress={() => {
-                        const filterData2 = selectMembers?.filter(
-                          (i: any) => i != item,
-                        );
-                        setSelectMembers(filterData2);
-                      }}
-                      style={{bottom: -15, position: 'absolute'}}
-                    />
-                  </View>
-                ))}
+                {selectMembers?.map(
+                  item => (
+                    console.log(item, 'item'),
+                    (
+                      <View
+                        style={[
+                          styles.imageContainer2,
+                          {height: height / 7, borderWidth: 0},
+                        ]}>
+                        <Image
+                          source={{uri: item?.image}}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            borderRadius: 5,
+                          }}
+                        />
+                        <VectorIcon
+                          groupName="Entypo"
+                          name="cross"
+                          color={Colors.red}
+                          size={26}
+                          onPress={() => {
+                            const filterData2 = selectMembers?.filter(
+                              (i: any) => i != item,
+                            );
+                            setSelectMembers(filterData2);
+                          }}
+                          style={{bottom: -15, position: 'absolute'}}
+                        />
+                      </View>
+                    )
+                  ),
+                )}
                 <TouchableOpacity
                   onPress={() => setModalVisible(true)}
                   style={[styles.imageContainer2, {height: height / 7}]}>
@@ -560,7 +560,7 @@ const CreateGroup = ({navigation}: any) => {
             <SizeBox size={10} />
             <CommonInput
               multiline={true}
-              placeholder=""
+              placeholder="Bio"
               value={bio}
               onChangeText={(text: string) => setBio(text)}
               styless={styles.multiInput}

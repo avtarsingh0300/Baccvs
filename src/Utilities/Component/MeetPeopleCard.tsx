@@ -16,7 +16,6 @@ import {
   width,
 } from '../Styles/responsiveSize';
 import {useNavigation} from '@react-navigation/native';
-import FastImage from 'react-native-fast-image';
 import {Colors} from '../Styles/colors';
 import {IMAGE_URL} from '../Constants/Urls';
 import ImagePath from '../Constants/ImagePath';
