@@ -1,6 +1,5 @@
-import {Platform, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {
-  height,
   moderateScale,
   moderateScaleVertical,
   textScale,
@@ -25,7 +24,7 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // paddingVertical: moderateScaleVertical(10),
+
     alignItems: 'center',
   },
   iptContainer: {
@@ -59,51 +58,7 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
     marginLeft: moderateScale(15),
   },
-  modalContainer: {
-    padding: 15,
-    width: '100%',
-    borderWidth: 1,
-    borderColor: Colors.inputborder,
-    borderRadius: 8,
-    backgroundColor: Colors.LinearBlack,
-  },
-  mondaInvw: {
-    padding: 5,
-    borderColor: Colors.Pink,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  biotxt: {
-    fontSize: textScale(20),
-    fontFamily: fontFamily.time_bold,
-    textAlign: 'center',
-    color: Colors.white,
-  },
-  langContainer: {
-    padding: 7,
-    paddingLeft: 18,
-    borderWidth: 1,
-    borderLeftWidth: 1,
-    borderColor: Colors.white,
-    borderRadius: 8,
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-  },
-  langItem: {
-    padding: 7,
-    borderWidth: 1,
-    borderColor: Colors.white,
-    borderRadius: 8,
-    margin: 5,
-  },
-  langItemText: {
-    color: Colors.greyTxt,
-    fontFamily: fontFamily.time_regular,
-    padding: 0,
-    fontWeight: '400',
-    fontSize: textScale(14),
-  },
+
   editedimg: {
     width: moderateScale(139),
     height: moderateScaleVertical(156),
@@ -139,11 +94,15 @@ export const styles = StyleSheet.create({
     width: moderateScale(134),
   },
   iptHolder: {
-    padding: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
     borderWidth: 0.25,
     borderLeftWidth: 0.25,
     borderColor: Colors.greyTxt,
     borderRadius: 2,
+    marginHorizontal: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
     // width:moderateScale(91)
   },
   iptHold: {
@@ -162,18 +121,38 @@ export const styles = StyleSheet.create({
     borderRadius: 2,
     alignItems: 'center',
     marginHorizontal: 5,
+    marginVertical: 5,
   },
   inpt: {
-    color: Colors.greyTxt,
+    color: Colors.white,
     fontFamily: fontFamily.time_regular,
     padding: 0,
     fontWeight: '400',
     fontSize: textScale(12),
-    width: '100%',
     textAlign: 'center',
   },
   langcon: {
     flexDirection: 'row',
     paddingHorizontal: 15,
+  },
+  Btnmain: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    marginVertical: 30,
+  },
+  btn: {
+    padding: 1,
+    borderRadius: 7,
+    width: '30%',
+  },
+  button: {
+    backgroundColor: Colors.backgroundNew,
+    borderRadius: 7,
+    height: 50,
+    justifyContent: 'center',
+  },
+  text: {
+    ...commonStyles.font14Center,
   },
 });

@@ -239,7 +239,12 @@ const HomeScreen = ({navigation}: any) => {
         </View>
         <SizeBox size={14} />
         <View style={{paddingHorizontal: 15}}>
-          <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
+          <View
+            style={{
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              marginTop: 10,
+            }}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <ImageComponent
                 source={ImagePath.priceTag}
@@ -403,8 +408,18 @@ const HomeScreen = ({navigation}: any) => {
           <Text style={styles.date}>
             {moment(value).format('DD MMMM YYYY')} ({eventData?.length})
           </Text>
-          <TouchableOpacity style={styles.allBtn} onPress={toggleModal}>
-            <Text style={{color: Colors.white, ...commonStyles.font12Regular}}>
+          <TouchableOpacity
+            style={[
+              styles.allBtn,
+              {
+                borderWidth: 1,
+                width: '30%',
+                alignItems: 'center',
+                justifyContent: 'center',
+              },
+            ]}
+            onPress={toggleModal}>
+            <Text style={{...commonStyles.font12Regular, color: Colors.white}}>
               {selectedOption}
             </Text>
           </TouchableOpacity>
@@ -435,61 +450,100 @@ const HomeScreen = ({navigation}: any) => {
         <Modal
           useNativeDriver={true}
           hideModalContentWhileAnimating={true}
-          animationIn="fadeIn"
-          animationOut="fadeOut"
           onBackdropPress={toggleModal}
           avoidKeyboard={true}
-          style={{flex: 1, margin: 0, justifyContent: 'flex-start'}}
+          style={{
+            justifyContent: 'flex-end',
+            margin: 0,
+          }}
           isVisible={isModalVisible}
-          backdropOpacity={0.2}>
+          backdropOpacity={0.8}
+          animationIn="slideInUp"
+          animationOut="flipOutY">
           <View style={styles.optionContainer}>
             <TouchableOpacity
               style={styles.allBtn}
               onPress={() => toggleStatus('all')}>
               <Text
                 style={{
-                  color: Colors.white,
                   ...commonStyles.font12Regular,
                   alignSelf: 'center',
                 }}>
                 All
               </Text>
+              <VectorIcon
+                groupName="Fontisto"
+                name={
+                  selectedOption == 'all'
+                    ? 'radio-btn-active'
+                    : 'radio-btn-passive'
+                }
+                color={Colors.lightPink}
+                size={15}
+              />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.allBtn}
               onPress={() => toggleStatus('Ongoing')}>
               <Text
                 style={{
-                  color: Colors.red,
                   ...commonStyles.font12Regular,
                   alignSelf: 'center',
                 }}>
                 Ongoing
               </Text>
+              <VectorIcon
+                groupName="Fontisto"
+                name={
+                  selectedOption == 'Ongoing'
+                    ? 'radio-btn-active'
+                    : 'radio-btn-passive'
+                }
+                color={Colors.lightPink}
+                size={15}
+              />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.allBtn}
               onPress={() => toggleStatus('upcoming')}>
               <Text
                 style={{
-                  color: Colors.red,
                   ...commonStyles.font12Regular,
                   alignSelf: 'center',
                 }}>
                 Upcoming
               </Text>
+              <VectorIcon
+                groupName="Fontisto"
+                name={
+                  selectedOption == 'upcoming'
+                    ? 'radio-btn-active'
+                    : 'radio-btn-passive'
+                }
+                color={Colors.lightPink}
+                size={15}
+              />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.allBtn}
               onPress={() => toggleStatus('missed')}>
               <Text
                 style={{
-                  color: Colors.red,
                   ...commonStyles.font12Regular,
                   alignSelf: 'center',
                 }}>
                 Missed
               </Text>
+              <VectorIcon
+                groupName="Fontisto"
+                name={
+                  selectedOption == 'missed'
+                    ? 'radio-btn-active'
+                    : 'radio-btn-passive'
+                }
+                color={Colors.lightPink}
+                size={15}
+              />
             </TouchableOpacity>
           </View>
         </Modal>

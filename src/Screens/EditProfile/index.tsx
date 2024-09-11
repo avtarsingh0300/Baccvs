@@ -12,50 +12,39 @@ import LinearGradient from 'react-native-linear-gradient';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {styles} from './style';
 import {
-  CommonBtn,
   CommonInput,
-  CommonInputBtn,
   Header,
   Loadingcomponent,
   SizeBox,
+  showError,
 } from '../../Utilities/Component/Helpers';
-import {
-  height,
-  moderateScale,
-  moderateScaleVertical,
-} from '../../Utilities/Styles/responsiveSize';
-import Modal from 'react-native-modal';
-import fontFamily from '../../Utilities/Styles/fontFamily';
+
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import {
+  getEventTypes,
   getUserProfile,
   UpdateUserProfile,
 } from '../../Utilities/Constants/auth';
 import languages from '../../Utilities/Constants';
+import ImagePicker from 'react-native-image-crop-picker';
+import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 
 const EditProfile = ({navigation}: any) => {
-  const [Name, setName] = useState('');
-  const [userHeight, setUserHeight] = useState('');
-  const [userAge, setUserAge] = useState('');
   const [userBio, setUserBio] = useState('');
   const [userLocation, setUserLocation] = useState('');
-  const [sign, setSign] = useState('');
   const [job, setJob] = useState('');
-  const [selectedDrink, setSelectDrink] = useState('');
-  const [selectedSmoke, setSelectSmoke] = useState('');
-  const [selectedGender, setSelectGender] = useState('');
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [modalVisibleLang, setModalVisibleLang] = useState<boolean>(false);
-  const [modalVisibleDrink, setModalVisibleDrink] = useState<boolean>(false);
-  const [selectedLang, setSelectedLang] = useState([]);
   const [userData, setUserData] = useState<object>({});
-  const [modalVisibleSmoking, setModalVisibleSmoking] =
-    useState<boolean>(false);
-  const genders = ['Male', 'Female', 'Other'];
-  const lang = ['English', 'Arabic', 'French', 'Dutch'];
-  const drinkList = ['Yes', 'No', 'Prefer not to say'];
+  const [zodiacsign, setZodiacsign] = useState('');
+  const [musicStyle, setMusicStyle] = useState([]);
+  const [selMusic, setSelMusic] = useState([]);
+  const [eventType, setEventType] = useState([]);
+  const [selEventType, setsSelEventType] = useState([]);
+  const [profileimg, setProfileImg] = useState('');
+  const [drinkingsel, setDrinkingsel] = useState('');
+  const [smokingsel, setSmokingsel] = useState('');
+  const [languagesel, setLanguagesel] = useState('');
   const onBack = () => {
     navigation.goBack();
   };
@@ -63,47 +52,48 @@ const EditProfile = ({navigation}: any) => {
   useEffect(() => {
     setLoading(true);
     getUserData();
+    getEventsTypes();
   }, []);
+
+  const getEventsTypes = () => {
+    getEventTypes()
+      .then(res => {
+        setMusicStyle(res?.musictype);
+        setEventType(res?.eventtype);
+      })
+      .catch(err => {
+        showError(err?.message), console.log(err);
+      });
+  };
+  const addImg = () => {
+    ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true,
+    }).then(image => {
+      console.log(image);
+      setProfileImg(image.path);
+    });
+  };
 
   const getUserData = async () => {
     getUserProfile()
       .then(res => {
-        // console.log(res, "res in getUserProfile");
-        setUserData(res);
-        setName(res?.full_name);
-        setUserHeight(res?.height);
-        setUserAge(res?.age?.toString());
-        setSign(res?.zodiac_sign);
-        setJob(res?.job_title);
-        setSelectDrink(res?.drinking);
-        setSelectDrink(res?.drinking);
-        setSelectSmoke(res?.smoking);
-        setUserBio(res?.bio);
-        setSelectedLang(res?.language);
-        setSelectGender(res?.gender);
-        setUserLocation(res?.location);
+        console.log(res, 'res in getUserProfile');
+        setUserData(res?.user);
+        setZodiacsign(res?.user?.zodiac_sign);
+        setJob(res?.user?.job_title);
+        setUserBio(res?.user?.bio);
+        setDrinkingsel(res?.user?.drinking);
+        setSmokingsel(res?.user?.smoking);
+        setUserLocation(res?.user?.location);
         setLoading(false);
       })
       .catch(err => {
         setLoading(false);
+        showError(err?.message);
         console.log(err, 'err in getUserProfile');
       });
-  };
-
-  const selectModalHandler = (item: any) => {
-    if (modalVisibleLang) {
-      const filterData = selectedLang?.filter((i: any) => i == item?.name);
-      if (filterData?.length > 0) {
-        const filterData2 = selectedLang?.filter((i: any) => i != item?.name);
-        setSelectedLang(filterData2);
-      } else {
-        setSelectedLang([...selectedLang, item?.name]);
-      }
-    } else {
-      // setSelectedGender(item);
-      // setModalVisible(false);
-      // setModalLanguageVisible(false);
-    }
   };
 
   const updateProfileHandler = () => {
@@ -112,7 +102,7 @@ const EditProfile = ({navigation}: any) => {
       gender: selectedGender,
       height: userHeight,
       age: userAge,
-      zodiac_sign: sign,
+      zodiac_sign: zodiacsign,
       job_title: job,
       location: userLocation,
       language: selectedLang,
@@ -133,6 +123,25 @@ const EditProfile = ({navigation}: any) => {
       });
   };
 
+  const toggleSelection = (item: any) => {
+    setSelMusic((prevSelectedItems: any) => {
+      if (prevSelectedItems.includes(item?._id)) {
+        return prevSelectedItems.filter((id: any) => id !== item?._id);
+      } else {
+        return [...prevSelectedItems, item?._id];
+      }
+    });
+  };
+
+  const toggleSelection2 = (item: any) => {
+    setsSelEventType((prevSelectedItems: any) => {
+      if (prevSelectedItems.includes(item?._id)) {
+        return prevSelectedItems.filter((name: any) => name !== item?._id);
+      } else {
+        return [...prevSelectedItems, item?._id];
+      }
+    });
+  };
   return (
     <LinearGradient
       colors={[Colors.backgroundNew, Colors.backgroundNew]}
@@ -144,22 +153,66 @@ const EditProfile = ({navigation}: any) => {
           contentContainerStyle={styles.container}
           showsVerticalScrollIndicator={false}>
           <Loadingcomponent isVisible={loading} />
+          <View style={{paddingHorizontal: 15}}></View>
           <Header title="Profile Edit" onPress={() => navigation.goBack()} />
           <SizeBox size={10} />
           <Text style={styles.profiletxt}>Profile picture </Text>
           <SizeBox size={15} />
-          <View
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={addImg}
             style={{alignItems: 'center', width: '43%', alignSelf: 'center'}}>
-            <Image source={ImagePath.ProfileImg} style={styles.editedimg} />
+            {userData?.pictures?.length > 0 ? (
+              <Image
+                source={{
+                  uri: profileimg
+                    ? profileimg
+                    : IMAGE_URL + userData?.pictures[0],
+                }}
+                style={styles.editedimg}
+              />
+            ) : (
+              <>
+                {profileimg ? (
+                  <Image
+                    source={{
+                      uri: profileimg,
+                    }}
+                    style={styles.editedimg}
+                  />
+                ) : (
+                  <Image
+                    source={ImagePath.ProfileImg}
+                    style={styles.editedimg}
+                  />
+                )}
+              </>
+            )}
+
             <VectorIcon
               groupName="Feather"
               name="edit"
               size={20}
               style={styles.editvci}
             />
-          </View>
+          </TouchableOpacity>
           <SizeBox size={10} />
           <Text style={styles.profiletxt}>Pictures & Videos </Text>
+
+          <SizeBox size={10} />
+          <Text style={styles.label}>{userData?.username}'s Bio</Text>
+          <SizeBox size={5} />
+          <View style={styles.inputContainer}>
+            <View style={{width: '90%'}}>
+              <CommonInput
+                multiline={true}
+                placeholder="Introduce yourself"
+                value={userBio}
+                onChangeText={(e: string) => setUserBio(e)}
+                styless={{undefined}}
+              />
+            </View>
+          </View>
           <SizeBox size={10} />
           <Text style={styles.label}>Music Type</Text>
           <SizeBox size={2} />
@@ -167,49 +220,129 @@ const EditProfile = ({navigation}: any) => {
           <SizeBox size={5} />
 
           <View style={{width: '100%'}}>
-            {userData?.music_type?.map((i, index) => (
-              <View style={styles.langcon}>
-                <TouchableOpacity style={styles.itHolder}>
-                  <Text style={styles.inpt}>{i}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.itHolder}>
-                  <Text style={styles.inpt}>EDM / Dance music</Text>
-                </TouchableOpacity>
-              </View>
-            ))}
+            <FlatList
+              data={musicStyle}
+              renderItem={({item}) => (
+                <View style={styles.langcon}>
+                  <TouchableOpacity
+                    onPress={() => toggleSelection(item)}
+                    style={[
+                      styles.itHolder,
+                      {
+                        backgroundColor: selMusic.includes(item?._id)
+                          ? Colors.lightPink
+                          : Colors.backgroundNew,
+                      },
+                    ]}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      {selMusic.includes(item?._id) ? (
+                        <VectorIcon
+                          groupName="AntDesign"
+                          name="check"
+                          color={Colors.white}
+                          size={15}
+                          style={{alignSlef: 'centre'}}
+                        />
+                      ) : null}
+
+                      <Text style={[styles.inpt]}>
+                        {` `}
+                        {item?.name}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              )}
+              numColumns={2}
+            />
 
             <SizeBox size={10} />
           </View>
 
-          <SizeBox size={10} />
           <Text style={styles.label}>Event Type</Text>
           <SizeBox size={2} />
           <Text style={styles.selecttxt}>Select event type</Text>
           <SizeBox size={5} />
 
-          <View style={styles.langcon}>
-            <TouchableOpacity style={styles.iptHolder}>
-              <Text style={styles.inpt}>Private</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.iptHolder}>
-              <Text style={styles.inpt}>Corporate</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.iptHold}>
-              <Text style={styles.inpt}>Small events</Text>
-            </TouchableOpacity>
+          <View style={{width: '100%'}}>
+            <FlatList
+              data={eventType}
+              renderItem={({item}) => (
+                <View style={styles.langcon}>
+                  <TouchableOpacity
+                    onPress={() => toggleSelection2(item)}
+                    style={[
+                      styles.itHolder,
+                      {
+                        backgroundColor: selEventType.includes(item?._id)
+                          ? Colors.lightPink
+                          : Colors.backgroundNew,
+                      },
+                    ]}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      {selEventType.includes(item?._id) ? (
+                        <VectorIcon
+                          groupName="AntDesign"
+                          name="check"
+                          color={Colors.white}
+                          size={15}
+                          style={{alignSlef: 'centre'}}
+                        />
+                      ) : null}
+
+                      <Text style={[styles.inpt]}>
+                        {` `}
+                        {item?.name}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              )}
+              numColumns={2}
+            />
           </View>
           <SizeBox size={10} />
           <Text style={styles.label}>Languages</Text>
           <SizeBox size={5} />
           <View>
             <View style={styles.langcon}>
-              <TouchableOpacity style={styles.iptHolder}>
+              <TouchableOpacity
+                style={[
+                  styles.iptHolder,
+                  {
+                    backgroundColor:
+                      languagesel == 'English'
+                        ? Colors.lightPink
+                        : Colors.backgroundNew,
+                  },
+                ]}
+                onPress={() => setLanguagesel('English')}>
                 <Text style={styles.inpt}>English</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.iptHolder}>
+              <TouchableOpacity
+                onPress={() => setLanguagesel('Spanish')}
+                style={[
+                  styles.iptHolder,
+                  {
+                    backgroundColor:
+                      languagesel == 'Spanish'
+                        ? Colors.lightPink
+                        : Colors.backgroundNew,
+                  },
+                ]}>
                 <Text style={styles.inpt}>Spanish</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.iptHolder}>
+              <TouchableOpacity
+                onPress={() => setLanguagesel('French')}
+                style={[
+                  styles.iptHolder,
+                  {
+                    backgroundColor:
+                      languagesel == 'French'
+                        ? Colors.lightPink
+                        : Colors.backgroundNew,
+                  },
+                ]}>
                 <Text style={styles.inpt}>French</Text>
               </TouchableOpacity>
             </View>
@@ -222,10 +355,25 @@ const EditProfile = ({navigation}: any) => {
               <CommonInput
                 placeholder="Job title"
                 value={job}
-                onChangeText={(e: string) => setJob(e?.trim())}
+                onChangeText={(e: string) => setJob(e)}
+                styless={{undefined}}
               />
             </View>
           </View>
+          <SizeBox size={10} />
+          <Text style={styles.label}>Zodiac Sign</Text>
+          <SizeBox size={5} />
+          <View style={styles.inputContainer}>
+            <View style={{width: '90%'}}>
+              <CommonInput
+                placeholder="Add your zodiac sign "
+                value={zodiacsign}
+                onChangeText={(e: string) => setZodiacsign(e)}
+                styless={{undefined}}
+              />
+            </View>
+          </View>
+
           <SizeBox size={10} />
           <Text style={styles.label}>Location</Text>
           <SizeBox size={5} />
@@ -235,6 +383,7 @@ const EditProfile = ({navigation}: any) => {
                 placeholder="Add your area"
                 value={userLocation}
                 onChangeText={(e: string) => setUserLocation(e)}
+                styless={{undefined}}
               />
             </View>
           </View>
@@ -242,13 +391,46 @@ const EditProfile = ({navigation}: any) => {
           <Text style={styles.label}>Drinking</Text>
           <SizeBox size={5} />
           <View style={styles.iptContainer}>
-            <TouchableOpacity style={styles.inptHolder} activeOpacity={0.8}>
+            <TouchableOpacity
+              style={[
+                styles.inptHolder,
+                {
+                  backgroundColor:
+                    drinkingsel == 'Prefer not to say'
+                      ? Colors.lightPink
+                      : Colors.backgroundNew,
+                },
+              ]}
+              activeOpacity={0.8}
+              onPress={() => setDrinkingsel('Prefer not to say')}>
               <Text style={styles.inpt}>Prefer not to say</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputHolder} activeOpacity={0.8}>
+            <TouchableOpacity
+              style={[
+                styles.inputHolder,
+                {
+                  backgroundColor:
+                    drinkingsel == 'Yes'
+                      ? Colors.lightPink
+                      : Colors.backgroundNew,
+                },
+              ]}
+              activeOpacity={0.8}
+              onPress={() => setDrinkingsel('Yes')}>
               <Text style={styles.inpt}>Yes</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputHolder} activeOpacity={0.8}>
+            <TouchableOpacity
+              style={[
+                styles.inputHolder,
+                {
+                  backgroundColor:
+                    drinkingsel == 'No'
+                      ? Colors.lightPink
+                      : Colors.backgroundNew,
+                },
+              ]}
+              activeOpacity={0.8}
+              onPress={() => setDrinkingsel('No')}>
               <Text style={styles.inpt}>No</Text>
             </TouchableOpacity>
           </View>
@@ -256,126 +438,68 @@ const EditProfile = ({navigation}: any) => {
           <Text style={styles.label}>Smoking</Text>
           <SizeBox size={5} />
           <View style={styles.iptContainer}>
-            <TouchableOpacity style={styles.inptHolder} activeOpacity={0.8}>
+            <TouchableOpacity
+              style={[
+                styles.inptHolder,
+                {
+                  backgroundColor:
+                    smokingsel == 'Prefer not to say'
+                      ? Colors.lightPink
+                      : Colors.backgroundNew,
+                },
+              ]}
+              activeOpacity={0.8}
+              onPress={() => setSmokingsel('Prefer not to say')}>
               <Text style={styles.inpt}>Prefer not to say</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputHolder} activeOpacity={0.8}>
+            <TouchableOpacity
+              style={[
+                styles.inputHolder,
+                {
+                  backgroundColor:
+                    smokingsel == 'Yes'
+                      ? Colors.lightPink
+                      : Colors.backgroundNew,
+                },
+              ]}
+              activeOpacity={0.8}
+              onPress={() => setSmokingsel('Yes')}>
               <Text style={styles.inpt}>Yes</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.inputHolder} activeOpacity={0.8}>
+            <TouchableOpacity
+              style={[
+                styles.inputHolder,
+                {
+                  backgroundColor:
+                    smokingsel == 'No'
+                      ? Colors.lightPink
+                      : Colors.backgroundNew,
+                },
+              ]}
+              activeOpacity={0.8}
+              onPress={() => setSmokingsel('No')}>
               <Text style={styles.inpt}>No</Text>
             </TouchableOpacity>
           </View>
-          <View
-            style={{
-              width: '90%',
-              alignSelf: 'center',
-              marginTop: moderateScaleVertical(30),
-            }}></View>
-        </KeyboardAwareScrollView>
-        <Modal
-          isVisible={
-            modalVisible ||
-            modalVisibleLang ||
-            modalVisibleDrink ||
-            modalVisibleSmoking
-          }
-          style={{
-            justifyContent: 'flex-end',
-            margin: 0,
-          }}
-          onBackdropPress={() => {
-            setModalVisible(false);
-            setModalVisibleLang(false);
-            setModalVisibleDrink(false);
-            setModalVisibleSmoking(false);
-          }}
-          backdropOpacity={0.5}
-          animationIn="slideInUp"
-          animationOut="flipOutY"
-          animationInTiming={600}
-          animationOutTiming={600}
-          backdropTransitionInTiming={600}
-          backdropTransitionOutTiming={600}>
-          <View
-            style={{
-              minHeight: height / 5,
-              maxHeight: height / 3,
-              width: '95%',
-              alignSelf: 'center',
-            }}>
-            <View style={styles.modalContainer}>
-              <FlatList
-                data={
-                  modalVisible
-                    ? genders
-                    : modalVisibleLang
-                    ? languages
-                    : drinkList
-                }
-                keyExtractor={(item, index) => index?.toString()}
-                renderItem={({item, index}) => {
-                  const lengthFlag = modalVisible
-                    ? genders?.length
-                    : modalVisibleLang
-                    ? languages?.length
-                    : drinkList?.length;
-                  const filterData = selectedLang?.filter(
-                    (i: any) => i == item?.name,
-                  );
-                  return (
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      onPress={() => {
-                        if (modalVisible) {
-                          setSelectGender(item);
-                        } else if (modalVisibleDrink) {
-                          setSelectDrink(item);
-                        } else if (modalVisibleSmoking) {
-                          setSelectSmoke(item);
-                        } else {
-                          selectModalHandler(item);
-                        }
-                      }}
-                      style={[
-                        {
-                          borderBottomWidth: lengthFlag - 1 == index ? 0 : 1,
-                        },
-                        styles.mondaInvw,
-                      ]}>
-                      <Text
-                        style={{
-                          color: Colors.white,
-                          padding: 5,
-                          fontWeight: '600',
-                          fontFamily: fontFamily.time_regular,
-                        }}>
-                        {item?.name ? item?.name : item}
-                      </Text>
-                      <VectorIcon
-                        groupName="MaterialCommunityIcons"
-                        name={
-                          (
-                            modalVisible
-                              ? selectedGender == item
-                              : modalVisibleDrink
-                              ? selectedDrink == item
-                              : modalVisibleSmoking
-                              ? selectedSmoke == item
-                              : filterData[0] == item?.name
-                          )
-                            ? 'radiobox-marked'
-                            : 'radiobox-blank'
-                        }
-                        size={18}
-                      />
-                    </TouchableOpacity>
-                  );
-                }}
-              />
-            </View>
+          <SizeBox size={10} />
+          <View style={styles.Btnmain}>
+            <LinearGradient
+              colors={[Colors.lightpink2, Colors.lightpink2]}
+              style={styles.btn}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation.goBack()}>
+                <Text style={styles.text}>Update</Text>
+              </TouchableOpacity>
+            </LinearGradient>
+
+            <Text
+              onPress={() => navigation.goBack()}
+              style={[styles.text, {color: Colors.white}]}>
+              cancel
+            </Text>
           </View>
-        </Modal>
+        </KeyboardAwareScrollView>
       </SafeAreaView>
     </LinearGradient>
   );
