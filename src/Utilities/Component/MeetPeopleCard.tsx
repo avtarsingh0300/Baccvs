@@ -64,14 +64,17 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
       {...rest}>
       <Swiper
         // showsButtons
-        // loop={true}
-        // autoplay
-        scrollEnabled={false}
+        loop={true}
+        autoplay
+        // autoplayDirection={true}
+        autoplayTimeout={2000}
+        // scrollEnabled={false}
         height={height / 1.4}
         width={width * 0.9}
         style={{borderRadius: 10}}
         containerStyle={{borderRadius: 10}}
         contentContainerStyle={{borderRadius: 10}}
+        index={activeIndex}
         onIndexChanged={index => setActiveIndex(index)}>
         {item?.pictures?.map((i, ind) => (
           <ImageBackground
@@ -79,7 +82,7 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
             source={{uri: IMAGE_URL + i}}
             // source={ImagePath.ProfileImg}
             style={{
-              width: width * 0.9,
+              width: '100%',
               height: height / 1.4,
               alignSelf: 'center',
               // marginBottom: 20,
@@ -91,13 +94,18 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
                 marginTop: moderateScaleVertical(20),
               }}>
               {item?.pictures?.map((i, ind) => (
-                <View
-                  style={{
-                    ...styles.bar,
-                    backgroundColor:
-                      activeIndex == ind ? Colors.Pink : Colors.white,
-                  }}
-                />
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={{paddingVertical: 5}}
+                  onPress={() => setActiveIndex(ind)}>
+                  <View
+                    style={{
+                      ...styles.bar,
+                      backgroundColor:
+                        activeIndex === ind ? Colors.Pink : Colors.white,
+                    }}
+                  />
+                </TouchableOpacity>
               ))}
             </View>
             <Text

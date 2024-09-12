@@ -78,7 +78,7 @@ export function disLikeUser(data: object) {
 }
 
 export function teamsDetails(data: object) {
-  return apiGet(GROUP_DETAILS, data);
+  return apiPost(GROUP_DETAILS, data);
 }
 
 export function getMapData() {

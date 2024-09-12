@@ -415,7 +415,7 @@ const MeetPeople = ({navigation}) => {
                       const dragHandlers = isFirst
                         ? panResponser?.panHandlers
                         : {};
-                      console.log(index, 'index');
+                      // console.log(index, 'index');
                       return (
                         <MeetPeopleCard
                           isFirst={isFirst}
