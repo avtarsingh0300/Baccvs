@@ -31,4 +31,5 @@ export const Colors = {
   memberaccess: '#5F09AF',
   brown: '#b04341',
   lightbrown: '#763033',
+  btnback:'#1C1C24',
 };

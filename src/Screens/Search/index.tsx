@@ -17,8 +17,13 @@ import VectorIcon from '../../Utilities/Component/vectorIcons';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import {ScrollView} from 'react-native-gesture-handler';
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
+
 
 const Search = ({navigation}: any) => {
+  const onContinue = () => {
+    navigation.navigate(NavigationStrings.HomeNight);
+  };
   const renderItem = () => (
     <View>
       <ImageBackground source={ImagePath.ProfileImg} style={styles.imgbck}>
@@ -200,7 +205,7 @@ const Search = ({navigation}: any) => {
           <View style={styles.nightclubs}>
             <View style={styles.flexview}>
               <Text style={styles.headingtext}>Nightclubs</Text>
-              <TouchableOpacity style={styles.showmore}>
+              <TouchableOpacity style={styles.showmore} onPress={onContinue}>
                 <Text style={styles.showtext}>Show more</Text>
               </TouchableOpacity>
             </View>

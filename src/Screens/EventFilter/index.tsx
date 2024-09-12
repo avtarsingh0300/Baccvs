@@ -53,6 +53,16 @@ const EventFilter = ({navigation}: any) => {
   useEffect(() => {
     getEventsTypes();
   }, []);
+  const renderAstro = ({ item }) => (
+    <View>
+      <TouchableOpacity style={styles.flatcontainer}>
+      <Text style={{...commonStyles.font12Regular,
+                        color: Colors.white,}}>
+                          Scorpio
+                          </Text>
+      </TouchableOpacity>
+    </View>
+  );
   const getEventsTypes = () => {
     getEventTypes()
       .then(res => {
@@ -206,7 +216,6 @@ const EventFilter = ({navigation}: any) => {
            
           </View>
           <SizeBox size={10} />
-          {/* <View style={styles.flatbox}> */}
           <View style={{paddingLeft:10}}>
               <Text
                 style={{
@@ -214,13 +223,6 @@ const EventFilter = ({navigation}: any) => {
                   color: Colors.white,
                 }}>
                 Event type
-                {/* <Text
-                  style={{
-                    fontSize: textScale(8),
-                    color: Colors.white,
-                  }}>
-                  {` `}(Up to 3)
-                </Text> */}
               </Text>
               <SizeBox size={5}/>
               <FlatList
@@ -236,23 +238,10 @@ const EventFilter = ({navigation}: any) => {
                       }}>
                       {item?.name}
                     </Text>
-                    {/* <View style={styles.tickvw}>
-                      {selectedItems.includes(item._id) ? (
-                        <VectorIcon
-                        groupName="MaterialCommunityIcons"
-                        name="check-outline"
-                        color={Colors.Pink}
-                        size={15}
-                        style={{bottom: 5, alignSlef: 'centre'}}
-                        />
-                        ) : null}
-                        </View> */}
                         </TouchableOpacity>
                 )}
               />
               </View>
-            {/* </View> */}
-          
           <SizeBox size={10}/>
           <View style={{flexDirection:"row",justifyContent:"space-between",paddingHorizontal:10}}>
           <Text
@@ -268,21 +257,9 @@ const EventFilter = ({navigation}: any) => {
                   color: Colors.white,
                  }}>
                   Free- 49€
-                {/* {selectedValues2.length > 1
-                  ? `${selectedValues2[0]} km - ${selectedValues2[1]} km`
-                  : `${selectedValues2[0]} km`} */}
               </Text>
               </View>
           <View style={styles.flexout}>
-            {/* <VectorIcon
-              groupName="Feather"
-              name="map-pin"
-              size={20}
-              color={Colors.Pink}
-            /> */}
-            {/* <View style={styles.boxcontainer}> */}
-            
-              
               <View>
                 <MultiSlider
                   markerStyle={styles.marker}
@@ -297,20 +274,7 @@ const EventFilter = ({navigation}: any) => {
                 />
               </View>
             </View>
-          {/* </View> */}
           <SizeBox size={10} />
-          {/* <View style={styles.flexout}>
-            <ImageComponent
-              resizeMode="contain"
-              source={ImagePath.Popper}
-              style={{
-                width: moderateScale(22),
-                height: moderateScaleVertical(22),
-              }}
-            />
-
-          </View> */}
-          {/* <SizeBox size={10} /> */}
             <Text
               style={{
                 ...commonStyles.font16Regular,
@@ -321,16 +285,6 @@ const EventFilter = ({navigation}: any) => {
             </Text>
             <SizeBox size={5}/>
           <View style={styles.flexout}>
-            {/* <ImageComponent
-              resizeMode="contain"
-              source={ImagePath.stair}
-              style={{
-                width: moderateScale(22),
-                height: moderateScaleVertical(22),
-              }}
-            /> */}
-
-            {/* <View style={styles.flatbox}> */}
               <FlatList
                 data={venueType}
                 numColumns={2}
@@ -345,22 +299,10 @@ const EventFilter = ({navigation}: any) => {
                       }}>
                       {item?.name}
                     </Text>
-                    {/* <View style={styles.tickvw}> */}
-                      {/* {selectedItems2.includes(item._id) ? (
-                        <VectorIcon
-                          groupName="MaterialCommunityIcons"
-                          name="check-outline"
-                          color={Colors.Pink}
-                          size={15}
-                          style={{bottom: 5, alignSlef: 'centre'}}
-                        />
-                      ) : null} */}
-                    {/* </View> */}
                   </TouchableOpacity>
                 )}
               />
             </View>
-          {/* </View> */}
           <SizeBox size={10} />
           <View style={{paddingLeft:10}}>
               <Text
@@ -371,17 +313,6 @@ const EventFilter = ({navigation}: any) => {
                 Music type
               </Text>
               <SizeBox size={5}/>
-          {/* <View style={styles.flexout}> */}
-            {/* <ImageComponent
-              resizeMode="contain"
-              source={ImagePath.Popper}
-              style={{
-                width: moderateScale(22),
-                height: moderateScaleVertical(22),
-              }}
-            /> */}
-
-            {/* <View style={styles.flatbox}> */}
               <FlatList
                 data={musicStyle}
                 numColumns={2}
@@ -396,17 +327,6 @@ const EventFilter = ({navigation}: any) => {
                       }}>
                       {item?.name}
                     </Text>
-                    {/* <View style={styles.tickvw}> */}
-                      {/* {selectedItems3.includes(item._id) ? (
-                        <VectorIcon
-                          groupName="MaterialCommunityIcons"
-                          name="check-outline"
-                          color={Colors.Pink}
-                          size={15}
-                          style={{bottom: 5, alignSlef: 'centre'}}
-                        />
-                      ) : null} */}
-                    {/* </View> */}
                   </TouchableOpacity>
                 )}
               />
@@ -472,6 +392,220 @@ const EventFilter = ({navigation}: any) => {
             }}>
             Social preferences
           </Text>
+          <SizeBox size={20} />
+              <View style={{flexDirection:"row",justifyContent:"space-between",paddingHorizontal:15}}>
+              <Text
+                style={{
+                  ...commonStyles.font16Regular,
+                  color: Colors.white,
+                }}>
+                Distance
+              </Text>
+              <Text
+                style={{...commonStyles.font16Regular, color: Colors.white}}>
+                0km
+              </Text>
+              </View>
+          <View style={styles.flex}>
+            <MultiSlider
+              markerStyle={styles.marker}
+              min={0}
+              max={100}
+              onValuesChangeFinish={onValuesChangeFinish}
+              allowOverlap
+              values={selectedValue} // Wrap the single value in an array
+              sliderLength={width / 1.3}
+              selectedStyle={styles.select}
+              unselectedStyle={styles.unsel}
+            /> 
+          </View>
+          <SizeBox size={10} />
+          <View style={{paddingLeft:10}}>
+              <Text
+                style={{
+                  ...commonStyles.font16Regular,
+                  color: Colors.white,
+                }}>
+                Interested in
+              </Text>
+              <SizeBox size={5}/>
+              <FlatList
+                data={[{id:1}]}
+                renderItem={({item}) => (
+                  <TouchableOpacity
+                    style={styles.flatcontainer}
+                    onPress={() => toggleSelection(item)}>
+                    <Text
+                      style={{
+                        ...commonStyles.font12Regular,
+                        color: Colors.white,
+                      }}>
+                      Everyone
+                    </Text>
+                        </TouchableOpacity>
+                )}
+              />
+              </View>
+          <SizeBox size={10}/>
+          <View style={{flexDirection:"row",justifyContent:"space-between",paddingHorizontal:10}}>
+          <Text
+                style={{
+                  ...commonStyles.font16Regular,
+                  color: Colors.white,
+                }}>
+                {` `}Age
+              </Text>
+              <Text
+                style={{
+                  ...commonStyles.font16Regular,
+                  color: Colors.white,
+                 }}>
+                  20 - 26
+              </Text>
+              </View>
+          <View style={styles.flexout}>
+              <View>
+                <MultiSlider
+                  markerStyle={styles.marker}
+                  values={selectedValues2}
+                  min={0}
+                  max={5}
+                  allowOverlap
+                  sliderLength={width / 1.3}
+                  selectedStyle={styles.select}
+                  unselectedStyle={styles.unsel}
+                  onValuesChangeFinish={onValuesChangeFinish2}
+                />
+              </View>
+            </View>
+          <SizeBox size={10} />
+          <View style={{ paddingLeft:15}}>
+          <Text
+                style={{
+                  ...commonStyles.font16Regular,
+                  color: Colors.white,
+                 
+                }}>
+                Smoking
+              </Text>
+              <SizeBox size={5}/>
+              <View style={{flexDirection:"row"}}>
+             <TouchableOpacity style={styles.flatcontainer}>
+              <Text  style={{
+                ...commonStyles.font12Regular,
+                color: Colors.white,
+              }}>Yes</Text>
+             </TouchableOpacity>
+              <TouchableOpacity style={[styles.flatcontainer,{marginHorizontal:2}]}>
+              <Text  style={{
+                ...commonStyles.font12Regular,
+                color: Colors.white,
+              }}>No</Text>
+             </TouchableOpacity>
+              <TouchableOpacity style={styles.flatcontainer}>
+              <Text  style={{
+                  ...commonStyles.font12Regular,
+                  color: Colors.white,
+                }}>Sometimes</Text>
+             </TouchableOpacity>
+              </View>
+              </View>
+              <SizeBox size={10} />
+          <View style={{paddingLeft:15}}>
+              <Text
+                style={{
+                  ...commonStyles.font16Regular,
+                  color: Colors.white,
+                }}>
+                Music type
+              </Text>
+              <SizeBox size={5}/>
+              <FlatList
+                data={musicStyle}
+                numColumns={2}
+                renderItem={({item}) => (
+                  <TouchableOpacity
+                    style={[styles.flatcon,{ backgroundColor:selectedItems3.includes(item._id) ? Colors.Linear: Colors.lightPink}]}
+                    onPress={() => toggleSelection3(item)}>
+                    <Text
+                      style={{
+                        ...commonStyles.font12Regular,
+                        color: Colors.white,
+                      }}>
+                      {item?.name}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
+          <SizeBox size={10} />
+            <TouchableOpacity
+              style={styles.flatbox}
+              activeOpacity={0.5}
+              onPress={() => SetModalVisibleLang(true)}>
+              <Text
+                style={{
+                  ...commonStyles.font16Regular,
+                  color: Colors.white,
+                  paddingLeft:15
+                }}>
+                Languages
+              </Text>
+
+              <SizeBox size={5} />
+              <FlatList
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                data={selectedLang}
+                renderItem={({item}) => (
+                  <TouchableOpacity
+                    style={styles.langItem}
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      const filterData2 = selectedLang?.filter(
+                        (i: any) => i != item,
+                      );
+                      setSelectedLang(filterData2);
+                    }}>
+                    <Text style={styles.langItemText}>{item} &#x2715;</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            </TouchableOpacity>
+          <SizeBox size={10} />
+          <View>
+          <Text
+                style={{
+                  ...commonStyles.font16Regular,
+                  color: Colors.white,
+                  paddingLeft:15
+                }}>
+                Astro Sign
+              </Text>
+              <SizeBox size={5}/>
+              <FlatList
+              data={[{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},]}
+              renderItem={renderAstro}
+              numColumns={3}
+              style={{paddingLeft:15}}
+              />
+              </View>
+              <SizeBox size={15}/>
+              <View style={styles.Btnmain}>
+            <LinearGradient colors={[Colors.lightPink, Colors.lightPink]} style={styles.btn}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation.goBack()}>
+                <Text style={styles.text}>Apply</Text>
+              </TouchableOpacity>
+            </LinearGradient>
+
+            <Text
+              onPress={resetButton}
+              style={[styles.text, {color: Colors.white}]}>
+              Reset
+            </Text>
+          </View>
           </>}
           <Modal
             isVisible={modalVisibleLang}

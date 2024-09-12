@@ -51,4 +51,5 @@ export default {
   EditSocialProfile: 'EditSocialProfile',
   GrroupDeatils: 'GrroupDeatils',
   DatingUserProfile: 'DatingUserProfile',
+  HomeNight:'HomeNight',
 };

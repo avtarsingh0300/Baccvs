@@ -76,7 +76,16 @@ const styles = StyleSheet.create({
   flatcon: {
     borderWidth:1,
     backgroundColor:Colors.lightPink,
-    width:"40%",
+    width:"35%",
+    justifyContent:"center",
+    alignItems:"center",
+    height:moderateScaleVertical(28),
+    borderRadius:2
+  },
+  flatcontainer: {
+    borderWidth:1,
+    backgroundColor:Colors.lightPink,
+    width:moderateScale(81),
     justifyContent:"center",
     alignItems:"center",
     height:moderateScaleVertical(28),
@@ -165,6 +174,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
+    marginBottom:10
   },
   btn: {
     padding: 1,
