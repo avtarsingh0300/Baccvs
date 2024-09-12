@@ -155,4 +155,14 @@ export const styles = StyleSheet.create({
   text: {
     ...commonStyles.font14Center,
   },
+  socialimg: {
+    height: 138,
+    width: 103,
+    margin: 10,
+    borderRadius: 10,
+  },
+  cross: {
+    position: 'absolute',
+    right: 10,
+  },
 });

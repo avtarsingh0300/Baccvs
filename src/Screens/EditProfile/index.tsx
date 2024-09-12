@@ -26,7 +26,7 @@ import {
   getUserProfile,
   UpdateUserProfile,
 } from '../../Utilities/Constants/auth';
-import languages from '../../Utilities/Constants';
+
 import ImagePicker from 'react-native-image-crop-picker';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 
@@ -37,14 +37,18 @@ const EditProfile = ({navigation}: any) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [userData, setUserData] = useState<object>({});
   const [zodiacsign, setZodiacsign] = useState('');
+
   const [musicStyle, setMusicStyle] = useState([]);
   const [selMusic, setSelMusic] = useState([]);
+
   const [eventType, setEventType] = useState([]);
   const [selEventType, setsSelEventType] = useState([]);
+
   const [profileimg, setProfileImg] = useState('');
   const [drinkingsel, setDrinkingsel] = useState('');
   const [smokingsel, setSmokingsel] = useState('');
   const [languagesel, setLanguagesel] = useState('');
+  const [pictures, setPictures] = useState([]);
   const onBack = () => {
     navigation.goBack();
   };
@@ -76,6 +80,17 @@ const EditProfile = ({navigation}: any) => {
     });
   };
 
+  const addImgs = () => {
+    ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true,
+    }).then(image => {
+      console.log(image);
+      const newPictures = [...pictures, image.path];
+      setPictures(newPictures);
+    });
+  };
   const getUserData = async () => {
     getUserProfile()
       .then(res => {
@@ -87,6 +102,7 @@ const EditProfile = ({navigation}: any) => {
         setDrinkingsel(res?.user?.drinking);
         setSmokingsel(res?.user?.smoking);
         setUserLocation(res?.user?.location);
+        setPictures(res?.user?.pictures);
         setLoading(false);
       })
       .catch(err => {
@@ -97,30 +113,70 @@ const EditProfile = ({navigation}: any) => {
   };
 
   const updateProfileHandler = () => {
-    const formData = {
-      full_name: Name,
-      gender: selectedGender,
-      height: userHeight,
-      age: userAge,
-      zodiac_sign: zodiacsign,
-      job_title: job,
-      location: userLocation,
-      language: selectedLang,
-      smoking: selectedSmoke,
-      drinking: selectedDrink,
-      bio: userBio,
-    };
-    setLoading(true);
-    UpdateUserProfile(formData)
-      .then(res => {
-        // console.log(res, "res in UpdateUserProfile");
-        getUserData();
-        onBack();
-      })
-      .catch(err => {
-        setLoading(false);
-        console.log(err, 'err in UpdateUserProfile');
+    const formData = new FormData();
+
+    formData.append('full_name', userData?.username);
+    formData.append('gender', userData?.gender);
+    formData.append('height', userData?.height);
+    formData.append('age', userData?.age);
+    formData.append('zodiac_sign', zodiacsign);
+    formData.append('job_title', job);
+    formData.append('location', userLocation);
+    formData.append('language', languagesel);
+    formData.append('smoking', smokingsel);
+    formData.append('drinking', drinkingsel);
+    formData.append('bio', userBio);
+    pictures.forEach((image, index) => {
+      formData.append('pictures', {
+        uri: image?.uri,
+        name: `image_${index}.jpg`,
+        type: 'image/jpeg',
       });
+    });
+
+    pictures.forEach((image, index) => {
+      formData.append('videos', {
+        uri: image?.uri,
+        name: `image_${index}.jpg`,
+        type: 'image/jpeg',
+      });
+    });
+
+    formData.append('interests_id', userData?.interest_type);
+    formData.append(
+      'music_type_id',
+      selMusic.length > 0 ? selMusic : userData?.music_type,
+    );
+    formData.append(
+      'event_type_id',
+      selEventType.length > 0 ? selEventType : userData?.event_type,
+    );
+
+    console.log(JSON.stringify(formData), 'formData');
+    // const formData = {
+    //   full_name: Name,
+    //   gender: selectedGender,
+    //   height: userHeight,
+    //   age: userAge,
+    //   zodiac_sign: zodiacsign,
+    //   job_title: job,
+    //   location: userLocation,
+    //   language: selectedLang,
+    //   smoking: selectedSmoke,
+    //   drinking: selectedDrink,
+    //   bio: userBio,
+    // };
+    // setLoading(true);
+    // UpdateUserProfile(formData)
+    //   .then(res => {
+    //     // console.log(res, "res in UpdateUserProfile");
+    //     getUserData();
+    //     onBack();
+    //   })
+    //   .catch(err => {
+    //     setLoading(false);
+    //     console.log(err, 'err in UpdateUserProfile');
+    //   });
   };
 
   const toggleSelection = (item: any) => {
@@ -141,6 +197,21 @@ const EditProfile = ({navigation}: any) => {
         return [...prevSelectedItems, item?._id];
       }
     });
+  };
+  const removeImg = (indexToRemove: any) => {
+    const updatedPictures = pictures.filter(
+      (_, index) => index !== indexToRemove,
+    );
+    setPictures(updatedPictures);
+  };
+  const getImageSource = (item: any) => {
+    console.log(item);
+
+    if (item.includes('file://') || item.startsWith('/')) {
+      return {uri: item};
+    }
+
+    return {uri: IMAGE_URL + item};
   };
   return (
     <LinearGradient
@@ -198,7 +269,52 @@ const EditProfile = ({navigation}: any) => {
           </TouchableOpacity>
           <SizeBox size={10} />
           <Text style={styles.profiletxt}>Pictures & Videos </Text>
-
+          <SizeBox size={2} />
+          <FlatList
+            numColumns={3}
+            style={{paddingHorizontal: 15}}
+            data={[...pictures, 'add']}
+            renderItem={({item, index}) => (
+              <View>
+                {item === 'add' ? (
+                  <TouchableOpacity
+                    style={[
+                      styles.socialimg,
+                      {
+                        borderWidth: 1,
+                        borderColor: Colors.white,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      },
+                    ]}
+                    onPress={addImgs}>
+                    <VectorIcon
+                      groupName="MaterialCommunityIcons"
+                      name="pencil-outline"
+                      size={19}
+                      color={Colors.white}
+                    />
+                  </TouchableOpacity>
+                ) : (
+                  <>
+                    <Image
+                      source={getImageSource(item)}
+                      style={styles.socialimg}
+                    />
+                    <VectorIcon
+                      groupName="MaterialIcons"
+                      name="cancel"
+                      size={18}
+                      color={Colors.white}
+                      style={styles.cross}
+                      onPress={() => removeImg(index)}
+                    />
+                  </>
+                )}
+              </View>
+            )}
+            keyExtractor={(item, index) => index.toString()}
+          />
           <SizeBox size={10} />
           <Text style={styles.label}>{userData?.username}'s Bio</Text>
           <SizeBox size={5} />
@@ -488,7 +604,7 @@ const EditProfile = ({navigation}: any) => {
               style={styles.btn}>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.goBack()}>
+                onPress={updateProfileHandler}>
                 <Text style={styles.text}>Update</Text>
               </TouchableOpacity>
             </LinearGradient>
