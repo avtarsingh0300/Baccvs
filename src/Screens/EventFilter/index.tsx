@@ -49,17 +49,16 @@ const EventFilter = ({navigation}: any) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedItems2, setSelectedItems2] = useState([]);
   const [selectedItems3, setSelectedItems3] = useState([]);
-  const [colors,setColors] = useState(false);
+  const [colors, setColors] = useState(false);
   useEffect(() => {
     getEventsTypes();
   }, []);
-  const renderAstro = ({ item }) => (
+  const renderAstro = ({item}) => (
     <View>
       <TouchableOpacity style={styles.flatcontainer}>
-      <Text style={{...commonStyles.font12Regular,
-                        color: Colors.white,}}>
-                          Scorpio
-                          </Text>
+        <Text style={{...commonStyles.font12Regular, color: Colors.white}}>
+          Scorpio
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -146,12 +145,12 @@ const EventFilter = ({navigation}: any) => {
         <ScrollView showsVerticalScrollIndicator={false}>
           <SizeBox size={5} />
           <View style={styles.eventCon}>
-          <VectorIcon
-            groupName={'Ionicons'}
-            name={'chevron-back'}
-            size={25}
-            onPress={onbackPress}
-          />
+            <VectorIcon
+              groupName={'Ionicons'}
+              name={'chevron-back'}
+              size={25}
+              onPress={onbackPress}
+            />
             <TouchableOpacity>
               <Text
                 style={[
@@ -176,437 +175,504 @@ const EventFilter = ({navigation}: any) => {
                 People
               </Text>
             </TouchableOpacity>
-            <View/>
+            <View />
           </View>
           <SizeBox size={10} />
-          {colors==0?(<><Text
-            style={{
-              ...commonStyles.font16Regular,
-              color: Colors.white,
-              textAlign: 'center',
-            }}>
-            Event and Activity Preferences
-          </Text>
-          <SizeBox size={20} />
-              <View style={{flexDirection:"row",justifyContent:"space-between",paddingHorizontal:15}}>
+          {colors == 0 ? (
+            <>
               <Text
                 style={{
                   ...commonStyles.font16Regular,
                   color: Colors.white,
+                  textAlign: 'center',
                 }}>
-                Distance
+                Event and Activity Preferences
               </Text>
-              <Text
-                style={{...commonStyles.font16Regular, color: Colors.white}}>
-                0km
-              </Text>
-              </View>
-          <View style={styles.flex}>
-            <MultiSlider
-              markerStyle={styles.marker}
-              min={0}
-              max={100}
-              onValuesChangeFinish={onValuesChangeFinish}
-              allowOverlap
-              values={selectedValue} // Wrap the single value in an array
-              sliderLength={width / 1.3}
-              selectedStyle={styles.select}
-              unselectedStyle={styles.unsel}
-            />
-           
-          </View>
-          <SizeBox size={10} />
-          <View style={{paddingLeft:10}}>
-              <Text
+              <SizeBox size={20} />
+              <View
                 style={{
-                  ...commonStyles.font16Regular,
-                  color: Colors.white,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  paddingHorizontal: 15,
                 }}>
-                Event type
-              </Text>
-              <SizeBox size={5}/>
-              <FlatList
-                data={eventType}
-                renderItem={({item}) => (
-                  <TouchableOpacity
-                    style={styles.flatcon}
-                    onPress={() => toggleSelection(item)}>
-                    <Text
-                      style={{
-                        ...commonStyles.font12Regular,
-                        color: Colors.white,
-                      }}>
-                      {item?.name}
-                    </Text>
-                        </TouchableOpacity>
-                )}
-              />
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    color: Colors.white,
+                  }}>
+                  Distance
+                </Text>
+                <Text
+                  style={{...commonStyles.font16Regular, color: Colors.white}}>
+                  0km
+                </Text>
               </View>
-          <SizeBox size={10}/>
-          <View style={{flexDirection:"row",justifyContent:"space-between",paddingHorizontal:10}}>
-          <Text
-                style={{
-                  ...commonStyles.font16Regular,
-                  color: Colors.white,
-                }}>
-                Pricing
-              </Text>
-              <Text
-                style={{
-                  ...commonStyles.font16Regular,
-                  color: Colors.white,
-                 }}>
-                  Free- 49€
-              </Text>
-              </View>
-          <View style={styles.flexout}>
-              <View>
+              <View style={styles.flex}>
                 <MultiSlider
                   markerStyle={styles.marker}
-                  values={selectedValues2}
                   min={0}
-                  max={5}
+                  max={100}
+                  onValuesChangeFinish={onValuesChangeFinish}
                   allowOverlap
+                  values={selectedValue} // Wrap the single value in an array
                   sliderLength={width / 1.3}
                   selectedStyle={styles.select}
                   unselectedStyle={styles.unsel}
-                  onValuesChangeFinish={onValuesChangeFinish2}
                 />
-              </View>
-            </View>
-          <SizeBox size={10} />
-            <Text
-              style={{
-                ...commonStyles.font16Regular,
-                color: Colors.white,
-                paddingLeft:10
-              }}>
-              Venue type
-            </Text>
-            <SizeBox size={5}/>
-          <View style={styles.flexout}>
-              <FlatList
-                data={venueType}
-                numColumns={2}
-                renderItem={({item}) => (
-                  <TouchableOpacity
-                    style={[styles.flatcon,{ backgroundColor:selectedItems2.includes(item._id) ? Colors.Linear: Colors.lightPink}]}
-                    onPress={() => toggleSelection2(item)}>
-                    <Text
-                      style={{
-                        ...commonStyles.font12Regular,
-                        color: Colors.white,
-                      }}>
-                      {item?.name}
-                    </Text>
-                  </TouchableOpacity>
-                )}
-              />
-            </View>
-          <SizeBox size={10} />
-          <View style={{paddingLeft:10}}>
-              <Text
-                style={{
-                  ...commonStyles.font16Regular,
-                  color: Colors.white,
-                }}>
-                Music type
-              </Text>
-              <SizeBox size={5}/>
-              <FlatList
-                data={musicStyle}
-                numColumns={2}
-                renderItem={({item}) => (
-                  <TouchableOpacity
-                    style={[styles.flatcon,{ backgroundColor:selectedItems3.includes(item._id) ? Colors.Linear: Colors.lightPink}]}
-                    onPress={() => toggleSelection3(item)}>
-                    <Text
-                      style={{
-                        ...commonStyles.font12Regular,
-                        color: Colors.white,
-                      }}>
-                      {item?.name}
-                    </Text>
-                  </TouchableOpacity>
-                )}
-              />
-            </View>
-          <SizeBox size={10} />
-            <TouchableOpacity
-              style={styles.flatbox}
-              activeOpacity={0.5}
-              onPress={() => SetModalVisibleLang(true)}>
-              <Text
-                style={{
-                  ...commonStyles.font16Regular,
-                  color: Colors.white,
-                  paddingLeft:10
-                }}>
-                Languages
-              </Text>
-
-              <SizeBox size={5} />
-              <FlatList
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                data={selectedLang}
-                renderItem={({item}) => (
-                  <TouchableOpacity
-                    style={styles.langItem}
-                    activeOpacity={0.8}
-                    onPress={() => {
-                      const filterData2 = selectedLang?.filter(
-                        (i: any) => i != item,
-                      );
-                      setSelectedLang(filterData2);
-                    }}>
-                    <Text style={styles.langItemText}>{item} &#x2715;</Text>
-                  </TouchableOpacity>
-                )}
-              />
-            </TouchableOpacity>
-          {/* </View> */}
-          <SizeBox size={15} />
-          <View style={styles.Btnmain}>
-            <LinearGradient colors={[Colors.lightPink, Colors.lightPink]} style={styles.btn}>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => navigation.goBack()}>
-                <Text style={styles.text}>Apply</Text>
-              </TouchableOpacity>
-            </LinearGradient>
-
-            <Text
-              onPress={resetButton}
-              style={[styles.text, {color: Colors.white}]}>
-              Reset
-            </Text>
-          </View></>)
-          :
-          <>
-          <Text
-            style={{
-              ...commonStyles.font16Regular,
-              color: Colors.white,
-              paddingLeft:20
-            }}>
-            Social preferences
-          </Text>
-          <SizeBox size={20} />
-              <View style={{flexDirection:"row",justifyContent:"space-between",paddingHorizontal:15}}>
-              <Text
-                style={{
-                  ...commonStyles.font16Regular,
-                  color: Colors.white,
-                }}>
-                Distance
-              </Text>
-              <Text
-                style={{...commonStyles.font16Regular, color: Colors.white}}>
-                0km
-              </Text>
-              </View>
-          <View style={styles.flex}>
-            <MultiSlider
-              markerStyle={styles.marker}
-              min={0}
-              max={100}
-              onValuesChangeFinish={onValuesChangeFinish}
-              allowOverlap
-              values={selectedValue} // Wrap the single value in an array
-              sliderLength={width / 1.3}
-              selectedStyle={styles.select}
-              unselectedStyle={styles.unsel}
-            /> 
-          </View>
-          <SizeBox size={10} />
-          <View style={{paddingLeft:10}}>
-              <Text
-                style={{
-                  ...commonStyles.font16Regular,
-                  color: Colors.white,
-                }}>
-                Interested in
-              </Text>
-              <SizeBox size={5}/>
-              <FlatList
-                data={[{id:1}]}
-                renderItem={({item}) => (
-                  <TouchableOpacity
-                    style={styles.flatcontainer}
-                    onPress={() => toggleSelection(item)}>
-                    <Text
-                      style={{
-                        ...commonStyles.font12Regular,
-                        color: Colors.white,
-                      }}>
-                      Everyone
-                    </Text>
-                        </TouchableOpacity>
-                )}
-              />
-              </View>
-          <SizeBox size={10}/>
-          <View style={{flexDirection:"row",justifyContent:"space-between",paddingHorizontal:10}}>
-          <Text
-                style={{
-                  ...commonStyles.font16Regular,
-                  color: Colors.white,
-                }}>
-                {` `}Age
-              </Text>
-              <Text
-                style={{
-                  ...commonStyles.font16Regular,
-                  color: Colors.white,
-                 }}>
-                  20 - 26
-              </Text>
-              </View>
-          <View style={styles.flexout}>
-              <View>
-                <MultiSlider
-                  markerStyle={styles.marker}
-                  values={selectedValues2}
-                  min={0}
-                  max={5}
-                  allowOverlap
-                  sliderLength={width / 1.3}
-                  selectedStyle={styles.select}
-                  unselectedStyle={styles.unsel}
-                  onValuesChangeFinish={onValuesChangeFinish2}
-                />
-              </View>
-            </View>
-          <SizeBox size={10} />
-          <View style={{ paddingLeft:15}}>
-          <Text
-                style={{
-                  ...commonStyles.font16Regular,
-                  color: Colors.white,
-                 
-                }}>
-                Smoking
-              </Text>
-              <SizeBox size={5}/>
-              <View style={{flexDirection:"row"}}>
-             <TouchableOpacity style={styles.flatcontainer}>
-              <Text  style={{
-                ...commonStyles.font12Regular,
-                color: Colors.white,
-              }}>Yes</Text>
-             </TouchableOpacity>
-              <TouchableOpacity style={[styles.flatcontainer,{marginHorizontal:2}]}>
-              <Text  style={{
-                ...commonStyles.font12Regular,
-                color: Colors.white,
-              }}>No</Text>
-             </TouchableOpacity>
-              <TouchableOpacity style={styles.flatcontainer}>
-              <Text  style={{
-                  ...commonStyles.font12Regular,
-                  color: Colors.white,
-                }}>Sometimes</Text>
-             </TouchableOpacity>
-              </View>
               </View>
               <SizeBox size={10} />
-          <View style={{paddingLeft:15}}>
+              <View style={{paddingLeft: 10}}>
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    color: Colors.white,
+                  }}>
+                  Event type
+                </Text>
+                <SizeBox size={5} />
+                <FlatList
+                  data={eventType}
+                  renderItem={({item}) => (
+                    <TouchableOpacity
+                      style={styles.flatcon}
+                      onPress={() => toggleSelection(item)}>
+                      <Text
+                        style={{
+                          ...commonStyles.font12Regular,
+                          color: Colors.white,
+                        }}>
+                        {item?.name}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                />
+              </View>
+              <SizeBox size={10} />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  paddingHorizontal: 10,
+                }}>
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    color: Colors.white,
+                  }}>
+                  Pricing
+                </Text>
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    color: Colors.white,
+                  }}>
+                  Free- 49€
+                </Text>
+              </View>
+              <View style={styles.flexout}>
+                <View>
+                  <MultiSlider
+                    markerStyle={styles.marker}
+                    values={selectedValues2}
+                    min={0}
+                    max={5}
+                    allowOverlap
+                    sliderLength={width / 1.3}
+                    selectedStyle={styles.select}
+                    unselectedStyle={styles.unsel}
+                    onValuesChangeFinish={onValuesChangeFinish2}
+                  />
+                </View>
+              </View>
+              <SizeBox size={10} />
               <Text
                 style={{
                   ...commonStyles.font16Regular,
                   color: Colors.white,
+                  paddingLeft: 10,
                 }}>
-                Music type
+                Venue type
               </Text>
-              <SizeBox size={5}/>
-              <FlatList
-                data={musicStyle}
-                numColumns={2}
-                renderItem={({item}) => (
+              <SizeBox size={5} />
+              <View style={styles.flexout}>
+                <FlatList
+                  data={venueType}
+                  numColumns={2}
+                  renderItem={({item}) => (
+                    <TouchableOpacity
+                      style={[
+                        styles.flatcon,
+                        {
+                          backgroundColor: selectedItems2.includes(item._id)
+                            ? Colors.Linear
+                            : Colors.lightPink,
+                        },
+                      ]}
+                      onPress={() => toggleSelection2(item)}>
+                      <Text
+                        style={{
+                          ...commonStyles.font12Regular,
+                          color: Colors.white,
+                        }}>
+                        {item?.name}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                />
+              </View>
+              <SizeBox size={10} />
+              <View style={{paddingLeft: 10}}>
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    color: Colors.white,
+                  }}>
+                  Music type
+                </Text>
+                <SizeBox size={5} />
+                <FlatList
+                  data={musicStyle}
+                  numColumns={2}
+                  renderItem={({item}) => (
+                    <TouchableOpacity
+                      style={[
+                        styles.flatcon,
+                        {
+                          backgroundColor: selectedItems3.includes(item._id)
+                            ? Colors.Linear
+                            : Colors.lightPink,
+                        },
+                      ]}
+                      onPress={() => toggleSelection3(item)}>
+                      <Text
+                        style={{
+                          ...commonStyles.font12Regular,
+                          color: Colors.white,
+                        }}>
+                        {item?.name}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                />
+              </View>
+              <SizeBox size={10} />
+              <TouchableOpacity
+                style={styles.flatbox}
+                activeOpacity={0.5}
+                onPress={() => SetModalVisibleLang(true)}>
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    color: Colors.white,
+                    paddingLeft: 10,
+                  }}>
+                  Languages
+                </Text>
+
+                <SizeBox size={5} />
+                <FlatList
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  data={selectedLang}
+                  renderItem={({item}) => (
+                    <TouchableOpacity
+                      style={styles.langItem}
+                      activeOpacity={0.8}
+                      onPress={() => {
+                        const filterData2 = selectedLang?.filter(
+                          (i: any) => i != item,
+                        );
+                        setSelectedLang(filterData2);
+                      }}>
+                      <Text style={styles.langItemText}>{item} &#x2715;</Text>
+                    </TouchableOpacity>
+                  )}
+                />
+              </TouchableOpacity>
+              {/* </View> */}
+              <SizeBox size={15} />
+              <View style={styles.Btnmain}>
+                <LinearGradient
+                  colors={[Colors.lightPink, Colors.lightPink]}
+                  style={styles.btn}>
                   <TouchableOpacity
-                    style={[styles.flatcon,{ backgroundColor:selectedItems3.includes(item._id) ? Colors.Linear: Colors.lightPink}]}
-                    onPress={() => toggleSelection3(item)}>
+                    style={styles.button}
+                    onPress={() => navigation.goBack()}>
+                    <Text style={styles.text}>Apply</Text>
+                  </TouchableOpacity>
+                </LinearGradient>
+
+                <Text
+                  onPress={resetButton}
+                  style={[styles.text, {color: Colors.white}]}>
+                  Reset
+                </Text>
+              </View>
+            </>
+          ) : (
+            <>
+              <Text
+                style={{
+                  ...commonStyles.font16Regular,
+                  color: Colors.white,
+                  paddingLeft: 20,
+                }}>
+                Social preferences
+              </Text>
+              <SizeBox size={20} />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  paddingHorizontal: 15,
+                }}>
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    color: Colors.white,
+                  }}>
+                  Distance
+                </Text>
+                <Text
+                  style={{...commonStyles.font16Regular, color: Colors.white}}>
+                  0km
+                </Text>
+              </View>
+              <View style={styles.flex}>
+                <MultiSlider
+                  markerStyle={styles.marker}
+                  min={0}
+                  max={100}
+                  onValuesChangeFinish={onValuesChangeFinish}
+                  allowOverlap
+                  values={selectedValue} // Wrap the single value in an array
+                  sliderLength={width / 1.3}
+                  selectedStyle={styles.select}
+                  unselectedStyle={styles.unsel}
+                />
+              </View>
+              <SizeBox size={10} />
+              <View style={{paddingLeft: 10}}>
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    color: Colors.white,
+                  }}>
+                  Interested in
+                </Text>
+                <SizeBox size={5} />
+                <FlatList
+                  data={[{id: 1}]}
+                  renderItem={({item}) => (
+                    <TouchableOpacity
+                      style={styles.flatcontainer}
+                      onPress={() => toggleSelection(item)}>
+                      <Text
+                        style={{
+                          ...commonStyles.font12Regular,
+                          color: Colors.white,
+                        }}>
+                        Everyone
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                />
+              </View>
+              <SizeBox size={10} />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  paddingHorizontal: 10,
+                }}>
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    color: Colors.white,
+                  }}>
+                  {` `}Age
+                </Text>
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    color: Colors.white,
+                  }}>
+                  20 - 26
+                </Text>
+              </View>
+              <View style={styles.flexout}>
+                <View>
+                  <MultiSlider
+                    markerStyle={styles.marker}
+                    values={selectedValues2}
+                    min={0}
+                    max={5}
+                    allowOverlap
+                    sliderLength={width / 1.3}
+                    selectedStyle={styles.select}
+                    unselectedStyle={styles.unsel}
+                    onValuesChangeFinish={onValuesChangeFinish2}
+                  />
+                </View>
+              </View>
+              <SizeBox size={10} />
+              <View style={{paddingLeft: 15}}>
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    color: Colors.white,
+                  }}>
+                  Smoking
+                </Text>
+                <SizeBox size={5} />
+                <View style={{flexDirection: 'row'}}>
+                  <TouchableOpacity style={styles.flatcontainer}>
                     <Text
                       style={{
                         ...commonStyles.font12Regular,
                         color: Colors.white,
                       }}>
-                      {item?.name}
+                      Yes
                     </Text>
                   </TouchableOpacity>
-                )}
-              />
-            </View>
-          <SizeBox size={10} />
-            <TouchableOpacity
-              style={styles.flatbox}
-              activeOpacity={0.5}
-              onPress={() => SetModalVisibleLang(true)}>
-              <Text
-                style={{
-                  ...commonStyles.font16Regular,
-                  color: Colors.white,
-                  paddingLeft:15
-                }}>
-                Languages
-              </Text>
-
-              <SizeBox size={5} />
-              <FlatList
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                data={selectedLang}
-                renderItem={({item}) => (
                   <TouchableOpacity
-                    style={styles.langItem}
-                    activeOpacity={0.8}
-                    onPress={() => {
-                      const filterData2 = selectedLang?.filter(
-                        (i: any) => i != item,
-                      );
-                      setSelectedLang(filterData2);
-                    }}>
-                    <Text style={styles.langItemText}>{item} &#x2715;</Text>
+                    style={[styles.flatcontainer, {marginHorizontal: 2}]}>
+                    <Text
+                      style={{
+                        ...commonStyles.font12Regular,
+                        color: Colors.white,
+                      }}>
+                      No
+                    </Text>
                   </TouchableOpacity>
-                )}
-              />
-            </TouchableOpacity>
-          <SizeBox size={10} />
-          <View>
-          <Text
-                style={{
-                  ...commonStyles.font16Regular,
-                  color: Colors.white,
-                  paddingLeft:15
-                }}>
-                Astro Sign
-              </Text>
-              <SizeBox size={5}/>
-              <FlatList
-              data={[{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},]}
-              renderItem={renderAstro}
-              numColumns={3}
-              style={{paddingLeft:15}}
-              />
+                  <TouchableOpacity style={styles.flatcontainer}>
+                    <Text
+                      style={{
+                        ...commonStyles.font12Regular,
+                        color: Colors.white,
+                      }}>
+                      Sometimes
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-              <SizeBox size={15}/>
-              <View style={styles.Btnmain}>
-            <LinearGradient colors={[Colors.lightPink, Colors.lightPink]} style={styles.btn}>
+              <SizeBox size={10} />
+              <View style={{paddingLeft: 15}}>
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    color: Colors.white,
+                  }}>
+                  Music type
+                </Text>
+                <SizeBox size={5} />
+                <FlatList
+                  data={musicStyle}
+                  numColumns={2}
+                  renderItem={({item}) => (
+                    <TouchableOpacity
+                      style={[
+                        styles.flatcon,
+                        {
+                          backgroundColor: selectedItems3.includes(item._id)
+                            ? Colors.Linear
+                            : Colors.lightPink,
+                        },
+                      ]}
+                      onPress={() => toggleSelection3(item)}>
+                      <Text
+                        style={{
+                          ...commonStyles.font12Regular,
+                          color: Colors.white,
+                        }}>
+                        {item?.name}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                />
+              </View>
+              <SizeBox size={10} />
               <TouchableOpacity
-                style={styles.button}
-                onPress={() => navigation.goBack()}>
-                <Text style={styles.text}>Apply</Text>
-              </TouchableOpacity>
-            </LinearGradient>
+                style={styles.flatbox}
+                activeOpacity={0.5}
+                onPress={() => SetModalVisibleLang(true)}>
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    color: Colors.white,
+                    paddingLeft: 15,
+                  }}>
+                  Languages
+                </Text>
 
-            <Text
-              onPress={resetButton}
-              style={[styles.text, {color: Colors.white}]}>
-              Reset
-            </Text>
-          </View>
-          </>}
+                <SizeBox size={5} />
+                <FlatList
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  data={selectedLang}
+                  renderItem={({item}) => (
+                    <TouchableOpacity
+                      style={styles.langItem}
+                      activeOpacity={0.8}
+                      onPress={() => {
+                        const filterData2 = selectedLang?.filter(
+                          (i: any) => i != item,
+                        );
+                        setSelectedLang(filterData2);
+                      }}>
+                      <Text style={styles.langItemText}>{item} &#x2715;</Text>
+                    </TouchableOpacity>
+                  )}
+                />
+              </TouchableOpacity>
+              <SizeBox size={10} />
+              <View>
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    color: Colors.white,
+                    paddingLeft: 15,
+                  }}>
+                  Astro Sign
+                </Text>
+                <SizeBox size={5} />
+                <FlatList
+                  data={[
+                    {id: 1},
+                    {id: 1},
+                    {id: 1},
+                    {id: 1},
+                    {id: 1},
+                    {id: 1},
+                    {id: 1},
+                    {id: 1},
+                    {id: 1},
+                  ]}
+                  renderItem={renderAstro}
+                  numColumns={3}
+                  style={{paddingLeft: 15}}
+                />
+              </View>
+              <SizeBox size={15} />
+              <View style={styles.Btnmain}>
+                <LinearGradient
+                  colors={[Colors.lightPink, Colors.lightPink]}
+                  style={styles.btn}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => navigation.goBack()}>
+                    <Text style={styles.text}>Apply</Text>
+                  </TouchableOpacity>
+                </LinearGradient>
+
+                <Text
+                  onPress={resetButton}
+                  style={[styles.text, {color: Colors.white}]}>
+                  Reset
+                </Text>
+              </View>
+            </>
+          )}
           <Modal
             isVisible={modalVisibleLang}
             style={{

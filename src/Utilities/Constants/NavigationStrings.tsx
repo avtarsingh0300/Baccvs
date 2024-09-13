@@ -52,4 +52,6 @@ export default {
   GrroupDeatils: 'GrroupDeatils',
   DatingUserProfile: 'DatingUserProfile',
   HomeNight:'HomeNight',
+  MarketingTools:'MarketingTools',
+  FeedbackScreen:'FeedbackScreen',
 };

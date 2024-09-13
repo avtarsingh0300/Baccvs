@@ -75,7 +75,10 @@ const EditProfile = ({navigation}: any) => {
       height: 400,
       cropping: true,
     }).then(image => {
-      console.log(image);
+      console.log(image.path);
+      const newPictures = [...pictures, image.path];
+      setPictures(newPictures);
+
       setProfileImg(image.path);
     });
   };
@@ -86,7 +89,7 @@ const EditProfile = ({navigation}: any) => {
       height: 400,
       cropping: true,
     }).then(image => {
-      console.log(image);
+      console.log(image, 'image');
       const newPictures = [...pictures, image.path];
       setPictures(newPictures);
     });
@@ -126,21 +129,21 @@ const EditProfile = ({navigation}: any) => {
     formData.append('smoking', smokingsel);
     formData.append('drinking', drinkingsel);
     formData.append('bio', userBio);
-    pictures.forEach((image, index) => {
-      formData.append('pictures', {
-        uri: image?.uri,
-        name: `image_${index}.jpg`,
-        type: 'image/jpeg',
-      });
-    });
+    // pictures.forEach((image, index) => {
+    //   formData.append('pictures', {
+    //     uri: image,
+    //     name: `image_${index}.jpg`,
+    //     type: 'image/jpeg',
+    //   });
+    // });
 
-    pictures.forEach((image, index) => {
-      formData.append('videos', {
-        uri: image?.uri,
-        name: `image_${index}.jpg`,
-        type: 'image/jpeg',
-      });
-    });
+    // pictures.forEach((image, index) => {
+    //   formData.append('videos', {
+    //     uri: image,
+    //     name: `image_${index}.jpg`,
+    //     type: 'image/jpeg',
+    //   });
+    // });
 
     formData.append('interests_id', userData?.interest_type);
     formData.append(
@@ -167,16 +170,16 @@ const EditProfile = ({navigation}: any) => {
     //   bio: userBio,
     // };
     // setLoading(true);
-    // UpdateUserProfile(formData)
-    //   .then(res => {
-    //     // console.log(res, "res in UpdateUserProfile");
-    //     getUserData();
-    //     onBack();
-    //   })
-    //   .catch(err => {
-    //     setLoading(false);
-    //     console.log(err, 'err in UpdateUserProfile');
-    //   });
+    UpdateUserProfile(formData)
+      .then(res => {
+        // console.log(res, "res in UpdateUserProfile");
+        getUserData();
+        onBack();
+      })
+      .catch(err => {
+        setLoading(false);
+        console.log(err, 'err in UpdateUserProfile');
+      });
   };
 
   const toggleSelection = (item: any) => {

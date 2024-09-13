@@ -49,3 +49,6 @@ export {default as EditSocialProfile} from '../Screens/EditSocialProfile/EditSoc
 export {default as GrroupDeatils} from '../Screens/GrroupDeatils/GrroupDeatils';
 export {default as DatingUserProfile} from '../Screens/DatingUserProfile/DatingUserProfile';
 export {default as HomeNight} from '../Screens/HomeNight';
+export {default as MarketingTools} from '../Screens/MarketingTools';
+export {default as FeedbackScreen} from '../Screens/FeedbackScreen';
+

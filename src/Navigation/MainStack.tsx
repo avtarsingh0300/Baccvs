@@ -188,6 +188,16 @@ export default function MainStack(Stack: any) {
         component={screens.HomeNight}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.MarketingTools}
+        component={screens.MarketingTools}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.FeedbackScreen}
+        component={screens.FeedbackScreen}
+        options={{headerShown: false}}
+      />
     </>
   );
 }
