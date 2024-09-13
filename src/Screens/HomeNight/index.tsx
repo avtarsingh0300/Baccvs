@@ -7,18 +7,40 @@ import ImagePath from '../../Utilities/Constants/ImagePath'
 import commonStyles from '../../Utilities/Styles/commonStyles'
 import VectorIcon from '../../Utilities/Component/vectorIcons'
 import { SizeBox } from '../../Utilities/Component/Helpers'
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings'
 
-const HomeNight = () => {
-    const renderNightClub = ({ item }) => (
-        <View style={{marginHorizontal:10,marginVertical:10}}>
-          <TouchableOpacity style={styles.flatcontainer}>
-          <Text style={{...commonStyles.font14Regular,
-                            color: Colors.lightPink,}}>
-                              Nighclub
-</Text>
-          </TouchableOpacity>
-        </View>
-      );
+const HomeNight = ({navigation}:any) => {
+  const nightclubNames = {
+    1: 'Nighclub Analytics',
+    2: 'Events',
+    3: 'Dj’s & Promoters',
+    4: 'Feedback & Reviews',
+    5: 'Marketing tools',
+    6: 'Promote ',
+    7: 'Bookings',
+  };
+  const handlePress = (id) => {
+    if (id === 5) {
+      navigation.navigate(NavigationStrings.MarketingTools); 
+    } else if (id === 4) {
+      navigation.navigate(NavigationStrings.FeedbackScreen)
+    } else {
+
+    }
+  };
+
+  const renderNightClub = ({ item }) => {
+    const name = nightclubNames[item.id] || 'Nightclub';
+    return (
+      <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
+        <TouchableOpacity style={styles.flatcontainer} onPress={() => handlePress(item.id)} >
+          <Text style={{ ...commonStyles.font14Regular, color: Colors.lightPink }}>
+            {name}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
   return (
     <LinearGradient
       colors={[Colors.backgroundNew, Colors.backgroundNew]}
@@ -33,7 +55,14 @@ const HomeNight = () => {
             </View>
             <SizeBox size={10}/>
             <FlatList
-            data={[{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},{id:1},]}
+            data={[{id:1},
+              {id:2},
+              {id:3},
+              {id:4},
+              {id:5},
+              {id:6},
+              {id:7},
+            ]}
             renderItem={renderNightClub}
             numColumns={2}
             style={{alignSelf:"center"}}
