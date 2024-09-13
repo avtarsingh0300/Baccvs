@@ -29,6 +29,7 @@ import {getEventTypes, getMemberDetails} from '../../Utilities/Constants/auth';
 import languages from '../../Utilities/Constants';
 import Swiper from 'react-native-swiper';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
+import Geolocation from '@react-native-community/geolocation';
 
 const DatingUserProfile = ({navigation, route}: any) => {
   const [musicStyle, setMusicStyle] = useState([]);
@@ -36,12 +37,35 @@ const DatingUserProfile = ({navigation, route}: any) => {
   const [loader, setLoader] = useState(false);
   const [userData, setUserData] = useState({});
   const [activeIndex, setActiveIndex] = useState(0);
+  const [distanceKm, setDistanceKm] = useState<number | null>(null);
+  const [lat, setLat] = useState(0);
+  const [lon, setLon] = useState(0);
+  const [loading, SetLoading] = useState(false);
 
   useEffect(() => {
     setLoader(true);
     getEventsTypes();
-    getMemberData();
+    getLocation();
   }, []);
+
+  const getLocation = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        // console.log(position, 'position');
+        setLat(position.coords.latitude);
+        setLon(position.coords.longitude);
+        SetLoading(true);
+        getMemberData();
+      },
+      error => {
+        SetLoading(false);
+        console.log(error.code, error.message);
+      },
+      {
+        timeout: 15000,
+      },
+    );
+  };
 
   const getEventsTypes = () => {
     getEventTypes()
@@ -64,13 +88,45 @@ const DatingUserProfile = ({navigation, route}: any) => {
     getMemberDetails(data)
       .then(res => {
         setUserData(res?.user);
-        // console.log(res, 'res in getMemberDetails');
+        if (res?.user?.latitude && res?.user?.longitude) {
+          handleCalculate(res?.user?.latitude, res?.user?.longitude);
+        }
+        // console.log(res?.user?.latitude, 'res in getMemberDetails');
         setLoader(false);
       })
       .catch(err => {
         setLoader(false);
         console.log(err, 'err in getMemberDetails');
       });
+  };
+  type Coordinates = {
+    latitude: number;
+    longitude: number;
+  };
+
+  // Function to calculate distance in kilometers
+  const calculateDistance = (start: Coordinates, end: Coordinates) => {
+    const distanceInMeters = haversine(
+      {lat: start.latitude, lon: start.longitude},
+      {lat: end.latitude, lon: end.longitude},
+    );
+
+    const distanceInKm = distanceInMeters / 1000; // Convert meters to kilometers
+    setDistanceKm(distanceInKm);
+  };
+
+  const handleCalculate = (lati: number, longi: number) => {
+    const start: Coordinates = {
+      latitude: lati, // San Francisco
+      longitude: longi,
+    };
+
+    const end: Coordinates = {
+      latitude: lat, // Los Angeles
+      longitude: lon,
+    };
+
+    calculateDistance(start, end);
   };
 
   const renderItem = ({item}: any) => (
@@ -135,7 +191,7 @@ const DatingUserProfile = ({navigation, route}: any) => {
         // paddingHorizontal: moderateScale(22),
       }}>
       <SafeAreaView>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Loadingcomponent isVisible={false} />
           <SizeBox size={10} />
           <View style={styles.header}>
@@ -209,11 +265,11 @@ const DatingUserProfile = ({navigation, route}: any) => {
             </Swiper>
           )}
           <SizeBox size={15} />
-          <Text style={styles.label}>About Kingson</Text>
+          <Text style={styles.label}>About {userData?.username}</Text>
           <SizeBox size={6} />
           <Text style={styles.description}>{userData?.bio}</Text>
           <SizeBox size={5} />
-          <View style={styles.loactionContainer}>
+          {/* <View style={styles.loactionContainer}>
             <VectorIcon
               groupName="Ionicons"
               name="location-outline"
@@ -221,52 +277,14 @@ const DatingUserProfile = ({navigation, route}: any) => {
               color={Colors.white}
             />
             <Text style={{...commonStyles.font14Bold, marginLeft: 10}}>
-              2 km away
+              {} km away
             </Text>
-          </View>
+          </View> */}
           <SizeBox size={10} />
           <Text style={styles.label}>Music Type</Text>
           <SizeBox size={10} />
           <FlatList
-            data={musicStyle}
-            contentContainerStyle={{
-              justifyContent: 'center',
-              width: '100%',
-              paddingHorizontal: moderateScale(20),
-            }}
-            renderItem={({item}) => {
-              if (!item || !item._id) {
-                return null;
-              }
-              return (
-                <View
-                  style={{
-                    borderWidth: 0,
-                    borderColor: Colors.white,
-                    padding: 5,
-                    backgroundColor: Colors.lightPink,
-                    borderRadius: 2,
-                    marginHorizontal: 5,
-                    marginVertical: 5,
-                  }}>
-                  <Text
-                    style={{
-                      ...commonStyles.font12Regular,
-                      color: Colors.white,
-                    }}>
-                    {item?.name}
-                  </Text>
-                </View>
-              );
-            }}
-            numColumns={3}
-            keyExtractor={item => item._id.toString()}
-          />
-          <SizeBox size={10} />
-          <Text style={styles.label}>Interests</Text>
-          <SizeBox size={10} />
-          <FlatList
-            data={musicStyle}
+            data={userData?.music_type_names}
             contentContainerStyle={{
               justifyContent: 'center',
               width: '100%',
@@ -292,7 +310,45 @@ const DatingUserProfile = ({navigation, route}: any) => {
                       ...commonStyles.font12Regular,
                       color: Colors.white,
                     }}>
-                    {item?.name}
+                    {item}
+                  </Text>
+                </View>
+              );
+            }}
+            numColumns={3}
+            keyExtractor={(item, index) => index.toString()}
+          />
+          <SizeBox size={10} />
+          <Text style={styles.label}>Interests</Text>
+          <SizeBox size={10} />
+          <FlatList
+            data={userData?.interests_names}
+            contentContainerStyle={{
+              justifyContent: 'center',
+              width: '100%',
+              paddingHorizontal: moderateScale(20),
+            }}
+            renderItem={({item}) => {
+              if (!item) {
+                return null;
+              }
+              return (
+                <View
+                  style={{
+                    borderWidth: 0,
+                    borderColor: Colors.white,
+                    padding: 5,
+                    backgroundColor: Colors.lightPink,
+                    borderRadius: 2,
+                    marginHorizontal: 5,
+                    marginVertical: 5,
+                  }}>
+                  <Text
+                    style={{
+                      ...commonStyles.font12Regular,
+                      color: Colors.white,
+                    }}>
+                    {item}
                   </Text>
                 </View>
               );
@@ -304,7 +360,7 @@ const DatingUserProfile = ({navigation, route}: any) => {
           <Text style={styles.label}>Languages</Text>
           <SizeBox size={10} />
           <FlatList
-            data={languages.slice(0, 4)}
+            data={userData?.language}
             contentContainerStyle={{
               justifyContent: 'center',
               width: '100%',
@@ -330,7 +386,7 @@ const DatingUserProfile = ({navigation, route}: any) => {
                       ...commonStyles.font12Regular,
                       color: Colors.white,
                     }}>
-                    {item?.name}
+                    {item}
                   </Text>
                 </View>
               );

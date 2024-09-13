@@ -4227,6 +4227,9 @@ fs-minipass@^3.0.0, fs-minipass@^3.0.3:
 fs.realpath@^1.0.0:
   version "1.0.0"
 
+fsevents@^2.3.2:
+  version "2.3.3"
+
 function-bind@^1.1.2:
   version "1.1.2"
 
@@ -4412,10 +4415,10 @@ hasown@^2.0.0, hasown@^2.0.1, hasown@^2.0.2:
   dependencies:
     function-bind "^1.1.2"
 
-haversine@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.npmjs.org/haversine/-/haversine-1.1.1.tgz"
-  integrity sha512-KW4MS8+krLIeiw8bF5z532CptG0ZyGGFj0UbKMxx25lKnnJ1hMUbuzQl+PXQjNiDLnl1bOyz23U6hSK10r4guw==
+haversine-distance@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.npmjs.org/haversine-distance/-/haversine-distance-1.2.3.tgz"
+  integrity sha512-cRKtuukt+/fVprlLueX30mytMNtiQ4tff93FDW9yrBx3BYrq6gujiw1+hEaaxssKlOZTm8R3BPtMbNM+n0+bqQ==
 
 hermes-estree@0.15.0:
   version "0.15.0"
