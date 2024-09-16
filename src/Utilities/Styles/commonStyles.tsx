@@ -86,7 +86,7 @@ export default StyleSheet.create({
     color: Colors.white,
   },
   font12Regular: {
-    fontSize: textScale(10),
+    fontSize: textScale(12),
     fontWeight: '700',
     fontFamily: fontFamily.time_regular,
     color: Colors.white,
