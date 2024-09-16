@@ -210,14 +210,14 @@ const EventFilter = ({navigation}: any) => {
               <View style={styles.flex}>
                 <MultiSlider
                   markerStyle={styles.marker}
+                  values={selectedValues2}
                   min={0}
-                  max={100}
-                  onValuesChangeFinish={onValuesChangeFinish}
+                  max={5}
                   allowOverlap
-                  values={selectedValue} // Wrap the single value in an array
                   sliderLength={width / 1.3}
                   selectedStyle={styles.select}
                   unselectedStyle={styles.unsel}
+                  onValuesChangeFinish={onValuesChangeFinish2}
                 />
               </View>
               <SizeBox size={10} />
@@ -273,14 +273,14 @@ const EventFilter = ({navigation}: any) => {
                 <View>
                   <MultiSlider
                     markerStyle={styles.marker}
-                    values={selectedValues2}
                     min={0}
-                    max={5}
+                    max={100}
+                    onValuesChangeFinish={onValuesChangeFinish}
                     allowOverlap
+                    values={selectedValue}
                     sliderLength={width / 1.3}
                     selectedStyle={styles.select}
                     unselectedStyle={styles.unsel}
-                    onValuesChangeFinish={onValuesChangeFinish2}
                   />
                 </View>
               </View>
@@ -445,7 +445,7 @@ const EventFilter = ({navigation}: any) => {
                   max={100}
                   onValuesChangeFinish={onValuesChangeFinish}
                   allowOverlap
-                  values={selectedValue} // Wrap the single value in an array
+                  values={selectedValue}
                   sliderLength={width / 1.3}
                   selectedStyle={styles.select}
                   unselectedStyle={styles.unsel}

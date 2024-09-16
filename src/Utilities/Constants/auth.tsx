@@ -62,7 +62,9 @@ export function otpSend(data: object) {
 }
 
 export function UpdateUserProfile(data: object) {
-  return apiPost(UPDATE_USER_PROFILE, data);
+  return apiPost(UPDATE_USER_PROFILE, data, {
+    'Content-Type': 'multipart/form-data',
+  });
 }
 
 export function otpMatch(data: object) {

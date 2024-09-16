@@ -17,6 +17,7 @@ import {
   Loadingcomponent,
   SizeBox,
   showError,
+  showSuccess,
 } from '../../Utilities/Component/Helpers';
 
 import VectorIcon from '../../Utilities/Component/vectorIcons';
@@ -90,14 +91,15 @@ const EditProfile = ({navigation}: any) => {
       cropping: true,
     }).then(image => {
       console.log(image, 'image');
-      const newPictures = [...pictures, image.path];
+      const newPictures = [...pictures, image?.sourceURL];
       setPictures(newPictures);
     });
   };
   const getUserData = async () => {
+    setLoading(true);
     getUserProfile()
       .then(res => {
-        console.log(res, 'res in getUserProfile');
+        console.log(res?.user?.pictures, 'res in getUserProfile');
         setUserData(res?.user);
         setZodiacsign(res?.user?.zodiac_sign);
         setJob(res?.user?.job_title);
@@ -105,7 +107,11 @@ const EditProfile = ({navigation}: any) => {
         setDrinkingsel(res?.user?.drinking);
         setSmokingsel(res?.user?.smoking);
         setUserLocation(res?.user?.location);
-        setPictures(res?.user?.pictures);
+        const modifyData = res?.user?.pictures.map(i => {
+          return IMAGE_URL + i;
+        });
+        // console.log(modifyData, 'modifyData');
+        setPictures(modifyData);
         setLoading(false);
       })
       .catch(err => {
@@ -129,13 +135,13 @@ const EditProfile = ({navigation}: any) => {
     formData.append('smoking', smokingsel);
     formData.append('drinking', drinkingsel);
     formData.append('bio', userBio);
-    // pictures.forEach((image, index) => {
-    //   formData.append('pictures', {
-    //     uri: image,
-    //     name: `image_${index}.jpg`,
-    //     type: 'image/jpeg',
-    //   });
-    // });
+    pictures.forEach((image, index) => {
+      formData.append('pictures', {
+        uri: image,
+        name: `image_${index}.jpg`,
+        type: 'image/jpeg',
+      });
+    });
 
     // pictures.forEach((image, index) => {
     //   formData.append('videos', {
@@ -154,30 +160,16 @@ const EditProfile = ({navigation}: any) => {
       'event_type_id',
       selEventType.length > 0 ? selEventType : userData?.event_type,
     );
-
-    console.log(JSON.stringify(formData), 'formData');
-    // const formData = {
-    //   full_name: Name,
-    //   gender: selectedGender,
-    //   height: userHeight,
-    //   age: userAge,
-    //   zodiac_sign: zodiacsign,
-    //   job_title: job,
-    //   location: userLocation,
-    //   language: selectedLang,
-    //   smoking: selectedSmoke,
-    //   drinking: selectedDrink,
-    //   bio: userBio,
-    // };
-    // setLoading(true);
+    setLoading(true);
     UpdateUserProfile(formData)
       .then(res => {
-        // console.log(res, "res in UpdateUserProfile");
+        setLoading(true);
         getUserData();
-        onBack();
+        showSuccess('Profile updated!!');
       })
       .catch(err => {
-        setLoading(false);
+        setLoading(true);
+        showError(err?.message);
         console.log(err, 'err in UpdateUserProfile');
       });
   };
@@ -214,7 +206,7 @@ const EditProfile = ({navigation}: any) => {
       return {uri: item};
     }
 
-    return {uri: IMAGE_URL + item};
+    return {uri: item};
   };
   return (
     <LinearGradient
@@ -262,7 +254,6 @@ const EditProfile = ({navigation}: any) => {
                 )}
               </>
             )}
-
             <VectorIcon
               groupName="Feather"
               name="edit"
