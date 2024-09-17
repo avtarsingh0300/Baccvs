@@ -54,4 +54,7 @@ export default {
   HomeNight:'HomeNight',
   MarketingTools:'MarketingTools',
   FeedbackScreen:'FeedbackScreen',
+  PromoteScreen:'PromoteScreen',
+  NightEvents:'NightEvents',
+  
 };

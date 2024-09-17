@@ -198,6 +198,16 @@ export default function MainStack(Stack: any) {
         component={screens.FeedbackScreen}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.PromoteScreen}
+        component={screens.PromoteScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.NightEvents}
+        component={screens.NightEvents}
+        options={{headerShown: false}}
+      />
     </>
   );
 }

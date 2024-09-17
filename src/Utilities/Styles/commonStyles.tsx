@@ -65,7 +65,7 @@ export default StyleSheet.create({
     color: Colors.white,
   },
   font14Bold: {
-    fontSize: textScale(16),
+    fontSize: textScale(14),
     fontFamily: fontFamily.bold,
     fontWeight: '700',
     color: Colors.white,
