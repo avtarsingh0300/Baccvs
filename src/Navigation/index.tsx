@@ -51,4 +51,4 @@ export {default as DatingUserProfile} from '../Screens/DatingUserProfile/DatingU
 export {default as HomeNight} from '../Screens/HomeNight';
 export {default as MarketingTools} from '../Screens/MarketingTools';
 export {default as FeedbackScreen} from '../Screens/FeedbackScreen';
-
+export {default as PromoteScreen} from '../Screens/PromoteScreen';

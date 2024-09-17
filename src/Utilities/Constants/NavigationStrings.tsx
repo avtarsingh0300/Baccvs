@@ -51,7 +51,8 @@ export default {
   EditSocialProfile: 'EditSocialProfile',
   GrroupDeatils: 'GrroupDeatils',
   DatingUserProfile: 'DatingUserProfile',
-  HomeNight:'HomeNight',
-  MarketingTools:'MarketingTools',
-  FeedbackScreen:'FeedbackScreen',
+  HomeNight: 'HomeNight',
+  MarketingTools: 'MarketingTools',
+  FeedbackScreen: 'FeedbackScreen',
+  PromoteScreen: 'PromoteScreen',
 };
