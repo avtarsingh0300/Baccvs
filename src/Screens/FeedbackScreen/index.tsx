@@ -13,8 +13,9 @@ const FeedbackScreen = ({navigation}: any) => {
     navigation.goBack();
   };
 
-  const renderFeedback = ({item, index, separators}: any) => {
+  const renderFeedback = ({item, index}: any) => {
     const isLastItem = index === data.length - 1;
+
     return (
       <View>
         <View style={{flexDirection: 'row'}}>

@@ -34,6 +34,8 @@ const HomeNight = ({navigation}: any) => {
       navigation.navigate(NavigationStrings.FeedbackScreen);
     } else if (id === 6) {
       navigation.navigate(NavigationStrings.PromoteScreen);
+    } else if (id === 2) {
+      navigation.navigate(NavigationStrings.NightEvents);
     }
   };
 

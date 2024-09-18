@@ -55,4 +55,6 @@ export default {
   MarketingTools: 'MarketingTools',
   FeedbackScreen: 'FeedbackScreen',
   PromoteScreen: 'PromoteScreen',
+
+  NightEvents: 'NightEvents',
 };

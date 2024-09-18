@@ -203,6 +203,14 @@ export default function MainStack(Stack: any) {
         component={screens.PromoteScreen}
         options={{headerShown: false}}
       />
+<<<<<<< HEAD
+=======
+      <Stack.Screen
+        name={NavigationStrings.NightEvents}
+        component={screens.NightEvents}
+        options={{headerShown: false}}
+      />
+>>>>>>> 62a68e02001a0fec3e7973020f1334c1c556cf7e
     </>
   );
 }
