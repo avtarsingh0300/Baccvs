@@ -147,7 +147,6 @@ export default function MainStack(Stack: any) {
         component={screens.ReferralCode}
         options={{headerShown: false}}
       />
-
       <Stack.Screen
         name={NavigationStrings.OtherProfiles}
         component={screens.OtherProfiles}
@@ -216,6 +215,16 @@ export default function MainStack(Stack: any) {
       <Stack.Screen
         name={NavigationStrings.MusicList}
         component={screens.MusicList}
+        options={{headerShown: false}}
+      />{' '}
+      <Stack.Screen
+        name={NavigationStrings.AnalyticsScreen}
+        component={screens.AnalyticsScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.AgoraSales}
+        component={screens.AgoraSales}
         options={{headerShown: false}}
       />
     </>

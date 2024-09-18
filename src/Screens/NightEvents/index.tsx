@@ -8,15 +8,18 @@ import VectorIcon from '../../Utilities/Component/vectorIcons'
 import ImagePath from '../../Utilities/Constants/ImagePath'
 import commonStyles from '../../Utilities/Styles/commonStyles'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings'
 
 const NightEvents = ({navigation}:any) => {
     const onbackPress = () => {
         navigation.goBack();
       };
-
+      const onContinue = () => {
+        navigation.navigate(NavigationStrings.AgoraSales);
+      };
       const renderNightClub = ({ item }) => (
           <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
-            <TouchableOpacity style={styles.flatcontainer} onPress={() => handlePress(item.id)} >
+            <TouchableOpacity style={styles.flatcontainer} onPress={onContinue} >
               <Text style={styles.eventTicket}>
               280/300
               </Text>

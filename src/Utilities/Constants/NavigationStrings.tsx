@@ -51,11 +51,16 @@ export default {
   EditSocialProfile: 'EditSocialProfile',
   GrroupDeatils: 'GrroupDeatils',
   DatingUserProfile: 'DatingUserProfile',
+
+  SeeMore: 'SeeMore',
+
+  MusicList: 'MusicList',
+
   HomeNight: 'HomeNight',
   MarketingTools: 'MarketingTools',
   FeedbackScreen: 'FeedbackScreen',
   PromoteScreen: 'PromoteScreen',
-  SeeMore: 'SeeMore',
   NightEvents: 'NightEvents',
-  MusicList: 'MusicList',
+  AnalyticsScreen: 'AnalyticsScreen',
+  AgoraSales: 'AgoraSales',
 };
