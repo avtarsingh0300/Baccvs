@@ -525,7 +525,7 @@ const HomeScreen = ({navigation}: any) => {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.allBtn}
+              style={[styles.allBtn]}
               onPress={() => toggleStatus('missed')}>
               <Text
                 style={{
@@ -545,6 +545,7 @@ const HomeScreen = ({navigation}: any) => {
                 size={15}
               />
             </TouchableOpacity>
+            <SizeBox size={10} />
           </View>
         </Modal>
       </SafeAreaView>

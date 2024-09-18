@@ -15,18 +15,23 @@ const Settings = ({navigation}: any) => {
   const onGoback = () => {
     navigation.goBack();
   };
+
   const onAccount = () => {
     navigation.navigate(NavigationStrings.AccountInfo);
   };
+
   const onChange = () => {
     navigation.navigate(NavigationStrings.ChangePass);
   };
+
   const onDeactive = () => {
     navigation.navigate(NavigationStrings.DeactiveScreen);
   };
+
   const onBlocked = () => {
     navigation.navigate(NavigationStrings.BlockedAccount);
   };
+
   const onLogout = () => {
     navigation.navigate(NavigationStrings.WelcomScreen);
     setTimeout(async () => {

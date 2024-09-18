@@ -19,11 +19,11 @@ import ImagePath from '../../Utilities/Constants/ImagePath';
 import {ScrollView} from 'react-native-gesture-handler';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 
-
 const Search = ({navigation}: any) => {
   const onContinue = () => {
     navigation.navigate(NavigationStrings.HomeNight);
   };
+
   const renderItem = () => (
     <View>
       <ImageBackground source={ImagePath.ProfileImg} style={styles.imgbck}>
@@ -33,6 +33,7 @@ const Search = ({navigation}: any) => {
       </ImageBackground>
     </View>
   );
+
   const renderData = () => (
     <ImageBackground source={ImagePath.ProfileImg} style={styles.imgback}>
       <SizeBox size={3} />
@@ -56,6 +57,7 @@ const Search = ({navigation}: any) => {
       </View>
     </ImageBackground>
   );
+
   const renderDataBars = () => (
     <ImageBackground source={ImagePath.ProfileImg} style={styles.imgback}>
       <SizeBox size={3} />
@@ -79,6 +81,7 @@ const Search = ({navigation}: any) => {
       </View>
     </ImageBackground>
   );
+
   const renderDataDj = () => (
     <View>
       <ImageBackground source={ImagePath.ProfileImg} style={styles.imgbcks}>
@@ -109,6 +112,7 @@ const Search = ({navigation}: any) => {
       </View>
     </View>
   );
+
   const renderPrivate = () => (
     <ImageBackground source={ImagePath.ProfileImg} style={styles.imgback}>
       <SizeBox size={3} />
@@ -131,6 +135,7 @@ const Search = ({navigation}: any) => {
       </View>
     </ImageBackground>
   );
+
   const renderOrganiser = () => (
     <ImageBackground source={ImagePath.ProfileImg} style={styles.imgback}>
       <SizeBox size={3} />
@@ -153,6 +158,7 @@ const Search = ({navigation}: any) => {
       </View>
     </ImageBackground>
   );
+
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
@@ -160,9 +166,9 @@ const Search = ({navigation}: any) => {
       end={{x: 1.3, y: 0.9}}
       style={styles.conatiner}>
       <SafeAreaView>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.searchbar}>
-            <View></View>
+            <View />
             <Text style={{...commonStyles.font20White, alignSelf: 'center'}}>
               Search
             </Text>
@@ -200,6 +206,9 @@ const Search = ({navigation}: any) => {
             renderItem={renderItem}
             horizontal
             style={{alignSelf: 'center'}}
+            keyExtractor={(item, index) => index?.toString()}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
           />
           <SizeBox size={7} />
           <View style={styles.nightclubs}>
@@ -213,7 +222,10 @@ const Search = ({navigation}: any) => {
               data={[{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}]}
               renderItem={renderData}
               horizontal
+              showsHorizontalScrollIndicator={false}
               style={{alignSelf: 'center'}}
+              keyExtractor={(item, index) => index?.toString()}
+              showsVerticalScrollIndicator={false}
             />
           </View>
           <SizeBox size={15} />
@@ -227,7 +239,10 @@ const Search = ({navigation}: any) => {
             data={[{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}]}
             renderItem={renderDataDj}
             horizontal
+            showsHorizontalScrollIndicator={false}
             style={{alignSelf: 'center'}}
+            keyExtractor={(item, index) => index?.toString()}
+            showsVerticalScrollIndicator={false}
           />
           <SizeBox size={7} />
           <View style={styles.nightclubs}>
@@ -241,7 +256,10 @@ const Search = ({navigation}: any) => {
               data={[{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}]}
               renderItem={renderPrivate}
               horizontal
+              showsHorizontalScrollIndicator={false}
               style={{alignSelf: 'center'}}
+              keyExtractor={(item, index) => index?.toString()}
+              showsVerticalScrollIndicator={false}
             />
           </View>
           <SizeBox size={15} />
@@ -254,7 +272,10 @@ const Search = ({navigation}: any) => {
           <FlatList
             data={[{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}]}
             renderItem={renderDataBars}
+            showsHorizontalScrollIndicator={false}
             horizontal
+            keyExtractor={(item, index) => index?.toString()}
+            showsVerticalScrollIndicator={false}
             style={{alignSelf: 'center'}}
           />
           <SizeBox size={7} />
@@ -268,8 +289,11 @@ const Search = ({navigation}: any) => {
             <FlatList
               data={[{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}]}
               renderItem={renderOrganiser}
+              showsHorizontalScrollIndicator={false}
               horizontal
               style={{alignSelf: 'center'}}
+              keyExtractor={(item, index) => index?.toString()}
+              showsVerticalScrollIndicator={false}
             />
           </View>
           <SizeBox size={15} />

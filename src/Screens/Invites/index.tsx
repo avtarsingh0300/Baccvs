@@ -145,7 +145,7 @@ const Invites = ({navigation}: any) => {
     </View>
   );
   const renderItemm = ({item}: any) => (
-    <View style={[styles.flex, {alignItems: 'flex-start'}]}>
+    <View style={[styles.flex, {}]}>
       {item?.image ? (
         <Image source={ImagePath.ProfileImg} style={styles.userimg} />
       ) : (
@@ -214,7 +214,12 @@ const Invites = ({navigation}: any) => {
         {button === 'R' ? (
           <>
             {recdata?.length > 0 ? (
-              <FlatList data={recdata} renderItem={renderItem} />
+              <FlatList
+                data={recdata}
+                renderItem={renderItem}
+                keyExtractor={(item, index) => index?.toString()}
+                showsVerticalScrollIndicator={false}
+              />
             ) : (
               <Text
                 style={[{...commonStyles.font14Center}, {color: Colors.white}]}>
@@ -225,7 +230,12 @@ const Invites = ({navigation}: any) => {
         ) : (
           <>
             {sendata?.length > 0 ? (
-              <FlatList data={sendata} renderItem={renderItemm} />
+              <FlatList
+                data={sendata}
+                renderItem={renderItemm}
+                keyExtractor={(item, index) => index?.toString()}
+                showsVerticalScrollIndicator={false}
+              />
             ) : (
               <Text
                 style={[{...commonStyles.font14Center}, {color: Colors.white}]}>
