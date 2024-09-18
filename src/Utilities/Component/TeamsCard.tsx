@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {
   Animated,
-  FlatList,
   Image,
   ImageBackground,
   StyleSheet,
@@ -9,7 +8,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Swiper from 'react-native-swiper';
 import {
   height,
   moderateScale,

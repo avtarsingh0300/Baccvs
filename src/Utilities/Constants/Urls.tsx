@@ -16,6 +16,7 @@ export const GET_EVENT_TYPE = getApiUrl('event-type-list');
 export const CREATE_EVENT = getApiUrl('create-event');
 export const CREATE_MEET_GROUP = getApiUrl('create-meet-group');
 export const MAP_SEARCH = getApiUrl('map-search');
+export const EVENT_SEARCH = getApiUrl('event-search');
 export const EVENT_DETAIL = getApiUrl('event');
 export const GET_NOTIFICATION = getApiUrl('notification-list');
 export const CHANGE_PASS = getApiUrl('change-password');

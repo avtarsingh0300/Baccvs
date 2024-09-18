@@ -52,8 +52,6 @@ export {default as HomeNight} from '../Screens/HomeNight';
 export {default as MarketingTools} from '../Screens/MarketingTools';
 export {default as FeedbackScreen} from '../Screens/FeedbackScreen';
 export {default as PromoteScreen} from '../Screens/PromoteScreen';
-<<<<<<< HEAD
-=======
 export {default as NightEvents} from '../Screens/NightEvents';
-
->>>>>>> 62a68e02001a0fec3e7973020f1334c1c556cf7e
+export {default as SeeMore} from '../Screens/SeeMore';
+export {default as MusicList} from '../Screens/MusicList';

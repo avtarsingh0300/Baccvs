@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
 import commonStyles from '../../Utilities/Styles/commonStyles';
@@ -19,7 +18,6 @@ import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import FastImage from 'react-native-fast-image';
 import {Loadingcomponent, SizeBox} from '../../Utilities/Component/Helpers';
-
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {getUserProfile} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
@@ -96,7 +94,6 @@ const UserProfile = ({navigation}: any) => {
               />
               <Text style={styles.liketxt}>Profile</Text>
             </View>
-
             <VectorIcon
               groupName="Entypo"
               name="dots-three-horizontal"
@@ -143,28 +140,30 @@ const UserProfile = ({navigation}: any) => {
               </Text>
             </View>
           </View>
-
-          <View style={styles.row}>
-            <VectorIcon
-              groupName="MaterialCommunityIcons"
-              name="cupcake"
-              size={20}
-              color={Colors.lightGrey}
-            />
-            <Text style={styles.rowText}>{userData?.age}</Text>
-            <View
-              style={{
-                height: moderateScaleVertical(25),
-                paddingHorizontal: 0.5,
-                backgroundColor: Colors.lightGrey,
-              }}
-            />
-            <Image
-              source={ImagePath.line_height}
-              tintColor={Colors.lightGrey}
-            />
-            <Text style={styles.rowText}>{userData?.height}</Text>
-            {/* <View
+          <ScrollView horizontal style={{}}>
+            <View style={styles.row}>
+              <VectorIcon
+                groupName="MaterialCommunityIcons"
+                name="cupcake"
+                size={20}
+                color={Colors.lightGrey}
+              />
+              <View style={{width: '5%'}} />
+              <Text style={styles.rowText}>{userData?.age}</Text>
+              <View style={{width: '5%'}} />
+              <View
+                style={{
+                  height: moderateScaleVertical(25),
+                  paddingHorizontal: 0.5,
+                  backgroundColor: Colors.lightGrey,
+                }}
+              />
+              <Image
+                source={ImagePath.line_height}
+                tintColor={Colors.lightGrey}
+              />
+              <Text style={styles.rowText}>{userData?.height}</Text>
+              {/* <View
               style={{
                 height: moderateScaleVertical(25),
                 paddingHorizontal: 0.5,
@@ -180,34 +179,35 @@ const UserProfile = ({navigation}: any) => {
             <Text style={styles.rowText}>
               {userData?.location ? userData?.location : 'Eiffel Tower'}
             </Text> */}
-            <View
-              style={{
-                height: moderateScaleVertical(25),
-                paddingHorizontal: 0.5,
-                backgroundColor: Colors.lightGrey,
-              }}
-            />
-            <VectorIcon
-              groupName="MaterialCommunityIcons"
-              name="zodiac-leo"
-              size={20}
-              color={Colors.lightGrey}
-            />
-            <Text style={styles.rowText}>{userData?.zodiac_sign}</Text>
-            <View
-              style={{
-                height: moderateScaleVertical(25),
-                paddingHorizontal: 0.5,
-                backgroundColor: Colors.lightGrey,
-              }}
-            />
-            <VectorIcon
-              groupName="MaterialCommunityIcons"
-              name="glass-cocktail"
-              size={20}
-              color={Colors.lightGrey}
-            />
-          </View>
+              <View
+                style={{
+                  height: moderateScaleVertical(25),
+                  paddingHorizontal: 0.5,
+                  backgroundColor: Colors.lightGrey,
+                }}
+              />
+              <VectorIcon
+                groupName="MaterialCommunityIcons"
+                name="zodiac-leo"
+                size={20}
+                color={Colors.lightGrey}
+              />
+              <Text style={styles.rowText}>{userData?.zodiac_sign}</Text>
+              <View
+                style={{
+                  height: moderateScaleVertical(25),
+                  paddingHorizontal: 0.5,
+                  backgroundColor: Colors.lightGrey,
+                }}
+              />
+              <VectorIcon
+                groupName="MaterialCommunityIcons"
+                name="glass-cocktail"
+                size={20}
+                color={Colors.lightGrey}
+              />
+            </View>
+          </ScrollView>
           <View style={styles.postContainer}>
             {userData?.pictures?.map((i, index) => (
               <FastImage

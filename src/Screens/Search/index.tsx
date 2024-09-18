@@ -7,35 +7,69 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import styles from './style';
 import {ImageComponent, SizeBox} from '../../Utilities/Component/Helpers';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
-import fontFamily from '../../Utilities/Styles/fontFamily';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import {ScrollView} from 'react-native-gesture-handler';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
+import {getSearchData} from '../../Utilities/Constants/auth';
+import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 
 const Search = ({navigation}: any) => {
+  const [searchText, setSearchText] = useState('');
+  const [searchData, setSearchData] = useState([]);
+
+  useEffect(() => {
+    searchHandler();
+  }, [searchText]);
+
+  const searchHandler = () => {
+    const formData = {
+      query: searchText,
+    };
+    getSearchData(formData)
+      .then(res => {
+        // console.log(res, 'res in search');
+        setSearchData(res);
+      })
+      .catch(err => {
+        console.log(err, 'err in search');
+      });
+  };
+
   const onContinue = () => {
     navigation.navigate(NavigationStrings.HomeNight);
   };
 
-  const renderItem = () => (
-    <View>
-      <ImageBackground source={ImagePath.ProfileImg} style={styles.imgbck}>
-        <Text style={{...commonStyles.font14, fontFamily: fontFamily.regular}}>
-          House
+  const renderItem = ({item}: any) => (
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={() => navigation.navigate(NavigationStrings.MusicList)}>
+      <ImageBackground
+        source={{uri: IMAGE_URL + item?.image}}
+        style={styles.imgbck}
+        borderRadius={5}>
+        <Text
+          style={{
+            ...commonStyles.font10Regular,
+            color: Colors.white,
+          }}>
+          {item?.name}
         </Text>
       </ImageBackground>
-    </View>
+    </TouchableOpacity>
   );
 
   const renderData = () => (
-    <ImageBackground source={ImagePath.ProfileImg} style={styles.imgback}>
+    <ImageBackground
+      source={ImagePath.ProfileImg}
+      style={styles.imgback}
+      borderRadius={5}>
       <SizeBox size={3} />
       <Text style={styles.phantom}>Le Phantom</Text>
       <View style={styles.vectoricons}>
@@ -58,33 +92,77 @@ const Search = ({navigation}: any) => {
     </ImageBackground>
   );
 
-  const renderDataBars = () => (
-    <ImageBackground source={ImagePath.ProfileImg} style={styles.imgback}>
-      <SizeBox size={3} />
-      <Text style={styles.larc}>L'ARC</Text>
-      <View style={styles.vectoricons}>
-        <VectorIcon
-          groupName="Fontisto"
-          name="heart-alt"
-          color={Colors.green}
-          size={25}
-        />
-        <View style={styles.vectortext}>
+  const renderDataBars = ({item}: any) => (
+    <TouchableOpacity activeOpacity={0.8}>
+      <ImageBackground
+        source={
+          item?.pictures?.length > 0
+            ? {uri: IMAGE_URL + item?.pictures[0]}
+            : ImagePath.ProfileImg
+        }
+        style={styles.imgback}
+        borderRadius={5}>
+        <SizeBox size={3} />
+        <Text style={styles.larc}>Bar</Text>
+        <View style={styles.vectoricons}>
           <VectorIcon
-            groupName="AntDesign"
-            name="star"
-            color={Colors.yellow}
-            size={15}
+            groupName="Fontisto"
+            name="heart-alt"
+            color={Colors.green}
+            size={25}
           />
-          <Text style={styles.textnumber}>{`  `}4,7</Text>
+          <View style={styles.vectortext}>
+            <VectorIcon
+              groupName="AntDesign"
+              name="star"
+              color={Colors.yellow}
+              size={15}
+            />
+            <Text style={styles.textnumber}>{`  `}4,7</Text>
+          </View>
         </View>
-      </View>
-    </ImageBackground>
+      </ImageBackground>
+    </TouchableOpacity>
+  );
+  const renderDataUser = ({item}: any) => (
+    <TouchableOpacity activeOpacity={0.8}>
+      <ImageBackground
+        source={
+          item?.pictures?.length > 0
+            ? {uri: IMAGE_URL + item?.pictures[0]}
+            : ImagePath.ProfileImg
+        }
+        style={styles.imgback}
+        borderRadius={5}>
+        <SizeBox size={3} />
+        <Text style={styles.larc}>{item?.username}</Text>
+        {/* <View style={styles.vectoricons}>
+          <VectorIcon
+            groupName="Fontisto"
+            name="heart-alt"
+            color={Colors.green}
+            size={25}
+          />
+          <View style={styles.vectortext}>
+            <VectorIcon
+              groupName="AntDesign"
+              name="star"
+              color={Colors.yellow}
+              size={15}
+            />
+            <Text style={styles.textnumber}>{`  `}4,7</Text>
+          </View>
+        </View> */}
+      </ImageBackground>
+    </TouchableOpacity>
   );
 
   const renderDataDj = () => (
     <View>
-      <ImageBackground source={ImagePath.ProfileImg} style={styles.imgbcks}>
+      <ImageBackground
+        source={ImagePath.ProfileImg}
+        style={styles.imgbcks}
+        borderRadius={5}>
         <SizeBox size={3} />
         <View style={styles.vectortext}>
           <VectorIcon
@@ -114,7 +192,10 @@ const Search = ({navigation}: any) => {
   );
 
   const renderPrivate = () => (
-    <ImageBackground source={ImagePath.ProfileImg} style={styles.imgback}>
+    <ImageBackground
+      source={ImagePath.ProfileImg}
+      style={styles.imgback}
+      borderRadius={5}>
       <SizeBox size={3} />
       <View style={styles.vectoricons}>
         <VectorIcon
@@ -136,8 +217,11 @@ const Search = ({navigation}: any) => {
     </ImageBackground>
   );
 
-  const renderOrganiser = () => (
-    <ImageBackground source={ImagePath.ProfileImg} style={styles.imgback}>
+  const renderOrganiser = ({item, index}: any) => (
+    <ImageBackground
+      source={{uri: IMAGE_URL + item?.pictures[0]}}
+      borderRadius={5}
+      style={styles.imgback}>
       <SizeBox size={3} />
       <View style={styles.vectoricons}>
         <VectorIcon
@@ -186,6 +270,9 @@ const Search = ({navigation}: any) => {
               placeholder="Search User or party name , group"
               placeholderTextColor={Colors.greyTxt}
               style={styles.input}
+              value={searchText}
+              autoCapitalize="none"
+              onChangeText={(e: string) => setSearchText(e)}
             />
             <VectorIcon
               groupName="Ionicons"
@@ -197,12 +284,15 @@ const Search = ({navigation}: any) => {
           <SizeBox size={10} />
           <View style={styles.flexview}>
             <Text style={styles.headingtext}>Music style</Text>
-            <TouchableOpacity style={styles.showmore}>
+            <TouchableOpacity
+              style={styles.showmore}
+              onPress={() => navigation.navigate(NavigationStrings.MusicList)}>
               <Text style={styles.showtext}>Show more</Text>
             </TouchableOpacity>
           </View>
+          <SizeBox size={2} />
           <FlatList
-            data={[{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}]}
+            data={searchData?.musicstyle}
             renderItem={renderItem}
             horizontal
             style={{alignSelf: 'center'}}
@@ -214,10 +304,14 @@ const Search = ({navigation}: any) => {
           <View style={styles.nightclubs}>
             <View style={styles.flexview}>
               <Text style={styles.headingtext}>Nightclubs</Text>
-              <TouchableOpacity style={styles.showmore} onPress={onContinue}>
+              <TouchableOpacity
+                style={styles.showmore}
+                // onPress={onContinue}
+                onPress={() => navigation.navigate(NavigationStrings.SeeMore)}>
                 <Text style={styles.showtext}>Show more</Text>
               </TouchableOpacity>
             </View>
+            <SizeBox size={2} />
             <FlatList
               data={[{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}]}
               renderItem={renderData}
@@ -231,10 +325,13 @@ const Search = ({navigation}: any) => {
           <SizeBox size={15} />
           <View style={styles.flexview}>
             <Text style={styles.headingtext}>Book a dj</Text>
-            <TouchableOpacity style={styles.showmore}>
+            <TouchableOpacity
+              style={styles.showmore}
+              onPress={() => navigation.navigate(NavigationStrings.SeeMore)}>
               <Text style={styles.showtext}>Show more</Text>
             </TouchableOpacity>
           </View>
+          <SizeBox size={2} />
           <FlatList
             data={[{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}]}
             renderItem={renderDataDj}
@@ -248,10 +345,13 @@ const Search = ({navigation}: any) => {
           <View style={styles.nightclubs}>
             <View style={styles.flexview}>
               <Text style={styles.headingtext}>Private parties</Text>
-              <TouchableOpacity style={styles.showmore}>
+              <TouchableOpacity
+                style={styles.showmore}
+                onPress={() => navigation.navigate(NavigationStrings.SeeMore)}>
                 <Text style={styles.showtext}>Show more</Text>
               </TouchableOpacity>
             </View>
+            <SizeBox size={2} />
             <FlatList
               data={[{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}]}
               renderItem={renderPrivate}
@@ -265,10 +365,13 @@ const Search = ({navigation}: any) => {
           <SizeBox size={15} />
           <View style={styles.flexview}>
             <Text style={styles.headingtext}>Bars</Text>
-            <TouchableOpacity style={styles.showmore}>
+            <TouchableOpacity
+              style={styles.showmore}
+              onPress={() => navigation.navigate(NavigationStrings.SeeMore)}>
               <Text style={styles.showtext}>Show more</Text>
             </TouchableOpacity>
           </View>
+          <SizeBox size={2} />
           <FlatList
             data={[{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}]}
             renderItem={renderDataBars}
@@ -278,16 +381,23 @@ const Search = ({navigation}: any) => {
             showsVerticalScrollIndicator={false}
             style={{alignSelf: 'center'}}
           />
-          <SizeBox size={7} />
+          {searchData?.events?.length > 0 && <SizeBox size={7} />}
           <View style={styles.nightclubs}>
-            <View style={styles.flexview}>
-              <Text style={styles.headingtext}>Event Organisers</Text>
-              <TouchableOpacity style={styles.showmore}>
-                <Text style={styles.showtext}>Show more</Text>
-              </TouchableOpacity>
-            </View>
+            {searchData?.events?.length > 0 && (
+              <View style={styles.flexview}>
+                <Text style={styles.headingtext}>Event Organisers</Text>
+                <TouchableOpacity
+                  style={styles.showmore}
+                  onPress={() =>
+                    navigation.navigate(NavigationStrings.SeeMore)
+                  }>
+                  <Text style={styles.showtext}>Show more</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            {searchData?.events?.length > 0 && <SizeBox size={2} />}
             <FlatList
-              data={[{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}]}
+              data={searchData?.events}
               renderItem={renderOrganiser}
               showsHorizontalScrollIndicator={false}
               horizontal
@@ -296,6 +406,27 @@ const Search = ({navigation}: any) => {
               showsVerticalScrollIndicator={false}
             />
           </View>
+          {searchData?.events?.length > 0 && <SizeBox size={15} />}
+          {searchData?.users?.length > 0 && (
+            <View style={styles.flexview}>
+              <Text style={styles.headingtext}>Users</Text>
+              <TouchableOpacity
+                style={styles.showmore}
+                onPress={() => navigation.navigate(NavigationStrings.SeeMore)}>
+                <Text style={styles.showtext}>Show more</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          {searchData?.users?.length > 0 && <SizeBox size={2} />}
+          <FlatList
+            data={searchData?.users}
+            renderItem={renderDataUser}
+            showsHorizontalScrollIndicator={false}
+            horizontal
+            keyExtractor={(item, index) => index?.toString()}
+            showsVerticalScrollIndicator={false}
+            style={{alignSelf: 'center'}}
+          />
           <SizeBox size={15} />
         </ScrollView>
       </SafeAreaView>

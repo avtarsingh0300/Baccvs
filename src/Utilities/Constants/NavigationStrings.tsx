@@ -55,6 +55,7 @@ export default {
   MarketingTools: 'MarketingTools',
   FeedbackScreen: 'FeedbackScreen',
   PromoteScreen: 'PromoteScreen',
-
+  SeeMore: 'SeeMore',
   NightEvents: 'NightEvents',
+  MusicList: 'MusicList',
 };

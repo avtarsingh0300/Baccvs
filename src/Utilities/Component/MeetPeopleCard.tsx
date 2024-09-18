@@ -77,114 +77,122 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
         index={activeIndex}
         onIndexChanged={index => setActiveIndex(index)}>
         {item?.pictures?.map((i, ind) => (
-          <ImageBackground
-            borderRadius={10}
-            source={{uri: IMAGE_URL + i}}
-            // source={ImagePath.ProfileImg}
-            style={{
-              width: '100%',
-              height: height / 1.4,
-              alignSelf: 'center',
-              // marginBottom: 20,
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => {
+              navigation.navigate(NavigationStrings.DatingUserProfile, {
+                id: item?._id,
+              });
             }}>
-            <View
+            <ImageBackground
+              borderRadius={10}
+              source={{uri: IMAGE_URL + i}}
+              // source={ImagePath.ProfileImg}
               style={{
+                width: '100%',
+                height: height / 1.4,
                 alignSelf: 'center',
-                flexDirection: 'row',
-                marginTop: moderateScaleVertical(20),
+                // marginBottom: 20,
               }}>
-              {item?.pictures?.map((i, ind) => (
+              <View
+                style={{
+                  alignSelf: 'center',
+                  flexDirection: 'row',
+                  marginTop: moderateScaleVertical(20),
+                }}>
+                {item?.pictures?.map((i, ind) => (
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={{paddingVertical: 5}}
+                    onPress={() => setActiveIndex(ind)}>
+                    <View
+                      style={{
+                        ...styles.bar,
+                        backgroundColor:
+                          activeIndex === ind ? Colors.Pink : Colors.white,
+                      }}
+                    />
+                  </TouchableOpacity>
+                ))}
+              </View>
+              <Text
+                style={{
+                  ...commonStyles.font14,
+                  color: Colors.white,
+                  fontWeight: '600',
+                  paddingHorizontal: 23,
+                  paddingVertical: 20,
+                }}>
+                {item?.username}, {item?.age}
+              </Text>
+              <View
+                style={[
+                  styles.invw,
+                  {
+                    position: 'absolute',
+                    bottom: 20,
+                    alignSelf: 'center',
+                  },
+                ]}>
+                <TouchableOpacity activeOpacity={0.8} style={styles.bottomBtn}>
+                  <Image source={ImagePath.sent} />
+                </TouchableOpacity>
                 <TouchableOpacity
                   activeOpacity={0.8}
-                  style={{paddingVertical: 5}}
-                  onPress={() => setActiveIndex(ind)}>
-                  <View
-                    style={{
-                      ...styles.bar,
-                      backgroundColor:
-                        activeIndex === ind ? Colors.Pink : Colors.white,
-                    }}
+                  style={styles.bottomBtn}
+                  onPress={() => disLikeUserProfileHanlder()}>
+                  <VectorIcon
+                    groupName="Entypo"
+                    name="cross"
+                    color={Colors.red}
+                    size={20}
                   />
                 </TouchableOpacity>
-              ))}
-            </View>
-            <Text
-              style={{
-                ...commonStyles.font14,
-                color: Colors.white,
-                fontWeight: '600',
-                paddingHorizontal: 23,
-                paddingVertical: 20,
-              }}>
-              {item?.username}, {item?.age}
-            </Text>
-            <View
-              style={[
-                styles.invw,
-                {
-                  position: 'absolute',
-                  bottom: 20,
-                  alignSelf: 'center',
-                },
-              ]}>
-              <TouchableOpacity activeOpacity={0.8} style={styles.bottomBtn}>
-                <Image source={ImagePath.sent} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={styles.bottomBtn}
-                onPress={() => disLikeUserProfileHanlder()}>
-                <VectorIcon
-                  groupName="Entypo"
-                  name="cross"
-                  color={Colors.red}
-                  size={20}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={styles.bottomBtn}
-                onPress={() => likeUserProfileHanlder('superlike')}>
-                <VectorIcon
-                  groupName={
-                    !item?.isSuperliked
-                      ? 'SimpleLineIcons'
-                      : 'MaterialCommunityIcons'
-                  }
-                  name={'fire'}
-                  color={Colors.lightPink}
-                  size={20}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={styles.bottomBtn}
-                onPress={() => likeUserProfileHanlder('like')}>
-                <VectorIcon
-                  groupName="FontAwesome"
-                  name={!item?.isLiked ? 'heart-o' : 'heart'}
-                  color={Colors.green}
-                  size={20}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() =>
-                  navigation.navigate(NavigationStrings.DatingUserProfile, {
-                    id: item?._id,
-                  })
-                }
-                style={[
-                  styles.bottomBtn,
-                  {backgroundColor: Colors.tranparent},
-                ]}>
-                <Image
-                  source={ImagePath.openSheet}
-                  style={{height: 40, width: 40}}
-                />
-              </TouchableOpacity>
-            </View>
-          </ImageBackground>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.bottomBtn}
+                  onPress={() => likeUserProfileHanlder('superlike')}>
+                  <VectorIcon
+                    groupName={
+                      !item?.isSuperliked
+                        ? 'SimpleLineIcons'
+                        : 'MaterialCommunityIcons'
+                    }
+                    name={'fire'}
+                    color={Colors.lightPink}
+                    size={20}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.bottomBtn}
+                  onPress={() => likeUserProfileHanlder('like')}>
+                  <VectorIcon
+                    groupName="FontAwesome"
+                    name={!item?.isLiked ? 'heart-o' : 'heart'}
+                    color={Colors.green}
+                    size={20}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    navigation.navigate(NavigationStrings.DatingUserProfile, {
+                      id: item?._id,
+                    });
+                  }}
+                  style={[
+                    styles.bottomBtn,
+                    {backgroundColor: Colors.tranparent},
+                  ]}>
+                  <Image
+                    source={ImagePath.openSheet}
+                    style={{height: 40, width: 40}}
+                  />
+                </TouchableOpacity>
+              </View>
+            </ImageBackground>
+          </TouchableOpacity>
         ))}
       </Swiper>
     </Animated.View>

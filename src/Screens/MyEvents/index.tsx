@@ -25,6 +25,7 @@ import ImagePath from '../../Utilities/Constants/ImagePath';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import {getMyEvent} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 
 const MyEvents = ({navigation}: any) => {
   const [button, setButton] = useState('missed');
@@ -64,8 +65,13 @@ const MyEvents = ({navigation}: any) => {
   const onbackPress = () => {
     navigation.goBack();
   };
+
+  const onEventDetails = (item: any) => {
+    navigation.navigate(NavigationStrings.EventDetails, {eventId: item?.id});
+  };
+
   const renderItem = ({item}: any) => (
-    <TouchableOpacity activeOpacity={0.8}>
+    <TouchableOpacity activeOpacity={0.8} onPress={() => onEventDetails(item)}>
       <View>
         <View style={styles.listContainer}>
           <View style={styles.backContainer}>

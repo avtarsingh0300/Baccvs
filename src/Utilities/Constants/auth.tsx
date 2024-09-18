@@ -13,6 +13,7 @@ import {
   CREATE_REF_CODE,
   DISLIKE_USER_PROFILE,
   EVENT_DETAIL,
+  EVENT_SEARCH,
   FOLLOW_USER,
   GET_ALL_MEET_GROUPS,
   GET_ALL_USERS,
@@ -85,6 +86,10 @@ export function teamsDetails(data: object) {
 
 export function getMapData() {
   return apiPost(MAP_SEARCH);
+}
+
+export function getSearchData(data: object) {
+  return apiPost(EVENT_SEARCH, data);
 }
 export function changePass(data: object) {
   return apiPost(CHANGE_PASS, data);

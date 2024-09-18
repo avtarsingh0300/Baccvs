@@ -26,7 +26,6 @@ import ImagePath from '../../Utilities/Constants/ImagePath';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import {getEventTypes, getMemberDetails} from '../../Utilities/Constants/auth';
-import languages from '../../Utilities/Constants';
 import Swiper from 'react-native-swiper';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import Geolocation from '@react-native-community/geolocation';
