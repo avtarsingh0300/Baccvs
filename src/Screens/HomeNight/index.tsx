@@ -30,6 +30,12 @@ const HomeNight = ({navigation}:any) => {
     else if (id === 2){
       navigation.navigate(NavigationStrings.NightEvents)
     }
+    else if (id === 1){
+      navigation.navigate(NavigationStrings.AnalyticsScreen)
+    }
+    else{
+      
+    }
   };
 
   const renderNightClub = ({ item }) => {

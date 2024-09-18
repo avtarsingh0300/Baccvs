@@ -56,5 +56,6 @@ export default {
   FeedbackScreen:'FeedbackScreen',
   PromoteScreen:'PromoteScreen',
   NightEvents:'NightEvents',
-  
+  AnalyticsScreen:'AnalyticsScreen',
+  AgoraSales:'AgoraSales',
 };

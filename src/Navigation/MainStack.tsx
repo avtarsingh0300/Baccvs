@@ -208,6 +208,16 @@ export default function MainStack(Stack: any) {
         component={screens.NightEvents}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.AnalyticsScreen}
+        component={screens.AnalyticsScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.AgoraSales}
+        component={screens.AgoraSales}
+        options={{headerShown: false}}
+      />
     </>
   );
 }

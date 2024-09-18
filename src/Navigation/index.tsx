@@ -53,4 +53,5 @@ export {default as MarketingTools} from '../Screens/MarketingTools';
 export {default as FeedbackScreen} from '../Screens/FeedbackScreen';
 export {default as PromoteScreen} from '../Screens/PromoteScreen';
 export {default as NightEvents} from '../Screens/NightEvents';
-
+export {default as AnalyticsScreen} from '../Screens/AnalyticsScreen';
+export {default as AgoraSales} from '../Screens/AgoraSales';
