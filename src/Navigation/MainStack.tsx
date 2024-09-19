@@ -231,6 +231,11 @@ export default function MainStack(Stack: any) {
         component={screens.AgoraAttendance}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.Profile}
+        component={screens.Profile}
+        options={{headerShown: false}}
+      />
     </>
   );
 }

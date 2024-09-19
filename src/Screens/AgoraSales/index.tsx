@@ -8,7 +8,6 @@ import commonStyles from '../../Utilities/Styles/commonStyles'
 import fontFamily from '../../Utilities/Styles/fontFamily'
 import ImagePath from '../../Utilities/Constants/ImagePath'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import HalfCircularProgressBar from '../../Utilities/Component/HalfProgressBar'
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings'
 
 const AgoraSales = ({navigation}:any) => {
@@ -62,8 +61,7 @@ const AgoraSales = ({navigation}:any) => {
       </View>
           <View style={styles.bottomline}/>
           <SizeBox size={20}/>
-          <HalfCircularProgressBar progress={20} />
-      </LinearGradient>
+                </LinearGradient>
       </View>
       <SizeBox size={10}/>
       <FlatList

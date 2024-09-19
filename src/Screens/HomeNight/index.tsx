@@ -18,6 +18,9 @@ import {SizeBox} from '../../Utilities/Component/Helpers';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 
 const HomeNight = ({navigation}: any) => {
+  const onContinue = () => {
+    navigation.navigate(NavigationStrings.Profile);
+  };
   const nightclubNames = {
     1: 'Nighclub Analytics',
     2: 'Events',
@@ -68,7 +71,9 @@ const HomeNight = ({navigation}: any) => {
       style={styles.LinearConatiner}>
       <SafeAreaView>
         <View style={styles.phantomcon}>
+          <TouchableOpacity activeOpacity={0.7} onPress={onContinue}>
           <Image source={ImagePath.ProfileImg} style={styles.editedimg} />
+          </TouchableOpacity>
           <Text style={{...commonStyles.font20White}}>The Phantom</Text>
           <VectorIcon
             groupName="Fontisto"

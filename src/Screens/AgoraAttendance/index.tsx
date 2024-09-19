@@ -8,20 +8,10 @@
     import fontFamily from '../../Utilities/Styles/fontFamily'
     import ImagePath from '../../Utilities/Constants/ImagePath'
     import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-    import HalfCircularProgressBar from '../../Utilities/Component/HalfProgressBar'
     import NavigationStrings from '../../Utilities/Constants/NavigationStrings'
-import CircularProgressBar from '../../Utilities/Component/HalfProgressBar'
+import CircularProgressBar from '../../Utilities/Component/hooks/CircularProgressBar'
     
     const AgoraAttendance = ({navigation}:any) => {
-        const [progress, setProgress] = useState(0);
-
-        useEffect(() => {
-          const interval = setInterval(() => {
-            setProgress((prev) => (prev <= 50 ? prev + 1 : 0));
-          }, 50);
-      
-          return () => clearInterval(interval);
-        }, []);
       
       const onContinue = () => {
         navigation.navigate(NavigationStrings.AgoraAttendance);
@@ -67,7 +57,6 @@ import CircularProgressBar from '../../Utilities/Component/HalfProgressBar'
           </View>
               <View style={styles.bottomline}/>
               <SizeBox size={20}/>
-              <HalfCircularProgressBar progress={20} />
           </LinearGradient>
           </View>
           <SizeBox size={10}/>
@@ -77,7 +66,7 @@ import CircularProgressBar from '../../Utilities/Component/HalfProgressBar'
       <CircularProgressBar progress={60} size={190} strokeWidth={12}/>
     </View>
           <SizeBox size={20}/>
-            <Text style={{...commonStyles.font16Regular,paddingLeft:15}}>Customers</Text>
+            <Text style={{...commonStyles.font16Regular,paddingLeft:15}}>People (124)</Text>
             <SizeBox size={10} />
               <FlatList
                 data={[{id: 1}, {id: 1}, {id: 1}, {id: 1}]}

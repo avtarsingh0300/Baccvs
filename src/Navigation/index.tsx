@@ -58,3 +58,4 @@ export {default as MusicList} from '../Screens/MusicList';
 export {default as AnalyticsScreen} from '../Screens/AnalyticsScreen';
 export {default as AgoraSales} from '../Screens/AgoraSales';
 export {default as AgoraAttendance} from '../Screens/AgoraAttendance';
+export {default as Profile} from '../Screens/Profile';

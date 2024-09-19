@@ -61,4 +61,5 @@ export default {
   AnalyticsScreen: 'AnalyticsScreen',
   AgoraSales: 'AgoraSales',
   AgoraAttendance:'AgoraAttendance',
+  Profile:'Profile',
 };
