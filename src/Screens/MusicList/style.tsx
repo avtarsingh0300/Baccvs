@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     height: moderateScaleVertical(55),
-    width: '60%',
+    width: '90%',
     alignSelf: 'center',
   },
   input: {

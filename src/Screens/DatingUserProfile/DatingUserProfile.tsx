@@ -445,7 +445,7 @@ const DatingUserProfile = ({navigation, route}: any) => {
               style={[styles.bottomBtn, {backgroundColor: '#FF813A'}]}>
               <Image
                 source={ImagePath.link_backward}
-                style={{height: 40, width: 40}}
+                style={{height: 25, width: 25, resizeMode: 'contain'}}
               />
             </TouchableOpacity>
           </View>

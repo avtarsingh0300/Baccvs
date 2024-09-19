@@ -30,7 +30,7 @@ import {
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import {FlatList} from 'react-native';
-import ToggleSwitch from 'toggle-switch-react-native';
+
 import {getEventTypes} from '../../Utilities/Constants/auth';
 
 import Modal from 'react-native-modal';
@@ -44,12 +44,16 @@ const EventFilter = ({navigation}: any) => {
   const [venueType, setVenueType] = useState([]);
   const [modalVisibleLang, SetModalVisibleLang] = useState(false);
   const [selectedLang, setSelectedLang] = useState([]);
-  const [selectedValue, setSelected] = useState([1, 4]);
-  const [selectedValues2, setSelectedValues2] = useState([1, 4]);
+  const [selectedValue, setSelected] = useState([0, 0]);
+  const [selectedValues2, setSelectedValues2] = useState([0, 0]);
+  const [selectedValue3, setSelected3] = useState([0, 0]);
+  const [selectedValues4, setSelectedValues4] = useState([0, 0]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedItems2, setSelectedItems2] = useState([]);
   const [selectedItems3, setSelectedItems3] = useState([]);
-  const [colors, setColors] = useState(false);
+  const [language, setLanguage] = useState('');
+  const [language2, setLanguage2] = useState('');
+  const [colors, setColors] = useState(0);
   useEffect(() => {
     getEventsTypes();
   }, []);
@@ -90,13 +94,19 @@ const EventFilter = ({navigation}: any) => {
   const onValuesChangeFinish = (values: any) => {
     setSelected(values);
   };
-  const onValuesChangeFinish2 = values => {
+  const onValuesChangeFinish2 = (values: any) => {
     setSelectedValues2(values);
   };
+  const onValuesChangeFinish3 = (values: any) => {
+    setSelected3(values);
+  };
+  const onValuesChangeFinish4 = (values: any) => {
+    setSelectedValues4(values);
+  };
   const toggleSelection = (item: any) => {
-    setSelectedItems(prevSelectedItems => {
+    setSelectedItems((prevSelectedItems: any) => {
       if (prevSelectedItems.includes(item._id)) {
-        return prevSelectedItems.filter(id => id !== item._id);
+        return prevSelectedItems.filter((id: any) => id !== item._id);
       } else {
         return [...prevSelectedItems, item._id];
       }
@@ -133,6 +143,8 @@ const EventFilter = ({navigation}: any) => {
     setSelectedLang([]);
     setSelectedValues2([0, 0]);
     setSelected([0, 0]);
+    setSelected3([0, 0]);
+    setSelectedValues2([0, 0]);
   };
 
   return (
@@ -204,7 +216,7 @@ const EventFilter = ({navigation}: any) => {
                 </Text>
                 <Text
                   style={{...commonStyles.font16Regular, color: Colors.white}}>
-                  0km
+                  {selectedValues2[0]} - {selectedValues2[1]} km
                 </Text>
               </View>
               <View style={styles.flex}>
@@ -212,7 +224,7 @@ const EventFilter = ({navigation}: any) => {
                   markerStyle={styles.marker}
                   values={selectedValues2}
                   min={0}
-                  max={5}
+                  max={30}
                   allowOverlap
                   sliderLength={width / 1.3}
                   selectedStyle={styles.select}
@@ -234,7 +246,14 @@ const EventFilter = ({navigation}: any) => {
                   data={eventType}
                   renderItem={({item}) => (
                     <TouchableOpacity
-                      style={styles.flatcon}
+                      style={[
+                        styles.flatcon,
+                        {
+                          backgroundColor: selectedItems.includes(item._id)
+                            ? Colors.Linear
+                            : Colors.lightPink,
+                        },
+                      ]}
                       onPress={() => toggleSelection(item)}>
                       <Text
                         style={{
@@ -266,7 +285,7 @@ const EventFilter = ({navigation}: any) => {
                     ...commonStyles.font16Regular,
                     color: Colors.white,
                   }}>
-                  Free- 49€
+                  {selectedValue[0]} - {selectedValue[1]}€
                 </Text>
               </View>
               <View style={styles.flexout}>
@@ -356,21 +375,85 @@ const EventFilter = ({navigation}: any) => {
                 />
               </View>
               <SizeBox size={10} />
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={styles.flatbox}
                 activeOpacity={0.5}
-                onPress={() => SetModalVisibleLang(true)}>
-                <Text
-                  style={{
-                    ...commonStyles.font16Regular,
-                    color: Colors.white,
-                    paddingLeft: 10,
-                  }}>
-                  Languages
-                </Text>
+                onPress={() => SetModalVisibleLang(true)}> */}
+              <Text
+                style={{
+                  ...commonStyles.font16Regular,
+                  color: Colors.white,
+                  paddingLeft: 10,
+                }}>
+                Languages
+              </Text>
+              <SizeBox size={5} />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignSelf: 'center',
+                  width: '90%',
+                }}>
+                <TouchableOpacity
+                  onPress={() => setLanguage('English')}
+                  style={[
+                    styles.flatcon,
+                    {
+                      backgroundColor:
+                        language == 'English'
+                          ? Colors.Linear
+                          : Colors.lightPink,
+                    },
+                  ]}>
+                  <Text
+                    style={{
+                      ...commonStyles.font12Regular,
+                      color: Colors.white,
+                    }}>
+                    English
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setLanguage('French')}
+                  style={[
+                    styles.flatcon,
+                    {
+                      backgroundColor:
+                        language == 'French' ? Colors.Linear : Colors.lightPink,
+                    },
+                  ]}>
+                  <Text
+                    style={{
+                      ...commonStyles.font12Regular,
+                      color: Colors.white,
+                    }}>
+                    French
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setLanguage('Spanish')}
+                  style={[
+                    styles.flatcon,
+                    {
+                      backgroundColor:
+                        language == 'Spanish'
+                          ? Colors.Linear
+                          : Colors.lightPink,
+                    },
+                  ]}>
+                  <Text
+                    style={{
+                      ...commonStyles.font12Regular,
+                      color: Colors.white,
+                    }}>
+                    Spanish
+                  </Text>
+                </TouchableOpacity>
+              </View>
 
-                <SizeBox size={5} />
-                <FlatList
+              <SizeBox size={5} />
+              {/* <FlatList
                   horizontal
                   showsHorizontalScrollIndicator={false}
                   data={selectedLang}
@@ -387,8 +470,8 @@ const EventFilter = ({navigation}: any) => {
                       <Text style={styles.langItemText}>{item} &#x2715;</Text>
                     </TouchableOpacity>
                   )}
-                />
-              </TouchableOpacity>
+                /> */}
+              {/* </TouchableOpacity> */}
               {/* </View> */}
               <SizeBox size={15} />
               <View style={styles.Btnmain}>
@@ -435,20 +518,20 @@ const EventFilter = ({navigation}: any) => {
                 </Text>
                 <Text
                   style={{...commonStyles.font16Regular, color: Colors.white}}>
-                  0km
+                  {selectedValue3[0]} - {selectedValue3[1]} km
                 </Text>
               </View>
               <View style={styles.flex}>
                 <MultiSlider
                   markerStyle={styles.marker}
+                  values={selectedValue3}
                   min={0}
                   max={100}
-                  onValuesChangeFinish={onValuesChangeFinish}
                   allowOverlap
-                  values={selectedValue}
                   sliderLength={width / 1.3}
                   selectedStyle={styles.select}
                   unselectedStyle={styles.unsel}
+                  onValuesChangeFinish={onValuesChangeFinish3}
                 />
               </View>
               <SizeBox size={10} />
@@ -497,21 +580,21 @@ const EventFilter = ({navigation}: any) => {
                     ...commonStyles.font16Regular,
                     color: Colors.white,
                   }}>
-                  20 - 26
+                  {selectedValues4[0]} - {selectedValues4[1]}
                 </Text>
               </View>
               <View style={styles.flexout}>
                 <View>
                   <MultiSlider
                     markerStyle={styles.marker}
-                    values={selectedValues2}
+                    values={selectedValues4}
                     min={0}
-                    max={5}
+                    max={80}
                     allowOverlap
                     sliderLength={width / 1.3}
                     selectedStyle={styles.select}
                     unselectedStyle={styles.unsel}
-                    onValuesChangeFinish={onValuesChangeFinish2}
+                    onValuesChangeFinish={onValuesChangeFinish4}
                   />
                 </View>
               </View>
@@ -592,39 +675,104 @@ const EventFilter = ({navigation}: any) => {
                 />
               </View>
               <SizeBox size={10} />
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={styles.flatbox}
                 activeOpacity={0.5}
-                onPress={() => SetModalVisibleLang(true)}>
-                <Text
-                  style={{
-                    ...commonStyles.font16Regular,
-                    color: Colors.white,
-                    paddingLeft: 15,
-                  }}>
-                  Languages
-                </Text>
+                onPress={() => SetModalVisibleLang(true)}> */}
+              <Text
+                style={{
+                  ...commonStyles.font16Regular,
+                  color: Colors.white,
+                  paddingLeft: 15,
+                }}>
+                Languages
+              </Text>
 
-                <SizeBox size={5} />
-                <FlatList
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  data={selectedLang}
-                  renderItem={({item}) => (
-                    <TouchableOpacity
-                      style={styles.langItem}
-                      activeOpacity={0.8}
-                      onPress={() => {
-                        const filterData2 = selectedLang?.filter(
-                          (i: any) => i != item,
-                        );
-                        setSelectedLang(filterData2);
-                      }}>
-                      <Text style={styles.langItemText}>{item} &#x2715;</Text>
-                    </TouchableOpacity>
-                  )}
-                />
-              </TouchableOpacity>
+              <SizeBox size={5} />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignSelf: 'center',
+                  width: '90%',
+                }}>
+                <TouchableOpacity
+                  onPress={() => setLanguage2('English')}
+                  style={[
+                    styles.flatcon,
+                    {
+                      backgroundColor:
+                        language2 == 'English'
+                          ? Colors.Linear
+                          : Colors.lightPink,
+                    },
+                  ]}>
+                  <Text
+                    style={{
+                      ...commonStyles.font12Regular,
+                      color: Colors.white,
+                    }}>
+                    English
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setLanguage2('French')}
+                  style={[
+                    styles.flatcon,
+                    {
+                      backgroundColor:
+                        language2 == 'French'
+                          ? Colors.Linear
+                          : Colors.lightPink,
+                    },
+                  ]}>
+                  <Text
+                    style={{
+                      ...commonStyles.font12Regular,
+                      color: Colors.white,
+                    }}>
+                    French
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setLanguage2('Spanish')}
+                  style={[
+                    styles.flatcon,
+                    {
+                      backgroundColor:
+                        language2 == 'Spanish'
+                          ? Colors.Linear
+                          : Colors.lightPink,
+                    },
+                  ]}>
+                  <Text
+                    style={{
+                      ...commonStyles.font12Regular,
+                      color: Colors.white,
+                    }}>
+                    Spanish
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              {/* <FlatList
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                data={selectedLang}
+                renderItem={({item}) => (
+                  <TouchableOpacity
+                    style={styles.langItem}
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      const filterData2 = selectedLang?.filter(
+                        (i: any) => i != item,
+                      );
+                      setSelectedLang(filterData2);
+                    }}>
+                    <Text style={styles.langItemText}>{item} &#x2715;</Text>
+                  </TouchableOpacity>
+                )}
+              /> */}
+              {/* </TouchableOpacity> */}
               <SizeBox size={10} />
               <View>
                 <Text
@@ -637,17 +785,7 @@ const EventFilter = ({navigation}: any) => {
                 </Text>
                 <SizeBox size={5} />
                 <FlatList
-                  data={[
-                    {id: 1},
-                    {id: 1},
-                    {id: 1},
-                    {id: 1},
-                    {id: 1},
-                    {id: 1},
-                    {id: 1},
-                    {id: 1},
-                    {id: 1},
-                  ]}
+                  data={[{id: 1}]}
                   renderItem={renderAstro}
                   numColumns={3}
                   style={{paddingLeft: 15}}
