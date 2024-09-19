@@ -8,8 +8,13 @@ import commonStyles from '../../Utilities/Styles/commonStyles'
 import fontFamily from '../../Utilities/Styles/fontFamily'
 import ImagePath from '../../Utilities/Constants/ImagePath'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import HalfCircularProgressBar from '../../Utilities/Component/HalfProgressBar'
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings'
 
 const AgoraSales = ({navigation}:any) => {
+  const onContinue = () => {
+    navigation.navigate(NavigationStrings.AgoraAttendance);
+  };
   const renderItem2 = ({item})=>(
     <View style={styles.earlytxt}>
       <Text style={{...commonStyles.font16White,fontFamily:fontFamily.time_regular}}>Early tickets (2351)</Text>
@@ -56,6 +61,8 @@ const AgoraSales = ({navigation}:any) => {
           <Text style={styles.ticketsqt}>20</Text>
       </View>
           <View style={styles.bottomline}/>
+          <SizeBox size={20}/>
+          <HalfCircularProgressBar progress={20} />
       </LinearGradient>
       </View>
       <SizeBox size={10}/>
@@ -72,7 +79,7 @@ const AgoraSales = ({navigation}:any) => {
             renderItem={renderFollower}
           />
           <SizeBox size={10}/>
-          <TouchableOpacity style={styles.showbtn}>
+          <TouchableOpacity style={styles.showbtn}onPress={onContinue}>
             <Text style={{...commonStyles.font14Regular,fontFamily:fontFamily.time_regular}}>Show more</Text>
           </TouchableOpacity>
           <SizeBox size={5}/>

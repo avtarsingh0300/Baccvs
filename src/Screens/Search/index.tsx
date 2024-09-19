@@ -71,7 +71,7 @@ const Search = ({navigation}: any) => {
       style={styles.imgback}
       borderRadius={5}>
       <SizeBox size={3} />
-      <Text style={styles.phantom}>Le Phantom</Text>
+      <Text style={styles.phantom} onPress={onContinue}>Le Phantom</Text>
       <View style={styles.vectoricons}>
         <VectorIcon
           groupName="Fontisto"

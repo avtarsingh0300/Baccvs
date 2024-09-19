@@ -51,11 +51,8 @@ export default {
   EditSocialProfile: 'EditSocialProfile',
   GrroupDeatils: 'GrroupDeatils',
   DatingUserProfile: 'DatingUserProfile',
-
   SeeMore: 'SeeMore',
-
   MusicList: 'MusicList',
-
   HomeNight: 'HomeNight',
   MarketingTools: 'MarketingTools',
   FeedbackScreen: 'FeedbackScreen',
@@ -63,4 +60,5 @@ export default {
   NightEvents: 'NightEvents',
   AnalyticsScreen: 'AnalyticsScreen',
   AgoraSales: 'AgoraSales',
+  AgoraAttendance:'AgoraAttendance',
 };
