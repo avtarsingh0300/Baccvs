@@ -59,3 +59,4 @@ export {default as AnalyticsScreen} from '../Screens/AnalyticsScreen';
 export {default as AgoraSales} from '../Screens/AgoraSales';
 export {default as AgoraAttendance} from '../Screens/AgoraAttendance';
 export {default as Profile} from '../Screens/Profile';
+export {default as NightclubEdit} from '../Screens/NightclubEdit';

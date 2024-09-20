@@ -21,6 +21,7 @@ const HomeNight = ({navigation}: any) => {
   const onContinue = () => {
     navigation.navigate(NavigationStrings.Profile);
   };
+ 
   const nightclubNames = {
     1: 'Nighclub Analytics',
     2: 'Events',

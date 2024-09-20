@@ -62,4 +62,5 @@ export default {
   AgoraSales: 'AgoraSales',
   AgoraAttendance:'AgoraAttendance',
   Profile:'Profile',
+  NightclubEdit:'NightclubEdit',
 };

@@ -86,6 +86,41 @@ button: {
     color:Colors.white,
     textAlign:"center",
     paddingTop:5
+  },
+  outerVw:{
+    width:moderateScale(220),
+    height:moderateScaleVertical(160),
+    borderWidth:1,
+    borderColor:Colors.white,
+    borderRadius:10,
+    padding:10,
+    marginHorizontal:10
+  },
+  image:{
+    width:moderateScale(36),
+    height:moderateScaleVertical(40),
+    borderRadius:5
+
+  },
+  imageview:{
+    width:moderateScale(38),
+    borderWidth:1,
+    borderColor:Colors.lightPink,
+    borderRadius:5,
+    flexDirection:"row"
+  },
+  date:{
+    fontSize:8,
+    fontFamily:fontFamily.regular,
+    fontWeight:"300",
+    color:Colors.greyTxt
+  },
+  review:{
+    fontSize:10,
+    fontFamily:fontFamily.regular,
+    fontWeight:"300",
+    color:Colors.white,
+    width:"90%"
   }
 })
 export default styles;

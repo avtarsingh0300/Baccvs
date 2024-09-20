@@ -8,14 +8,19 @@ import commonStyles from '../../Utilities/Styles/commonStyles'
 import { SizeBox } from '../../Utilities/Component/Helpers'
 import ImagePath from '../../Utilities/Constants/ImagePath'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings'
 
 const data= [{id:1},{id:2},{id:3},{id:4}];
 const Data1 = Array(6).fill({ label: '#Techno' });
 const Data2 = Array(5).fill({ label: 'Private' });
 const Data3 = Array(3).fill({ label: 'English' });
 const Data4= [{id:1},{id:2},{id:3},{id:4}];
+const reviewData= [{id:1},{id:2},{id:3},];
 
-const Profile = () => {
+const Profile = ({navigation}:any) => {
+  const onContinue = () => {
+    navigation.navigate(NavigationStrings.NightclubEdit);
+  };
     const renderEvents = ({item,index}: any) => {
         var isLastItem = index === data.length - 1; 
             return(
@@ -94,6 +99,24 @@ const Profile = () => {
         </View>
       );
     };
+      const renderReview =({item,index})=>{
+        var isLastItem = index === data.length - 1; 
+        return(
+               <View style={styles.outerVw}>
+                 <View style={{flexDirection:"row",alignItems:"center",justifyContent:"space-between"}}>
+                  <View style={{flexDirection:"row",alignItems:"center"}}>
+                  <View style={styles.imageview}>
+                  <Image source={ImagePath.ProfileImg} style={styles.image}/>
+                  </View>
+                  <Text style={{...commonStyles.font12Regular}}>{`  `}Benoit</Text>
+                  </View>
+                  <Text style={styles.date}>23/02/2024</Text>
+                 </View>
+                  <SizeBox size={6}/>
+                  <Text style={styles.review}>We couldn’t go to ibiza, so ibiza vibes came to us thanks to the amazing performance of Sasha !</Text>
+               </View>
+      );
+    };
   return (
     <LinearGradient
       colors={[Colors.backgroundNew, Colors.backgroundNew]}
@@ -105,7 +128,9 @@ const Profile = () => {
         <View style={styles.headercontainer}>
             <Text style={{...commonStyles.font16Regular}}>⭐4.8</Text>
             <Text style={{...commonStyles.font20White}}>The Phantom</Text>
+            <TouchableOpacity activeOpacity={0.7} onPress={onContinue}>
             <VectorIcon groupName='Entypo' name='dots-three-horizontal' size={20}/>
+            </TouchableOpacity>
         </View>
         <SizeBox size={10}/>
         <View style={styles.imgview}>
@@ -194,9 +219,17 @@ const Profile = () => {
             <Text style={{...commonStyles.font16White}}>Reviews (18)</Text>
             <Text style={{...commonStyles.font16White}}>{`  `}⭐4,7</Text>
          </View>
-                <VectorIcon groupName='FontAwesome6' name='square-plus' size={25}/>
+                <VectorIcon groupName='FontAwesome6' name='square-plus' size={25} color={Colors.greyTxt}/>
          </View>
         <SizeBox size={10}/>
+        <FlatList
+            data={reviewData}
+            renderItem={renderReview}
+            keyExtractor={(item, index) => index.toString()}
+            horizontal
+            style={{paddingLeft:15}}
+          />
+
         </KeyboardAwareScrollView>
         </SafeAreaView>
         </LinearGradient>
