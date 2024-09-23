@@ -71,7 +71,7 @@ const Search = ({navigation}: any) => {
       style={styles.imgback}
       borderRadius={5}>
       <SizeBox size={3} />
-      <Text style={styles.phantom} onPress={onContinue}>
+      <Text style={styles.phantom} >
         Le Phantom
       </Text>
       <View style={styles.vectoricons}>
@@ -387,7 +387,7 @@ const Search = ({navigation}: any) => {
           <View style={styles.nightclubs}>
             {searchData?.events?.length > 0 && (
               <View style={styles.flexview}>
-                <Text style={styles.headingtext}>Event Organisers</Text>
+                <Text style={styles.headingtext} onPress={onContinue}>Event Organisers</Text>
                 <TouchableOpacity
                   style={styles.showmore}
                   onPress={() =>

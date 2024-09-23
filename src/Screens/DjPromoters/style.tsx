@@ -1,0 +1,85 @@
+import { StyleSheet } from "react-native";
+import { height, moderateScale, moderateScaleVertical, width } from "../../Utilities/Styles/responsiveSize";
+import { Colors } from "../../Utilities/Styles/colors";
+import fontFamily from "../../Utilities/Styles/fontFamily";
+
+const styles= StyleSheet.create({
+    LinearConatiner:{
+        flex:1
+    },
+    backimage:{
+    height:height/1.8,
+    width:width,
+    borderRadius:4,
+    },
+    imgouterview:{
+        borderBottomWidth:1,
+        borderRadius:4,
+        borderColor:Colors.lightPink
+    },
+    container:{
+        flex:1,
+        paddingHorizontal:20
+    },
+    sashatxt:{
+        fontSize:24,
+        fontFamily:fontFamily.regular,
+        fontWeight:"700",
+        color:Colors.white
+    },
+    friendstxt:{
+        fontSize:13,
+        fontFamily:fontFamily.regular,
+        fontWeight:"300",
+        color:Colors.white
+    },
+    messagebtn:{
+        width:moderateScale(132),
+        height:moderateScaleVertical(26),
+        backgroundColor:Colors.white,
+        borderRadius:2,
+        flexDirection:"row",
+        alignSelf:"center",
+        justifyContent:"center",
+        alignItems:"center"
+    },
+    messagebtn1:{
+        width:moderateScale(132),
+        height:moderateScaleVertical(26),
+        backgroundColor:Colors.white,
+        borderRadius:2,
+        flexDirection:"row",
+        alignSelf:"center",
+        justifyContent:"center",
+        alignItems:"center",
+        marginLeft:10
+    },
+    datetxt:{
+        fontSize:9,
+        fontWeight:"300",
+        fontFamily:fontFamily.regular,
+        color:Colors.black
+    },
+    seeallbtn:{
+        borderBottomWidth:1,
+        borderColor:Colors.white,
+        width:moderateScale(48),
+        alignSelf:"flex-end",
+        marginRight:10
+    },
+    backimg:{
+        width:moderateScale(149),
+        height:moderateScaleVertical(111),
+        alignSelf:"center",
+        marginTop:7,
+        borderRadius:8
+    },
+    ftcontainer:{
+        height:moderateScaleVertical(207),
+        width:moderateScale(165),
+        backgroundColor:Colors.white,
+        borderRadius:8,
+        marginHorizontal:5,
+    },
+})
+export default styles; 
