@@ -6,6 +6,7 @@ import {
   TextInput,
   View,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
@@ -15,7 +16,6 @@ import styles from './style';
 import {ImageComponent, SizeBox} from '../../Utilities/Component/Helpers';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
-import {ScrollView} from 'react-native-gesture-handler';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {getSearchData} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
@@ -71,7 +71,9 @@ const Search = ({navigation}: any) => {
       style={styles.imgback}
       borderRadius={5}>
       <SizeBox size={3} />
-      <Text style={styles.phantom} onPress={onContinue}>Le Phantom</Text>
+      <Text style={styles.phantom} onPress={onContinue}>
+        Le Phantom
+      </Text>
       <View style={styles.vectoricons}>
         <VectorIcon
           groupName="Fontisto"
@@ -256,7 +258,7 @@ const Search = ({navigation}: any) => {
             <Text style={{...commonStyles.font20White, alignSelf: 'center'}}>
               Search
             </Text>
-            <TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.8}>
               <ImageComponent
                 source={ImagePath.filterIcon}
                 style={{width: 30, height: 30}}
@@ -301,7 +303,7 @@ const Search = ({navigation}: any) => {
             showsHorizontalScrollIndicator={false}
           />
           <SizeBox size={7} />
-          <View style={styles.nightclubs}>
+          {/* <View style={styles.nightclubs}>
             <View style={styles.flexview}>
               <Text style={styles.headingtext}>Nightclubs</Text>
               <TouchableOpacity
@@ -321,8 +323,8 @@ const Search = ({navigation}: any) => {
               keyExtractor={(item, index) => index?.toString()}
               showsVerticalScrollIndicator={false}
             />
-          </View>
-          <SizeBox size={15} />
+          </View> */}
+          {/* <SizeBox size={15} />
           <View style={styles.flexview}>
             <Text style={styles.headingtext}>Book a dj</Text>
             <TouchableOpacity
@@ -380,7 +382,7 @@ const Search = ({navigation}: any) => {
             keyExtractor={(item, index) => index?.toString()}
             showsVerticalScrollIndicator={false}
             style={{alignSelf: 'center'}}
-          />
+          /> */}
           {searchData?.events?.length > 0 && <SizeBox size={7} />}
           <View style={styles.nightclubs}>
             {searchData?.events?.length > 0 && (
