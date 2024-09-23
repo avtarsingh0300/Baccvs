@@ -114,7 +114,7 @@ const EventFilter = ({navigation}: any) => {
   };
 
   const toggleSelection2 = (item: any) => {
-    setSelectedItems2(prevSelectedItems => {
+    setSelectedItems2((prevSelectedItems: any) => {
       if (prevSelectedItems.includes(item._id)) {
         return prevSelectedItems.filter(id => id !== item._id);
       } else {
@@ -124,7 +124,7 @@ const EventFilter = ({navigation}: any) => {
   };
 
   const toggleSelection3 = (item: any) => {
-    setSelectedItems3(prevSelectedItems => {
+    setSelectedItems3((prevSelectedItems: any) => {
       if (prevSelectedItems.includes(item._id)) {
         return prevSelectedItems.filter(id => id !== item._id);
       } else {

@@ -69,7 +69,7 @@ export const styles = StyleSheet.create({
 
     alignItems: 'center',
 
-    paddingHorizontal: 10,
+    // paddingHorizontal: 10,
   },
   bottomBarText: {
     fontSize: textScale(8),
