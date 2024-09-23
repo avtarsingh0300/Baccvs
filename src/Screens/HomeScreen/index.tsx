@@ -162,15 +162,17 @@ const HomeScreen = ({navigation}: any) => {
   };
 
   const renderItem = ({item}: any) => (
+    // console.log(item, 'item'),
     <TouchableOpacity activeOpacity={0.8} onPress={() => onEventDetails(item)}>
       <View>
         <View style={styles.listContainer}>
           <View style={styles.backContainer}>
-            <View />
+            {/* <View /> */}
             <Text
               style={{
                 ...commonStyles.font16Regular,
                 color: Colors.white,
+                marginLeft: moderateScale(80),
               }}>
               {item?.event_name}
             </Text>
@@ -205,7 +207,6 @@ const HomeScreen = ({navigation}: any) => {
                   ]}
                 />
               ) : null}
-
               {item?.members[2]?.imageUrl ? (
                 <ImageComponent
                   source={{uri: IMAGE_URL + item?.members[2]?.imageUrl}}
@@ -217,7 +218,6 @@ const HomeScreen = ({navigation}: any) => {
                   ]}
                 />
               ) : null}
-
               {item?.members?.length > 3 ? (
                 <Text
                   style={{
@@ -238,59 +238,74 @@ const HomeScreen = ({navigation}: any) => {
           </ImageBackground>
         </View>
         <SizeBox size={14} />
-        <View style={{paddingHorizontal: 15}}>
-          <View
-            style={{
-              justifyContent: 'space-between',
-              flexDirection: 'row',
-              marginTop: 10,
-            }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <ImageComponent
-                source={ImagePath.priceTag}
-                resizeMode="contain"
-                style={styles.tag}
-              />
-              <Text
-                style={{
-                  ...commonStyles.font14,
-                  fontFamily: fontFamily.time_bold,
-                }}>
-                {` `}
-                {item?.early_price} €
+        {item?.event_date > moment(new Date()).format('YYYY-MM-DD') ? (
+          <View style={{paddingHorizontal: 15}}>
+            <View
+              style={{
+                justifyContent: 'space-between',
+                flexDirection: 'row',
+                marginTop: 10,
+              }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <ImageComponent
+                  source={ImagePath.priceTag}
+                  resizeMode="contain"
+                  style={styles.tag}
+                />
+                <Text
+                  style={{
+                    ...commonStyles.font14,
+                    fontFamily: fontFamily.time_bold,
+                  }}>
+                  {` `}
+                  {item?.early_price} €
+                </Text>
+              </View>
+              <Text style={styles.ontxt}>
+                Ongoing{` `}
+                <Text
+                  style={{
+                    color: Colors.white,
+                  }}>
+                  - {item?.duration}
+                </Text>
               </Text>
             </View>
-            <Text style={styles.ontxt}>
-              Ongoing{` `}
+            <View style={styles.backContainer}>
+              <View style={styles.flex}>
+                <VectorIcon groupName="Feather" name="users" size={15} />
+                <Text
+                  style={{
+                    ...commonStyles.font12Regular,
+                    color: Colors.lightorange,
+                  }}>
+                  {` `}
+                  {item?.spot} spots
+                </Text>
+              </View>
               <Text
                 style={{
+                  ...commonStyles.font14Center,
                   color: Colors.white,
                 }}>
-                - {item?.duration}
-              </Text>
-            </Text>
-          </View>
-          <View style={styles.backContainer}>
-            <View style={styles.flex}>
-              <VectorIcon groupName="Feather" name="users" size={15} />
-              <Text
-                style={{
-                  ...commonStyles.font12Regular,
-                  color: Colors.lightorange,
-                }}>
-                {` `}
-                {item?.spot} spots
+                Party - Afterparty
               </Text>
             </View>
+          </View>
+        ) : (
+          <View style={{paddingHorizontal: moderateScale(15)}}>
+            <SizeBox size={5} />
             <Text
               style={{
-                ...commonStyles.font14Center,
-                color: Colors.white,
+                ...commonStyles.font16WhiteBold,
+                color: Colors.lightPink,
               }}>
-              Party - Afterparty
+              Past event
+              <Text style={{...commonStyles.font16White}}> - Afterparty</Text>
             </Text>
+            <SizeBox size={5} />
           </View>
-        </View>
+        )}
         <FlatList
           data={item.music_type}
           horizontal

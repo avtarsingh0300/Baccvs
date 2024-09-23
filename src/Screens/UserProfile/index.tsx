@@ -12,7 +12,10 @@ import React, {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
 import commonStyles from '../../Utilities/Styles/commonStyles';
-import {moderateScaleVertical} from '../../Utilities/Styles/responsiveSize';
+import {
+  moderateScale,
+  moderateScaleVertical,
+} from '../../Utilities/Styles/responsiveSize';
 import {styles} from './style';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
@@ -46,7 +49,7 @@ const UserProfile = ({navigation}: any) => {
     getUserProfile()
       .then(res => {
         setLoader(false);
-        console.log(res, 'res in getUserProfile');
+        // console.log(res, 'res in getUserProfile');
         setUserData(res?.user);
         setEventCount(res);
       })
@@ -59,7 +62,7 @@ const UserProfile = ({navigation}: any) => {
     navigation.goBack();
   };
 
-  const renderItem = ({item, index}) => (
+  const renderItem = ({item, index}: any) => (
     <View>
       <View style={styles.listContainer}>
         <ImageBackground
@@ -140,74 +143,105 @@ const UserProfile = ({navigation}: any) => {
               </Text>
             </View>
           </View>
-          <ScrollView horizontal style={{}}>
-            <View style={styles.row}>
-              <VectorIcon
-                groupName="MaterialCommunityIcons"
-                name="cupcake"
-                size={20}
-                color={Colors.lightGrey}
-              />
-              <View style={{width: '5%'}} />
-              <Text style={styles.rowText}>{userData?.age}</Text>
-              <View style={{width: '5%'}} />
-              <View
-                style={{
-                  height: moderateScaleVertical(25),
-                  paddingHorizontal: 0.5,
-                  backgroundColor: Colors.lightGrey,
-                }}
-              />
-              <Image
-                source={ImagePath.line_height}
-                tintColor={Colors.lightGrey}
-              />
-              <Text style={styles.rowText}>{userData?.height}</Text>
-              {/* <View
-              style={{
-                height: moderateScaleVertical(25),
-                paddingHorizontal: 0.5,
-                backgroundColor: Colors.lightGrey,
-              }}
-            />
-            <VectorIcon
-              groupName="SimpleLineIcons"
-              name="location-pin"
-              size={20}
-              color={Colors.lightGrey}
-            />
-            <Text style={styles.rowText}>
-              {userData?.location ? userData?.location : 'Eiffel Tower'}
-            </Text> */}
-              <View
-                style={{
-                  height: moderateScaleVertical(25),
-                  paddingHorizontal: 0.5,
-                  backgroundColor: Colors.lightGrey,
-                }}
-              />
-              <VectorIcon
-                groupName="MaterialCommunityIcons"
-                name="zodiac-leo"
-                size={20}
-                color={Colors.lightGrey}
-              />
-              <Text style={styles.rowText}>{userData?.zodiac_sign}</Text>
-              <View
-                style={{
-                  height: moderateScaleVertical(25),
-                  paddingHorizontal: 0.5,
-                  backgroundColor: Colors.lightGrey,
-                }}
-              />
-              <VectorIcon
-                groupName="MaterialCommunityIcons"
-                name="glass-cocktail"
-                size={20}
-                color={Colors.lightGrey}
-              />
-            </View>
-          </ScrollView>
+          {/* <ScrollView horizontal> */}
+          <FlatList
+            data={[{id: 0}]}
+            keyExtractor={i => i?.id?.toString()}
+            contentContainerStyle={{paddingRight: moderateScale(120)}}
+            renderItem={() => (
+              <View style={styles.row}>
+                <View style={{width: '2%'}} />
+                {userData?.age && (
+                  <>
+                    <VectorIcon
+                      groupName="MaterialCommunityIcons"
+                      name="cupcake"
+                      size={20}
+                      color={Colors.lightGrey}
+                    />
+                    <View style={{width: '2%'}} />
+                    <Text style={styles.rowText}>{userData?.age}</Text>
+                  </>
+                )}
+                <View style={{width: '2%'}} />
+                <View
+                  style={{
+                    height: moderateScaleVertical(25),
+                    paddingHorizontal: 0.5,
+                    backgroundColor: Colors.lightGrey,
+                  }}
+                />
+                <View style={{width: '2%'}} />
+                {userData?.height && (
+                  <>
+                    <Image
+                      source={ImagePath.line_height}
+                      tintColor={Colors.lightGrey}
+                    />
+                    <View style={{width: '2%'}} />
+                    <Text style={styles.rowText}>{userData?.height}</Text>
+                    <View
+                      style={{
+                        height: moderateScaleVertical(25),
+                        paddingHorizontal: 0.5,
+                        backgroundColor: Colors.lightGrey,
+                      }}
+                    />
+                  </>
+                )}
+                <VectorIcon
+                  groupName="SimpleLineIcons"
+                  name="location-pin"
+                  size={20}
+                  color={Colors.lightGrey}
+                />
+                <View style={{width: '2%'}} />
+                <Text style={styles.rowText}>
+                  {userData?.location ? userData?.location : 'Eiffel Tower'}
+                </Text>
+                <View style={{width: '2%'}} />
+                {userData?.zodiac_sign && (
+                  <>
+                    <View
+                      style={{
+                        height: moderateScaleVertical(25),
+                        paddingHorizontal: 0.5,
+                        backgroundColor: Colors.lightGrey,
+                      }}
+                    />
+                    <View style={{width: '2%'}} />
+                    <VectorIcon
+                      groupName="MaterialCommunityIcons"
+                      name="zodiac-leo"
+                      size={20}
+                      color={Colors.lightGrey}
+                    />
+                    <View style={{width: '2%'}} />
+                    <Text style={styles.rowText}>{userData?.zodiac_sign}</Text>
+                  </>
+                )}
+                <View style={{width: '2%'}} />
+                <View
+                  style={{
+                    height: moderateScaleVertical(25),
+                    paddingHorizontal: 0.5,
+                    backgroundColor: Colors.lightGrey,
+                  }}
+                />
+                <View style={{width: '2%'}} />
+                <VectorIcon
+                  groupName="MaterialCommunityIcons"
+                  name="glass-cocktail"
+                  size={20}
+                  color={Colors.lightGrey}
+                />
+                <View style={{width: '2%'}} />
+                <Text style={styles.rowText}>{userData?.drinking}</Text>
+              </View>
+            )}
+            horizontal
+          />
+          {/* </ScrollView> */}
           <View style={styles.postContainer}>
             {userData?.pictures?.map((i, index) => (
               <FastImage
@@ -217,7 +251,6 @@ const UserProfile = ({navigation}: any) => {
               />
             ))}
           </View>
-
           {userData?.bio ? (
             <>
               <SizeBox size={10} />
@@ -228,7 +261,6 @@ const UserProfile = ({navigation}: any) => {
               <SizeBox size={8} />
             </>
           ) : null}
-
           <SizeBox size={5} />
           {userData?.music_type?.length > 0 ? (
             <>
@@ -242,7 +274,6 @@ const UserProfile = ({navigation}: any) => {
               </View>
             </>
           ) : null}
-
           {userData?.event_type?.length > 0 ? (
             <>
               <Text style={styles.title}>Event Type</Text>
@@ -267,7 +298,6 @@ const UserProfile = ({navigation}: any) => {
               </View>
             </>
           ) : null}
-
           <SizeBox size={10} />
           {eventCount?.past_events ? (
             <>
