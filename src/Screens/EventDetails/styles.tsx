@@ -143,4 +143,24 @@ export const styles = StyleSheet.create({
     width: '90%',
     alignSelf: 'center',
   },
+  row: {
+    width: '90%',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  ticketText: {
+    ...commonStyles.font14Bold,
+    color: Colors.white,
+  },
+  soldBox: {
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: Colors.white,
+    borderRadius: 10,
+    width: '25%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

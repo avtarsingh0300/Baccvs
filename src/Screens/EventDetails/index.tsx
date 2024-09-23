@@ -44,6 +44,7 @@ const EventDetails = ({navigation, route}: any) => {
   const refInfoRBSheet: any = useRef();
   const refPeopleRBSheet: any = useRef();
   const refMapRBSheet: any = useRef();
+  const refTicketsRBSheet: any = useRef();
   const [loading, setLoading] = useState(false);
   const [eventData, setEventData] = useState({});
   const user = useSelector((data: object) => data?.auth?.userData);
@@ -397,6 +398,9 @@ const EventDetails = ({navigation, route}: any) => {
 
             <TouchableOpacity
               activeOpacity={0.8}
+              onPress={() => {
+                refTicketsRBSheet.current.open();
+              }}
               style={styles.ticketContainer}>
               <Image
                 source={ImagePath.Ticket}
@@ -466,6 +470,19 @@ const EventDetails = ({navigation, route}: any) => {
                 keyExtractor={item => item?.id?.toString()}
                 renderItem={renderItem}
               />
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={{
+                  alignSelf: 'center',
+                  position: 'absolute',
+                  bottom: moderateScale(20),
+                }}>
+                <Image
+                  source={ImagePath.likes}
+                  resizeMode="contain"
+                  style={{width: 24, height: 24}}
+                />
+              </TouchableOpacity>
             </LinearGradient>
           </RBSheet>
           <RBSheet
@@ -809,6 +826,199 @@ const EventDetails = ({navigation, route}: any) => {
                   />
                 </MapView>
               </View>
+            </LinearGradient>
+          </RBSheet>
+          <RBSheet
+            ref={refTicketsRBSheet}
+            // closeOnDragDown={true}
+            closeOnPressMask={true}
+            height={height / 1.8}
+            customStyles={{
+              wrapper: {
+                backgroundColor: 'transparent',
+                width: '90%',
+                bottom: height / 30,
+                alignSelf: 'center',
+              },
+              container: {
+                height: height / 1.8,
+                borderRadius: 10,
+              },
+            }}>
+            <LinearGradient
+              colors={[Colors.backgroundNew, Colors.backgroundNew]}
+              start={{x: 0, y: 0}}
+              end={{x: 1.3, y: 0.9}}
+              style={styles.sheetContent}>
+              <SizeBox size={10} />
+              <Text
+                style={{
+                  ...commonStyles.font16WhiteBold,
+                  fontSize: textScale(20),
+                  alignSelf: 'center',
+                }}>
+                Tickets
+              </Text>
+              <SizeBox size={2} />
+              <Text
+                style={{
+                  ...styles.ticketText,
+                  alignSelf: 'center',
+                  color: Colors.greyTxt,
+                }}>
+                Select a ticket
+              </Text>
+              <SizeBox size={10} />
+              <View style={styles.row}>
+                <View style={{width: '30%'}}>
+                  <Text style={styles.ticketText}>Free ticket</Text>
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <VectorIcon
+                    groupName="AntDesign"
+                    name="minuscircleo"
+                    color={Colors.white}
+                    size={24}
+                  />
+                  <View style={{width: 10}} />
+                  <Text
+                    style={{
+                      ...commonStyles.font14Bold,
+                      color: Colors.white,
+                    }}>
+                    0
+                  </Text>
+                  <View style={{width: 10}} />
+                  <VectorIcon
+                    groupName="AntDesign"
+                    name="pluscircleo"
+                    color={Colors.white}
+                    size={24}
+                  />
+                </View>
+                <View style={styles.soldBox}>
+                  <Text style={styles.ticketText}>Sold out</Text>
+                </View>
+                <Text style={styles.ticketText}>€</Text>
+              </View>
+              <SizeBox size={10} />
+              <View style={styles.row}>
+                <View style={{width: '30%'}}>
+                  <Text style={styles.ticketText}>Early tickets</Text>
+                  <Text
+                    style={{...commonStyles.font12Bold, color: Colors.greyTxt}}>
+                    Before 22h00
+                  </Text>
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <VectorIcon
+                    groupName="AntDesign"
+                    name="minuscircleo"
+                    color={Colors.white}
+                    size={24}
+                  />
+                  <View style={{width: 10}} />
+                  <Text
+                    style={{
+                      ...commonStyles.font14Bold,
+                      color: Colors.white,
+                    }}>
+                    0
+                  </Text>
+                  <View style={{width: 10}} />
+                  <VectorIcon
+                    groupName="AntDesign"
+                    name="pluscircleo"
+                    color={Colors.white}
+                    size={24}
+                  />
+                </View>
+                <View style={styles.soldBox}>
+                  <Text style={styles.ticketText}>Sold out</Text>
+                </View>
+                <Text style={styles.ticketText}>€</Text>
+              </View>
+              <SizeBox size={10} />
+              <View style={styles.row}>
+                <View style={{width: '30%'}}>
+                  <Text style={styles.ticketText}>Regular tickets</Text>
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <VectorIcon
+                    groupName="AntDesign"
+                    name="minuscircleo"
+                    color={Colors.white}
+                    size={24}
+                  />
+                  <View style={{width: 10}} />
+                  <Text
+                    style={{
+                      ...commonStyles.font14Bold,
+                      color: Colors.white,
+                    }}>
+                    0
+                  </Text>
+                  <View style={{width: 10}} />
+                  <VectorIcon
+                    groupName="AntDesign"
+                    name="pluscircleo"
+                    color={Colors.white}
+                    size={24}
+                  />
+                </View>
+                <View style={styles.soldBox}>
+                  <Text style={styles.ticketText}>15,99</Text>
+                </View>
+                <Text style={styles.ticketText}>€</Text>
+              </View>
+              <SizeBox size={10} />
+              <View style={styles.row}>
+                <View style={{width: '30%'}}>
+                  <Text style={styles.ticketText}>Late tickets</Text>
+                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <VectorIcon
+                    groupName="AntDesign"
+                    name="minuscircleo"
+                    color={Colors.white}
+                    size={24}
+                  />
+                  <View style={{width: 10}} />
+                  <Text
+                    style={{
+                      ...commonStyles.font14Bold,
+                      color: Colors.white,
+                    }}>
+                    0
+                  </Text>
+                  <View style={{width: 10}} />
+                  <VectorIcon
+                    groupName="AntDesign"
+                    name="pluscircleo"
+                    color={Colors.white}
+                    size={24}
+                  />
+                </View>
+                <View style={styles.soldBox}>
+                  <Text style={styles.ticketText}>19,99</Text>
+                </View>
+                <Text style={styles.ticketText}>€</Text>
+              </View>
+              <SizeBox size={10} />
+              <Text
+                style={{...commonStyles.font16WhiteBold, alignSelf: 'center'}}>
+                Total : 15,99 €
+              </Text>
+              <SizeBox size={10} />
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={{
+                  ...styles.soldBox,
+                  width: '50%',
+                  alignSelf: 'center',
+                }}>
+                <Text style={styles.ticketText}>Confirm Purchase</Text>
+              </TouchableOpacity>
             </LinearGradient>
           </RBSheet>
         </ImageBackground>

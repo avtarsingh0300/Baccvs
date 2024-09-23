@@ -58,11 +58,12 @@ export const styles = StyleSheet.create({
     marginVertical: moderateScaleVertical(20),
   },
   row: {
-    width: '90%',
-    paddingVertical: moderateScaleVertical(10),
+    // width: '90%',
+    // paddingVertical: moderateScaleVertical(10),
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignSelf: 'center',
+    // justifyContent: 'space-between',
+    // alignSelf: 'center',
+    alignItems: 'center',
   },
   rowText: {
     ...commonStyles.font14,
