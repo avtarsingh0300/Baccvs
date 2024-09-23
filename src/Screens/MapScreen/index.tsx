@@ -79,6 +79,7 @@ const MapScreen = ({navigation}: any) => {
   const onFilter = () => {
     navigation.navigate(NavigationStrings.EventFilter);
   };
+
   return (
     <View style={styles.conatiner}>
       <View
@@ -122,7 +123,7 @@ const MapScreen = ({navigation}: any) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <View style={{width: '10%'}} />
+          <View style={{width: '18%'}} />
         </View>
         <MapView
           style={styles.map}
