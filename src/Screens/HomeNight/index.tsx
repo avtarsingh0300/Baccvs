@@ -44,8 +44,8 @@ const HomeNight = ({navigation}: any) => {
     else if (id === 1){
       navigation.navigate(NavigationStrings.AnalyticsScreen)
     }
-    else{
-      
+    else if (id === 3){
+      navigation.navigate(NavigationStrings.DjPromoters)
     }
   };
 

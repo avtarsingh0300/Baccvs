@@ -241,6 +241,11 @@ export default function MainStack(Stack: any) {
         component={screens.NightclubEdit}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.DjPromoters}
+        component={screens.DjPromoters}
+        options={{headerShown: false}}
+      />
     </>
   );
 }
