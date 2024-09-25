@@ -25,10 +25,16 @@ import {
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
-import {getEventTypes, getMemberDetails} from '../../Utilities/Constants/auth';
+import {
+  disLikeUser,
+  getEventTypes,
+  getMemberDetails,
+  likeUser,
+} from '../../Utilities/Constants/auth';
 import Swiper from 'react-native-swiper';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import Geolocation from '@react-native-community/geolocation';
+import {useSelector} from 'react-redux';
 
 const DatingUserProfile = ({navigation, route}: any) => {
   const [musicStyle, setMusicStyle] = useState([]);
@@ -40,6 +46,7 @@ const DatingUserProfile = ({navigation, route}: any) => {
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
   const [loading, SetLoading] = useState(false);
+  const user = useSelector((data: object) => data?.auth?.userData);
 
   useEffect(() => {
     setLoader(true);
@@ -181,6 +188,44 @@ const DatingUserProfile = ({navigation, route}: any) => {
       </View>
     </TouchableOpacity>
   );
+
+  const likeUserProfileHanlder = (type: string) => {
+    const data = {
+      userId: user?.user?.id,
+      likedUserId: userData?.id,
+      type: type,
+    };
+    // console.log(type, 'type');
+    likeUser(data)
+      .then(res => {
+        console.log(res, 'res in likeUserProfileHanlder');
+        getMemberData();
+      })
+      .catch(err => {
+        console.log(err, 'err in likeUserProfileHanlder');
+        setLoader(false);
+      });
+  };
+
+  const disLikeUserProfileHanlder = () => {
+    const data = {
+      userId: user?.user?.id,
+      likedUserId: userData?.id,
+      // type: type,
+    };
+    // console.log(type, 'type');
+    disLikeUser(data)
+      .then(res => {
+        console.log(res, 'res in disLikeUser');
+        getMemberData();
+      })
+      .catch(err => {
+        console.log(err, 'err in disLikeUser');
+        setLoader(false);
+      });
+  };
+
+  console.log(userData, 'userData');
 
   return (
     <View
@@ -413,44 +458,69 @@ const DatingUserProfile = ({navigation, route}: any) => {
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderItem}
           />
-          <SizeBox size={10} />
-          <View style={[styles.invw, {alignSelf: 'center'}]}>
-            <TouchableOpacity activeOpacity={0.8} style={styles.bottomBtn}>
-              <Image source={ImagePath.sent} />
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} style={styles.bottomBtn}>
-              <VectorIcon
-                groupName="Entypo"
-                name="cross"
-                color={Colors.red}
-                size={20}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} style={styles.bottomBtn}>
-              <Image source={ImagePath.FireLike} />
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} style={styles.bottomBtn}>
-              <VectorIcon
-                groupName="Feather"
-                name="heart"
-                color={Colors.green}
-                size={20}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => {
-                navigation.goBack();
-              }}
-              style={[styles.bottomBtn, {backgroundColor: '#FF813A'}]}>
-              <Image
-                source={ImagePath.link_backward}
-                style={{height: 25, width: 25, resizeMode: 'contain'}}
-              />
-            </TouchableOpacity>
-          </View>
-          <SizeBox size={15} />
+          <SizeBox size={45} />
         </ScrollView>
+        <View
+          style={[
+            styles.invw,
+            {
+              alignSelf: 'center',
+              position: 'absolute',
+              bottom: moderateScaleVertical(30),
+            },
+          ]}>
+          <TouchableOpacity activeOpacity={0.8} style={styles.bottomBtn}>
+            <Image source={ImagePath.sent} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.bottomBtn}
+            onPress={() => disLikeUserProfileHanlder()}>
+            <VectorIcon
+              groupName="Entypo"
+              name="cross"
+              color={Colors.red}
+              size={20}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.bottomBtn}
+            onPress={() => likeUserProfileHanlder('superlike')}>
+            <VectorIcon
+              groupName={
+                !userData?.isSuperliked
+                  ? 'SimpleLineIcons'
+                  : 'MaterialCommunityIcons'
+              }
+              name={'fire'}
+              color={Colors.lightPink}
+              size={20}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.bottomBtn}
+            onPress={() => likeUserProfileHanlder('like')}>
+            <VectorIcon
+              groupName="Feather"
+              name={!userData?.isLiked ? 'heart-o' : 'heart'}
+              color={Colors.green}
+              size={20}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => {
+              navigation.goBack();
+            }}
+            style={[styles.bottomBtn, {backgroundColor: '#FF813A'}]}>
+            <Image
+              source={ImagePath.link_backward}
+              style={{height: 25, width: 25, resizeMode: 'contain'}}
+            />
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
     </View>
   );
