@@ -96,13 +96,14 @@ const PeopleLikes = ({navigation}: any) => {
           style={styles.blurimg}
           borderBottomRightRadius={10}
           borderBottomLeftRadius={10}>
+            <View style={{borderRightWidth:1,borderColor:Colors.white,width:"50%"}}>
           <VectorIcon
             groupName="Entypo"
             name="cross"
             size={25}
-            color={Colors.white}
+            color={Colors.red}
           />
-          <View style={styles.line}></View>
+          </View>
           <VectorIcon
             groupName="Foundation"
             name="heart"

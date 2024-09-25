@@ -116,7 +116,7 @@ button: {
     color:Colors.greyTxt
   },
   review:{
-    fontSize:10,
+    fontSize:14,
     fontFamily:fontFamily.regular,
     fontWeight:"300",
     color:Colors.white,

@@ -70,11 +70,12 @@ const styles = StyleSheet.create({
   },
   blurimg: {
     width: moderateScaleVertical(140),
-    height: moderateScale(35),
+    height: moderateScale(30),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
+    marginBottom:1
   },
   line: {
     height: '100%',
