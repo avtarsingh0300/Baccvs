@@ -24,9 +24,12 @@ import {Loadingcomponent, SizeBox} from '../../Utilities/Component/Helpers';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {getUserProfile} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
+import ProfileImagePreview from '../../Utilities/Component/ProfileImagePreview';
 
 const UserProfile = ({navigation}: any) => {
   const [loader, setLoader] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
   const [userData, setUserData] = useState({});
   const [eventCount, setEventCount] = useState([]);
   const onEdit = () => {
@@ -146,7 +149,7 @@ const UserProfile = ({navigation}: any) => {
           {/* <ScrollView horizontal> */}
           <FlatList
             data={[{id: 0}]}
-            keyExtractor={i => i?.id?.toString()}
+            keyExtractor={(item, index) => index?.toString()}
             contentContainerStyle={{paddingRight: moderateScale(120)}}
             renderItem={() => (
               <View style={styles.row}>
@@ -244,11 +247,19 @@ const UserProfile = ({navigation}: any) => {
           {/* </ScrollView> */}
           <View style={styles.postContainer}>
             {userData?.pictures?.map((i, index) => (
-              <FastImage
-                source={{uri: IMAGE_URL + i}}
-                key={index}
-                style={styles.postImage}
-              />
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={[styles.postImage, {borderWidth: 0}]}
+                onPress={() => {
+                  setShowPreview(true);
+                  setSelectedImage(i);
+                }}>
+                <FastImage
+                  source={{uri: IMAGE_URL + i}}
+                  key={index}
+                  style={styles.postImage}
+                />
+              </TouchableOpacity>
             ))}
           </View>
           {userData?.bio ? (
@@ -314,6 +325,13 @@ const UserProfile = ({navigation}: any) => {
             </>
           ) : null}
         </ScrollView>
+        <ProfileImagePreview
+          setShowModal={setShowPreview}
+          // showModal={true}
+          data={userData}
+          image={selectedImage}
+          showModal={showPreview}
+        />
       </SafeAreaView>
     </LinearGradient>
   );

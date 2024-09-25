@@ -3,7 +3,6 @@ import {
   FlatList,
   Image,
   ImageBackground,
-  Platform,
   SafeAreaView,
   ScrollView,
   Share,
@@ -26,7 +25,6 @@ import {
 } from '../../Utilities/Styles/responsiveSize';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
-
 import {
   Loadingcomponent,
   SizeBox,
@@ -83,16 +81,10 @@ const EventDetails = ({navigation, route}: any) => {
       .then(res => {
         setLoading(false);
         setEventData(res);
-
-        console.log(res, 'sss');
       })
       .catch(err => {
         setLoading(false), showError(err.message), console.log(err);
       });
-  };
-  const formatTime = (timeString: string) => {
-    const date = new Date(`1970-01-01T${timeString}Z`);
-    return date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
   };
 
   const calculateDuration = (startTime: string, endTime: string) => {
@@ -105,12 +97,14 @@ const EventDetails = ({navigation, route}: any) => {
       return `${diffHrs}h ${diffMins}m`;
     }
   };
+
   const initialRegion = {
     latitude: eventData.latitude ? eventData.latitude : 37.78825,
     longitude: eventData.longitude ? eventData.longitude : -122.4324,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   };
+
   const renderItem = ({item, index}: any) => (
     <View style={styles.itemContainer}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -148,6 +142,7 @@ const EventDetails = ({navigation, route}: any) => {
       </TouchableOpacity> */}
     </View>
   );
+
   const comItem = ({item, index}: any) => (
     <View style={styles.itemContainer}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -179,6 +174,7 @@ const EventDetails = ({navigation, route}: any) => {
       </View>
     </View>
   );
+
   const renderMembers = ({item, index}: any) => (
     <View style={styles.itemContainer}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -217,6 +213,7 @@ const EventDetails = ({navigation, route}: any) => {
       </Text>
     </View>
   );
+
   const renderLineUp = ({item, index}: any) => (
     <View style={{paddingHorizontal: 15, alignItems: 'center'}}>
       <Image
@@ -228,6 +225,7 @@ const EventDetails = ({navigation, route}: any) => {
       </Text>
     </View>
   );
+
   const renderParticipants = ({item, index}: any) => (
     <View style={{paddingHorizontal: 15, alignItems: 'center'}}>
       <Image
@@ -239,6 +237,7 @@ const EventDetails = ({navigation, route}: any) => {
       </Text>
     </View>
   );
+
   return (
     <LinearGradient
       colors={[Colors.backgroundNew, Colors.backgroundNew]}
@@ -742,7 +741,6 @@ const EventDetails = ({navigation, route}: any) => {
                 ]}>
                 Event members
               </Text>
-
               {eventData?.members_names ? (
                 <FlatList
                   data={eventData?.members_names}
