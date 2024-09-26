@@ -205,6 +205,29 @@ const styles= StyleSheet.create({
       pasteventimg:{
         width:"100%",
         height:moderateScaleVertical(213)
+      },
+      djset:{
+        width:"100%",
+        borderWidth:1,
+        borderColor:Colors.lightPink,
+        height:moderateScaleVertical(215)
+      },
+      innerimg:{
+        width:moderateScale(56),
+        height:moderateScaleVertical(70),
+        borderRadius:5
+      },
+      innervw:{
+        width:moderateScale(58),
+        height:moderateScaleVertical(72),
+        borderWidth:1,
+        borderColor:Colors.lightPink,
+        borderRadius:5
+      },
+      outerview:{
+        position:"absolute",
+        bottom:15,
+        paddingHorizontal:15
       }
 })
 export default styles; 

@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   inputHolder: {
     padding: 15,
     paddingLeft: 18,
-    borderWidth: 1,
+    borderWidth: 0.25,
     borderColor: Colors.greyTxt,
     borderRadius: 2,
   },

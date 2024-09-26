@@ -61,3 +61,5 @@ export {default as AgoraAttendance} from '../Screens/AgoraAttendance';
 export {default as Profile} from '../Screens/Profile';
 export {default as NightclubEdit} from '../Screens/NightclubEdit';
 export {default as DjPromoters} from '../Screens/DjPromoters';
+export {default as EditDjProfile} from '../Screens/EditDjProfile';
+export {default as SetPriceScreen} from '../Screens/SetPriceScreen';

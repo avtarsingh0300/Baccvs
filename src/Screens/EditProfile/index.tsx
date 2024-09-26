@@ -143,14 +143,6 @@ const EditProfile = ({navigation}: any) => {
       });
     });
 
-    // pictures.forEach((image, index) => {
-    //   formData.append('videos', {
-    //     uri: image,
-    //     name: `image_${index}.jpg`,
-    //     type: 'image/jpeg',
-    //   });
-    // });
-
     formData.append('interests_id', userData?.interest_type);
     formData.append(
       'music_type_id',

@@ -246,6 +246,16 @@ export default function MainStack(Stack: any) {
         component={screens.DjPromoters}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.EditDjProfile}
+        component={screens.EditDjProfile}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.SetPriceScreen}
+        component={screens.SetPriceScreen}
+        options={{headerShown: false}}
+      />
     </>
   );
 }

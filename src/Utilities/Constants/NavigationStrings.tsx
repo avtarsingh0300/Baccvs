@@ -63,5 +63,7 @@ export default {
   AgoraAttendance:'AgoraAttendance',
   Profile:'Profile',
   NightclubEdit:'NightclubEdit',
-  DjPromoters:'DjPromoters'
+  DjPromoters:'DjPromoters',
+  EditDjProfile:'EditDjProfile',
+  SetPriceScreen:'SetPriceScreen',
 };

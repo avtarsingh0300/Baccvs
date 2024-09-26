@@ -8,20 +8,26 @@ import ImagePath from '../../Utilities/Constants/ImagePath'
 import commonStyles from '../../Utilities/Styles/commonStyles'
 import { showError, SizeBox } from '../../Utilities/Component/Helpers'
 import VectorIcon from '../../Utilities/Component/vectorIcons'
-import { moderateScaleVertical } from '../../Utilities/Styles/responsiveSize'
 import { getEventTypes, getUserData } from '../../Utilities/Constants/auth'
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings'
 
 const data= [{id:1},{id:2},{id:3},{id:4}];
 const Data3 = Array(3).fill({ label: 'English' });
 const reviewData= [{id:1},{id:2},{id:3},];
+const Data4 = Array(2).fill({ label: 'Techno' });
 
 const DjPromoters = ({navigation}:any) => {
+const onContinue = ()=>{
+  navigation.navigate(NavigationStrings.EditDjProfile)
+}
+
   const [musicStyle, setMusicStyle] = useState([]);
   const [selMusic, setSelMusic] = useState([]);
   const [eventType, setEventType] = useState([]);
   const [selEventType, setsSelEventType] = useState([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [pictures, setPictures] = useState([]);
+
 
   useEffect(() => {
     setLoading(true);
@@ -89,6 +95,13 @@ const renderLanguage = ({ item }) => (
   </TouchableOpacity>
   </View>
 );
+const renderPastEvents = ({ item }) => (
+  <View style={{alignSelf:"center"}}>
+  <TouchableOpacity style={styles.button}>
+    <Text style={styles.buttonText}>{item.label}</Text>
+  </TouchableOpacity>
+  </View>
+);
 const renderReview =({item,index})=>{
   var isLastItem = index === data.length - 1; 
   return(
@@ -115,11 +128,11 @@ const renderReview =({item,index})=>{
       style={styles.LinearConatiner}>
       <SafeAreaView>
         <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.imgouterview}>
+          <TouchableOpacity style={styles.imgouterview} onPress={onContinue}>
     <ImageBackground source={ImagePath.ProfileImg} style={styles.backimage}>
       <Text style={{...commonStyles.font20White,padding:20}}>Dj Profile </Text>
     </ImageBackground>
-    </View> 
+    </TouchableOpacity> 
     <SizeBox size={10}/>
     <View style={styles.container}>
        <Text style={styles.sashatxt}>Sasha, 24</Text>
@@ -299,8 +312,24 @@ const renderReview =({item,index})=>{
          <Text style={{...commonStyles.font16White,textDecorationLine:"underline"}}>See all</Text>
           </View>
           <SizeBox size={10}/>
+          <View style={styles.djset}>
           <Image source={ImagePath.ProfileImg} style={styles.pasteventimg}/>
-          <SizeBox size={10}/>
+          <View style={styles.outerview}>
+            <Text style={{...commonStyles.font12Regular,textAlign:"center"}}>Neymar</Text>
+            <SizeBox size={2}/>
+            <View style={styles.innervw}>
+              <Image source={ImagePath.ProfileImg} style={styles.innerimg}/>
+            </View>
+          </View>
+          </View>
+          <SizeBox size={8}/>
+          <FlatList
+            data={Data4}
+            renderItem={renderPastEvents}
+            keyExtractor={(item, index) => index.toString()}
+            numColumns={3}
+          />
+          <SizeBox size={13}/>
           <TouchableOpacity style={styles.talkbtn}>
             <Text style={{...commonStyles.font12Regular,color:Colors.black}}>Book DJ Set</Text>
           </TouchableOpacity>
