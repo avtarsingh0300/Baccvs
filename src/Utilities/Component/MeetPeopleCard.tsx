@@ -25,8 +25,8 @@ import commonStyles from '../Styles/commonStyles';
 
 interface MeetPeopleCardProps {
   index: number;
-  disLikeUserProfileHanlder: () => void;
-  likeUserProfileHanlder: (type: string) => void;
+  disLikeUserProfileHanlder: (item: object) => void;
+  likeUserProfileHanlder: (type: string, item?: object) => void;
   swipe: Animated.ValueXY;
   [key: string]: any; // To handle any additional props
   item: object;
@@ -51,15 +51,12 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
 
   const navigation = useNavigation();
 
-  // console.log(item, 'item');
-
   return (
     <Animated.View
       style={[
         styles.container,
         {zIndex: 100},
         isFirst && {transform: [...swipe.getTranslateTransform(), {rotate}]},
-        // {transform: [...swipe.getTranslateTransform(), {rotate}]},
       ]}
       {...rest}>
       <Swiper
@@ -140,7 +137,7 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
                 <TouchableOpacity
                   activeOpacity={0.8}
                   style={styles.bottomBtn}
-                  onPress={() => disLikeUserProfileHanlder()}>
+                  onPress={() => disLikeUserProfileHanlder(item)}>
                   <VectorIcon
                     groupName="Entypo"
                     name="cross"
@@ -151,7 +148,7 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
                 <TouchableOpacity
                   activeOpacity={0.8}
                   style={styles.bottomBtn}
-                  onPress={() => likeUserProfileHanlder('superlike')}>
+                  onPress={() => likeUserProfileHanlder('superlike', item)}>
                   <VectorIcon
                     groupName={
                       !item?.isSuperliked
@@ -166,7 +163,7 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
                 <TouchableOpacity
                   activeOpacity={0.8}
                   style={styles.bottomBtn}
-                  onPress={() => likeUserProfileHanlder('like')}>
+                  onPress={() => likeUserProfileHanlder('like', item)}>
                   <VectorIcon
                     groupName="FontAwesome"
                     name={!item?.isLiked ? 'heart-o' : 'heart'}

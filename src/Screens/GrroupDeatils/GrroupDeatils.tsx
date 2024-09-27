@@ -25,39 +25,25 @@ import {
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
-import {getEventTypes, teamsDetails} from '../../Utilities/Constants/auth';
+import {
+  disLikeTeam,
+  getEventTypes,
+  likeTeam,
+  teamsDetails,
+} from '../../Utilities/Constants/auth';
 import languages from '../../Utilities/Constants';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 
 const GrroupDeatils = ({navigation, route}: any) => {
   const [musicStyle, setMusicStyle] = useState([]);
-  const [interestType, setInterestType] = useState([]);
-  const [selectedMusic, setSelectedMusic] = useState([]);
-  const [selectedInterestType, setselectedInterestType] = useState([]);
-  const [selectedLanguage, setSelectedLanguage] = useState([]);
   const [teamData, setTeamData] = useState([]);
   const [loader, setLoader] = useState(false);
+  const user = useSelector((data: object) => data?.auth?.userData);
 
   useEffect(() => {
     setLoader(true);
-    getEventsTypes();
     getDetails();
   }, []);
-
-  const getEventsTypes = () => {
-    getEventTypes()
-      .then(res => {
-        // console.log(res, 'res');
-        setMusicStyle(res?.musictype);
-        setInterestType(res?.interesttype);
-        setLoader(false);
-      })
-      .catch(err => {
-        setLoader(false);
-        showError(err?.message);
-        console.log(err);
-      });
-  };
 
   const getDetails = () => {
     const data = {
@@ -73,6 +59,43 @@ const GrroupDeatils = ({navigation, route}: any) => {
         setLoader(false);
         showError(err?.message);
         console.log(err);
+      });
+  };
+
+  const disLikeTeamHanlder = () => {
+    setLoader(true);
+    const data = {
+      userId: user?.user?.id,
+      groupId: teamData?._id,
+      // type: type,
+    };
+    // console.log(type, 'type');
+    disLikeTeam(data)
+      .then(res => {
+        getDetails();
+        console.log(res, 'res in disLikeUser');
+      })
+      .catch(err => {
+        console.log(err, 'err in disLikeUser');
+        setLoader(false);
+      });
+  };
+
+  const likeTeameHanlder = (type: string) => {
+    setLoader(true);
+    const data = {
+      userId: user?.user?.id,
+      groupId: teamData?._id,
+      type: type,
+    };
+    likeTeam(data)
+      .then(res => {
+        getDetails();
+        console.log(res, 'res in likeUserProfileHanlder');
+      })
+      .catch(err => {
+        console.log(err, 'err in likeUserProfileHanlder');
+        setLoader(false);
       });
   };
 
@@ -253,44 +276,69 @@ const GrroupDeatils = ({navigation, route}: any) => {
             numColumns={3}
             keyExtractor={(item, index) => index.toString()}
           />
-          <SizeBox size={10} />
-          <View style={[styles.invw, {alignSelf: 'center'}]}>
-            <TouchableOpacity activeOpacity={0.8} style={styles.bottomBtn}>
-              <Image source={ImagePath.sent} />
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} style={styles.bottomBtn}>
-              <VectorIcon
-                groupName="Entypo"
-                name="cross"
-                color={Colors.red}
-                size={20}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} style={styles.bottomBtn}>
-              <Image source={ImagePath.FireLike} />
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} style={styles.bottomBtn}>
-              <VectorIcon
-                groupName="Feather"
-                name="heart"
-                color={Colors.green}
-                size={20}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => {
-                navigation.goBack();
-              }}
-              style={[styles.bottomBtn, {backgroundColor: '#FF813A'}]}>
-              <Image
-                source={ImagePath.link_backward}
-                style={{height: 40, width: 40}}
-              />
-            </TouchableOpacity>
-          </View>
-          <SizeBox size={15} />
+          <SizeBox size={40} />
         </ScrollView>
+        <View
+          style={[
+            styles.invw,
+            {
+              alignSelf: 'center',
+              position: 'absolute',
+              bottom: moderateScaleVertical(20),
+            },
+          ]}>
+          <TouchableOpacity activeOpacity={0.8} style={styles.bottomBtn}>
+            <Image source={ImagePath.sent} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.bottomBtn}
+            onPress={() => disLikeTeamHanlder()}>
+            <VectorIcon
+              groupName="Entypo"
+              name="cross"
+              color={Colors.red}
+              size={20}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.bottomBtn}
+            onPress={() => likeTeameHanlder('superlike')}>
+            <VectorIcon
+              groupName={
+                !teamData?.superlike?.isSuperliked
+                  ? 'SimpleLineIcons'
+                  : 'MaterialCommunityIcons'
+              }
+              name={'fire'}
+              color={Colors.lightPink}
+              size={20}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.bottomBtn}
+            onPress={() => likeTeameHanlder('like')}>
+            <VectorIcon
+              groupName="Feather"
+              name={!teamData?.likeStatus?.like ? 'heart-o' : 'heart'}
+              color={Colors.green}
+              size={20}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => {
+              navigation.goBack();
+            }}
+            style={[styles.bottomBtn, {backgroundColor: '#FF813A'}]}>
+            <Image
+              source={ImagePath.link_backward}
+              style={{height: 40, width: 40}}
+            />
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
     </View>
   );

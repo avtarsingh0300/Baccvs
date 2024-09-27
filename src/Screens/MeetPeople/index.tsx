@@ -18,9 +18,11 @@ import VectorIcon from '../../Utilities/Component/vectorIcons';
 import {Loadingcomponent, SizeBox} from '../../Utilities/Component/Helpers';
 import {height, moderateScale} from '../../Utilities/Styles/responsiveSize';
 import {
+  disLikeTeam,
   disLikeUser,
   getAllMeetGroups,
   getAllUsers,
+  likeTeam,
   likeUser,
 } from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
@@ -83,7 +85,7 @@ const MeetPeople = ({navigation}) => {
   const getAllMeetGroupsHandler = () => {
     getAllMeetGroups()
       .then(res => {
-        // console.log(res, 'res in getAllMeetGroups');
+        // console.log(JSON.stringify(res), 'res in getAllMeetGroups');
         setGroupData(res?.data);
         setLoader(false);
       })
@@ -93,17 +95,17 @@ const MeetPeople = ({navigation}) => {
       });
   };
 
-  const likeUserProfileHanlder = (type: string) => {
+  const likeUserProfileHanlder = (type: string, item: object) => {
     const data = {
       userId: user?.user?.id,
-      likedUserId: currentImage?._id,
+      likedUserId: item?._id,
       type: type,
     };
     console.log(type, 'type');
     likeUser(data)
       .then(res => {
         console.log(res, 'res in likeUserProfileHanlder');
-        getAllUserHandler();
+        handelSelectionUser('');
       })
       .catch(err => {
         console.log(err, 'err in likeUserProfileHanlder');
@@ -111,17 +113,53 @@ const MeetPeople = ({navigation}) => {
       });
   };
 
-  const disLikeUserProfileHanlder = (type: string) => {
+  const likeTeameHanlder = (type: string, item: object) => {
     const data = {
       userId: user?.user?.id,
-      likedUserId: currentImage?._id,
+      groupId: item?._id,
+      type: type,
+    };
+    console.log(type, 'type');
+    likeTeam(data)
+      .then(res => {
+        console.log(res, 'res in likeUserProfileHanlder');
+        handelSelectionTeam('');
+      })
+      .catch(err => {
+        console.log(err, 'err in likeUserProfileHanlder');
+        setLoader(false);
+      });
+  };
+
+  const disLikeUserProfileHanlder = (item: object) => {
+    const data = {
+      userId: user?.user?.id,
+      likedUserId: item?._id,
       // type: type,
     };
     // console.log(type, 'type');
     disLikeUser(data)
       .then(res => {
         console.log(res, 'res in disLikeUser');
-        getAllUserHandler();
+        handelSelectionUser('left');
+      })
+      .catch(err => {
+        console.log(err, 'err in disLikeUser');
+        setLoader(false);
+      });
+  };
+
+  const disLikeTeamHanlder = (item: object) => {
+    const data = {
+      userId: user?.user?.id,
+      groupId: item?._id,
+      // type: type,
+    };
+    // console.log(type, 'type');
+    disLikeTeam(data)
+      .then(res => {
+        console.log(res, 'res in disLikeUser');
+        handelSelectionTeam('left');
       })
       .catch(err => {
         console.log(err, 'err in disLikeUser');
@@ -299,6 +337,44 @@ const MeetPeople = ({navigation}) => {
     }
   }, [swipeTeam, groupData]);
 
+  const handelSelectionUser = useCallback(
+    (direction: string) => {
+      if (direction == 'left') {
+        Animated.timing(swipe, {
+          toValue: {x: -1 * 500, y: 0},
+          useNativeDriver: true,
+          duration: 500,
+        }).start(removeCard);
+      } else {
+        Animated.timing(swipe, {
+          toValue: {x: 1 * 500, y: 0},
+          useNativeDriver: true,
+          duration: 500,
+        }).start(removeCard);
+      }
+    },
+    [removeCard],
+  );
+
+  const handelSelectionTeam = useCallback(
+    (direction: string) => {
+      if (direction == 'left') {
+        Animated.timing(swipeTeam, {
+          toValue: {x: -1 * 500, y: 0},
+          useNativeDriver: true,
+          duration: 500,
+        }).start(removeTeamCard);
+      } else {
+        Animated.timing(swipeTeam, {
+          toValue: {x: 1 * 500, y: 0},
+          useNativeDriver: true,
+          duration: 500,
+        }).start(removeTeamCard);
+      }
+    },
+    [removeTeamCard],
+  );
+
   return (
     <>
       <LinearGradient
@@ -393,8 +469,8 @@ const MeetPeople = ({navigation}) => {
                         // setImageIndex={setImageIndex}
                         // setLoader={setLoader}
                         // handleNext={handleNext}
-                        likeUserProfileHanlder={likeUserProfileHanlder}
-                        disLikeUserProfileHanlder={disLikeUserProfileHanlder}
+                        likeUserProfileHanlder={likeTeameHanlder}
+                        disLikeUserProfileHanlder={disLikeTeamHanlder}
                         // rotate={rotate}
                         swipe={swipeTeam}
                         {...dragHandlers}
