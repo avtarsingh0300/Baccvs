@@ -25,8 +25,8 @@ import {SizeBox} from './Helpers';
 
 interface TeamsCardCardProps {
   index: number;
-  disLikeUserProfileHanlder: () => void;
-  likeUserProfileHanlder: (type: string) => void;
+  disLikeUserProfileHanlder: (item: object) => void;
+  likeUserProfileHanlder: (type: string, item: object) => void;
   swipe: Animated.ValueXY;
   [key: string]: any; // To handle any additional props
   item: object;
@@ -43,7 +43,6 @@ const TeamsCard: React.FC<TeamsCardCardProps> = ({
   likeUserProfileHanlder,
   ...rest
 }) => {
-  const [activeIndex, setActiveIndex] = useState(0);
   const rotate = swipe.x.interpolate({
     inputRange: [-100, 0, 100],
     outputRange: ['-8deg', '0deg', '8deg'],
@@ -57,7 +56,6 @@ const TeamsCard: React.FC<TeamsCardCardProps> = ({
         styles.container,
         {zIndex: 100},
         isFirst && {transform: [...swipe.getTranslateTransform(), {rotate}]},
-        // {transform: [...swipe.getTranslateTransform(), {rotate}]},
       ]}
       {...rest}>
       <ImageBackground
@@ -68,30 +66,6 @@ const TeamsCard: React.FC<TeamsCardCardProps> = ({
           {item?.name}
         </Text>
       </ImageBackground>
-      {/* <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          height: height / 3,
-          width: width,
-        }}>
-        {item?.members?.map(i => (
-          <ImageBackground
-            borderRadius={10}
-            source={{uri: IMAGE_URL + i?.picture}}
-            style={styles.imgbck}>
-            <Text
-              style={{
-                ...commonStyles.font12Bold,
-                color: Colors.white,
-                fontWeight: '600',
-                padding: 10,
-              }}>
-              {i?.fullName}
-            </Text>
-          </ImageBackground>
-        ))}
-      </View> */}
       {item?.members?.length > 2 ? (
         <View
           style={{
@@ -167,7 +141,7 @@ const TeamsCard: React.FC<TeamsCardCardProps> = ({
         <TouchableOpacity
           activeOpacity={0.8}
           style={styles.bottomBtn}
-          onPress={() => disLikeUserProfileHanlder()}>
+          onPress={() => disLikeUserProfileHanlder(item)}>
           <VectorIcon
             groupName="Entypo"
             name="cross"
@@ -178,10 +152,12 @@ const TeamsCard: React.FC<TeamsCardCardProps> = ({
         <TouchableOpacity
           activeOpacity={0.8}
           style={styles.bottomBtn}
-          onPress={() => likeUserProfileHanlder('superlike')}>
+          onPress={() => likeUserProfileHanlder('superlike', item)}>
           <VectorIcon
             groupName={
-              !item?.isSuperliked ? 'SimpleLineIcons' : 'MaterialCommunityIcons'
+              !item?.superlike?.isSuperliked
+                ? 'SimpleLineIcons'
+                : 'MaterialCommunityIcons'
             }
             name={'fire'}
             color={Colors.lightPink}
@@ -191,10 +167,10 @@ const TeamsCard: React.FC<TeamsCardCardProps> = ({
         <TouchableOpacity
           activeOpacity={0.8}
           style={styles.bottomBtn}
-          onPress={() => likeUserProfileHanlder('like')}>
+          onPress={() => likeUserProfileHanlder('like', item)}>
           <VectorIcon
             groupName="FontAwesome"
-            name={!item?.isLiked ? 'heart-o' : 'heart'}
+            name={!item?.likeStatus?.like ? 'heart-o' : 'heart'}
             color={Colors.green}
             size={20}
           />

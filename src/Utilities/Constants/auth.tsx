@@ -12,6 +12,7 @@ import {
   CREATE_MEET_GROUP,
   CREATE_REF_CODE,
   DISLIKE_USER_PROFILE,
+  DIS_LIKE_TEAM,
   EVENT_DETAIL,
   EVENT_SEARCH,
   FOLLOW_USER,
@@ -32,6 +33,7 @@ import {
   GET_SELL_TICKETS,
   GET_USER_LIKES,
   GROUP_DETAILS,
+  LIKE_TEAM,
   LIKE_USER_PROFILE,
   LOGIN,
   MAP_SEARCH,
@@ -74,6 +76,14 @@ export function otpMatch(data: object) {
 
 export function likeUser(data: object) {
   return apiPost(LIKE_USER_PROFILE, data);
+}
+
+export function likeTeam(data: object) {
+  return apiPost(LIKE_TEAM, data);
+}
+
+export function disLikeTeam(data: object) {
+  return apiPost(DIS_LIKE_TEAM, data);
 }
 
 export function disLikeUser(data: object) {

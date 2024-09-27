@@ -225,8 +225,6 @@ const DatingUserProfile = ({navigation, route}: any) => {
       });
   };
 
-  console.log(userData, 'userData');
-
   return (
     <View
       style={{
