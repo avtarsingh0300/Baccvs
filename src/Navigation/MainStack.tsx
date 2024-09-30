@@ -256,6 +256,11 @@ export default function MainStack(Stack: any) {
         component={screens.SetPriceScreen}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.DjBooking}
+        component={screens.DjBooking}
+        options={{headerShown: false}}
+      />
     </>
   );
 }

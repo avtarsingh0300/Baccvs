@@ -66,4 +66,5 @@ export default {
   DjPromoters:'DjPromoters',
   EditDjProfile:'EditDjProfile',
   SetPriceScreen:'SetPriceScreen',
+  DjBooking:'DjBooking',
 };
