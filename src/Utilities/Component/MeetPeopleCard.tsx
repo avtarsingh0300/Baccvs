@@ -75,13 +75,13 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
         onIndexChanged={index => setActiveIndex(index)}>
         {item?.pictures?.map((i, ind) => (
           <TouchableOpacity
-            activeOpacity={0.8}
+            activeOpacity={0.9}
             // onPress={() => {
             //   navigation.navigate(NavigationStrings.DatingUserProfile, {
             //     id: item?._id,
             //   });
             // }}
-            >
+          >
             <ImageBackground
               borderRadius={10}
               source={{uri: IMAGE_URL + i}}

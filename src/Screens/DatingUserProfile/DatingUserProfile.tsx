@@ -91,6 +91,7 @@ const DatingUserProfile = ({navigation, route}: any) => {
     const data = {
       id: route?.params?.id,
     };
+    console.log(route?.params?.id);
     getMemberDetails(data)
       .then(res => {
         setUserData(res?.user);

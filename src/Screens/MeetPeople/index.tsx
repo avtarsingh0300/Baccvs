@@ -15,7 +15,11 @@ import {Colors} from '../../Utilities/Styles/colors';
 import styles from './style';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
-import {Loadingcomponent, SizeBox} from '../../Utilities/Component/Helpers';
+import {
+  Loadingcomponent,
+  SizeBox,
+  showError,
+} from '../../Utilities/Component/Helpers';
 import {height, moderateScale} from '../../Utilities/Styles/responsiveSize';
 import {
   disLikeTeam,
@@ -63,7 +67,6 @@ const MeetPeople = ({navigation}) => {
   const getAllUserHandler = () => {
     getAllUsers()
       .then(res => {
-        // console.log(JSON.stringify(res), 'res in getAllUsers');
         setUserData([]);
         setUserData(res?.data);
         if (userData?.length == 0) {
@@ -85,7 +88,6 @@ const MeetPeople = ({navigation}) => {
   const getAllMeetGroupsHandler = () => {
     getAllMeetGroups()
       .then(res => {
-        // console.log(JSON.stringify(res), 'res in getAllMeetGroups');
         setGroupData(res?.data);
         setLoader(false);
       })
@@ -105,9 +107,11 @@ const MeetPeople = ({navigation}) => {
     likeUser(data)
       .then(res => {
         console.log(res, 'res in likeUserProfileHanlder');
+        showError(res?.message);
         handelSelectionUser('');
       })
       .catch(err => {
+        showError(err?.message);
         console.log(err, 'err in likeUserProfileHanlder');
         setLoader(false);
       });
@@ -260,13 +264,10 @@ const MeetPeople = ({navigation}) => {
     },
 
     onPanResponderRelease: (_, {dx, dy}) => {
-      // console.log('dx:' + dx + ' dy:' + dy);
       let direction = Math.sign(dx);
       let isActionActive = Math.abs(dx) > 200;
       if (direction == 1) {
-        //  setTextFlag(true);
         if (dx < 200 && dy < -450) {
-          //  getPropertiesDetailsHnadler();
           console.log('swipe up');
         } else {
           if (dx > 200) {
@@ -274,9 +275,7 @@ const MeetPeople = ({navigation}) => {
           }
         }
       } else {
-        //  setTextFlag(true);
         if (dx < 200 && dy < -450) {
-          //  getPropertiesDetailsHnadler();
         } else {
           if (dx < -200) {
             console.log('left swipe');
@@ -285,20 +284,14 @@ const MeetPeople = ({navigation}) => {
       }
 
       if (isActionActive) {
-        //  setTextFlag(false);
-        // if (dx > 0 && dy > 0) {
         Animated.timing(swipeTeam, {
           toValue: {x: 500 * dx, y: dy},
           useNativeDriver: true,
           duration: 500,
         }).start(() => {
-          removeTeamCard(); // Remove the card after the animation completes
+          removeTeamCard();
         });
-        // handleNext();
-        // }
       } else {
-        // setTextFlag(true);
-        // if (dx < -200 && dy < -150 && dx > 200 && dy < -200) {
         Animated.spring(swipeTeam, {
           toValue: {x: 0, y: 0},
           useNativeDriver: true,
@@ -318,22 +311,18 @@ const MeetPeople = ({navigation}) => {
   };
 
   const removeCard = useCallback(() => {
-    // setData(prepState => prepState.slice(1));
     if (userData.length > 1) {
-      setUserData(prevState => prevState.slice(1)); // Remove the first card from the list
-      swipe.setValue({x: 0, y: 0}); // Reset swipe position
+      setUserData(prevState => prevState.slice(1));
+      swipe.setValue({x: 0, y: 0});
     } else {
-      // console.log('working');
     }
   }, [swipe, userData]);
 
   const removeTeamCard = useCallback(() => {
-    // setData(prepState => prepState.slice(1));
     if (userData.length > 1) {
-      setGroupData(prevState => prevState.slice(1)); // Remove the first card from the list
-      swipeTeam.setValue({x: 0, y: 0}); // Reset swipe position
+      setGroupData(prevState => prevState.slice(1));
+      swipeTeam.setValue({x: 0, y: 0});
     } else {
-      // console.log('working');
     }
   }, [swipeTeam, groupData]);
 

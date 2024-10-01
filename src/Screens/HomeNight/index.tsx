@@ -21,7 +21,7 @@ const HomeNight = ({navigation}: any) => {
   const onContinue = () => {
     navigation.navigate(NavigationStrings.Profile);
   };
- 
+
   const nightclubNames = {
     1: 'Nighclub Analytics',
     2: 'Events',
@@ -40,12 +40,12 @@ const HomeNight = ({navigation}: any) => {
       navigation.navigate(NavigationStrings.PromoteScreen);
     } else if (id === 2) {
       navigation.navigate(NavigationStrings.NightEvents);
-    }
-    else if (id === 1){
-      navigation.navigate(NavigationStrings.AnalyticsScreen)
-    }
-    else if (id === 3){
-      navigation.navigate(NavigationStrings.DjPromoters)
+    } else if (id === 1) {
+      navigation.navigate(NavigationStrings.AnalyticsScreen);
+    } else if (id === 3) {
+      navigation.navigate(NavigationStrings.DjPromoters);
+    } else if (id === 7) {
+      navigation.navigate(NavigationStrings.DjBooking);
     }
   };
 
@@ -73,7 +73,7 @@ const HomeNight = ({navigation}: any) => {
       <SafeAreaView>
         <View style={styles.phantomcon}>
           <TouchableOpacity activeOpacity={0.7} onPress={onContinue}>
-          <Image source={ImagePath.ProfileImg} style={styles.editedimg} />
+            <Image source={ImagePath.ProfileImg} style={styles.editedimg} />
           </TouchableOpacity>
           <Text style={{...commonStyles.font20White}}>The Phantom</Text>
           <VectorIcon
