@@ -27,5 +27,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  eventbtn:{
+    borderWidth: 1,
+    borderColor: Colors.white,
+    borderRadius: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+  }
 });
 export default styles;

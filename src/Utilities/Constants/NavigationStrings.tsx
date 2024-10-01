@@ -67,4 +67,5 @@ export default {
   EditDjProfile:'EditDjProfile',
   SetPriceScreen:'SetPriceScreen',
   DjBooking:'DjBooking',
+  DjInvoices:'DjInvoices',
 };

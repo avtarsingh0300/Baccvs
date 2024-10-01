@@ -156,13 +156,7 @@ const DjBooking = () => {
                       </View>
                     </View>
                     <TouchableOpacity
-                      style={{
-                        borderWidth: 1,
-                        borderColor: Colors.white,
-                        borderRadius: 10,
-                        paddingVertical: 5,
-                        paddingHorizontal: 10,
-                      }}>
+                      style={styles.eventbtn}>
                       <Text
                         style={{
                           ...commonStyles.font10Regular,
@@ -177,6 +171,49 @@ const DjBooking = () => {
             />
           </>
         ) : null}
+        {button === 'Requests' ? (
+         <>
+         <SizeBox size={20} />
+            <FlatList
+              data={[{id: 1}, {id: 2}]}
+              renderItem={({item}) => (
+                <View
+                    style={{
+                      justifyContent: 'space-between',
+                      marginVertical: 10,
+                      alignItems: 'center',
+                    }}>
+                <View style={{flexDirection: 'row'}}>
+                <Image
+                  source={ImagePath.ProfileImg}
+                  style={{
+                    width: 56,
+                    height: 56,
+                    borderRadius: 5,
+                    borderWidth: 1,
+                    borderColor: Colors.Pink,
+                  }}
+                />
+                <View style={{paddingLeft: 10}}>
+                  <Text style={{...commonStyles.font10Bold,color:Colors.white}}>L’Arc Paris wants to book you for “Agora party” .</Text>
+                  <Text style={{...commonStyles.font10Regular,paddingVertical:7,color:Colors.white}}>2 hours Set : 300€</Text>
+                  <Text style={{...commonStyles.font10Regular,color:Colors.green}}>in 10 Days</Text>
+                </View>
+                </View>
+                <SizeBox size={10}/>
+                <View style={{flexDirection:"row"}}>
+                  <TouchableOpacity  style={styles.eventbtn}>
+                        <Text style={{...commonStyles.font10Regular,color:Colors.white}}>See Event</Text></TouchableOpacity>
+                  <TouchableOpacity  style={[styles.eventbtn,{marginHorizontal:10}]}>
+                        <Text style={{...commonStyles.font10Regular,color:Colors.white}}>Accept</Text></TouchableOpacity>
+                  <TouchableOpacity  style={styles.eventbtn}>
+                        <Text style={{...commonStyles.font10Regular,color:Colors.white}}>Refuse</Text></TouchableOpacity>
+                </View>
+              </View>
+              )}
+              />
+        </>
+        ):null}
       </SafeAreaView>
     </LinearGradient>
   );

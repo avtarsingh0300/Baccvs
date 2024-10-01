@@ -30,6 +30,7 @@ const HomeNight = ({navigation}: any) => {
     5: 'Marketing tools',
     6: 'Promote ',
     7: 'Bookings',
+    8: 'Invoices'
   };
   const handlePress = id => {
     if (id === 5) {
@@ -46,6 +47,8 @@ const HomeNight = ({navigation}: any) => {
       navigation.navigate(NavigationStrings.DjPromoters);
     } else if (id === 7) {
       navigation.navigate(NavigationStrings.DjBooking);
+    } else if (id === 8){
+      navigation.navigate(NavigationStrings.DjInvoices)
     }
   };
 
@@ -85,7 +88,7 @@ const HomeNight = ({navigation}: any) => {
         </View>
         <SizeBox size={10} />
         <FlatList
-          data={[{id: 1}, {id: 2}, {id: 3}, {id: 4}, {id: 5}, {id: 6}, {id: 7}]}
+          data={[{id: 1}, {id: 2}, {id: 3}, {id: 4}, {id: 5}, {id: 6}, {id: 7},{id:8}]}
           renderItem={renderNightClub}
           numColumns={2}
           style={{alignSelf: 'center'}}

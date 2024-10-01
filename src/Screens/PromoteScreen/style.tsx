@@ -62,21 +62,21 @@ const styles = StyleSheet.create({
     },
     button: {
         borderWidth:1,
-        borderRadius:2,
+        borderRadius:10,
         width:moderateScale(83),
         height:moderateScaleVertical(26),
         marginVertical:5,
         justifyContent:"center",
         marginHorizontal:5,
-        borderColor:Colors.lightPink,
+        borderColor:Colors.grey,
       },
     button1: {
         borderWidth:1,
-        borderRadius:2,
+        borderRadius:10,
         marginVertical:5,
         justifyContent:"center",
         marginHorizontal:5,
-        borderColor:Colors.lightPink,
+        borderColor:Colors.grey,
         padding:5
       },
       buttonText: {

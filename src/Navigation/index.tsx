@@ -63,4 +63,5 @@ export {default as NightclubEdit} from '../Screens/NightclubEdit';
 export {default as DjPromoters} from '../Screens/DjPromoters';
 export {default as EditDjProfile} from '../Screens/EditDjProfile';
 export {default as SetPriceScreen} from '../Screens/SetPriceScreen';
-export {default as DjBooking} from '../Screens/DjBooking';
+export {default as DjBooking} from '../Screens/DJBooking';
+export {default as DjInvoices} from '../Screens/DjInvoices';
