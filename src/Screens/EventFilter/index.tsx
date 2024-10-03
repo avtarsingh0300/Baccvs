@@ -675,6 +675,15 @@ const EventFilter = ({navigation}: any) => {
                 />
               </View>
               <SizeBox size={10} />
+              <Text
+                style={{
+                  ...commonStyles.font16Regular,
+                  color: Colors.white,
+                  paddingLeft: 15,
+                }}>
+                Interests
+              </Text>
+              <SizeBox size={10} />
               {/* <TouchableOpacity
                 style={styles.flatbox}
                 activeOpacity={0.5}
