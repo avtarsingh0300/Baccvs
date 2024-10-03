@@ -105,23 +105,7 @@ const CreateSuccess = ({navigation, route}: any) => {
       .then(res => {
         setLoader(false);
         showSuccess('Event create successfully');
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [
-              {
-                name: NavigationStrings.TabRoutes,
-                state: {
-                  routes: [
-                    {
-                      name: NavigationStrings.HomeScreen,
-                    },
-                  ],
-                },
-              },
-            ],
-          }),
-        );
+        navigation.navigate(NavigationStrings.TabRoutes);
       })
       .catch(err => {
         setLoader(false);

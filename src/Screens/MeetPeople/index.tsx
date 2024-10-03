@@ -1,14 +1,11 @@
 import {
   View,
   Text,
-  FlatList,
-  ImageBackground,
-  Image,
   TouchableOpacity,
   Animated,
   PanResponder,
 } from 'react-native';
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
@@ -19,6 +16,7 @@ import {
   Loadingcomponent,
   SizeBox,
   showError,
+  showSuccess,
 } from '../../Utilities/Component/Helpers';
 import {height, moderateScale} from '../../Utilities/Styles/responsiveSize';
 import {
@@ -33,12 +31,11 @@ import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import {useSelector} from 'react-redux';
 import Modal from 'react-native-modal';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
-import ImagePath from '../../Utilities/Constants/ImagePath';
 import MeetPeopleCard from '../../Utilities/Component/MeetPeopleCard';
 import MeetFilterModal from '../../Utilities/Component/MeetFilterModal';
 import TeamsCard from '../../Utilities/Component/TeamsCard';
 
-const MeetPeople = ({navigation}) => {
+const MeetPeople = ({navigation}: any) => {
   const [button, setButton] = useState('online');
   const [currentImage, setCurrentImage] = useState({});
   const [loader, setLoader] = useState(false);
@@ -49,8 +46,6 @@ const MeetPeople = ({navigation}) => {
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [activeIndexModal, setActiveIndexModal] = useState(0);
   const [imageIndex, setImageIndex] = useState(0);
-  // console.log(user, 'user');
-
   const swipe = useRef(new Animated.ValueXY()).current;
   const swipeTeam = useRef(new Animated.ValueXY()).current;
 
@@ -107,7 +102,7 @@ const MeetPeople = ({navigation}) => {
     likeUser(data)
       .then(res => {
         console.log(res, 'res in likeUserProfileHanlder');
-        showError(res?.message);
+        showSuccess(res?.message);
         handelSelectionUser('');
       })
       .catch(err => {
