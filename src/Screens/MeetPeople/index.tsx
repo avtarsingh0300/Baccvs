@@ -567,7 +567,7 @@ const MeetPeople = ({navigation}: any) => {
                     }}
                     activeOpacity={0.8}
                     style={[styles.option, {borderBottomWidth: 1}]}>
-                    <Text style={styles.optionText}>My groups</Text>
+                    <Text style={styles.optionText}>My teams</Text>
                     <VectorIcon
                       groupName="FontAwesome"
                       name="question-circle-o"

@@ -51,8 +51,8 @@ const MeetFilterModal = ({
   const [lon, setLon] = useState(0);
   const [selectCap, setSelectCap] = useState('2');
   const [loading, setLoading] = useState(false);
-  const [Interest,setInterest] = useState('');
-  
+  const [Interest, setInterest] = useState('');
+
   useEffect(() => {
     getEventsTypes();
   }, []);
@@ -91,8 +91,8 @@ const MeetFilterModal = ({
     'Parties',
     'Nightclubs',
     'Dining',
-    'Activities'
-  ]
+    'Activities',
+  ];
 
   const signData = [
     'Aries',
@@ -200,33 +200,27 @@ const MeetFilterModal = ({
         });
     }
   };
-  const renderItem = ({ item }) => (
+  const renderItem = ({item}) => (
     <View
-    style={[
-      styles.row,
-      {flexWrap: 'wrap', justifyContent: 'space-around'},
-    ]}>
-    {InterestList.map((item, index) => (
-                    <TouchableOpacity
-                      key={index}
-                      activeOpacity={0.8}
-                      onPress={() => setInterest(item)}
-                      style={[
-                        styles.selectContainer,
-                        {
-                          backgroundColor:
-                            Interest == item
-                              ? Colors.lightPink
-                              : Colors.backgroundNew,
-                          marginBottom: 10,
-                        },
-                      ]}>
-                      <Text style={styles.selectText}>{item}</Text>
-                    </TouchableOpacity>
-                  ))}
-  </View>
+      style={[styles.row, {flexWrap: 'wrap', justifyContent: 'space-around'}]}>
+      {InterestList.map((item, index) => (
+        <TouchableOpacity
+          key={index}
+          activeOpacity={0.8}
+          onPress={() => setInterest(item)}
+          style={[
+            styles.selectContainer,
+            {
+              backgroundColor:
+                Interest == item ? Colors.lightPink : Colors.backgroundNew,
+              marginBottom: 10,
+            },
+          ]}>
+          <Text style={styles.selectText}>{item}</Text>
+        </TouchableOpacity>
+      ))}
+    </View>
   );
-
 
   return (
     <Modal
@@ -623,12 +617,12 @@ const MeetFilterModal = ({
             <View style={[styles.row, {}]}>
               <Text style={styles.label}>Interests</Text>
             </View>
-            <SizeBox size={7}/>
+            <SizeBox size={7} />
             <FlatList
-             data={[{id:1}]}
-             renderItem={renderItem}
-             keyExtractor={(item, index) => index.toString()}
-             />
+              data={[{id: 1}]}
+              renderItem={renderItem}
+              keyExtractor={(item, index) => index.toString()}
+            />
             <SizeBox size={10} />
             <View style={[styles.row, {}]}>
               <Text style={styles.label}>Languages</Text>
