@@ -33,6 +33,7 @@ import {
 } from '../../Utilities/Constants/auth';
 import languages from '../../Utilities/Constants';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
+import {useSelector} from 'react-redux';
 
 const GrroupDeatils = ({navigation, route}: any) => {
   const [musicStyle, setMusicStyle] = useState([]);
@@ -335,7 +336,7 @@ const GrroupDeatils = ({navigation, route}: any) => {
             style={[styles.bottomBtn, {backgroundColor: '#FF813A'}]}>
             <Image
               source={ImagePath.link_backward}
-              style={{height: 40, width: 40}}
+              style={{height: 25, width: 25, resizeMode: 'contain'}}
             />
           </TouchableOpacity>
         </View>

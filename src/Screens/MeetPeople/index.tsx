@@ -127,6 +127,7 @@ const MeetPeople = ({navigation}: any) => {
       .catch(err => {
         console.log(err, 'err in likeUserProfileHanlder');
         setLoader(false);
+        showError(err?.message);
       });
   };
 
@@ -145,6 +146,7 @@ const MeetPeople = ({navigation}: any) => {
       .catch(err => {
         console.log(err, 'err in disLikeUser');
         setLoader(false);
+        showError(err?.message);
       });
   };
 
@@ -163,6 +165,7 @@ const MeetPeople = ({navigation}: any) => {
       .catch(err => {
         console.log(err, 'err in disLikeUser');
         setLoader(false);
+        showError(err?.message);
       });
   };
 
@@ -220,7 +223,7 @@ const MeetPeople = ({navigation}: any) => {
           useNativeDriver: true,
           duration: 500,
         }).start(() => {
-          removeCard(); // Remove the card after the animation completes
+          removeCard();
         });
         // handleNext();
         // }
@@ -437,25 +440,21 @@ const MeetPeople = ({navigation}: any) => {
             <>
               <View style={{flex: 1}}>
                 {groupData
-                  ?.slice(0) // Prevent mutation by creating a copy
+                  ?.slice(0)
                   ?.map((item, index: number) => {
                     const isFirst: boolean = index === 0;
                     const dragHandlers = isFirst
                       ? panTeamResponser?.panHandlers
                       : {};
-                    // console.log(index, 'index');
+
                     return (
                       <TeamsCard
                         isFirst={isFirst}
                         item={item}
                         key={index}
                         index={index}
-                        // setImageIndex={setImageIndex}
-                        // setLoader={setLoader}
-                        // handleNext={handleNext}
                         likeUserProfileHanlder={likeTeameHanlder}
                         disLikeUserProfileHanlder={disLikeTeamHanlder}
-                        // rotate={rotate}
                         swipe={swipeTeam}
                         {...dragHandlers}
                       />
@@ -566,7 +565,7 @@ const MeetPeople = ({navigation}: any) => {
                       setShowModal(false);
                     }}
                     activeOpacity={0.8}
-                    style={[styles.option, {borderBottomWidth: 1}]}>
+                    style={[styles.option, {borderBottomWidth: 0}]}>
                     <Text style={styles.optionText}>My teams</Text>
                     <VectorIcon
                       groupName="FontAwesome"
@@ -575,7 +574,7 @@ const MeetPeople = ({navigation}: any) => {
                       color={Colors.Pink}
                     />
                   </TouchableOpacity>
-                  <TouchableOpacity
+                  {/* <TouchableOpacity
                     onPress={() => {
                       navigation.navigate(NavigationStrings.EditSocialProfile);
                       setShowModal(false);
@@ -589,7 +588,7 @@ const MeetPeople = ({navigation}: any) => {
                       size={18}
                       color={Colors.Pink}
                     />
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </>
               )}
             </LinearGradient>
