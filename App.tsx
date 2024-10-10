@@ -13,12 +13,12 @@ import fontFamily from './src/Utilities/Styles/fontFamily';
 import {getUserData} from './src/Utilities/Constants/auth';
 import Geolocation from '@react-native-community/geolocation';
 import notifee from '@notifee/react-native';
-import messaging from '@react-native-firebase/messaging';
+// import messaging from '@react-native-firebase/messaging';
 
 LogBox.ignoreAllLogs();
 const App = () => {
   useEffect(() => {
-    requestUserPermission();
+    // requestUserPermission();
     getUserData();
 
     SplashScreen.hide();
@@ -29,39 +29,39 @@ const App = () => {
         requestLocationPermission();
       }
     }
-    getTokenHandler();
+    // getTokenHandler();
   }, []);
 
-  useEffect(() => {
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-    });
+  // useEffect(() => {
+  //   const unsubscribe = messaging().onMessage(async remoteMessage => {
+  //     Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+  //   });
 
-    return unsubscribe;
-  }, []);
+  //   return unsubscribe;
+  // }, []);
 
-  async function requestUserPermission() {
-    const authStatus = await messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-    PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-    );
-    if (enabled) {
-      console.log('Authorization status:', authStatus);
-    }
-  }
+  // async function requestUserPermission() {
+  //   const authStatus = await messaging().requestPermission();
+  //   const enabled =
+  //     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+  //     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  //   PermissionsAndroid.request(
+  //     PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+  //   );
+  //   if (enabled) {
+  //     console.log('Authorization status:', authStatus);
+  //   }
+  // }
 
-  const getTokenHandler = async () => {
-    try {
-      await messaging().registerDeviceForRemoteMessages();
-      const token = await messaging().getToken();
-      console.log(token, 'token');
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const getTokenHandler = async () => {
+  //   try {
+  //     await messaging().registerDeviceForRemoteMessages();
+  //     const token = await messaging().getToken();
+  //     console.log(token, 'token');
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const requestLocationPermission = async () => {
     try {
