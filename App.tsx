@@ -12,10 +12,13 @@ import store from './src/Redux/store';
 import fontFamily from './src/Utilities/Styles/fontFamily';
 import {getUserData} from './src/Utilities/Constants/auth';
 import Geolocation from '@react-native-community/geolocation';
-import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import notifee from '@notifee/react-native';
+import messaging from '@react-native-firebase/messaging';
+
 LogBox.ignoreAllLogs();
 const App = () => {
   useEffect(() => {
+    requestUserPermission();
     getUserData();
 
     SplashScreen.hide();
@@ -26,7 +29,39 @@ const App = () => {
         requestLocationPermission();
       }
     }
+    getTokenHandler();
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+
+    return unsubscribe;
+  }, []);
+
+  async function requestUserPermission() {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+    );
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+    }
+  }
+
+  const getTokenHandler = async () => {
+    try {
+      await messaging().registerDeviceForRemoteMessages();
+      const token = await messaging().getToken();
+      console.log(token, 'token');
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const requestLocationPermission = async () => {
     try {
@@ -53,6 +88,31 @@ const App = () => {
   const requestLocationPermissionIOS = () => {
     Geolocation.requestAuthorization();
   };
+
+  async function onDisplayNotification() {
+    // Request permissions (required for iOS)
+    await notifee.requestPermission();
+
+    // Create a channel (required for Android)
+    const channelId = await notifee.createChannel({
+      id: 'default',
+      name: 'Default Channel',
+    });
+
+    // Display a notification
+    await notifee.displayNotification({
+      title: 'Notification Title',
+      body: 'Main body content of the notification',
+      android: {
+        channelId,
+        smallIcon: 'name-of-a-small-icon', // optional, defaults to 'ic_launcher'.
+        // pressAction is needed if you want the notification to open the app when pressed
+        pressAction: {
+          id: 'default',
+        },
+      },
+    });
+  }
 
   return (
     <GestureHandlerRootView
