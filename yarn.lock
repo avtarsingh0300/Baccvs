@@ -1313,11 +1313,6 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@notifee/react-native@^9.1.1":
-  version "9.1.1"
-  resolved "https://registry.npmjs.org/@notifee/react-native/-/react-native-9.1.1.tgz"
-  integrity sha512-d9UdnT7TIJKal+RSCcl81beveWXjBpNZZ+8rqzcfd8DcAlkl7WGvvIAhUfkb83aOfc/zHpZJrJwu4fxwI6GCCg==
-
 "@npmcli/agent@^2.0.0":
   version "2.2.2"
   dependencies:
@@ -4316,9 +4311,6 @@ fs-minipass@^3.0.0, fs-minipass@^3.0.3:
 
 fs.realpath@^1.0.0:
   version "1.0.0"
-
-fsevents@^2.3.2:
-  version "2.3.3"
 
 function-bind@^1.1.2:
   version "1.1.2"
