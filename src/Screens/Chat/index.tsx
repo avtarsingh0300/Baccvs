@@ -16,6 +16,7 @@ import VectorIcon from '../../Utilities/Component/vectorIcons';
 import {FlatList} from 'react-native';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
+
 const Chat = ({navigation}: any) => {
   const [button, setButton] = useState('R');
 
@@ -140,3 +141,4 @@ const Chat = ({navigation}: any) => {
 };
 
 export default Chat;
+
