@@ -36,7 +36,7 @@ import fontFamily from '../../Utilities/Styles/fontFamily';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import Geolocation from '@react-native-community/geolocation';
-import {getHomedata} from '../../Utilities/Constants/auth';
+import {getHomedata, likeEvents} from '../../Utilities/Constants/auth';
 import Modal from 'react-native-modal';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import {saveUserData} from '../../Redux/Action/auth';
@@ -55,6 +55,7 @@ const HomeScreen = ({navigation}: any) => {
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
   const user = useSelector((data: object) => data?.auth?.userData?.user);
+
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -91,6 +92,23 @@ const HomeScreen = ({navigation}: any) => {
   const onMapPress = () => {
     navigation.navigate(NavigationStrings.MapScreen);
   };
+  const onLikePress = (id: string) => {
+    const data = {
+      user_id: user?.id,
+      event_id: id,
+    };
+    console.log(data);
+    likeEvents(data)
+      .then(res => {
+        getdata2(lat, lon);
+        console.log(res);
+      })
+      .catch(err => {
+        showError(err?.msg);
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
     const requestLocationPermission = async () => {
       if (Platform.OS === 'android') {
@@ -118,8 +136,12 @@ const HomeScreen = ({navigation}: any) => {
         getLocation();
       }
     };
-
-    requestLocationPermission();
+    const _unsubscribe = navigation.addListener('focus', () => {
+      requestLocationPermission();
+    });
+    return () => {
+      _unsubscribe();
+    };
   }, []);
 
   const getLocation = () => {
@@ -152,6 +174,22 @@ const HomeScreen = ({navigation}: any) => {
       .then(res => {
         SetLoading(false);
         SetEventData(res.events);
+
+        SetMemberData(res.events.members);
+      })
+      .catch(err => {
+        SetLoading(false);
+        showError(err.message);
+        console.log(err);
+      });
+  };
+  const getdata2 = (lat: any, long: any) => {
+    SetLoading(false);
+    getHomedata(lat, long, selectedOption)
+      .then(res => {
+        SetLoading(false);
+        SetEventData(res.events);
+
         SetMemberData(res.events.members);
       })
       .catch(err => {
@@ -229,10 +267,10 @@ const HomeScreen = ({navigation}: any) => {
                 </Text>
               ) : null}
             </View>
-            <TouchableOpacity style={styles.liktxtcon}>
-              <Text style={styles.likestxt}>
-                {item?.like_count > 0 ? item?.like_count : '0'} Likes{' '}
-              </Text>
+            <TouchableOpacity
+              style={styles.liktxtcon}
+              onPress={() => onLikePress(item?.id)}>
+              <Text style={styles.likestxt}>{item?.likes_count} Likes </Text>
               <Image source={ImagePath.likes} style={styles.likeimg} />
             </TouchableOpacity>
           </ImageBackground>

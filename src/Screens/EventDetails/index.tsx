@@ -33,7 +33,12 @@ import {
   showSuccess,
 } from '../../Utilities/Component/Helpers';
 import MapView, {Marker} from 'react-native-maps';
-import {createCommets, getEventDetail} from '../../Utilities/Constants/auth';
+import {
+  createCommets,
+  deleteComment,
+  getEventDetail,
+  likeEvents,
+} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import {useSelector} from 'react-redux';
@@ -98,7 +103,6 @@ const EventDetails = ({navigation, route}: any) => {
       .then(res => {
         setLoading(false);
         setEventData(res);
-        console.log(res);
       })
       .catch(err => {
         setLoading(false), showError(err.message), console.log(err);
@@ -111,19 +115,45 @@ const EventDetails = ({navigation, route}: any) => {
     }
     const data = {
       user_id: user?.user?.id,
-      event_id: route.params.eventId,
+      event_id: route?.params?.eventId,
       description: commentvalue,
     };
     createCommets(data)
       .then(res => {
         showSuccess(res?.message);
-
         setCommentValue('');
         getEvent2();
         console.log(res);
       })
       .catch(err => {
         setCommentValue('');
+        showError(err?.msg);
+        console.log(err);
+      });
+  };
+
+  const onLikePress = () => {
+    const data = {
+      user_id: user?.user?.id,
+      event_id: route?.params?.eventId,
+    };
+    console.log(data);
+    likeEvents(data)
+      .then(res => {
+        getEvent2();
+        console.log(res);
+      })
+      .catch(err => {
+        showError(err?.msg);
+        console.log(err);
+      });
+  };
+  const onDeletePress = (id: string) => {
+    deleteComment(id)
+      .then(res => {
+        getEvent2();
+      })
+      .catch(err => {
         showError(err?.msg);
         console.log(err);
       });
@@ -187,7 +217,11 @@ const EventDetails = ({navigation, route}: any) => {
 
   const comItem = ({item, index}: any) => (
     <View style={styles.itemContainer}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
         {item?.user?.image ? (
           <Image
             source={{uri: IMAGE_URL + item?.user?.image}}
@@ -214,6 +248,14 @@ const EventDetails = ({navigation, route}: any) => {
           </Text>
         </View>
       </View>
+      {item?.userId === user?.user?.id ? (
+        <VectorIcon
+          groupName="MaterialCommunityIcons"
+          name="delete"
+          size={20}
+          onPress={() => onDeletePress(item?.id)}
+        />
+      ) : null}
     </View>
   );
 
@@ -512,6 +554,7 @@ const EventDetails = ({navigation, route}: any) => {
                 renderItem={renderItem}
               />
               <TouchableOpacity
+                onPress={onLikePress}
                 activeOpacity={0.8}
                 style={{
                   alignSelf: 'center',

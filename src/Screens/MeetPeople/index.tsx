@@ -27,7 +27,6 @@ import {
   likeTeam,
   likeUser,
 } from '../../Utilities/Constants/auth';
-import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import {useSelector} from 'react-redux';
 import Modal from 'react-native-modal';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';

@@ -12,6 +12,7 @@ import {
   CREATE_EVENT,
   CREATE_MEET_GROUP,
   CREATE_REF_CODE,
+  DELETE_COMMENT,
   DISLIKE_USER_PROFILE,
   DIS_LIKE_TEAM,
   EVENT_DETAIL,
@@ -34,6 +35,7 @@ import {
   GET_SELL_TICKETS,
   GET_USER_LIKES,
   GROUP_DETAILS,
+  LIKE_EVENT,
   LIKE_TEAM,
   LIKE_USER_PROFILE,
   LOGIN,
@@ -228,6 +230,13 @@ export function registerUser(data: object) {
 
 export function createCommets(data: object) {
   return apiPost(CREATE_COMMENT, data);
+}
+
+export function likeEvents(data: object) {
+  return apiPost(LIKE_EVENT, data);
+}
+export function deleteComment(iD: String) {
+  return apiPost(`${DELETE_COMMENT}?id=${iD}`);
 }
 export function getHomedata(
   latitude: number,

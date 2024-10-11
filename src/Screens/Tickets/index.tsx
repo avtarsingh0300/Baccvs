@@ -34,13 +34,11 @@ import Modal from 'react-native-modal';
 
 const Tickets = ({navigation}: any) => {
   const [colors, setColors] = useState(0);
-  const [sellBtn, setSellBtn] = useState(false);
   const [userData, setUserData] = useState([]);
   const [buyticketdata, setBuyTicket] = useState([]);
   const [sellticketdata, setSellTicket] = useState([]);
   const [loader, setLoader] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-
   const [buyItem, setBuyItem] = useState('');
   useEffect(() => {
     getMyTickets();
