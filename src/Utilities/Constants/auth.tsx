@@ -15,6 +15,7 @@ import {
   DELETE_COMMENT,
   DISLIKE_USER_PROFILE,
   DIS_LIKE_TEAM,
+  EDIT_COMMENT,
   EVENT_DETAIL,
   EVENT_SEARCH,
   FOLLOW_USER,
@@ -237,6 +238,9 @@ export function likeEvents(data: object) {
 }
 export function deleteComment(iD: String) {
   return apiPost(`${DELETE_COMMENT}?id=${iD}`);
+}
+export function editComment(data: object) {
+  return apiPost(EDIT_COMMENT, data);
 }
 export function getHomedata(
   latitude: number,

@@ -36,6 +36,7 @@ import MapView, {Marker} from 'react-native-maps';
 import {
   createCommets,
   deleteComment,
+  editComment,
   getEventDetail,
   likeEvents,
 } from '../../Utilities/Constants/auth';
@@ -43,6 +44,7 @@ import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import {useSelector} from 'react-redux';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import fontFamily from '../../Utilities/Styles/fontFamily';
 
 const EventDetails = ({navigation, route}: any) => {
   const refRBSheet: any = useRef();
@@ -54,6 +56,8 @@ const EventDetails = ({navigation, route}: any) => {
   const [loading, setLoading] = useState(false);
   const [eventData, setEventData] = useState({});
   const [commentvalue, setCommentValue] = useState('');
+  const [commentid, setCommentId] = useState('');
+  
   const user = useSelector((data: object) => data?.auth?.userData);
 
   const onPressBack = () => {
@@ -113,23 +117,50 @@ const EventDetails = ({navigation, route}: any) => {
       showError('Type comments');
       return;
     }
+    const formData ={
+      id: commentid,
+      user_id:user?.user?.id,
+      event_id: route?.params?.eventId,
+      description:commentvalue
+    }
     const data = {
       user_id: user?.user?.id,
       event_id: route?.params?.eventId,
       description: commentvalue,
     };
-    createCommets(data)
+    if(commentid?.length>0){
+      editComment(formData)
       .then(res => {
-        showSuccess(res?.message);
         setCommentValue('');
+        setCommentId('')
         getEvent2();
-        console.log(res);
       })
       .catch(err => {
         setCommentValue('');
+        setCommentId('')
         showError(err?.msg);
         console.log(err);
       });
+    }
+    else{
+
+      createCommets(data)
+        .then(res => {
+          showSuccess(res?.message);
+          setCommentValue('');
+          setCommentId('')
+          getEvent2();
+          console.log(res);
+        })
+        .catch(err => {
+          setCommentValue('');
+          setCommentId('')
+          showError(err?.msg);
+          console.log(err);
+        });
+    }
+  // console.log(formData)
+    
   };
 
   const onLikePress = () => {
@@ -157,6 +188,11 @@ const EventDetails = ({navigation, route}: any) => {
         showError(err?.msg);
         console.log(err);
       });
+  };
+  const onEditPress = (item) => {
+    setCommentId(item?.id)
+    setCommentValue(item?.description)
+   
   };
 
   const calculateDuration = (startTime: string, endTime: string) => {
@@ -248,6 +284,15 @@ const EventDetails = ({navigation, route}: any) => {
           </Text>
         </View>
       </View>
+      <View style={{flexDirection:"row",alignItems:"center"}}>
+        <VectorIcon
+          groupName="Octicons"
+          name="pencil"
+          size={15}
+          color={Colors.white}
+          onPress={() => onEditPress(item)}
+        />
+  <View style={{width:7}}/>
       {item?.userId === user?.user?.id ? (
         <VectorIcon
           groupName="MaterialCommunityIcons"
@@ -256,6 +301,7 @@ const EventDetails = ({navigation, route}: any) => {
           onPress={() => onDeletePress(item?.id)}
         />
       ) : null}
+      </View>
     </View>
   );
 
@@ -632,8 +678,8 @@ const EventDetails = ({navigation, route}: any) => {
                   placeholder="Type here"
                   multiline
                   value={commentvalue}
-                  onChangeText={(text: any) => setCommentValue(text)}
-                  style={{width: '90%', paddingVertical: 5}}
+                onChangeText={(text: string) => {setCommentValue(text); text.length==0&& setCommentId("")}}
+                  style={{width: '90%', paddingVertical: 5,color:Colors.black,fontFamily:fontFamily.regular}}
                 />
                 <VectorIcon
                   groupName="Ionicons"

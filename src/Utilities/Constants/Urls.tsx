@@ -57,3 +57,4 @@ export const REPORT_USER = getApiUrl('report-user');
 export const CREATE_COMMENT = getApiUrl('create-comment');
 export const LIKE_EVENT = getApiUrl('like-event');
 export const DELETE_COMMENT = getApiUrl('delete-comment');
+export const EDIT_COMMENT = getApiUrl('edit-comment');
