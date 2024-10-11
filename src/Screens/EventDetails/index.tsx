@@ -7,6 +7,7 @@ import {
   ScrollView,
   Share,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -29,12 +30,14 @@ import {
   Loadingcomponent,
   SizeBox,
   showError,
+  showSuccess,
 } from '../../Utilities/Component/Helpers';
 import MapView, {Marker} from 'react-native-maps';
-import {getEventDetail} from '../../Utilities/Constants/auth';
+import {createCommets, getEventDetail} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import {useSelector} from 'react-redux';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const EventDetails = ({navigation, route}: any) => {
   const refRBSheet: any = useRef();
@@ -45,7 +48,9 @@ const EventDetails = ({navigation, route}: any) => {
   const refTicketsRBSheet: any = useRef();
   const [loading, setLoading] = useState(false);
   const [eventData, setEventData] = useState({});
+  const [commentvalue, setCommentValue] = useState('');
   const user = useSelector((data: object) => data?.auth?.userData);
+
   const onPressBack = () => {
     navigation.goBack();
   };
@@ -81,9 +86,46 @@ const EventDetails = ({navigation, route}: any) => {
       .then(res => {
         setLoading(false);
         setEventData(res);
+        console.log(res);
       })
       .catch(err => {
         setLoading(false), showError(err.message), console.log(err);
+      });
+  };
+  const getEvent2 = () => {
+    setLoading(false);
+    getEventDetail(route.params.eventId)
+      .then(res => {
+        setLoading(false);
+        setEventData(res);
+        console.log(res);
+      })
+      .catch(err => {
+        setLoading(false), showError(err.message), console.log(err);
+      });
+  };
+  const onSendComments = () => {
+    if (!commentvalue) {
+      showError('Type comments');
+      return;
+    }
+    const data = {
+      user_id: user?.user?.id,
+      event_id: route.params.eventId,
+      description: commentvalue,
+    };
+    createCommets(data)
+      .then(res => {
+        showSuccess(res?.message);
+
+        setCommentValue('');
+        getEvent2();
+        console.log(res);
+      })
+      .catch(err => {
+        setCommentValue('');
+        showError(err?.msg);
+        console.log(err);
       });
   };
 
@@ -164,7 +206,7 @@ const EventDetails = ({navigation, route}: any) => {
           />
         )}
         <View>
-          <Text style={[styles.distanceText, {marginLeft: 10}]}>
+          <Text style={[styles.distanceText, {marginLeft: 10, fontSize: 12}]}>
             {item?.user?.name}
           </Text>
           <Text style={[styles.cmttxt, {marginLeft: 10}]}>
@@ -504,6 +546,7 @@ const EventDetails = ({navigation, route}: any) => {
               start={{x: 0, y: 0}}
               end={{x: 1.3, y: 0.9}}
               style={styles.sheetContent}>
+              {/* <KeyboardAwareScrollView showsVerticalScrollIndicator={false}> */}
               <VectorIcon
                 groupName="Fontisto"
                 name="close-a"
@@ -529,6 +572,36 @@ const EventDetails = ({navigation, route}: any) => {
                 renderItem={comItem}
               />
               <SizeBox size={10} />
+
+              <View
+                style={{
+                  backgroundColor: Colors.white,
+                  width: '90%',
+                  minHeight: 35,
+                  alignSelf: 'center',
+                  borderRadius: 5,
+                  justifyContent: 'space-between',
+                  flexDirection: 'row',
+                  paddingHorizontal: 10,
+                  alignItems: 'center',
+                }}>
+                <TextInput
+                  placeholder="Type here"
+                  multiline
+                  value={commentvalue}
+                  onChangeText={(text: any) => setCommentValue(text)}
+                  style={{width: '90%', paddingVertical: 5}}
+                />
+                <VectorIcon
+                  groupName="Ionicons"
+                  name="send-outline"
+                  onPress={onSendComments}
+                  size={20}
+                  color={Colors.lightPink}
+                />
+              </View>
+              <SizeBox size={5} />
+              {/* </KeyboardAwareScrollView> */}
             </LinearGradient>
           </RBSheet>
           <RBSheet
@@ -904,7 +977,10 @@ const EventDetails = ({navigation, route}: any) => {
                 <View style={{width: '30%'}}>
                   <Text style={styles.ticketText}>Early tickets</Text>
                   <Text
-                    style={{...commonStyles.font12Bold, color: Colors.greyTxt}}>
+                    style={{
+                      ...commonStyles.font12Bold,
+                      color: Colors.greyTxt,
+                    }}>
                     Before 22h00
                   </Text>
                 </View>
@@ -1004,7 +1080,10 @@ const EventDetails = ({navigation, route}: any) => {
               </View>
               <SizeBox size={10} />
               <Text
-                style={{...commonStyles.font16WhiteBold, alignSelf: 'center'}}>
+                style={{
+                  ...commonStyles.font16WhiteBold,
+                  alignSelf: 'center',
+                }}>
                 Total : 15,99 €
               </Text>
               <SizeBox size={10} />

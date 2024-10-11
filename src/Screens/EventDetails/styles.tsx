@@ -113,8 +113,8 @@ export const styles = StyleSheet.create({
     minHeight: moderateScaleVertical(30),
   },
   cmttxt: {
-    fontSize: textScale(8),
-    fontFamily: fontFamily.regular,
+    fontSize: textScale(12),
+    fontFamily: fontFamily.time_regular,
     color: Colors.white,
   },
   onelife: {

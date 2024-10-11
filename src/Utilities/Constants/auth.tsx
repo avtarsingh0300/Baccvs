@@ -8,6 +8,7 @@ import {
   CANCEL_INVITES,
   CANCEL_SELL_TICKET,
   CHANGE_PASS,
+  CREATE_COMMENT,
   CREATE_EVENT,
   CREATE_MEET_GROUP,
   CREATE_REF_CODE,
@@ -223,6 +224,10 @@ export function unFollowUser(data: object) {
 }
 export function registerUser(data: object) {
   return apiPost(REGISTER_USER, data, {'Content-Type': 'multipart/form-data'});
+}
+
+export function createCommets(data: object) {
+  return apiPost(CREATE_COMMENT, data);
 }
 export function getHomedata(
   latitude: number,
