@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@notifee/react-native": "^9.1.1",
     "@ptomasroos/react-native-multi-slider": "^2.2.2",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-clipboard/clipboard": "^1.14.1",
@@ -62,6 +63,7 @@
     "react-redux": "^9.1.2",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
+    "socket.io-client": "^4.8.0",
     "toggle-switch-react-native": "^3.3.0"
   },
   "devDependencies": {

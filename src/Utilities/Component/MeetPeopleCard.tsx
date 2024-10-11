@@ -28,14 +28,13 @@ interface MeetPeopleCardProps {
   disLikeUserProfileHanlder: (item: object) => void;
   likeUserProfileHanlder: (type: string, item?: object) => void;
   swipe: Animated.ValueXY;
-  [key: string]: any; // To handle any additional props
+  [key: string]: any;
   item: object;
   isFirst: boolean;
 }
 
 const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
   index,
-  // setImageIndex,
   swipe,
   item,
   isFirst,
@@ -132,7 +131,12 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
                     alignSelf: 'center',
                   },
                 ]}>
-                <TouchableOpacity activeOpacity={0.8} style={styles.bottomBtn}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate(NavigationStrings?.Messages);
+                  }}
+                  activeOpacity={0.8}
+                  style={styles.bottomBtn}>
                   <Image source={ImagePath.sent} />
                 </TouchableOpacity>
                 <TouchableOpacity

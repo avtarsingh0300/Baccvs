@@ -17,6 +17,7 @@ import {FlatList} from 'react-native';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 
+import io from 'socket.io-client';
 const Chat = ({navigation}: any) => {
   const [button, setButton] = useState('R');
 

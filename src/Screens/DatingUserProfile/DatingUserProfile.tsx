@@ -35,6 +35,7 @@ import Swiper from 'react-native-swiper';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import Geolocation from '@react-native-community/geolocation';
 import {useSelector} from 'react-redux';
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 
 const DatingUserProfile = ({navigation, route}: any) => {
   const [musicStyle, setMusicStyle] = useState([]);
@@ -98,7 +99,7 @@ const DatingUserProfile = ({navigation, route}: any) => {
         if (res?.user?.latitude && res?.user?.longitude) {
           handleCalculate(res?.user?.latitude, res?.user?.longitude);
         }
-        // console.log(res?.user?.latitude, 'res in getMemberDetails');
+        // console.log(res?.user, 'res in getMemberDetails');
         setLoader(false);
       })
       .catch(err => {
@@ -468,7 +469,12 @@ const DatingUserProfile = ({navigation, route}: any) => {
               bottom: moderateScaleVertical(30),
             },
           ]}>
-          <TouchableOpacity activeOpacity={0.8} style={styles.bottomBtn}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate(NavigationStrings.Messages);
+            }}
+            activeOpacity={0.8}
+            style={styles.bottomBtn}>
             <Image source={ImagePath.sent} />
           </TouchableOpacity>
           <TouchableOpacity

@@ -10,7 +10,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import React, {Fragment, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
 import commonStyles from '../../Utilities/Styles/commonStyles';
@@ -25,6 +25,8 @@ import {
 import {Keyboard} from 'react-native';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import Modal from 'react-native-modal';
+import io from 'socket.io-client';
+
 const initialMessages = [
   {id: '1', text: 'Hello!', sender: 'other'},
   {id: '2', text: 'Hi! How are you?', sender: 'me'},
@@ -37,6 +39,7 @@ const Messages = ({navigation}: any) => {
   const [messages, setMessages] = useState(initialMessages);
   const [newMessage, setNewMessage] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const socket = io('https://13.48.250.217');
   const handleSend = () => {
     if (newMessage.trim().length > 0) {
       const newMessageObject = {
@@ -73,6 +76,19 @@ const Messages = ({navigation}: any) => {
     setShowModal(false);
     navigation.navigate(NavigationStrings.EditGroup);
   };
+  useEffect(() => {
+    socket.emit('connection');
+    console.log('A user connected:', socket);
+    socket.emit('joinRoom', 'roomId');
+
+    socket.on('receiveMessage', newMessage => {
+      setMessages(prevMessages => [...prevMessages, newMessage]);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
   return (
     <KeyboardAvoidingView
       style={{flex: 1, backgroundColor: Colors.Linear}}

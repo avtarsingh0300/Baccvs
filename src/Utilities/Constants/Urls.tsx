@@ -54,3 +54,4 @@ export const FOLLOW_USER = getApiUrl('follow-user');
 export const UN_FOLLOW_USER = getApiUrl('unfollow-user');
 export const BLOCK_USER = getApiUrl('block-user');
 export const REPORT_USER = getApiUrl('report-user');
+export const CREATE_COMMENT = getApiUrl('create-comment');
