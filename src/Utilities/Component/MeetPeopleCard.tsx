@@ -133,7 +133,9 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
                 ]}>
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate(NavigationStrings?.Messages);
+                    navigation.navigate(NavigationStrings?.Messages, {
+                      userdata: item,
+                    });
                   }}
                   activeOpacity={0.8}
                   style={styles.bottomBtn}>

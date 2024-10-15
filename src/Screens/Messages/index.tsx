@@ -26,27 +26,34 @@ import {Keyboard} from 'react-native';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import Modal from 'react-native-modal';
 import io from 'socket.io-client';
+import {useSelector} from 'react-redux';
+import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 
-const initialMessages = [
-  {id: '1', text: 'Hello!', sender: 'other'},
-  {id: '2', text: 'Hi! How are you?', sender: 'me'},
-  {id: '3', text: 'I am good, thank you!', sender: 'other'},
-  {id: '4', text: 'What about you?', sender: 'other'},
-  {id: '5', text: 'I am doing well too.', sender: 'me'},
-];
-
-const Messages = ({navigation}: any) => {
-  const [messages, setMessages] = useState(initialMessages);
+const Messages = ({navigation, route}: any) => {
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const socket = io('https://13.48.250.217');
+  const user = useSelector((data: object) => data?.auth?.userData);
+  const [roomid, setRoomID] = useState(
+    route?.params?.userdata?._id + '-' + user?.user?.id,
+  );
+  const socket = io('http://13.48.250.217:3003/', {
+    withCredentials: true,
+    transports: ['websocket'],
+  });
   const handleSend = () => {
     if (newMessage.trim().length > 0) {
       const newMessageObject = {
         id: (messages.length + 1).toString(),
         text: newMessage,
-        sender: 'me',
+        sender: user?.user?.id,
       };
+
+      socket.emit('sendMessage', {
+        roomid,
+        message: newMessageObject,
+      });
+
       setMessages([...messages, newMessageObject]);
       setNewMessage('');
     }
@@ -56,15 +63,6 @@ const Messages = ({navigation}: any) => {
     navigation.goBack();
   };
 
-  const renderItem = ({item}: any) => (
-    <View
-      style={[
-        styles.messageContainer,
-        item.sender === 'me' ? styles.myMessage : styles.otherMessage,
-      ]}>
-      <Text style={styles.messageText}>{item.text}</Text>
-    </View>
-  );
   const onProfile = () => {
     setShowModal(true);
   };
@@ -76,10 +74,16 @@ const Messages = ({navigation}: any) => {
     setShowModal(false);
     navigation.navigate(NavigationStrings.EditGroup);
   };
+
   useEffect(() => {
-    socket.emit('connection');
-    console.log('A user connected:', socket);
-    socket.emit('joinRoom', 'roomId');
+    socket.on('connect', () => {
+      console.log('Connected to server');
+      socket.emit('joinRoom', roomid);
+    });
+
+    socket.on('connect_error', err => {
+      console.log('Socket connection error: ', err);
+    });
 
     socket.on('receiveMessage', newMessage => {
       setMessages(prevMessages => [...prevMessages, newMessage]);
@@ -88,7 +92,18 @@ const Messages = ({navigation}: any) => {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [roomid]);
+
+  const renderItem = ({item}: any) => (
+    <View
+      style={[
+        styles.messageContainer,
+        item.sender === user?.user?.id ? styles.myMessage : styles.otherMessage,
+      ]}>
+      <Text style={styles.messageText}>{item.text}</Text>
+    </View>
+  );
+
   return (
     <KeyboardAvoidingView
       style={{flex: 1, backgroundColor: Colors.Linear}}
@@ -116,23 +131,39 @@ const Messages = ({navigation}: any) => {
             />
             <View>
               <Text style={{...commonStyles.font16White, alignSelf: 'center'}}>
-                Mark Zakrbarg
+                {user?.user?.username}
               </Text>
               <SizeBox size={2} />
-              <Text
+              {/* <Text
                 style={{...commonStyles.font12Regular, color: Colors.greyTxt}}>
                 Last seen at 07:08 AM
-              </Text>
+              </Text> */}
             </View>
-            <TouchableOpacity onPress={onProfile}>
-              <Image
-                source={ImagePath.ProfileImg}
-                style={{
-                  width: moderateScale(40),
-                  height: moderateScaleVertical(40),
-                  borderRadius: 15,
-                }}
-              />
+            <TouchableOpacity
+
+            // onPress={onProfile}
+            >
+              {route?.params?.userdata?.pictures[0] ? (
+                <Image
+                  source={{
+                    uri: IMAGE_URL + route?.params?.userdata?.pictures[0],
+                  }}
+                  style={{
+                    width: moderateScale(40),
+                    height: moderateScaleVertical(40),
+                    borderRadius: 15,
+                  }}
+                />
+              ) : (
+                <Image
+                  source={ImagePath.ProfileImg}
+                  style={{
+                    width: moderateScale(40),
+                    height: moderateScaleVertical(40),
+                    borderRadius: 15,
+                  }}
+                />
+              )}
             </TouchableOpacity>
           </View>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

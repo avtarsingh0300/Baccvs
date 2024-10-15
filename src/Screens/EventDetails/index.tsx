@@ -57,7 +57,7 @@ const EventDetails = ({navigation, route}: any) => {
   const [eventData, setEventData] = useState({});
   const [commentvalue, setCommentValue] = useState('');
   const [commentid, setCommentId] = useState('');
-  
+
   const user = useSelector((data: object) => data?.auth?.userData);
 
   const onPressBack = () => {
@@ -117,50 +117,47 @@ const EventDetails = ({navigation, route}: any) => {
       showError('Type comments');
       return;
     }
-    const formData ={
+    const formData = {
       id: commentid,
-      user_id:user?.user?.id,
+      user_id: user?.user?.id,
       event_id: route?.params?.eventId,
-      description:commentvalue
-    }
+      description: commentvalue,
+    };
     const data = {
       user_id: user?.user?.id,
       event_id: route?.params?.eventId,
       description: commentvalue,
     };
-    if(commentid?.length>0){
+    if (commentid?.length > 0) {
       editComment(formData)
-      .then(res => {
-        setCommentValue('');
-        setCommentId('')
-        getEvent2();
-      })
-      .catch(err => {
-        setCommentValue('');
-        setCommentId('')
-        showError(err?.msg);
-        console.log(err);
-      });
-    }
-    else{
-
+        .then(res => {
+          setCommentValue('');
+          setCommentId('');
+          getEvent2();
+        })
+        .catch(err => {
+          setCommentValue('');
+          setCommentId('');
+          showError(err?.msg);
+          console.log(err);
+        });
+    } else {
       createCommets(data)
         .then(res => {
           showSuccess(res?.message);
           setCommentValue('');
-          setCommentId('')
+          setCommentId('');
           getEvent2();
           console.log(res);
         })
         .catch(err => {
           setCommentValue('');
-          setCommentId('')
+          setCommentId('');
           showError(err?.msg);
           console.log(err);
         });
     }
-  // console.log(formData)
-    
+    // console.log(formData)
   };
 
   const onLikePress = () => {
@@ -189,10 +186,9 @@ const EventDetails = ({navigation, route}: any) => {
         console.log(err);
       });
   };
-  const onEditPress = (item) => {
-    setCommentId(item?.id)
-    setCommentValue(item?.description)
-   
+  const onEditPress = item => {
+    setCommentId(item?.id);
+    setCommentValue(item?.description);
   };
 
   const calculateDuration = (startTime: string, endTime: string) => {
@@ -279,29 +275,32 @@ const EventDetails = ({navigation, route}: any) => {
           <Text style={[styles.distanceText, {marginLeft: 10, fontSize: 12}]}>
             {item?.user?.name}
           </Text>
-          <Text style={[styles.cmttxt, {marginLeft: 10}]}>
+          <Text
+            numberOfLines={2}
+            style={[styles.cmttxt, {marginLeft: 10, width: width / 1.9}]}>
             {item?.description}
           </Text>
         </View>
       </View>
-      <View style={{flexDirection:"row",alignItems:"center"}}>
-        <VectorIcon
-          groupName="Octicons"
-          name="pencil"
-          size={15}
-          color={Colors.white}
-          onPress={() => onEditPress(item)}
-        />
-  <View style={{width:7}}/>
       {item?.userId === user?.user?.id ? (
-        <VectorIcon
-          groupName="MaterialCommunityIcons"
-          name="delete"
-          size={20}
-          onPress={() => onDeletePress(item?.id)}
-        />
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <VectorIcon
+            groupName="Octicons"
+            name="pencil"
+            size={15}
+            color={Colors.white}
+            style={{marginHorizontal: 15}}
+            onPress={() => onEditPress(item)}
+          />
+
+          <VectorIcon
+            groupName="MaterialCommunityIcons"
+            name="delete"
+            size={20}
+            onPress={() => onDeletePress(item?.id)}
+          />
+        </View>
       ) : null}
-      </View>
     </View>
   );
 
@@ -666,7 +665,7 @@ const EventDetails = ({navigation, route}: any) => {
                 style={{
                   backgroundColor: Colors.white,
                   width: '90%',
-                  minHeight: 35,
+                  minHeight: 40,
                   alignSelf: 'center',
                   borderRadius: 5,
                   justifyContent: 'space-between',
@@ -678,8 +677,16 @@ const EventDetails = ({navigation, route}: any) => {
                   placeholder="Type here"
                   multiline
                   value={commentvalue}
-                onChangeText={(text: string) => {setCommentValue(text); text.length==0&& setCommentId("")}}
-                  style={{width: '90%', paddingVertical: 5,color:Colors.black,fontFamily:fontFamily.regular}}
+                  onChangeText={(text: string) => {
+                    setCommentValue(text);
+                    text.length == 0 && setCommentId('');
+                  }}
+                  style={{
+                    width: '90%',
+                    paddingVertical: 5,
+                    color: Colors.black,
+                    fontFamily: fontFamily.regular,
+                  }}
                 />
                 <VectorIcon
                   groupName="Ionicons"
