@@ -92,7 +92,8 @@ const MyEvents = ({navigation}: any) => {
                 {item?.distance}
                 {` `}
               </Text>
-              <VectorIcon groupName="Feather" name="map-pin" size={15} />
+                <VectorIcon groupName='MaterialCommunityIcons' name='delete' size={20} style={{marginRight:15}}/>
+                <VectorIcon groupName="Feather" name="map-pin" size={15} />
             </View>
           </View>
           <ImageBackground

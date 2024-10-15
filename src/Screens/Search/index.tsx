@@ -127,7 +127,8 @@ const Search = ({navigation}: any) => {
     </TouchableOpacity>
   );
   const renderDataUser = ({item}: any) => (
-    <TouchableOpacity activeOpacity={0.8}>
+    <TouchableOpacity activeOpacity={0.8} onPress={ ()=> navigation.navigate(NavigationStrings.OtherProfiles,{
+      id: item?._id})}>
       <ImageBackground
         source={
           item?.pictures?.length > 0

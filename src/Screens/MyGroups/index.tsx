@@ -29,7 +29,8 @@ const MyGroups = ({navigation, route}: any) => {
   const [showModal, setShowModal] = useState(false);
   const [loader, setLoader] = useState(false);
   const [groupData, setGroupData] = useState([]);
-  const [selectTeam, setSelectTeam] = useState([]);
+  // const [selectTeam, setSelectTeam] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(null);
   const onList = () => {
     // setShowModal(!showModal);
   };
@@ -55,28 +56,42 @@ const MyGroups = ({navigation, route}: any) => {
 
   const renderItem = useCallback(
     ({item, index}: any) => {
-      const filterData = selectTeam?.filter(i => i?._id === item?._id);
+      // const filterData = selectTeam?.filter(i => i?._id === item?._id);
+      const filterData = activeIndex === index;
+      // return (
+      //   <>
+      //     <TouchableOpacity
+      //       activeOpacity={route?.params?.name === 'Select team' ? 0.8 : 1}
+      //       style={{
+      //         backgroundColor:
+      //           filterData?.length > 0 ? '#7464A3' : Colors.tranparent,
+      //       }}
+      //       onPress={() => {
+      //         if (route?.params?.name === 'Select team') {
+      //           if (filterData?.length >0) {
+      //             const filterData = selectTeam?.filter(
+      //               i => i?._id !== item?._id,
+      //             );
+      //             setSelectTeam(filterData);
+      //           } else {
+      //             const customData = [...selectTeam, item];
+      //             setSelectTeam(customData);
+      //           }
+      //         }
+      //       }}>
       return (
         <>
-          <TouchableOpacity
-            activeOpacity={route?.params?.name === 'Select team' ? 0.8 : 1}
-            style={{
-              backgroundColor:
-                filterData?.length > 0 ? '#7464A3' : Colors.tranparent,
-            }}
-            onPress={() => {
-              if (route?.params?.name === 'Select team') {
-                if (filterData?.length > 0) {
-                  const filterData = selectTeam?.filter(
-                    i => i?._id !== item?._id,
-                  );
-                  setSelectTeam(filterData);
-                } else {
-                  const customData = [...selectTeam, item];
-                  setSelectTeam(customData);
-                }
-              }
-            }}>
+        <TouchableOpacity
+          activeOpacity={route?.params?.name === 'Select team' ? 0.8 : 1}
+          style={{
+            backgroundColor: filterData ? '#7464A3' : Colors.transparent,
+          }}
+          onPress={() => {
+            if (route?.params?.name === 'Select team') {
+              setActiveIndex(filterData ? null : index);
+            }
+          }}
+        > 
             <SizeBox size={7} />
             <FlatList
               horizontal
@@ -119,10 +134,14 @@ const MyGroups = ({navigation, route}: any) => {
           </TouchableOpacity>
           <SizeBox size={1} />
         </>
-      );
-    },
-    [selectTeam, groupData],
-  );
+);
+},
+[activeIndex, route?.params?.name]
+);
+  //     );
+  //   },
+  //   [groupData],
+  // );
 
   const renderItemm = ({index, item}: any) => (
     <View>

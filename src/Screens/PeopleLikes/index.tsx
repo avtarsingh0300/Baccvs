@@ -127,6 +127,19 @@ const PeopleLikes = ({navigation}: any) => {
       <SizeBox size={3} />
     </ImageBackground>
   );
+  const renderItemm = ({item}: any) => (
+    <ImageBackground
+      source={
+        item?.likedUserId?.pictures?.length > 0
+          ? {uri: IMAGE_URL + item?.likedUserId?.pictures[0]}
+          : ImagePath.ProfileImg
+      }
+      style={styles.imgbacks}
+      borderRadius={10}
+      blurRadius={30}>
+      <SizeBox size={3} />
+    </ImageBackground>
+  );
   const onbackPress = () => {
     navigation.goBack();
   };
@@ -176,6 +189,23 @@ const PeopleLikes = ({navigation}: any) => {
           {colors === 1 ? (
             <>
               <SizeBox size={10} />
+              <View style={{flexDirection: 'row', paddingTop: 15,alignItems:"center"}}>
+                <VectorIcon
+                  groupName="FontAwesome"
+                  name="group"
+                  size={15}
+                  color={Colors.white}
+                />
+                  <Text style={styles.crushtxt}>Group likes</Text>
+                  </View>
+              <SizeBox size={10} />
+                <FlatList
+                  data={userData?.otherLike}
+                  renderItem={renderItemm}
+                  numColumns={2}
+                  style={{alignSelf: 'center'}}
+                />
+              <SizeBox size={10} />
               <View style={{flexDirection: 'row'}}>
                 <VectorIcon
                   groupName="MaterialIcons"
@@ -187,10 +217,10 @@ const PeopleLikes = ({navigation}: any) => {
               </View>
               {userData?.crush?.length > 0 ? (
                 <FlatList
-                  data={userData?.crush}
-                  renderItem={renderData}
-                  horizontal
-                  style={{alignSelf: 'center'}}
+                data={userData?.crush}
+                renderItem={renderData}
+                horizontal
+                style={{alignSelf: 'center'}}
                 />
               ) : (
                 <>
@@ -212,10 +242,10 @@ const PeopleLikes = ({navigation}: any) => {
 
               {userData?.otherLike?.length > 0 ? (
                 <FlatList
-                  data={userData?.otherLike}
-                  renderItem={renderData1}
-                  numColumns={2}
-                  style={{alignSelf: 'center'}}
+                data={userData?.otherLike}
+                renderItem={renderData1}
+                numColumns={2}
+                style={{alignSelf: 'center'}}
                 />
               ) : (
                 <>
@@ -227,6 +257,23 @@ const PeopleLikes = ({navigation}: any) => {
             </>
           ) : (
             <View>
+                <SizeBox size={10} />
+                <View style={{flexDirection: 'row', paddingTop: 15,alignItems:"center"}}>
+                <VectorIcon
+                  groupName="FontAwesome"
+                  name="group"
+                  size={15}
+                  color={Colors.white}
+                />
+                  <Text style={styles.crushtxt}>Group likes</Text>
+                  </View>
+                <SizeBox size={10} />
+                  <FlatList
+                    data={userData?.otherLike}
+                    renderItem={renderItemm}
+                    numColumns={2}
+                    style={{alignSelf: 'center'}}
+                  />
               <View style={{flexDirection: 'row', paddingTop: 15}}>
                 <VectorIcon
                   groupName="MaterialIcons"
