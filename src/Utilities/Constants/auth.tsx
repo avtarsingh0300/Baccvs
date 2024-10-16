@@ -22,6 +22,7 @@ import {
   GET_ALL_MEET_GROUPS,
   GET_ALL_USERS,
   GET_BUYTICKET_LIST,
+  GET_DELETE_EVENT,
   GET_EVENT_TYPE,
   GET_FOLLOWER_LIST,
   GET_GROUP_PEOPLE,
@@ -241,6 +242,9 @@ export function deleteComment(iD: String) {
 }
 export function editComment(data: object) {
   return apiPost(EDIT_COMMENT, data);
+}
+export function deleteEvent(id: String) {
+  return apiGet(`${GET_DELETE_EVENT}?id=${id}`);
 }
 export function getHomedata(
   latitude: number,

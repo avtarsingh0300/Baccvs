@@ -18,13 +18,14 @@ import {
   SizeBox,
   dummydata,
   showError,
+  showSuccess,
 } from '../../Utilities/Component/Helpers';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import {height, width} from '../../Utilities/Styles/responsiveSize';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import fontFamily from '../../Utilities/Styles/fontFamily';
-import {getMyEvent} from '../../Utilities/Constants/auth';
-import {IMAGE_URL} from '../../Utilities/Constants/Urls';
+import {deleteEvent, getMyEvent} from '../../Utilities/Constants/auth';
+import { IMAGE_URL} from '../../Utilities/Constants/Urls';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 
 const MyEvents = ({navigation}: any) => {
@@ -62,6 +63,18 @@ const MyEvents = ({navigation}: any) => {
         console.log(err);
       });
   };
+ 
+  const deletePress = (id) => {
+    deleteEvent(id)
+      .then(res => {
+        getMyEvents('ongoing');
+        showSuccess(res?.message)
+      })
+      .catch(err => {
+        showError(err?.message);
+        console.log(message);
+      });
+  };
   const onbackPress = () => {
     navigation.goBack();
   };
@@ -92,7 +105,12 @@ const MyEvents = ({navigation}: any) => {
                 {item?.distance}
                 {` `}
               </Text>
-                <VectorIcon groupName='MaterialCommunityIcons' name='delete' size={20} style={{marginRight:15}}/>
+                <VectorIcon 
+                groupName='MaterialCommunityIcons'
+                name='delete'
+               size={20}
+               style={{marginRight:15}} 
+                onPress={() => deletePress(item?.id)}/>
                 <VectorIcon groupName="Feather" name="map-pin" size={15} />
             </View>
           </View>
