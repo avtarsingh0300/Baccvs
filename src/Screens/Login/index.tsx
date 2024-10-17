@@ -12,7 +12,6 @@ import {
   showError,
   showSuccess,
 } from '../../Utilities/Component/Helpers';
-import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {login, setDataHandler} from '../../Utilities/Constants/auth';
 import {Keyboard} from 'react-native';
 import {saveUserData} from '../../Redux/Action/auth';
@@ -35,12 +34,11 @@ const Login = ({navigation}: any) => {
       identifier: username,
       password: password,
     };
-    console.log(formData);
+    // console.log(formData);
     login(formData)
       .then(res => {
         setLoader(false);
-        console.log(res, 'res');
-        navigation.navigate(NavigationStrings.TabRoutes);
+        // console.log(res, 'res');
         setTimeout(() => {
           setDataHandler(res);
           saveUserData(res);

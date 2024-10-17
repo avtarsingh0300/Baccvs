@@ -34,7 +34,7 @@ const MyEvents = ({navigation}: any) => {
   const [loading, SetLoading] = useState(false);
   const [eventData, SetEventData] = useState([]);
   const user = useSelector((data: object) => data?.auth?.userData);
-  console.log(user);
+  // console.log(user);
   const handleButton = (value: any) => {
     if (value === 'missed') {
       setButton('missed');
