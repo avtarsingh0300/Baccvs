@@ -25,29 +25,31 @@ import {height, width} from '../../Utilities/Styles/responsiveSize';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import {deleteEvent, getMyEvent} from '../../Utilities/Constants/auth';
-import { IMAGE_URL} from '../../Utilities/Constants/Urls';
+import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
+import {useSelector} from 'react-redux';
 
 const MyEvents = ({navigation}: any) => {
   const [button, setButton] = useState('missed');
   const [loading, SetLoading] = useState(false);
   const [eventData, SetEventData] = useState([]);
-
+  const user = useSelector((data: object) => data?.auth?.userData);
+  console.log(user);
   const handleButton = (value: any) => {
     if (value === 'missed') {
       setButton('missed');
-      getMyEvents('missed');
+      getMyEvents('past');
     } else if (value === 'ongoing') {
       setButton('ongoing');
-      getMyEvents('ongoing');
+      getMyEvents('today');
     } else if (value === 'upcoming') {
       setButton('upcoming');
-      getMyEvents('upcoming');
+      getMyEvents('future');
     }
   };
 
   useEffect(() => {
-    getMyEvents('ongoing');
+    getMyEvents('past');
   }, []);
 
   const getMyEvents = (status: any) => {
@@ -56,19 +58,19 @@ const MyEvents = ({navigation}: any) => {
     getMyEvent(status)
       .then(res => {
         SetLoading(false);
-        SetEventData(res?.events), console.log(res?.events);
+        SetEventData(res?.events), console.log(res);
       })
       .catch(err => {
         SetLoading(false), showError(err?.message);
         console.log(err);
       });
   };
- 
-  const deletePress = (id) => {
+
+  const deletePress = id => {
     deleteEvent(id)
       .then(res => {
         getMyEvents('ongoing');
-        showSuccess(res?.message)
+        showSuccess(res?.message);
       })
       .catch(err => {
         showError(err?.message);
@@ -84,146 +86,156 @@ const MyEvents = ({navigation}: any) => {
   };
 
   const renderItem = ({item}: any) => (
-    <TouchableOpacity activeOpacity={0.8} onPress={() => onEventDetails(item)}>
-      <View>
-        <View style={styles.listContainer}>
-          <View style={styles.backContainer}>
-            <View />
-            <Text
-              style={{
-                ...commonStyles.font16Regular,
-                color: Colors.white,
-              }}>
-              {item?.event_name}
-            </Text>
-            <View style={styles.flex}>
-              <Text
-                style={{
-                  ...commonStyles.font12Regular,
-                  color: Colors.white,
-                }}>
-                {item?.distance}
-                {` `}
-              </Text>
-                <VectorIcon 
-                groupName='MaterialCommunityIcons'
-                name='delete'
-               size={20}
-               style={{marginRight:15}} 
-                onPress={() => deletePress(item?.id)}/>
-                <VectorIcon groupName="Feather" name="map-pin" size={15} />
-            </View>
-          </View>
-          <ImageBackground
-            source={{uri: IMAGE_URL + item?.thumbnail_urls[0]}}
-            style={styles.backimg}>
-            <View style={styles.flexinner}>
-              <ImageComponent
-                source={{uri: IMAGE_URL + item?.members[0]?.imageUrl}}
-                style={styles.shortimg}
-              />
-              {item?.members[1]?.imageUrl ? (
-                <ImageComponent
-                  source={{uri: IMAGE_URL + item?.members[1]?.imageUrl}}
-                  style={[
-                    styles.extraimg,
-                    {
-                      marginLeft: 5,
-                    },
-                  ]}
-                />
-              ) : null}
-
-              {item?.members[2]?.imageUrl ? (
-                <ImageComponent
-                  source={{uri: IMAGE_URL + item?.members[2]?.imageUrl}}
-                  style={[
-                    styles.extraimg,
-                    {
-                      right: 10,
-                    },
-                  ]}
-                />
-              ) : null}
-
-              {item?.members?.length > 3 ? (
-                <Text
-                  style={{
-                    ...commonStyles.font16Regular,
-                    alignSelf: 'flex-end',
-                    color: Colors.white,
-                  }}>
-                  +{item?.members?.length - 3}
-                </Text>
-              ) : null}
-            </View>
-            <TouchableOpacity style={styles.liktxtcon}>
-              <Text style={styles.likestxt}>{item.like_count} Likes </Text>
-              <Image source={ImagePath.likes} style={styles.likeimg} />
-            </TouchableOpacity>
-          </ImageBackground>
+    <View>
+      <View style={styles.backContainer}>
+        <View />
+        <Text
+          style={{
+            ...commonStyles.font16Regular,
+            color: Colors.white,
+          }}>
+          {item?.event_name}
+        </Text>
+        <View style={styles.flex}>
+          <Text
+            style={{
+              ...commonStyles.font12Regular,
+              color: Colors.white,
+            }}>
+            {item?.distance}
+          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              deletePress(item?.id);
+            }}>
+            <VectorIcon
+              groupName="MaterialCommunityIcons"
+              name="delete"
+              size={30}
+              style={{marginRight: 15}}
+              onPress={() => {
+                deletePress(item?.id);
+              }}
+            />
+          </TouchableOpacity>
+          {/* <VectorIcon groupName="Feather" name="map-pin" size={15} /> */}
         </View>
-        <SizeBox size={14} />
-        <View style={{paddingHorizontal: 15}}>
-          <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <ImageComponent
-                source={ImagePath.priceTag}
-                resizeMode="contain"
-                style={styles.tag}
-              />
-              <Text
-                style={{
-                  ...commonStyles.font14,
-                  fontFamily: fontFamily.time_bold,
-                }}>
-                {` `}
-                {item?.regular_price} €
-              </Text>
-            </View>
-            <Text style={styles.ontxt}>
-              Ongoing{` `}
-              <Text
-                style={{
-                  color: Colors.white,
-                }}>
-                - {item?.duration}
-              </Text>
-            </Text>
-          </View>
-          <View style={styles.backContainer}>
-            <View style={styles.flex}>
-              <VectorIcon groupName="Feather" name="users" size={15} />
-              <Text
-                style={{
-                  ...commonStyles.font12Regular,
-                  color: Colors.lightorange,
-                }}>
-                {` `}
-                {item?.spot} spots
-              </Text>
-            </View>
-            <Text
-              style={{
-                ...commonStyles.font14Center,
-                color: Colors.white,
-              }}>
-              Party - Afterparty
-            </Text>
-          </View>
-        </View>
-        <FlatList
-          data={item.music_type}
-          horizontal
-          style={{paddingHorizontal: 15}}
-          renderItem={({item}) => (
-            <View style={styles.music}>
-              <Text style={styles.musictxt}>{item}</Text>
-            </View>
-          )}
-        />
       </View>
-    </TouchableOpacity>
+
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() => onEventDetails(item)}
+        style={styles.listContainer}>
+        <ImageBackground
+          source={{uri: IMAGE_URL + item?.thumbnail_urls[0]}}
+          style={styles.backimg}>
+          <View style={styles.flexinner}>
+            <ImageComponent
+              source={{uri: IMAGE_URL + item?.members[0]?.imageUrl}}
+              style={styles.shortimg}
+            />
+            {item?.members[1]?.imageUrl ? (
+              <ImageComponent
+                source={{uri: IMAGE_URL + item?.members[1]?.imageUrl}}
+                style={[
+                  styles.extraimg,
+                  {
+                    marginLeft: 5,
+                  },
+                ]}
+              />
+            ) : null}
+
+            {item?.members[2]?.imageUrl ? (
+              <ImageComponent
+                source={{uri: IMAGE_URL + item?.members[2]?.imageUrl}}
+                style={[
+                  styles.extraimg,
+                  {
+                    right: 10,
+                  },
+                ]}
+              />
+            ) : null}
+
+            {item?.members?.length > 3 ? (
+              <Text
+                style={{
+                  ...commonStyles.font16Regular,
+                  alignSelf: 'flex-end',
+                  color: Colors.white,
+                }}>
+                +{item?.members?.length - 3}
+              </Text>
+            ) : null}
+          </View>
+          <TouchableOpacity style={styles.liktxtcon}>
+            <Text style={styles.likestxt}>{item.like_count} Likes </Text>
+            <Image source={ImagePath.likes} style={styles.likeimg} />
+          </TouchableOpacity>
+        </ImageBackground>
+      </TouchableOpacity>
+      <SizeBox size={14} />
+      <View style={{paddingHorizontal: 15}}>
+        <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <ImageComponent
+              source={ImagePath.priceTag}
+              resizeMode="contain"
+              style={styles.tag}
+            />
+            <Text
+              style={{
+                ...commonStyles.font14,
+                fontFamily: fontFamily.time_bold,
+              }}>
+              {` `}
+              {item?.regular_price} €
+            </Text>
+          </View>
+          <Text style={styles.ontxt}>
+            Ongoing{` `}
+            <Text
+              style={{
+                color: Colors.white,
+              }}>
+              - {item?.duration}
+            </Text>
+          </Text>
+        </View>
+        <View style={styles.backContainer}>
+          <View style={styles.flex}>
+            <VectorIcon groupName="Feather" name="users" size={15} />
+            <Text
+              style={{
+                ...commonStyles.font12Regular,
+                color: Colors.lightorange,
+              }}>
+              {` `}
+              {item?.spot} spots
+            </Text>
+          </View>
+          <Text
+            style={{
+              ...commonStyles.font14Center,
+              color: Colors.white,
+            }}>
+            Party - Afterparty
+          </Text>
+        </View>
+      </View>
+      <FlatList
+        data={item.music_type}
+        horizontal
+        style={{paddingHorizontal: 15}}
+        renderItem={({item}) => (
+          <View style={styles.music}>
+            <Text style={styles.musictxt}>{item}</Text>
+          </View>
+        )}
+      />
+      {/* </TouchableOpacity> */}
+    </View>
   );
 
   return (

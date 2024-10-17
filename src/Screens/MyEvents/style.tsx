@@ -48,14 +48,14 @@ const styles = StyleSheet.create({
   listContainer: {
     justifyContent: 'center',
     paddingHorizontal: moderateScale(10),
-    marginTop: moderateScaleVertical(40),
+    marginTop: moderateScaleVertical(10),
     height: height / 3.5,
   },
   backContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: moderateScaleVertical(10),
+    marginVertical: moderateScaleVertical(20),
   },
   tag: {
     width: moderateScale(19),
