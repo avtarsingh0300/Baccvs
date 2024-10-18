@@ -3,8 +3,8 @@ import {
   ImageBackground,
   SafeAreaView,
   ScrollView,
-  StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
@@ -16,10 +16,11 @@ import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import {getUserForLike, getUserLikes} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 
 const PeopleLikes = ({navigation}: any) => {
   const [colors, setColors] = useState(0);
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState<any>({});
   const [loader, setLoader] = useState(false);
 
   useEffect(() => {
@@ -30,7 +31,7 @@ const PeopleLikes = ({navigation}: any) => {
     setLoader(true);
     if (colors != 1) {
       getUserLikes()
-        .then(res => {
+        .then((res: any) => {
           console.log(res, 'res in getUserLikes');
           setUserData(res?.data);
           setLoader(false);
@@ -41,7 +42,7 @@ const PeopleLikes = ({navigation}: any) => {
         });
     } else {
       getUserForLike()
-        .then(res => {
+        .then((res: any) => {
           console.log(res, 'res in getUserForLike');
           setUserData(res?.data);
           setLoader(false);
@@ -54,111 +55,152 @@ const PeopleLikes = ({navigation}: any) => {
   };
 
   const renderData = ({item}: any) => (
-    <ImageBackground
-      source={{uri: IMAGE_URL + item?.likedUserId?.pictures[0]}}
-      style={styles.imgbacks}
-      borderRadius={10}
-      blurRadius={30}>
-      <SizeBox size={3} />
-      <Text style={styles.kingson}>{item?.likedUserId?.username}</Text>
-    </ImageBackground>
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={() => {
+        navigation.navigate(NavigationStrings.DatingUserProfile, {
+          id: item?.likedUserId?._id,
+        });
+      }}>
+      <ImageBackground
+        source={{uri: IMAGE_URL + item?.likedUserId?.pictures[0]}}
+        style={styles.imgbacks}
+        borderRadius={10}>
+        <SizeBox size={3} />
+        <Text style={styles.kingson}>{item?.likedUserId?.username}</Text>
+      </ImageBackground>
+    </TouchableOpacity>
   );
   const renderData1 = ({item}: any) => (
     // console.log(item, 'item'),
-    <ImageBackground
-      source={
-        item?.userId?.pictures?.length > 0
-          ? {uri: IMAGE_URL + item?.userId?.pictures[0]}
-          : ImagePath.ProfileImg
-      }
-      style={styles.imgbacks}
-      borderRadius={10}
-      blurRadius={30}>
-      <SizeBox size={3} />
-      <Text style={styles.kingson}>{item?.userId?.username}</Text>
-    </ImageBackground>
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={() => {
+        navigation.navigate(NavigationStrings.DatingUserProfile, {
+          id: item?.likedUserId,
+        });
+      }}>
+      <ImageBackground
+        source={
+          item?.userId?.pictures?.length > 0
+            ? {uri: IMAGE_URL + item?.userId?.pictures[0]}
+            : ImagePath.ProfileImg
+        }
+        style={styles.imgbacks}
+        borderRadius={10}>
+        <SizeBox size={3} />
+        <Text style={styles.kingson}>{item?.userId?.username}</Text>
+      </ImageBackground>
+    </TouchableOpacity>
   );
   const renderItem = ({item}: any) => (
-    <ImageBackground
-      source={
-        item?.likedUserId?.pictures?.length > 0
-          ? {uri: IMAGE_URL + item?.likedUserId?.pictures[0]}
-          : ImagePath.ProfileImg
-      }
-      style={styles.imgback}
-      borderRadius={10}
-      blurRadius={30}>
-      <SizeBox size={3} />
-      <Text style={styles.leilani}>
-        {item?.likedUserId?.username}, {item?.likedUserId?.age}
-      </Text>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          position: 'absolute',
-          bottom: -1,
-        }}>
-        <ImageBackground
-          source={ImagePath.blurpic}
-          style={styles.blurimg}
-          borderBottomRightRadius={10}
-          borderBottomLeftRadius={10}>
-          <View
-            style={{
-              borderRightWidth: 1,
-              borderColor: Colors.white,
-              width: '50%',
-            }}>
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={() => {
+        navigation.navigate(NavigationStrings.DatingUserProfile, {
+          id: item?.likedUserId?._id,
+        });
+      }}>
+      <ImageBackground
+        source={
+          item?.likedUserId?.pictures?.length > 0
+            ? {uri: IMAGE_URL + item?.likedUserId?.pictures[0]}
+            : ImagePath.ProfileImg
+        }
+        style={styles.imgback}
+        borderRadius={10}>
+        <SizeBox size={3} />
+        <Text style={styles.leilani}>
+          {item?.likedUserId?.username}, {item?.likedUserId?.age}
+        </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            position: 'absolute',
+            bottom: -1,
+          }}>
+          <ImageBackground
+            source={ImagePath.blurpic}
+            style={styles.blurimg}
+            borderBottomRightRadius={10}
+            borderBottomLeftRadius={10}>
+            <View
+              style={{
+                borderRightWidth: 1,
+                borderColor: Colors.white,
+                width: '50%',
+              }}>
+              <VectorIcon
+                groupName="Entypo"
+                name="cross"
+                size={25}
+                color={Colors.red}
+              />
+            </View>
             <VectorIcon
-              groupName="Entypo"
-              name="cross"
-              size={25}
-              color={Colors.red}
+              groupName="Foundation"
+              name="heart"
+              size={20}
+              color={Colors.green}
             />
-          </View>
-          <VectorIcon
-            groupName="Foundation"
-            name="heart"
-            size={20}
-            color={Colors.green}
-          />
-        </ImageBackground>
-      </View>
-    </ImageBackground>
+          </ImageBackground>
+        </View>
+      </ImageBackground>
+    </TouchableOpacity>
   );
   const renderItem1 = ({item}: any) => (
     // console.log(item, 'item'),
-    <ImageBackground
-      source={
-        item?.likedUserId?.pictures?.length > 0
-          ? {uri: IMAGE_URL + item?.likedUserId?.pictures[0]}
-          : ImagePath.ProfileImg
-      }
-      style={styles.imgbacks}
-      borderRadius={10}
-      blurRadius={30}>
-      <SizeBox size={3} />
-    </ImageBackground>
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={() => {
+        navigation.navigate(NavigationStrings.DatingUserProfile, {
+          id: item?.likedUserId?._id,
+        });
+      }}>
+      <ImageBackground
+        source={
+          item?.likedUserId?.pictures?.length > 0
+            ? {uri: IMAGE_URL + item?.likedUserId?.pictures[0]}
+            : ImagePath.ProfileImg
+        }
+        style={styles.imgbacks}
+        borderRadius={10}>
+        <SizeBox size={3} />
+      </ImageBackground>
+    </TouchableOpacity>
   );
   const renderItemm = ({item}: any) => (
-    <ImageBackground
-      source={
-        item?.likedUserId?.pictures?.length > 0 ||
-        item?.groupId?.image?.length > 0
-          ? {
-              uri:
-                IMAGE_URL + item?.likedUserId?.pictures[0]
-                  ? item?.likedUserId?.pictures[0]
-                  : item?.groupId?.image[0],
-            }
-          : ImagePath.ProfileImg
-      }
-      style={styles.imgbacks}
-      borderRadius={10}
-      blurRadius={30}>
-      <SizeBox size={3} />
-    </ImageBackground>
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={() => {
+        if (item?.groupId) {
+          navigation.navigate(NavigationStrings.GrroupDeatils, {
+            data: item?.groupId,
+          });
+        } else {
+          navigation.navigate(NavigationStrings.DatingUserProfile, {
+            id: item?.likedUserId?._id,
+          });
+        }
+      }}>
+      <ImageBackground
+        source={
+          item?.likedUserId?.pictures?.length > 0 ||
+          item?.groupId?.image?.length > 0
+            ? {
+                uri:
+                  IMAGE_URL + item?.likedUserId?.pictures[0]
+                    ? item?.likedUserId?.pictures[0]
+                    : item?.groupId?.image[0],
+              }
+            : ImagePath.ProfileImg
+        }
+        style={styles.imgbacks}
+        borderRadius={10}>
+        <SizeBox size={3} />
+      </ImageBackground>
+    </TouchableOpacity>
   );
   const onbackPress = () => {
     navigation.goBack();

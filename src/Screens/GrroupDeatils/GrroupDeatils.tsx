@@ -50,6 +50,7 @@ const GrroupDeatils = ({navigation, route}: any) => {
     const data = {
       groupId: route.params?.data?._id,
     };
+    // console.log(data, 'data');
     teamsDetails(data)
       .then(res => {
         console.log(JSON.stringify(res), 'res in teamsDetails');

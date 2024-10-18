@@ -5,7 +5,6 @@ import {Colors} from '../../Utilities/Styles/colors';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import styles from './style';
 import {
-  Header,
   Loadingcomponent,
   SizeBox,
   showError,
@@ -25,7 +24,7 @@ import VectorIcon from '../../Utilities/Component/vectorIcons';
 import {useSelector} from 'react-redux';
 
 const Invites = ({navigation}: any) => {
-  const user = useSelector((data: object) => data?.auth?.userData);
+  const user = useSelector((data: any) => data?.auth?.userData);
   const [button, setButton] = useState('R');
   const [recdata, setRecdata] = useState([]);
   const [sendata, setSenddata] = useState([]);
@@ -46,7 +45,11 @@ const Invites = ({navigation}: any) => {
   const getInvites = () => {
     setLoader(true);
     getInvitesList()
-      .then(res => {
+      .then((res: any) => {
+        console.log(
+          res?.pagination?.received?.data,
+          'res?.pagination?.received?.data',
+        );
         setLoader(false);
         setRecdata(res?.pagination?.received?.data);
         setSenddata(res?.pagination?.sent?.data);
@@ -67,6 +70,7 @@ const Invites = ({navigation}: any) => {
     };
     inviteAccpet(data)
       .then(res => {
+        // console.log(res, 'res');
         showSuccess('Invite accepted!!');
         getInvites();
       })
@@ -93,7 +97,7 @@ const Invites = ({navigation}: any) => {
   };
   const onCancel = (item: any) => {
     const data = {
-      invite_id: item?._id,
+      InviteId: item?._id,
     };
     cancelInvites(data)
       .then(res => {
@@ -130,6 +134,16 @@ const Invites = ({navigation}: any) => {
             <Text style={styles.btntxt}>Accept</Text>
           </LinearGradient>
         </TouchableOpacity>
+        {/* {item?.accepted == 'yes' && (
+          <LinearGradient
+            colors={[Colors.backgroundNew, Colors.backgroundNew]}
+            style={[
+              styles.acbtn,
+              {borderWidth: 1, borderColor: Colors.lightPink},
+            ]}>
+            <Text style={styles.btntxt}>Accepted</Text>
+          </LinearGradient>
+        )} */}
         <SizeBox size={2} />
         <TouchableOpacity onPress={() => onRefuse(item)}>
           <LinearGradient
@@ -145,6 +159,7 @@ const Invites = ({navigation}: any) => {
     </View>
   );
   const renderItemm = ({item}: any) => (
+    // console.log(item, 'item'),
     <View style={[styles.flex, {}]}>
       {item?.image ? (
         <Image source={ImagePath.ProfileImg} style={styles.userimg} />
