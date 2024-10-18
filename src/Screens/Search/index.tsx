@@ -71,9 +71,7 @@ const Search = ({navigation}: any) => {
       style={styles.imgback}
       borderRadius={5}>
       <SizeBox size={3} />
-      <Text style={styles.phantom} >
-        Le Phantom
-      </Text>
+      <Text style={styles.phantom}>Le Phantom</Text>
       <View style={styles.vectoricons}>
         <VectorIcon
           groupName="Fontisto"
@@ -127,8 +125,13 @@ const Search = ({navigation}: any) => {
     </TouchableOpacity>
   );
   const renderDataUser = ({item}: any) => (
-    <TouchableOpacity activeOpacity={0.8} onPress={ ()=> navigation.navigate(NavigationStrings.OtherProfiles,{
-      id: item?._id})}>
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={() =>
+        navigation.navigate(NavigationStrings.OtherProfiles, {
+          id: item?._id,
+        })
+      }>
       <ImageBackground
         source={
           item?.pictures?.length > 0
@@ -221,29 +224,37 @@ const Search = ({navigation}: any) => {
   );
 
   const renderOrganiser = ({item, index}: any) => (
-    <ImageBackground
-      source={{uri: IMAGE_URL + item?.pictures[0]}}
-      borderRadius={5}
-      style={styles.imgback}>
-      <SizeBox size={3} />
-      <View style={styles.vectoricons}>
-        <VectorIcon
-          groupName="Fontisto"
-          name="heart-alt"
-          color={Colors.green}
-          size={25}
-        />
-        <View style={styles.vectortext}>
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={() => {
+        navigation.navigate(NavigationStrings.EventDetails, {
+          eventId: item?._id,
+        });
+      }}>
+      <ImageBackground
+        source={{uri: IMAGE_URL + item?.pictures[0]}}
+        borderRadius={5}
+        style={styles.imgback}>
+        <SizeBox size={3} />
+        <View style={styles.vectoricons}>
           <VectorIcon
-            groupName="AntDesign"
-            name="star"
-            color={Colors.yellow}
-            size={15}
+            groupName="Fontisto"
+            name="heart-alt"
+            color={Colors.green}
+            size={25}
           />
-          <Text style={styles.textnumber}>{`  `}4,7</Text>
+          <View style={styles.vectortext}>
+            <VectorIcon
+              groupName="AntDesign"
+              name="star"
+              color={Colors.yellow}
+              size={15}
+            />
+            <Text style={styles.textnumber}>{`  `}4,7</Text>
+          </View>
         </View>
-      </View>
-    </ImageBackground>
+      </ImageBackground>
+    </TouchableOpacity>
   );
 
   return (
@@ -388,7 +399,9 @@ const Search = ({navigation}: any) => {
           <View style={styles.nightclubs}>
             {searchData?.events?.length > 0 && (
               <View style={styles.flexview}>
-                <Text style={styles.headingtext} onPress={onContinue}>Event Organisers</Text>
+                <Text style={styles.headingtext} onPress={onContinue}>
+                  Event Organisers
+                </Text>
                 <TouchableOpacity
                   style={styles.showmore}
                   onPress={() =>

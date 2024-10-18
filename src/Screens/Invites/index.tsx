@@ -82,7 +82,7 @@ const Invites = ({navigation}: any) => {
   };
   const onRefuse = (item: any) => {
     const data = {
-      invite_id: item?._id,
+      InviteId: item?._id,
     };
     inviteRefuse(data)
       .then(res => {
@@ -127,14 +127,16 @@ const Invites = ({navigation}: any) => {
         </TouchableOpacity>
       </View>
       <View>
-        <TouchableOpacity onPress={() => onAccept(item)}>
-          <LinearGradient
-            colors={[Colors.btnLinear2, Colors.btnLinear2]}
-            style={styles.acbtn}>
-            <Text style={styles.btntxt}>Accept</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-        {/* {item?.accepted == 'yes' && (
+        {item?.accepted != 'yes' && (
+          <TouchableOpacity onPress={() => onAccept(item)}>
+            <LinearGradient
+              colors={[Colors.btnLinear2, Colors.btnLinear2]}
+              style={styles.acbtn}>
+              <Text style={styles.btntxt}>Accept</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        )}
+        {item?.accepted == 'yes' && (
           <LinearGradient
             colors={[Colors.backgroundNew, Colors.backgroundNew]}
             style={[
@@ -143,18 +145,20 @@ const Invites = ({navigation}: any) => {
             ]}>
             <Text style={styles.btntxt}>Accepted</Text>
           </LinearGradient>
-        )} */}
+        )}
         <SizeBox size={2} />
-        <TouchableOpacity onPress={() => onRefuse(item)}>
-          <LinearGradient
-            colors={[Colors.backgroundNew, Colors.backgroundNew]}
-            style={[
-              styles.acbtn,
-              {borderWidth: 1, borderColor: Colors.lightPink},
-            ]}>
-            <Text style={styles.btntxt}>Refuse</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+        {item?.accepted != 'yes' && (
+          <TouchableOpacity onPress={() => onRefuse(item)}>
+            <LinearGradient
+              colors={[Colors.backgroundNew, Colors.backgroundNew]}
+              style={[
+                styles.acbtn,
+                {borderWidth: 1, borderColor: Colors.lightPink},
+              ]}>
+              <Text style={styles.btntxt}>Refuse</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -190,7 +194,7 @@ const Invites = ({navigation}: any) => {
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.conatiner}>
-      <SafeAreaView>
+      <SafeAreaView style={{flex: 1}}>
         <Loadingcomponent isVisible={loader} />
         <SizeBox size={10} />
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -225,7 +229,6 @@ const Invites = ({navigation}: any) => {
           </Text>
         </View>
         <SizeBox size={15} />
-
         {button === 'R' ? (
           <>
             {recdata?.length > 0 ? (
@@ -234,6 +237,7 @@ const Invites = ({navigation}: any) => {
                 renderItem={renderItem}
                 keyExtractor={(item, index) => index?.toString()}
                 showsVerticalScrollIndicator={false}
+                ListFooterComponent={() => <SizeBox size={10} />}
               />
             ) : (
               <Text
@@ -250,6 +254,7 @@ const Invites = ({navigation}: any) => {
                 renderItem={renderItemm}
                 keyExtractor={(item, index) => index?.toString()}
                 showsVerticalScrollIndicator={false}
+                ListFooterComponent={() => <SizeBox size={10} />}
               />
             ) : (
               <Text
