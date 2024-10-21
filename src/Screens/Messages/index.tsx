@@ -34,6 +34,7 @@ const Messages = ({navigation, route}: any) => {
   const [newMessage, setNewMessage] = useState('');
   const [showModal, setShowModal] = useState(false);
   const user = useSelector((data: object) => data?.auth?.userData);
+  console.log(route?.params?.userdata);
   const [roomid, setRoomID] = useState(
     route?.params?.userdata?._id + '-' + user?.user?.id,
   );
@@ -130,8 +131,13 @@ const Messages = ({navigation, route}: any) => {
               onPress={onGoBack}
             />
             <View>
-              <Text style={{...commonStyles.font16White, alignSelf: 'center'}}>
-                {user?.user?.username}
+              <Text
+                style={{
+                  ...commonStyles.font16White,
+                  alignSelf: 'center',
+                  color: Colors.white,
+                }}>
+                {route?.params?.userdata?.username}
               </Text>
               <SizeBox size={2} />
               {/* <Text

@@ -185,7 +185,7 @@ export function getMyEvent(status: string) {
   return apiGet(`${GET_MY_EVENT}?filter=${status}`);
 }
 export function getAllUsers() {
-  return apiGet(`${GET_ALL_USERS}`);
+  return apiGet(`${GET_ALL_USERS}?page=1&limit=100`);
 }
 export function getUserLikes() {
   return apiGet(`${GET_USER_LIKES}`);

@@ -52,6 +52,7 @@ const UploadImage = (props: any) => {
       phone_number: data.phone_number,
       pictures: pictures,
       videos: pictures,
+      type: 'user',
     };
 
     const formData2 = {

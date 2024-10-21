@@ -75,8 +75,9 @@ const RegisterScreen = (props: any) => {
       bio: userBio,
       language: selectedLang,
       password: userPassword,
-      phone_number: props.route.params.phone,
+      phone_number: props?.route?.params?.phone,
     };
+
     props.navigation.navigate(NavigationStrings.UploadImage, {data: data});
   };
 
@@ -245,11 +246,7 @@ const RegisterScreen = (props: any) => {
                       const filterData = selectedLang?.filter(
                         (i: any) => i == item?.name,
                       );
-                      console.log(
-                        (selectedGender || filterData[0]) ==
-                          (item?.name ? item?.name : item),
-                        '(selectedGender || filterData[0]) == (item?.name ? item?.name : item)',
-                      );
+
                       return (
                         <TouchableOpacity
                           activeOpacity={0.8}
@@ -280,8 +277,7 @@ const RegisterScreen = (props: any) => {
                           <VectorIcon
                             groupName="MaterialCommunityIcons"
                             name={
-                              (selectedGender || filterData[0]) ==
-                              (item?.name ? item?.name : item)
+                              filterData[0] == (item?.name ? item?.name : item)
                                 ? 'radiobox-marked'
                                 : 'radiobox-blank'
                             }
