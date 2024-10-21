@@ -4,14 +4,12 @@ import {
   SafeAreaView,
   Image,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   ScrollView,
   FlatList,
   TextInput,
-  Alert,
   ImageBackground,
 } from 'react-native';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import {
   height,
@@ -32,8 +30,6 @@ import {
   createMeetGroup,
   getEventTypes,
   getFollowerList,
-  getGroupPeople,
-  getMusicTypeList,
 } from '../../Utilities/Constants/auth';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import Modal from 'react-native-modal';
@@ -42,7 +38,6 @@ import styles from './style';
 import ImagePicker from 'react-native-image-crop-picker';
 import languages from '../../Utilities/Constants';
 import uuid from 'react-native-uuid';
-import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 
 const CreateGroup = ({navigation}: any) => {
   const [musicStyle, setMusicStyle] = useState([]);
@@ -130,7 +125,7 @@ const CreateGroup = ({navigation}: any) => {
 
   const getEventsTypes = () => {
     getEventTypes()
-      .then(res => {
+      .then((res: any) => {
         setMusicStyle(res?.musictype);
         setInterestType(res?.interesttype);
         setLoader(false);
@@ -143,7 +138,7 @@ const CreateGroup = ({navigation}: any) => {
 
   const getFollower = () => {
     getFollowerList()
-      .then(res => {
+      .then((res: any) => {
         setMembers(res?.followers);
         setLoader(false);
       })
@@ -214,9 +209,9 @@ const CreateGroup = ({navigation}: any) => {
     }
   };
 
-  const removeImg = id => {
+  const removeImg = (id: any) => {
     setSelectedImages(prevImages =>
-      prevImages.filter(image => image?.id !== id),
+      prevImages.filter((image: any) => image?.id !== id),
     );
   };
 

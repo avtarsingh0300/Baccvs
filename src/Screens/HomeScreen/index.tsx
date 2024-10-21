@@ -19,14 +19,12 @@ import {
   ImageComponent,
   Loadingcomponent,
   SizeBox,
-  dummydata,
   showError,
 } from '../../Utilities/Component/Helpers';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import {
   height,
   moderateScale,
-  moderateScaleVertical,
   width,
 } from '../../Utilities/Styles/responsiveSize';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
@@ -39,7 +37,6 @@ import Geolocation from '@react-native-community/geolocation';
 import {getHomedata, likeEvents} from '../../Utilities/Constants/auth';
 import Modal from 'react-native-modal';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
-import {saveUserData} from '../../Redux/Action/auth';
 import {useSelector} from 'react-redux';
 const HomeScreen = ({navigation}: any) => {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -54,7 +51,7 @@ const HomeScreen = ({navigation}: any) => {
   const [selectedOption, setSelectedOption] = useState('all');
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
-  const user = useSelector((data: object) => data?.auth?.userData?.user);
+  const user = useSelector((data: any) => data?.auth?.userData?.user);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -146,7 +143,7 @@ const HomeScreen = ({navigation}: any) => {
 
   const getLocation = () => {
     Geolocation.getCurrentPosition(
-      position => {
+      (position: any) => {
         SetLoading(true);
         setLocation(position);
         setLat(position.coords.latitude);
@@ -171,7 +168,7 @@ const HomeScreen = ({navigation}: any) => {
   const getdata = (lat: any, long: any, status: any) => {
     SetLoading(true);
     getHomedata(lat, long, status ? status : selectedOption)
-      .then(res => {
+      .then((res: any) => {
         SetLoading(false);
         SetEventData(res.events);
 
@@ -186,7 +183,7 @@ const HomeScreen = ({navigation}: any) => {
   const getdata2 = (lat: any, long: any) => {
     SetLoading(false);
     getHomedata(lat, long, selectedOption)
-      .then(res => {
+      .then((res: any) => {
         SetLoading(false);
         SetEventData(res.events);
 
@@ -420,12 +417,12 @@ const HomeScreen = ({navigation}: any) => {
               <View style={styles.itemRow} key={index}>
                 {dates?.map((item, dateIndex) => {
                   const isActive =
-                    value.toDateString() === item?.date?.toDateString();
+                    value?.toDateString() === item?.date?.toDateString();
                   return (
                     <TouchableWithoutFeedback
                       key={dateIndex}
                       onPress={() => {
-                        setValue(item?.date), console.log(item.date);
+                        setValue(item?.date);
                       }}>
                       <LinearGradient
                         colors={[
@@ -439,7 +436,7 @@ const HomeScreen = ({navigation}: any) => {
                               styles.itemDate,
                               isActive && {color: Colors.white},
                             ]}>
-                            {item.date.getDate()}
+                            {item?.date?.getDate()}
                           </Text>
                           <Text
                             style={[

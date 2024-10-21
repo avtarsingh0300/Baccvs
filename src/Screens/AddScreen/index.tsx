@@ -8,7 +8,6 @@ import {
   ScrollView,
   FlatList,
   TextInput,
-  Alert,
 } from 'react-native';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import commonStyles from '../../Utilities/Styles/commonStyles';
@@ -32,17 +31,15 @@ import {getEventTypes} from '../../Utilities/Constants/auth';
 import languages from '../../Utilities/Constants';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import Modal from 'react-native-modal';
-
-import DateTimePicker from '@react-native-community/datetimepicker';
 import Geolocation from '@react-native-community/geolocation';
 import Geocoder from 'react-native-geocoding';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 Geocoder.init('AIzaSyA-WTLYCwUjh4ffr-NkzBJnVHv6NEaHYSc');
+
 const AddScreen = ({navigation}: any) => {
   const swiper: any = useRef();
-
   const [value, setValue] = useState(new Date());
   const [week, setWeek] = useState(0);
   const [musicStyle, setMusicStyle] = useState([]);
@@ -53,7 +50,6 @@ const AddScreen = ({navigation}: any) => {
   const [selectedMusic, setSelectedMusic] = useState([]);
   const [selectedEventType, setselectedEventType] = useState([]);
   const [selectedVenue, setSelectedVenue] = useState([]);
-
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
   const [startTime, setStartTime] = useState('');
@@ -67,7 +63,6 @@ const AddScreen = ({navigation}: any) => {
   const [eventname, setEventname] = useState('');
   const [phone, setPhone] = useState('');
   const [numpeople, setNumPeople] = useState('');
-
   const [bio, setBio] = useState('');
   const [charges, setCharges] = useState('');
 
@@ -153,7 +148,7 @@ const AddScreen = ({navigation}: any) => {
         setMusicStyle(res?.musictype);
         setEventType(res?.eventtype);
         setVenueType(res?.venuetype);
-        console.log(res, 'ressss');
+        // console.log(res, 'ressss');
       })
       .catch(err => {
         showError(err?.message), console.log(err);
@@ -231,7 +226,7 @@ const AddScreen = ({navigation}: any) => {
     Geolocation.getCurrentPosition(
       position => {
         setUserLocation(position?.coords);
-        console.log(position, 'hghg');
+        // console.log(position, 'hghg');
       },
       error => {
         console.log(error.code, error.message, 'jiwhd');
@@ -388,7 +383,6 @@ const AddScreen = ({navigation}: any) => {
               {moment(value).format('DD MMMM YYYY')}
             </Text>
           </View>
-
           <SizeBox size={10} />
           <View style={styles.timecon}>
             <TouchableOpacity onPress={showDatePicker} style={styles.startbtn}>
@@ -467,7 +461,6 @@ const AddScreen = ({navigation}: any) => {
                 placeholder="People Capacity"
               />
             </View>
-
             <SizeBox size={10} />
             <View style={[styles.cardBtn, {padding: 0, paddingHorizontal: 10}]}>
               <Image
@@ -492,7 +485,6 @@ const AddScreen = ({navigation}: any) => {
                 placeholder="Free / Chargeable"
               />
             </View>
-
             <SizeBox size={10} />
             <TouchableOpacity
               style={styles.cardBtn}
@@ -533,7 +525,6 @@ const AddScreen = ({navigation}: any) => {
               ))}
             </TouchableOpacity>
             <SizeBox size={10} />
-
             <Text
               style={{
                 ...commonStyles.font16Regular,
@@ -576,7 +567,7 @@ const AddScreen = ({navigation}: any) => {
                 );
               }}
               numColumns={3}
-              tractor={item => item._id.toString()}
+              tractor={(item: any) => item._id.toString()}
             />
             <SizeBox size={10} />
             <Text

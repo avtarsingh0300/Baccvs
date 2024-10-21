@@ -38,29 +38,15 @@ const EditSocialProfile = () => {
 
   const getEventsTypes = () => {
     getEventTypes()
-      .then(res => {
+      .then((res: any) => {
         setMusicStyle(res?.musictype);
         setInterestType(res?.interesttype);
-        console.log(res, 'ressss');
+        // console.log(res, 'ressss');
       })
       .catch(err => {
         showError(err?.message), console.log(err);
       });
   };
-
-  //   const getEventsTypes = () => {
-  //     getMusicTypeList()
-  //       .then(res => {
-  //         // console.log(res, 'res in ghetkdfjkdbn');
-  //         setMusicStyle(res);
-  //         // setLoader(false);
-  //       })
-  //       .catch(err => {
-  //         // setLoader(false);
-  //         showError(err?.message);
-  //         console.log(err);
-  //       });
-  //   };
 
   const renderItem = ({item}: any) => (
     <TouchableOpacity activeOpacity={0.8} onPress={() => {}}>
@@ -159,7 +145,7 @@ const EditSocialProfile = () => {
             numColumns={3}
             renderItem={({item, index}) => (
               <>
-                {data.length - 1 != index ? (
+                {data?.length - 1 != index ? (
                   <ImageBackground
                     style={styles.userMoreImages}
                     borderRadius={5}
@@ -213,6 +199,7 @@ const EditSocialProfile = () => {
             multiline={true}
             value={userBio}
             onChangeText={(e: string) => setUserBio(e)}
+            styless={{}}
           />
           <SizeBox size={15} />
           <Text style={[styles.label, {color: Colors.white, marginLeft: 10}]}>
@@ -223,7 +210,7 @@ const EditSocialProfile = () => {
             data={musicStyle}
             keyExtractor={(item, index) => index.toString()}
             numColumns={2}
-            renderItem={({item, index}) => (
+            renderItem={({item, index}: any) => (
               <TouchableOpacity
                 key={index}
                 activeOpacity={0.8}
@@ -248,7 +235,7 @@ const EditSocialProfile = () => {
             data={interestType}
             keyExtractor={(item, index) => index.toString()}
             numColumns={2}
-            renderItem={({item, index}) => (
+            renderItem={({item, index}: any) => (
               <TouchableOpacity
                 key={index}
                 activeOpacity={0.8}
@@ -298,6 +285,7 @@ const EditSocialProfile = () => {
             placeholder="Leo"
             value={userSign}
             onChangeText={(e: string) => setUserSign(e)}
+            styless={{}}
           />
           <SizeBox size={7} />
           <Text style={[styles.label, {color: Colors.white, marginLeft: 10}]}>
@@ -308,6 +296,7 @@ const EditSocialProfile = () => {
             placeholder="DJ"
             value={userJob}
             onChangeText={(e: string) => setUserJob(e)}
+            styless={{}}
           />
           <SizeBox size={7} />
           <Text style={[styles.label, {color: Colors.white, marginLeft: 10}]}>
@@ -318,6 +307,7 @@ const EditSocialProfile = () => {
             placeholder="Add your area"
             value={userLocation}
             onChangeText={(e: string) => setUserLocation(e)}
+            styless={{}}
           />
           <SizeBox size={7} />
           <Text style={styles.label}>Drinking</Text>
@@ -386,6 +376,7 @@ const EditSocialProfile = () => {
             data={[{id: 0}]}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderItem}
+            showsVerticalScrollIndicator={false}
           />
           <SizeBox size={10} />
           <Text style={{...commonStyles.font20W400, color: Colors.white}}>

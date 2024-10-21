@@ -266,6 +266,11 @@ export default function MainStack(Stack: any) {
         component={screens.DjInvoices}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.MatchPeople}
+        component={screens.MatchPeople}
+        options={{headerShown: false}}
+      />
     </>
   );
 }

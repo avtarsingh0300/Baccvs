@@ -36,11 +36,11 @@ import TeamsCard from '../../Utilities/Component/TeamsCard';
 
 const MeetPeople = ({navigation}: any) => {
   const [button, setButton] = useState('online');
-  const [currentImage, setCurrentImage] = useState({});
+  const [currentImage, setCurrentImage] = useState<any>({});
   const [loader, setLoader] = useState(false);
   const [userData, setUserData] = useState([]);
   const [groupData, setGroupData] = useState([]);
-  const user = useSelector((data: object) => data?.auth?.userData);
+  const user = useSelector((data: any) => data?.auth?.userData);
   const [showModal, setShowModal] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [activeIndexModal, setActiveIndexModal] = useState(0);
@@ -60,14 +60,14 @@ const MeetPeople = ({navigation}: any) => {
 
   const getAllUserHandler = () => {
     getAllUsers()
-      .then(res => {
+      .then((res: any) => {
         setUserData([]);
         setUserData(res?.data);
         if (userData?.length == 0) {
           setCurrentImage(res?.data[0]);
         } else {
           const filterData = res?.data?.filter(
-            x => currentImage?._id == x?._id,
+            (x: any) => currentImage?._id == x?._id,
           );
           setCurrentImage(filterData[0]);
         }
@@ -81,7 +81,7 @@ const MeetPeople = ({navigation}: any) => {
 
   const getAllMeetGroupsHandler = () => {
     getAllMeetGroups()
-      .then(res => {
+      .then((res: any) => {
         setGroupData(res?.data);
         setLoader(false);
       })
@@ -91,18 +91,24 @@ const MeetPeople = ({navigation}: any) => {
       });
   };
 
-  const likeUserProfileHanlder = (type: string, item: object) => {
+  const likeUserProfileHanlder = (type: string, item: any) => {
     const data = {
       userId: user?.user?.id,
       likedUserId: item?._id,
       type: type,
     };
-    console.log(type, 'type');
+    // console.log(type, 'type');
     likeUser(data)
-      .then(res => {
-        console.log(res, 'res in likeUserProfileHanlder');
-        showSuccess(res?.message);
+      .then((res: any) => {
+        // console.log(res, 'res in likeUserProfileHanlder');
         handelSelectionUser('');
+        if (res?.match) {
+          navigation.navigate(NavigationStrings.MatchPeople, {
+            data: res?.data?.likedUserId,
+          });
+        } else {
+          showSuccess(res?.message);
+        }
       })
       .catch(err => {
         showError(err?.message);
@@ -111,7 +117,7 @@ const MeetPeople = ({navigation}: any) => {
       });
   };
 
-  const likeTeameHanlder = (type: string, item: object) => {
+  const likeTeameHanlder = (type: string, item: any) => {
     const data = {
       userId: user?.user?.id,
       groupId: item?._id,
@@ -119,18 +125,18 @@ const MeetPeople = ({navigation}: any) => {
     };
     console.log(type, 'type');
     likeTeam(data)
-      .then(res => {
-        console.log(res, 'res in likeUserProfileHanlder');
+      .then((res: any) => {
+        console.log(res, 'res in likeTeameHanlder');
         handelSelectionTeam('');
       })
       .catch(err => {
-        console.log(err, 'err in likeUserProfileHanlder');
+        console.log(err, 'err in likeTeameHanlder');
         setLoader(false);
         showError(err?.message);
       });
   };
 
-  const disLikeUserProfileHanlder = (item: object) => {
+  const disLikeUserProfileHanlder = (item: any) => {
     const data = {
       userId: user?.user?.id,
       likedUserId: item?._id,
@@ -138,7 +144,7 @@ const MeetPeople = ({navigation}: any) => {
     };
     // console.log(type, 'type');
     disLikeUser(data)
-      .then(res => {
+      .then((res: any) => {
         console.log(res, 'res in disLikeUser');
         handelSelectionUser('left');
       })
@@ -149,7 +155,7 @@ const MeetPeople = ({navigation}: any) => {
       });
   };
 
-  const disLikeTeamHanlder = (item: object) => {
+  const disLikeTeamHanlder = (item: any) => {
     const data = {
       userId: user?.user?.id,
       groupId: item?._id,
