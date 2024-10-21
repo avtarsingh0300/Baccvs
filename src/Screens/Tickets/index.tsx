@@ -51,7 +51,6 @@ const Tickets = ({navigation}: any) => {
     getTickets()
       .then(res => {
         setLoader(false);
-
         setUserData(res?.tickets);
       })
       .catch(err => {
@@ -66,7 +65,6 @@ const Tickets = ({navigation}: any) => {
     getBuyTicketList()
       .then(res => {
         setLoader(false);
-
         setBuyTicket(res?.tickets);
       })
       .catch(err => {
