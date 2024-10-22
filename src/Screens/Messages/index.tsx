@@ -15,7 +15,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import styles from './style';
-import {SizeBox} from '../../Utilities/Component/Helpers';
+import {showError, SizeBox} from '../../Utilities/Component/Helpers';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import {
@@ -28,12 +28,14 @@ import Modal from 'react-native-modal';
 import io from 'socket.io-client';
 import {useSelector} from 'react-redux';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
+import { chatHistory } from '../../Utilities/Constants/auth';
 
 const Messages = ({navigation, route}: any) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [loader, setLoader] = useState(false);
   const user = useSelector((data: object) => data?.auth?.userData);
 
   const myId = user?.user?.id;
@@ -54,8 +56,23 @@ const Messages = ({navigation, route}: any) => {
         sender: user?.user?.id,
         roomId: roomid,
       });
+      getChatHistory();
     });
 
+    const getChatHistory = () => {
+      setLoader(true);
+      chatHistory('668bc3785bd3a00506a1de62-67173ff280aedc16cd031f24')
+        .then(res => {
+          setLoader(false);
+       console.log(res);
+       
+        })
+        .catch(err => {
+          setLoader(false);
+          showError(err?.message);
+          console.log(err, 'error');
+        });
+    };
     socket.on('connect_error', err => {
       console.log('Socket connection error: ', err);
     });

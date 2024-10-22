@@ -59,3 +59,4 @@ export const LIKE_EVENT = getApiUrl('like-event');
 export const DELETE_COMMENT = getApiUrl('delete-comment');
 export const EDIT_COMMENT = getApiUrl('edit-comment');
 export const GET_DELETE_EVENT = getApiUrl('delete-event');
+export const GET_CHAT_HISTORY = getApiUrl('chat-history');
