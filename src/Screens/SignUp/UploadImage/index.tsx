@@ -6,7 +6,7 @@ import {
   View,
   Image,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './style';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../../Utilities/Styles/colors';
@@ -34,48 +34,79 @@ const UploadImage = (props: any) => {
   };
 
   const onComplete = () => {
+    setLoader(true);
     if (selectedImages.length === 0) {
       return showError('Select image!');
     }
     const pictures = selectedImages.map(n => n.uri);
 
     setLoader(true);
-    const formData = {
-      full_name: data.full_name,
-      email: data.email,
-      dob: data.dob,
-      username: data.username,
-      gender: data.gender,
-      bio: data.bio,
-      language: data.language,
-      password: data.password,
-      phone_number: data.phone_number,
-      pictures: pictures,
-      videos: pictures,
-      type: 'user',
-    };
+    const formadata = new FormData();
+    formadata.append('full_name', data.full_name);
+    formadata.append('email', data.email);
+    formadata.append('dob', data.dob);
+    formadata.append('username', data.username);
+    formadata.append('gender', data.gender);
+    formadata.append('bio', data.bio);
+    formadata.append('language', data.language);
+    formadata.append('password', data.password);
+    formadata.append('phone_number', data.phone_number);
+    formadata.append('type', 'user');
+    pictures.forEach((image, index) => {
+      formadata.append('pictures', {
+        uri: image,
+        name: `image_${index}.jpg`,
+        type: 'image/jpeg',
+      });
+    });
 
-    const formData2 = {
-      full_name: data?.fullName,
-      email: data?.email,
-      dob: data?.date,
-      bio: data?.servicesDescription,
-      language: data?.language,
-      password: data?.password,
-      type: data?.selectedProfession,
-      business_name: data?.businessName,
-      business_address: data?.businessAddress,
-      website: data?.websiteOptional,
-      social_links: data?.socialMedia,
-      social_description: data?.servicesDescription,
-      phone_number: data.phoneNumber,
-      pictures: pictures,
-      videos: pictures,
-    };
-    registerUser(props.route.params.key === 'profess' ? formData2 : formData)
+    pictures.forEach((image, index) => {
+      formadata.append('videos', {
+        uri: image.path,
+        name: `video${image.id}.mp4`,
+        type: image?.mime,
+      });
+    });
+
+    const formadata2 = new FormData();
+    formadata2.append('full_name', data.full_name);
+    formadata2.append('email', data.email);
+
+    formadata2.append('dob', data.dob);
+    formadata2.append('username', data.username);
+    formadata2.append('gender', data.gender);
+    formadata2.append('bio', data.bio);
+    formadata2.append('language', data.language);
+    formadata2.append('password', data.password);
+    formadata2.append('phone_number', data.phone_number);
+    formadata2.append('type', data?.selectedProfession);
+    formadata2.append('business_name', data?.businessName);
+    formadata2.append('business_address', data?.businessAddress);
+    formadata2.append('website', data?.websiteOptional);
+    formadata2.append('social_links', data?.socialMedia);
+    formadata2.append('social_description', data?.servicesDescription);
+
+    pictures.forEach((image, index) => {
+      formadata2.append('pictures', {
+        uri: image,
+        name: `image_${index}.jpg`,
+        type: 'image/jpeg',
+      });
+    });
+
+    pictures.forEach((image, index) => {
+      formadata2.append('videos', {
+        uri: image.path,
+        name: `video${image.id}.mp4`,
+        type: image?.mime,
+      });
+    });
+
+    console.log(props.route.params.key === 'profess' ? formadata : formadata2);
+    registerUser(props.route.params.key === 'profess' ? formadata2 : formadata)
       .then(res => {
-        setLoader(false),
-          showSuccess('User create successfully!!'),
+        setLoader(false), console.log(res);
+        showSuccess('User create successfully!!'),
           props.navigation.navigate(NavigationStrings.TabRoutes);
         setTimeout(() => {
           setDataHandler(res);

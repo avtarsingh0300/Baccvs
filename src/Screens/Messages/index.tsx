@@ -33,31 +33,78 @@ const Messages = ({navigation, route}: any) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const user = useSelector((data: object) => data?.auth?.userData);
-  console.log(route?.params?.userdata);
-  const [roomid, setRoomID] = useState(
-    route?.params?.userdata?._id + '-' + user?.user?.id,
-  );
+
+  const myId = user?.user?.id;
+  const selectedUser = route?.params?.userdata?._id;
+  console.log(myId, 'my id');
+  const roomid =
+    selectedUser > myId ? myId + '-' + selectedUser : selectedUser + '-' + myId;
   const socket = io('http://13.48.250.217:3003/', {
     withCredentials: true,
     transports: ['websocket'],
   });
-  const handleSend = () => {
-    if (newMessage.trim().length > 0) {
-      const newMessageObject = {
-        id: (messages.length + 1).toString(),
-        text: newMessage,
+
+  useEffect(() => {
+    socket.on('connect', () => {
+      console.log('Connected to server');
+
+      socket.emit('joinRoom', {
         sender: user?.user?.id,
-      };
-
-      socket.emit('sendMessage', {
-        roomid,
-        message: newMessageObject,
+        roomId: roomid,
       });
+    });
 
-      setMessages([...messages, newMessageObject]);
-      setNewMessage('');
+    socket.on('connect_error', err => {
+      console.log('Socket connection error: ', err);
+    });
+
+    socket.on('message', newMessage => {
+      setMessages(prevMessages => [...prevMessages, newMessage]);
+    });
+
+    socket.on('typing', ({userId}) => {
+      if (userId !== myId) {
+        setIsTyping(true);
+      }
+    });
+
+    socket.on('stopTyping', ({userId}) => {
+      if (userId !== myId) {
+        setIsTyping(false);
+      }
+    });
+    return () => {
+      socket.disconnect();
+    };
+  }, [roomid]);
+
+  const handleTyping = (text: string) => {
+    setNewMessage(text);
+
+    if (text.length > 0) {
+      socket.emit('typing', {roomId: roomid, userId: myId});
     }
+
+    if (text.length === 0) {
+      socket.emit('stopTyping', {roomId: roomid, userId: myId});
+    }
+  };
+
+  const handleSend = () => {
+    console.log(newMessage);
+    if (newMessage.trim().length > 0) {
+      socket.emit('message', {
+        sender: user?.user?.id,
+        roomId: roomid,
+        message: newMessage,
+        attachment: null,
+        isGroup: false,
+      });
+    }
+    socket.emit('stopTyping', {roomId: roomid, userId: myId});
+    setNewMessage('');
   };
 
   const onGoBack = () => {
@@ -76,32 +123,13 @@ const Messages = ({navigation, route}: any) => {
     navigation.navigate(NavigationStrings.EditGroup);
   };
 
-  useEffect(() => {
-    socket.on('connect', () => {
-      console.log('Connected to server');
-      socket.emit('joinRoom', roomid);
-    });
-
-    socket.on('connect_error', err => {
-      console.log('Socket connection error: ', err);
-    });
-
-    socket.on('receiveMessage', newMessage => {
-      setMessages(prevMessages => [...prevMessages, newMessage]);
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [roomid]);
-
   const renderItem = ({item}: any) => (
     <View
       style={[
         styles.messageContainer,
         item.sender === user?.user?.id ? styles.myMessage : styles.otherMessage,
       ]}>
-      <Text style={styles.messageText}>{item.text}</Text>
+      <Text style={styles.messageText}>{item.message}</Text>
     </View>
   );
 
@@ -172,6 +200,7 @@ const Messages = ({navigation, route}: any) => {
               )}
             </TouchableOpacity>
           </View>
+
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <Fragment>
               <SizeBox size={10} />
@@ -183,7 +212,11 @@ const Messages = ({navigation, route}: any) => {
               />
             </Fragment>
           </TouchableWithoutFeedback>
+
+          {isTyping && <Text style={{color: Colors.white}}>typing...</Text>}
+          <SizeBox size={10} />
         </SafeAreaView>
+
         <View
           style={{
             flexDirection: 'row',
@@ -195,7 +228,7 @@ const Messages = ({navigation, route}: any) => {
             <TextInput
               style={styles.input}
               value={newMessage}
-              onChangeText={setNewMessage}
+              onChangeText={handleTyping}
               placeholderTextColor={Colors.greyTxt}
               placeholder="Type a message..."
               multiline
