@@ -100,7 +100,6 @@ const MeetPeople = ({navigation}: any) => {
     // console.log(type, 'type');
     likeUser(data)
       .then((res: any) => {
-        // console.log(res, 'res in likeUserProfileHanlder');
         handelSelectionUser('');
         if (res?.match) {
           navigation.navigate(NavigationStrings.MatchPeople, {

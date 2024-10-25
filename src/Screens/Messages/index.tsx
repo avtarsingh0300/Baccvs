@@ -15,7 +15,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import styles from './style';
-import {showError, SizeBox} from '../../Utilities/Component/Helpers';
+import {
+  Loadingcomponent,
+  showError,
+  SizeBox,
+} from '../../Utilities/Component/Helpers';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import {
@@ -28,7 +32,7 @@ import Modal from 'react-native-modal';
 import io from 'socket.io-client';
 import {useSelector} from 'react-redux';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
-import { chatHistory } from '../../Utilities/Constants/auth';
+import {chatHistory} from '../../Utilities/Constants/auth';
 
 const Messages = ({navigation, route}: any) => {
   const [messages, setMessages] = useState([]);
@@ -61,11 +65,10 @@ const Messages = ({navigation, route}: any) => {
 
     const getChatHistory = () => {
       setLoader(true);
-      chatHistory('668bc3785bd3a00506a1de62-67173ff280aedc16cd031f24')
+      chatHistory(roomid)
         .then(res => {
           setLoader(false);
-       console.log(res);
-       
+          setMessages(res?.data?.messages);
         })
         .catch(err => {
           setLoader(false);
@@ -156,6 +159,7 @@ const Messages = ({navigation, route}: any) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       //   keyboardVerticalOffset={50}
     >
+      <Loadingcomponent isVisible={loader} />
       <LinearGradient
         colors={[Colors.Linear, Colors.LinearBlack, Colors.Linear]}
         start={{x: 0, y: 0}}
@@ -221,12 +225,18 @@ const Messages = ({navigation, route}: any) => {
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <Fragment>
               <SizeBox size={10} />
-              <FlatList
-                data={messages}
-                renderItem={renderItem}
-                keyExtractor={item => item.id}
-                contentContainerStyle={styles.messagesContainer}
-              />
+              {messages?.length > 0 ? (
+                <FlatList
+                  data={messages}
+                  renderItem={renderItem}
+                  keyExtractor={item => item.id}
+                  contentContainerStyle={styles.messagesContainer}
+                />
+              ) : (
+                <Text style={{...commonStyles.font14Center}}>
+                  Let start conversation !!
+                </Text>
+              )}
             </Fragment>
           </TouchableWithoutFeedback>
 
