@@ -40,10 +40,10 @@ const styles = StyleSheet.create({
   },
   flex: {
     flexDirection: 'row',
-    width:"100%",
-    alignItems:"center",
-    justifyContent:"center",
-    alignSelf:"center"
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
   boxcontainer: {
     paddingHorizontal: 10,
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingLeft:15
+    paddingLeft: 15,
   },
   // flatbox: {
   //   // paddingHorizontal: 10,
@@ -74,22 +74,22 @@ const styles = StyleSheet.create({
   //   paddingVertical: moderateScaleVertical(10),
   // },
   flatcon: {
-    borderWidth:1,
-    backgroundColor:Colors.lightPink,
-    width:"35%",
-    justifyContent:"center",
-    alignItems:"center",
-    height:moderateScaleVertical(28),
-    borderRadius:2
+    borderWidth: 1,
+    backgroundColor: Colors.lightPink,
+    width: '30%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: moderateScaleVertical(28),
+    borderRadius: 2,
   },
   flatcontainer: {
-    borderWidth:1,
-    backgroundColor:Colors.lightPink,
-    width:moderateScale(81),
-    justifyContent:"center",
-    alignItems:"center",
-    height:moderateScaleVertical(28),
-    borderRadius:2
+    borderWidth: 1,
+    backgroundColor: Colors.lightPink,
+    width: moderateScale(81),
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: moderateScaleVertical(28),
+    borderRadius: 2,
   },
   flatcon2: {
     flexDirection: 'row',
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    marginBottom:10
+    marginBottom: 10,
   },
   btn: {
     padding: 1,
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
   eventCon: {
     flexDirection: 'row',
     alignSelf: 'center',
-    justifyContent:"space-between",
+    justifyContent: 'space-between',
     width: '100%',
   },
   eventtxt: {

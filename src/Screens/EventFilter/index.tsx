@@ -3,8 +3,8 @@ import {
   Text,
   SafeAreaView,
   ScrollView,
-  TextInput,
   TouchableOpacity,
+  TextInput,
   Image,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
@@ -12,30 +12,22 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
 import styles from './style';
 import commonStyles from '../../Utilities/Styles/commonStyles';
-import {
-  Header,
-  ImageComponent,
-  SizeBox,
-  dummydata,
-  showError,
-} from '../../Utilities/Component/Helpers';
+import {SizeBox, showError} from '../../Utilities/Component/Helpers';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import {
   height,
   moderateScale,
   moderateScaleVertical,
-  textScale,
   width,
 } from '../../Utilities/Styles/responsiveSize';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
-import ImagePath from '../../Utilities/Constants/ImagePath';
 import {FlatList} from 'react-native';
-
 import {getEventTypes} from '../../Utilities/Constants/auth';
-
 import Modal from 'react-native-modal';
 import fontFamily from '../../Utilities/Styles/fontFamily';
-import languages from '../../Utilities/Constants';
+import {horoscopeSigns, languages} from '../../Utilities/Constants';
+import ImagePath from '../../Utilities/Constants/ImagePath';
+
 const EventFilter = ({navigation}: any) => {
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
@@ -51,28 +43,47 @@ const EventFilter = ({navigation}: any) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedItems2, setSelectedItems2] = useState([]);
   const [selectedItems3, setSelectedItems3] = useState([]);
-  const [language, setLanguage] = useState('');
+  const [selectedItemsSign, setSelectedItemsSign] = useState([]);
+  const [eventSearch, setEventSearch] = useState('');
+  const [eventSearchData, setEventSearchData] = useState([]);
+  const [musicSearch, setMusicSearch] = useState('');
+  const [musicSearchData, setMusicSearchData] = useState([]);
+  const [venueSearch, setVenueSearch] = useState('');
+  const [venueSearchData, setVenueSearchData] = useState([]);
   const [language2, setLanguage2] = useState('');
   const [colors, setColors] = useState(0);
+
   useEffect(() => {
     getEventsTypes();
   }, []);
-  const renderAstro = ({item}) => (
-    <View>
-      <TouchableOpacity style={styles.flatcontainer}>
-        <Text style={{...commonStyles.font12Regular, color: Colors.white}}>
-          Scorpio
-        </Text>
-      </TouchableOpacity>
-    </View>
+
+  const renderAstro = ({item}: any) => (
+    <TouchableOpacity
+      style={[
+        styles.flatcontainer,
+        {
+          backgroundColor: selectedItemsSign?.includes(item?.id)
+            ? Colors.Linear
+            : Colors.lightPink,
+        },
+      ]}
+      activeOpacity={0.8}
+      onPress={() => {
+        toggleSelectionSign(item);
+      }}>
+      <Text style={{...commonStyles.font12Regular, color: Colors.white}}>
+        {item?.name}
+      </Text>
+    </TouchableOpacity>
   );
+
   const getEventsTypes = () => {
     getEventTypes()
       .then(res => {
         setMusicStyle(res?.musictype);
         setEventType(res?.eventtype);
         setVenueType(res?.venuetype);
-        console.log(res, 'ressss');
+        // console.log(res, 'ressss');
       })
       .catch(err => {
         showError(err?.message), console.log(err);
@@ -132,6 +143,17 @@ const EventFilter = ({navigation}: any) => {
       }
     });
   };
+
+  const toggleSelectionSign = (item: any) => {
+    setSelectedItemsSign((prevSelectedItems: any) => {
+      if (prevSelectedItems.includes(item?.id)) {
+        return prevSelectedItems.filter((id: any) => id !== item?.id);
+      } else {
+        return [...prevSelectedItems, item.id];
+      }
+    });
+  };
+
   const onbackPress = () => {
     navigation.goBack();
   };
@@ -146,6 +168,27 @@ const EventFilter = ({navigation}: any) => {
     setSelected3([0, 0]);
     setSelectedValues2([0, 0]);
   };
+
+  useEffect(() => {
+    const filteredData = eventType.filter((item: any) =>
+      item?.name.toLowerCase().includes(eventSearch.toLowerCase()),
+    );
+    setEventSearchData(filteredData);
+  }, [eventSearch, eventType]);
+
+  useEffect(() => {
+    const filteredData = musicStyle.filter((item: any) =>
+      item?.name.toLowerCase().includes(musicSearch.toLowerCase()),
+    );
+    setMusicSearchData(filteredData);
+  }, [musicSearch, musicStyle]);
+
+  useEffect(() => {
+    const filteredData = venueType.filter((item: any) =>
+      item?.name.toLowerCase().includes(venueSearch.toLowerCase()),
+    );
+    setVenueSearchData(filteredData);
+  }, [venueSearch, venueType]);
 
   return (
     <LinearGradient
@@ -234,22 +277,52 @@ const EventFilter = ({navigation}: any) => {
               </View>
               <SizeBox size={10} />
               <View style={{paddingLeft: 10}}>
-                <Text
+                <View
                   style={{
-                    ...commonStyles.font16Regular,
-                    color: Colors.white,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
                   }}>
-                  Event type
-                </Text>
+                  <Text
+                    style={{
+                      ...commonStyles.font16Regular,
+                      color: Colors.white,
+                    }}>
+                    Event type
+                  </Text>
+                  <View
+                    style={{
+                      width: moderateScale(227),
+                      height: moderateScaleVertical(35),
+                      borderRadius: 20,
+                      backgroundColor: Colors.white,
+                      flexDirection: 'row',
+                      justifyContent: 'space-around',
+                      alignItems: 'center',
+                    }}>
+                    <TextInput
+                      placeholder="Enter something here..."
+                      value={eventSearch}
+                      placeholderTextColor={Colors.greyTxt}
+                      onChangeText={(e: string) => {
+                        setEventSearch(e);
+                      }}
+                      style={{
+                        ...commonStyles.font10Bold,
+                      }}
+                    />
+                    <Image source={ImagePath.SearchNewGroup} />
+                  </View>
+                </View>
                 <SizeBox size={5} />
                 <FlatList
-                  data={eventType}
+                  data={eventSearch?.length > 0 ? eventSearchData : eventType}
                   renderItem={({item}) => (
                     <TouchableOpacity
                       style={[
                         styles.flatcon,
                         {
-                          backgroundColor: selectedItems.includes(item._id)
+                          backgroundColor: selectedItems?.includes(item?._id)
                             ? Colors.Linear
                             : Colors.lightPink,
                         },
@@ -304,18 +377,48 @@ const EventFilter = ({navigation}: any) => {
                 </View>
               </View>
               <SizeBox size={10} />
-              <Text
+              <View
                 style={{
-                  ...commonStyles.font16Regular,
-                  color: Colors.white,
-                  paddingLeft: 10,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
                 }}>
-                Venue type
-              </Text>
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    color: Colors.white,
+                    paddingLeft: 10,
+                  }}>
+                  Venue type
+                </Text>
+                <View
+                  style={{
+                    width: moderateScale(227),
+                    height: moderateScaleVertical(35),
+                    borderRadius: 20,
+                    backgroundColor: Colors.white,
+                    flexDirection: 'row',
+                    justifyContent: 'space-around',
+                    alignItems: 'center',
+                  }}>
+                  <TextInput
+                    placeholder="Enter something here..."
+                    value={venueSearch}
+                    placeholderTextColor={Colors.greyTxt}
+                    onChangeText={(e: string) => {
+                      setVenueSearch(e);
+                    }}
+                    style={{
+                      ...commonStyles.font10Bold,
+                    }}
+                  />
+                  <Image source={ImagePath.SearchNewGroup} />
+                </View>
+              </View>
               <SizeBox size={5} />
               <View style={styles.flexout}>
                 <FlatList
-                  data={venueType}
+                  data={venueSearch?.length > 0 ? venueSearchData : venueType}
                   numColumns={2}
                   renderItem={({item}) => (
                     <TouchableOpacity
@@ -341,16 +444,46 @@ const EventFilter = ({navigation}: any) => {
               </View>
               <SizeBox size={10} />
               <View style={{paddingLeft: 10}}>
-                <Text
+                <View
                   style={{
-                    ...commonStyles.font16Regular,
-                    color: Colors.white,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
                   }}>
-                  Music type
-                </Text>
+                  <Text
+                    style={{
+                      ...commonStyles.font16Regular,
+                      color: Colors.white,
+                    }}>
+                    Music type
+                  </Text>
+                  <View
+                    style={{
+                      width: moderateScale(227),
+                      height: moderateScaleVertical(35),
+                      borderRadius: 20,
+                      backgroundColor: Colors.white,
+                      flexDirection: 'row',
+                      justifyContent: 'space-around',
+                      alignItems: 'center',
+                    }}>
+                    <TextInput
+                      placeholder="Enter something here..."
+                      value={musicSearch}
+                      placeholderTextColor={Colors.greyTxt}
+                      onChangeText={(e: string) => {
+                        setMusicSearch(e);
+                      }}
+                      style={{
+                        ...commonStyles.font10Bold,
+                      }}
+                    />
+                    <Image source={ImagePath.SearchNewGroup} />
+                  </View>
+                </View>
                 <SizeBox size={5} />
                 <FlatList
-                  data={musicStyle}
+                  data={musicSearch?.length > 0 ? musicSearchData : musicStyle}
                   numColumns={2}
                   renderItem={({item}) => (
                     <TouchableOpacity
@@ -375,104 +508,19 @@ const EventFilter = ({navigation}: any) => {
                 />
               </View>
               <SizeBox size={10} />
-              {/* <TouchableOpacity
+              <TouchableOpacity
                 style={styles.flatbox}
                 activeOpacity={0.5}
-                onPress={() => SetModalVisibleLang(true)}> */}
-              <Text
-                style={{
-                  ...commonStyles.font16Regular,
-                  color: Colors.white,
-                  paddingLeft: 10,
-                }}>
-                Languages
-              </Text>
-              <SizeBox size={5} />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignSelf: 'center',
-                  width: '90%',
-                }}>
-                <TouchableOpacity
-                  onPress={() => setLanguage('English')}
-                  style={[
-                    styles.flatcon,
-                    {
-                      backgroundColor:
-                        language == 'English'
-                          ? Colors.Linear
-                          : Colors.lightPink,
-                    },
-                  ]}>
-                  <Text
-                    style={{
-                      ...commonStyles.font12Regular,
-                      color: Colors.white,
-                    }}>
-                    English
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => setLanguage('French')}
-                  style={[
-                    styles.flatcon,
-                    {
-                      backgroundColor:
-                        language == 'French' ? Colors.Linear : Colors.lightPink,
-                    },
-                  ]}>
-                  <Text
-                    style={{
-                      ...commonStyles.font12Regular,
-                      color: Colors.white,
-                    }}>
-                    French
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => setLanguage('Spanish')}
-                  style={[
-                    styles.flatcon,
-                    {
-                      backgroundColor:
-                        language == 'Spanish'
-                          ? Colors.Linear
-                          : Colors.lightPink,
-                    },
-                  ]}>
-                  <Text
-                    style={{
-                      ...commonStyles.font12Regular,
-                      color: Colors.white,
-                    }}>
-                    Spanish
-                  </Text>
-                </TouchableOpacity>
-              </View>
-
-              <SizeBox size={5} />
-              {/* <FlatList
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  data={selectedLang}
-                  renderItem={({item}) => (
-                    <TouchableOpacity
-                      style={styles.langItem}
-                      activeOpacity={0.8}
-                      onPress={() => {
-                        const filterData2 = selectedLang?.filter(
-                          (i: any) => i != item,
-                        );
-                        setSelectedLang(filterData2);
-                      }}>
-                      <Text style={styles.langItemText}>{item} &#x2715;</Text>
-                    </TouchableOpacity>
-                  )}
-                /> */}
-              {/* </TouchableOpacity> */}
-              {/* </View> */}
+                onPress={() => SetModalVisibleLang(true)}>
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    color: Colors.white,
+                    paddingLeft: 10,
+                  }}>
+                  Languages
+                </Text>
+              </TouchableOpacity>
               <SizeBox size={15} />
               <View style={styles.Btnmain}>
                 <LinearGradient
@@ -484,7 +532,6 @@ const EventFilter = ({navigation}: any) => {
                     <Text style={styles.text}>Apply</Text>
                   </TouchableOpacity>
                 </LinearGradient>
-
                 <Text
                   onPress={resetButton}
                   style={[styles.text, {color: Colors.white}]}>
@@ -641,13 +688,43 @@ const EventFilter = ({navigation}: any) => {
               </View>
               <SizeBox size={10} />
               <View style={{paddingLeft: 15}}>
-                <Text
+                <View
                   style={{
-                    ...commonStyles.font16Regular,
-                    color: Colors.white,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
                   }}>
-                  Music type
-                </Text>
+                  <Text
+                    style={{
+                      ...commonStyles.font16Regular,
+                      color: Colors.white,
+                    }}>
+                    Music type
+                  </Text>
+                  <View
+                    style={{
+                      width: moderateScale(227),
+                      height: moderateScaleVertical(35),
+                      borderRadius: 20,
+                      backgroundColor: Colors.white,
+                      flexDirection: 'row',
+                      justifyContent: 'space-around',
+                      alignItems: 'center',
+                    }}>
+                    <TextInput
+                      placeholder="Enter something here..."
+                      value={musicSearch}
+                      placeholderTextColor={Colors.greyTxt}
+                      onChangeText={(e: string) => {
+                        setMusicSearch(e);
+                      }}
+                      style={{
+                        ...commonStyles.font10Bold,
+                      }}
+                    />
+                    <Image source={ImagePath.SearchNewGroup} />
+                  </View>
+                </View>
                 <SizeBox size={5} />
                 <FlatList
                   data={musicStyle}
@@ -657,7 +734,7 @@ const EventFilter = ({navigation}: any) => {
                       style={[
                         styles.flatcon,
                         {
-                          backgroundColor: selectedItems3.includes(item._id)
+                          backgroundColor: selectedItems3.includes(item?._id)
                             ? Colors.Linear
                             : Colors.lightPink,
                         },
@@ -675,113 +752,19 @@ const EventFilter = ({navigation}: any) => {
                 />
               </View>
               <SizeBox size={10} />
-              <Text
-                style={{
-                  ...commonStyles.font16Regular,
-                  color: Colors.white,
-                  paddingLeft: 15,
-                }}>
-                Interests
-              </Text>
-              <SizeBox size={10} />
-              {/* <TouchableOpacity
+              <TouchableOpacity
                 style={styles.flatbox}
                 activeOpacity={0.5}
-                onPress={() => SetModalVisibleLang(true)}> */}
-              <Text
-                style={{
-                  ...commonStyles.font16Regular,
-                  color: Colors.white,
-                  paddingLeft: 15,
-                }}>
-                Languages
-              </Text>
-
-              <SizeBox size={5} />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignSelf: 'center',
-                  width: '90%',
-                }}>
-                <TouchableOpacity
-                  onPress={() => setLanguage2('English')}
-                  style={[
-                    styles.flatcon,
-                    {
-                      backgroundColor:
-                        language2 == 'English'
-                          ? Colors.Linear
-                          : Colors.lightPink,
-                    },
-                  ]}>
-                  <Text
-                    style={{
-                      ...commonStyles.font12Regular,
-                      color: Colors.white,
-                    }}>
-                    English
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => setLanguage2('French')}
-                  style={[
-                    styles.flatcon,
-                    {
-                      backgroundColor:
-                        language2 == 'French'
-                          ? Colors.Linear
-                          : Colors.lightPink,
-                    },
-                  ]}>
-                  <Text
-                    style={{
-                      ...commonStyles.font12Regular,
-                      color: Colors.white,
-                    }}>
-                    French
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => setLanguage2('Spanish')}
-                  style={[
-                    styles.flatcon,
-                    {
-                      backgroundColor:
-                        language2 == 'Spanish'
-                          ? Colors.Linear
-                          : Colors.lightPink,
-                    },
-                  ]}>
-                  <Text
-                    style={{
-                      ...commonStyles.font12Regular,
-                      color: Colors.white,
-                    }}>
-                    Spanish
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              {/* <FlatList
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                data={selectedLang}
-                renderItem={({item}) => (
-                  <TouchableOpacity
-                    style={styles.langItem}
-                    activeOpacity={0.8}
-                    onPress={() => {
-                      const filterData2 = selectedLang?.filter(
-                        (i: any) => i != item,
-                      );
-                      setSelectedLang(filterData2);
-                    }}>
-                    <Text style={styles.langItemText}>{item} &#x2715;</Text>
-                  </TouchableOpacity>
-                )}
-              /> */}
-              {/* </TouchableOpacity> */}
+                onPress={() => SetModalVisibleLang(true)}>
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    color: Colors.white,
+                    paddingLeft: 10,
+                  }}>
+                  Languages
+                </Text>
+              </TouchableOpacity>
               <SizeBox size={10} />
               <View>
                 <Text
@@ -794,7 +777,7 @@ const EventFilter = ({navigation}: any) => {
                 </Text>
                 <SizeBox size={5} />
                 <FlatList
-                  data={[{id: 1}]}
+                  data={horoscopeSigns}
                   renderItem={renderAstro}
                   numColumns={3}
                   style={{paddingLeft: 15}}
@@ -811,7 +794,6 @@ const EventFilter = ({navigation}: any) => {
                     <Text style={styles.text}>Apply</Text>
                   </TouchableOpacity>
                 </LinearGradient>
-
                 <Text
                   onPress={resetButton}
                   style={[styles.text, {color: Colors.white}]}>
