@@ -1,4 +1,5 @@
 import {
+  Alert,
   FlatList,
   Image,
   KeyboardAvoidingView,
@@ -33,14 +34,17 @@ import io from 'socket.io-client';
 import {useSelector} from 'react-redux';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import {chatHistory} from '../../Utilities/Constants/auth';
+import ImagePicker from 'react-native-image-crop-picker';
 
 const Messages = ({navigation, route}: any) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [showOptionModal, setShowOptionModal] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [loader, setLoader] = useState(false);
-  const user = useSelector((data: object) => data?.auth?.userData);
+  const user = useSelector((data: any) => data?.auth?.userData);
+  const [image, setImage] = useState('');
 
   const myId = user?.user?.id;
   const selectedUser = route?.params?.userdata?._id;
@@ -111,17 +115,21 @@ const Messages = ({navigation, route}: any) => {
   };
 
   const handleSend = () => {
-    if (newMessage.trim().length > 0) {
+    if (newMessage.trim().length > 0 || image.length > 0) {
+      // console.log('handleSend');
+      console.log(image, 'handleSend');
       socket.emit('message', {
         sender: user?.user?.id,
         roomId: roomid,
         message: newMessage,
         attachment: null,
+        // attachment: image.length > 0 ? image : null,
         isGroup: false,
       });
     }
     socket.emit('stopTyping', {roomId: roomid, userId: myId});
     setNewMessage('');
+    setImage('');
   };
 
   const onGoBack = () => {
@@ -149,6 +157,51 @@ const Messages = ({navigation, route}: any) => {
       <Text style={styles.messageText}>{item.message}</Text>
     </View>
   );
+
+  const pickImageFromGallery = () => {
+    ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true,
+      multiple: false,
+    })
+      .then((image: any) => {
+        setImage(image?.path);
+        console.log(image, 'image');
+        setShowOptionModal(false);
+      })
+      .catch(error => {
+        if (error.code === 'E_PICKER_CANCELLED') {
+          setShowOptionModal(false);
+          console.log('User canceled image picker');
+        } else {
+          setShowOptionModal(false);
+          Alert.alert('Error', 'Something went wrong. Please try again.');
+        }
+      });
+  };
+
+  const captureImageWithCamera = () => {
+    ImagePicker.openCamera({
+      width: 300,
+      height: 400,
+      cropping: true,
+    })
+      .then((image: any) => {
+        setImage(image?.path);
+        console.log(image, 'image');
+        setShowOptionModal(false);
+      })
+      .catch(error => {
+        if (error.code === 'E_PICKER_CANCELLED') {
+          setShowOptionModal(false);
+          console.log('User canceled camera');
+        } else {
+          setShowOptionModal(false);
+          Alert.alert('Error', 'Something went wrong. Please try again.');
+        }
+      });
+  };
 
   return (
     <KeyboardAvoidingView
@@ -236,17 +289,15 @@ const Messages = ({navigation, route}: any) => {
               )}
             </Fragment>
           </TouchableWithoutFeedback>
-
           {isTyping && <Text style={{color: Colors.white}}>typing...</Text>}
           <SizeBox size={10} />
         </SafeAreaView>
-
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginBottom: 50,
+            marginBottom: moderateScaleVertical(30),
           }}>
           <View style={styles.inputContainer}>
             <TextInput
@@ -257,7 +308,7 @@ const Messages = ({navigation, route}: any) => {
               placeholder="Type a message..."
               multiline
             />
-            <TouchableOpacity onPress={handleSend}>
+            <TouchableOpacity activeOpacity={0.8} onPress={handleSend}>
               <VectorIcon
                 groupName="Ionicons"
                 name="send-outline"
@@ -266,15 +317,18 @@ const Messages = ({navigation, route}: any) => {
               />
             </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.sendButton}>
+          {/* <TouchableOpacity style={styles.sendButton}>
             <VectorIcon
               groupName="Feather"
               name="mic"
               size={22}
               color={Colors.lightPink}
             />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.sendButton}>
+          </TouchableOpacity> */}
+          <TouchableOpacity
+            style={styles.sendButton}
+            activeOpacity={0.8}
+            onPress={() => setShowOptionModal(true)}>
             <VectorIcon
               groupName="Feather"
               name="paperclip"
@@ -316,6 +370,41 @@ const Messages = ({navigation, route}: any) => {
               <VectorIcon groupName="MaterialIcons" name="logout" size={15} />
               <Text style={styles.optionText}>{` `}Leave</Text>
             </TouchableOpacity>
+          </View>
+        </Modal>
+        <Modal
+          useNativeDriver={true}
+          hideModalContentWhileAnimating={true}
+          animationIn="fadeIn"
+          animationOut="fadeOut"
+          onBackdropPress={() => setShowOptionModal(false)}
+          avoidKeyboard={true}
+          style={{flex: 1, margin: 0, justifyContent: 'flex-end'}}
+          isVisible={showOptionModal}
+          backdropOpacity={0.8}>
+          <View
+            style={{
+              width: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingVertical: moderateScaleVertical(20),
+            }}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={[styles.option2]}
+              onPress={captureImageWithCamera}>
+              <VectorIcon groupName="Entypo" name="camera" size={20} />
+              <Text style={styles.optionText2}>{`  `}Camera</Text>
+            </TouchableOpacity>
+            <SizeBox size={5} />
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={[styles.option2]}
+              onPress={pickImageFromGallery}>
+              <VectorIcon groupName="FontAwesome" name="photo" size={20} />
+              <Text style={styles.optionText2}>{`  `}Gallery</Text>
+            </TouchableOpacity>
+            <SizeBox size={10} />
           </View>
         </Modal>
       </LinearGradient>

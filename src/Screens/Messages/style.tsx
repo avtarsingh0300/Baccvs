@@ -43,9 +43,8 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     padding: 10,
-
     backgroundColor: Colors.white,
-    width: '70%',
+    width: '85%',
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
@@ -80,12 +79,26 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingVertical: moderateScaleVertical(8),
     paddingHorizontal: moderateScale(10),
-
     alignItems: 'center',
     flexDirection: 'row',
   },
+  option2: {
+    width: '100%',
+    paddingVertical: moderateScaleVertical(15),
+    paddingHorizontal: moderateScale(10),
+    alignItems: 'center',
+    flexDirection: 'row',
+    backgroundColor: Colors.appColor,
+    justifyContent: 'center',
+    borderRadius: 30,
+  },
   optionText: {
     ...commonStyles.font10Regular,
+    fontWeight: '600',
+    color: Colors.white,
+  },
+  optionText2: {
+    ...commonStyles.font14,
     fontWeight: '600',
     color: Colors.white,
   },

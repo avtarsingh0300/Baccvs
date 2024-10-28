@@ -82,39 +82,36 @@ const Chat = ({navigation}: any) => {
   };
 
   const renderItem = ({item}: any) => (
-    console.log(item, 'item'),
-    (
-      <TouchableOpacity
-        style={styles.flex}
-        onPress={() => {
-          onChat(item);
-        }}>
-        <Image
-          source={
-            item?.otherUser?.image?.length > 0
-              ? {uri: IMAGE_URL + item?.otherUser?.image}
-              : ImagePath.ProfileImg
-          }
-          style={styles.userimg}
-        />
-        <View>
-          <Text numberOfLines={1} style={styles.heading}>
-            {item?.otherUser?.name}
-          </Text>
-          <SizeBox size={2} />
-          <Text
-            numberOfLines={1}
-            style={[styles.heading, {color: Colors.lightGrey}]}>
-            {item?.message}
-          </Text>
-        </View>
-        <View>
-          <Text style={[styles.heading, {color: Colors.lightGrey}]}>
-            {moment(item?.timestamp).startOf('day').fromNow()}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    )
+    <TouchableOpacity
+      style={styles.flex}
+      onPress={() => {
+        onChat(item);
+      }}>
+      <Image
+        source={
+          item?.otherUser?.image?.length > 0
+            ? {uri: IMAGE_URL + item?.otherUser?.image}
+            : ImagePath.ProfileImg
+        }
+        style={styles.userimg}
+      />
+      <View>
+        <Text numberOfLines={1} style={styles.heading}>
+          {item?.otherUser?.name}
+        </Text>
+        <SizeBox size={2} />
+        <Text
+          numberOfLines={1}
+          style={[styles.heading, {color: Colors.lightGrey}]}>
+          {item?.message}
+        </Text>
+      </View>
+      <View>
+        <Text style={[styles.heading, {color: Colors.lightGrey}]}>
+          {moment(item?.timestamp).startOf('day').fromNow()}
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
 
   const renderItemm = ({item}: any) => (
