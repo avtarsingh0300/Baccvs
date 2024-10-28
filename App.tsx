@@ -99,7 +99,7 @@ const App = () => {
   //     name: 'Default Channel',
   //   });
 
-    // Display a notification
+  // Display a notification
   //   await notifee.displayNotification({
   //     title: 'Notification Title',
   //     body: 'Main body content of the notification',
