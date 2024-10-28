@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import fontFamily from "../../Utilities/Styles/fontFamily";
 import { Colors } from "../../Utilities/Styles/colors";
-import { moderateScale, moderateScaleVertical } from "../../Utilities/Styles/responsiveSize";
+import { height, moderateScale, moderateScaleVertical } from "../../Utilities/Styles/responsiveSize";
 
 const styles = StyleSheet.create({
     LinearConatiner: {flex: 1, paddingHorizontal: 20},
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
         fontWeight:"400",
         fontFamily:fontFamily.time_regular,
         color:Colors.green,
-        marginHorizontal:17
+        marginHorizontal:7
     },
     partyimg:{
         width:moderateScaleVertical(300),
@@ -92,7 +92,10 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         alignItems:"center",
         justifyContent:"space-between"
-    }
+    },
+      qrCode: {
+       
+      },
 })
 
 export default styles;

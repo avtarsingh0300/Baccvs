@@ -125,7 +125,7 @@ const Tickets = ({navigation}: any) => {
   };
   const renderItem = ({item}: any) => (
     <TouchableOpacity
-      onPress={() => navigation.navigate(NavigationStrings.QrCode, {})}>
+      onPress={() => navigation.navigate(NavigationStrings.QrCode, {data:item})}>
       <View style={styles.item}>
         <ImageComponent
           source={

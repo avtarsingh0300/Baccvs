@@ -1,13 +1,20 @@
-import { ImageBackground, SafeAreaView, Text, View ,Image, TouchableOpacity} from 'react-native'
-import React from 'react'
+import { ImageBackground, SafeAreaView, Text, View ,Image, TouchableOpacity, TextInput} from 'react-native'
+import React, { useState } from 'react'
 import styles from './style'
 import LinearGradient from 'react-native-linear-gradient'
 import { Colors } from '../../Utilities/Styles/colors'
 import { SizeBox } from '../../Utilities/Component/Helpers'
 import VectorIcon from '../../Utilities/Component/vectorIcons'
 import ImagePath from '../../Utilities/Constants/ImagePath'
-import { height } from '../../Utilities/Styles/responsiveSize'
-const QrCode = ({navigation}: any) => {
+import QRCode from 'react-native-qrcode-svg';
+
+const QrCode = ({ navigation,route }:any) => {
+
+  const eventItem = route?.params?.data
+  // const handleGenerateQr = () => {
+  //   onGenerate(inputValue);
+  // };
+  console.log(route.params.data)
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
@@ -32,11 +39,17 @@ const QrCode = ({navigation}: any) => {
           source={ImagePath.qrbackground}
           style={styles.qrbckimg}>
           <View style={styles.textscanner}>
-            <Text style={styles.agoratxt}>Agora party</Text>
+            <Text style={styles.agoratxt}>{eventItem?.eventId?.event_name}</Text>
             <SizeBox size={3} />
-            <Text style={styles.ticketprice}>Early ticket - 20€</Text>
+            <Text style={styles.ticketprice}>Early ticket -{eventItem?.eventId?.early_price}€</Text>
             <SizeBox size={15} />
-            <Image source={ImagePath.Qrcode} style={styles.qrcodeimg} />
+            {/* <Image source={ImagePath.Qrcode} style={styles.qrcodeimg} /> */}
+            
+          <QRCode
+          value={eventItem?.eventId?._id}
+          size={150}
+          style={styles.qrCode}
+        />
           </View>
           <View
             style={{
@@ -50,7 +63,7 @@ const QrCode = ({navigation}: any) => {
               size={15}
               color={Colors.green}
             />
-            <Text style={styles.datetxt}>Wednesday 20 December</Text>
+            <Text style={styles.datetxt}>{eventItem?.eventId?.date}</Text>
           </View>
           <SizeBox size={4} />
           <View
@@ -65,7 +78,7 @@ const QrCode = ({navigation}: any) => {
               size={13}
               color={Colors.green}
             />
-            <Text style={styles.timetxt}>11:00 PM - 6-00 AM</Text>
+            <Text style={styles.timetxt}>{eventItem?.eventId?.start_time}- {eventItem?.eventId?.end_time}</Text>
           </View>
         </ImageBackground>
         <SizeBox size={7} />
