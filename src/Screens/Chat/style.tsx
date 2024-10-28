@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     height: moderateScaleVertical(40),
   },
   input: {
-    color: Colors.black,
+    color: Colors.white,
     fontFamily: fontFamily.regular,
     width: '90%',
   },

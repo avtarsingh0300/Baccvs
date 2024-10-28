@@ -28,7 +28,7 @@ import styles from './style';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import MapView, {Marker} from 'react-native-maps';
 import {getEventTypes} from '../../Utilities/Constants/auth';
-import languages from '../../Utilities/Constants';
+import {languages} from '../../Utilities/Constants';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import Modal from 'react-native-modal';
 import Geolocation from '@react-native-community/geolocation';

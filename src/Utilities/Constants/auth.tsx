@@ -36,6 +36,7 @@ import {
   GET_NOTIFICATION,
   GET_REF_CODE,
   GET_SELL_TICKETS,
+  GET_USER_LAST_CHAT,
   GET_USER_LIKES,
   GROUP_DETAILS,
   LIKE_EVENT,
@@ -191,6 +192,9 @@ export function getAllUsers() {
 export function getUserLikes() {
   return apiGet(`${GET_USER_LIKES}`);
 }
+export function getUserLastChats(text?: string) {
+  return apiGet(`${GET_USER_LAST_CHAT}${text}`);
+}
 export function getUserForLike() {
   return apiGet(`${GET_LIKES_FOR_USER}`);
 }
@@ -256,7 +260,7 @@ export function getHomedata(
   selectedOption: string,
 ) {
   return apiGet(
-    `${GET_HOME_DATA}?filter=${selectedOption}&userLatitude=${latitude}&userLongitude=${longitude}&page=1&limit=5`,
+    `${GET_HOME_DATA}?filter=${selectedOption}&userLatitude=${latitude}&userLongitude=${longitude}&page=1&limit=50`,
   );
 }
 

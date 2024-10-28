@@ -76,6 +76,7 @@ const CreateSuccess = ({navigation, route}: any) => {
     formData.append('mode', 'In-person');
     formData.append('event_type_id', routeData.selectedEventType);
     formData.append('venue_type_id', routeData.selectedVenue);
+    formData.append('early_price', routeData.charges ? routeData.charges : '0');
 
     selectedVideos.forEach((video, index) => {
       formData.append('videos', {

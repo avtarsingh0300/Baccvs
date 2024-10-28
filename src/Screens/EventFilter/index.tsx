@@ -509,7 +509,12 @@ const EventFilter = ({navigation}: any) => {
               </View>
               <SizeBox size={10} />
               <TouchableOpacity
-                style={styles.flatbox}
+                style={{
+                  borderWidth: 1,
+                  borderColor: Colors.Pink,
+                  borderRadius: 5,
+                  paddingVertical: 10,
+                }}
                 activeOpacity={0.5}
                 onPress={() => SetModalVisibleLang(true)}>
                 <Text
@@ -518,7 +523,16 @@ const EventFilter = ({navigation}: any) => {
                     color: Colors.white,
                     paddingLeft: 10,
                   }}>
-                  Languages
+                  Languages{` `}
+                  <Text
+                    style={{
+                      ...commonStyles.font16Regular,
+                      fontSize: 13,
+                      color: Colors.white,
+                      paddingLeft: 10,
+                    }}>
+                    (select languages)
+                  </Text>
                 </Text>
               </TouchableOpacity>
               <SizeBox size={15} />
@@ -753,7 +767,12 @@ const EventFilter = ({navigation}: any) => {
               </View>
               <SizeBox size={10} />
               <TouchableOpacity
-                style={styles.flatbox}
+                style={{
+                  borderWidth: 1,
+                  borderColor: Colors.Pink,
+                  borderRadius: 5,
+                  paddingVertical: 10,
+                }}
                 activeOpacity={0.5}
                 onPress={() => SetModalVisibleLang(true)}>
                 <Text
@@ -762,7 +781,16 @@ const EventFilter = ({navigation}: any) => {
                     color: Colors.white,
                     paddingLeft: 10,
                   }}>
-                  Languages
+                  Languages{` `}
+                  <Text
+                    style={{
+                      ...commonStyles.font16Regular,
+                      fontSize: 13,
+                      color: Colors.white,
+                      paddingLeft: 10,
+                    }}>
+                    (select languages)
+                  </Text>
                 </Text>
               </TouchableOpacity>
               <SizeBox size={10} />

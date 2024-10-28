@@ -186,7 +186,6 @@ const HomeScreen = ({navigation}: any) => {
       .then((res: any) => {
         SetLoading(false);
         SetEventData(res.events);
-
         SetMemberData(res.events.members);
       })
       .catch(err => {
@@ -485,6 +484,7 @@ const HomeScreen = ({navigation}: any) => {
             }}
             data={eventData}
             renderItem={renderItem}
+            ListFooterComponent={() => <SizeBox size={10} />}
           />
         ) : (
           <Text style={[styles.date, {alignSelf: 'center', marginTop: 20}]}>

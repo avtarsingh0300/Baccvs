@@ -51,7 +51,9 @@ const Tickets = ({navigation}: any) => {
     getTickets()
       .then(res => {
         setLoader(false);
+
         setUserData(res?.tickets);
+        console.log(res?.tickets);
       })
       .catch(err => {
         setLoader(false);
@@ -107,8 +109,9 @@ const Tickets = ({navigation}: any) => {
       eventId: buyItem?.eventId?._id,
       ticketNumber: `TICKET${randomSixDigit}`,
       price: buyItem?.price,
+      event_date: moment(buyItem?.eventId?.date).format('YYYY-MM-DD'),
     };
-    console.log(data);
+
     buyTicket(data)
       .then(res => {
         showSuccess('Ticket buy successfully!!');
@@ -122,7 +125,7 @@ const Tickets = ({navigation}: any) => {
   };
   const renderItem = ({item}: any) => (
     <TouchableOpacity
-      onPress={() => navigation.navigate(NavigationStrings.QrCode)}>
+      onPress={() => navigation.navigate(NavigationStrings.QrCode, {})}>
       <View style={styles.item}>
         <ImageComponent
           source={

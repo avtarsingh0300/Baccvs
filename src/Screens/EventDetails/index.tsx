@@ -94,6 +94,7 @@ const EventDetails = ({navigation, route}: any) => {
     getEventDetail(route.params.eventId)
       .then(res => {
         setLoading(false);
+        console.log(res, 'sdcds');
         setEventData(res);
         console.log(res);
       })
@@ -534,10 +535,7 @@ const EventDetails = ({navigation, route}: any) => {
                 source={ImagePath.Ticket}
                 style={{tintColor: Colors.white}}
               />
-              <Text style={styles.ticketPrice}>
-                {' '}
-                €{eventData?.regular_price}
-              </Text>
+              <Text style={styles.ticketPrice}> €{eventData?.early_price}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.8}
@@ -1180,7 +1178,7 @@ const EventDetails = ({navigation, route}: any) => {
                   ...commonStyles.font16WhiteBold,
                   alignSelf: 'center',
                 }}>
-                Total : 15,99 €
+                Total : €{eventData?.early_price}
               </Text>
               <SizeBox size={10} />
               <TouchableOpacity

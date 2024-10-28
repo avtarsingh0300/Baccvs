@@ -44,7 +44,7 @@ const Messages = ({navigation, route}: any) => {
 
   const myId = user?.user?.id;
   const selectedUser = route?.params?.userdata?._id;
-  console.log(myId, 'my id');
+
   const roomid =
     selectedUser > myId ? myId + '-' + selectedUser : selectedUser + '-' + myId;
   const socket = io('http://13.48.250.217:3003/', {
@@ -54,8 +54,6 @@ const Messages = ({navigation, route}: any) => {
 
   useEffect(() => {
     socket.on('connect', () => {
-      console.log('Connected to server');
-
       socket.emit('joinRoom', {
         sender: user?.user?.id,
         roomId: roomid,
@@ -68,7 +66,7 @@ const Messages = ({navigation, route}: any) => {
       chatHistory(roomid)
         .then(res => {
           setLoader(false);
-          setMessages(res?.data?.messages);
+          setMessages(res?.data?.messages?.reverse());
         })
         .catch(err => {
           setLoader(false);
@@ -113,7 +111,6 @@ const Messages = ({navigation, route}: any) => {
   };
 
   const handleSend = () => {
-    console.log(newMessage);
     if (newMessage.trim().length > 0) {
       socket.emit('message', {
         sender: user?.user?.id,
@@ -198,7 +195,7 @@ const Messages = ({navigation, route}: any) => {
 
             // onPress={onProfile}
             >
-              {route?.params?.userdata?.pictures[0] ? (
+              {route?.params?.userdata?.pictures?.length ? (
                 <Image
                   source={{
                     uri: IMAGE_URL + route?.params?.userdata?.pictures[0],
@@ -229,7 +226,7 @@ const Messages = ({navigation, route}: any) => {
                 <FlatList
                   data={messages}
                   renderItem={renderItem}
-                  keyExtractor={item => item.id}
+                  keyExtractor={(item, index) => index.toString()}
                   contentContainerStyle={styles.messagesContainer}
                 />
               ) : (
