@@ -36,6 +36,8 @@ import {
   GET_NOTIFICATION,
   GET_REF_CODE,
   GET_SELL_TICKETS,
+  GET_USER_FOLLOWER_LIST,
+  GET_USER_FOLLOWING_LIST,
   GET_USER_LAST_CHAT,
   GET_USER_LIKES,
   GROUP_DETAILS,
@@ -191,6 +193,12 @@ export function getAllUsers() {
 }
 export function getUserLikes() {
   return apiGet(`${GET_USER_LIKES}`);
+}
+export function getUserFollowing() {
+  return apiGet(`${GET_USER_FOLLOWING_LIST}`);
+}
+export function getUserFollower() {
+  return apiGet(`${GET_USER_FOLLOWER_LIST}`);
 }
 export function getUserLastChats(text?: string) {
   return apiGet(`${GET_USER_LAST_CHAT}${text}`);

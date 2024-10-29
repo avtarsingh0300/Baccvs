@@ -2,7 +2,6 @@ import {FlatList, Image, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {
   height,
-  moderateScale,
   moderateScaleVertical,
 } from '../../Utilities/Styles/responsiveSize';
 import {ImageComponent, SizeBox} from '../../Utilities/Component/Helpers';
@@ -11,17 +10,16 @@ import MapView, {Marker} from 'react-native-maps';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import {Colors} from '../../Utilities/Styles/colors';
 import Geolocation from '@react-native-community/geolocation';
-import {getDistance} from 'geolib';
 import {getMapData} from '../../Utilities/Constants/auth';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
+
 const MapScreen = ({navigation}: any) => {
-  const [userLocation, setUserLocation] = useState(null);
+  const [userLocation, setUserLocation] = useState<any>(null);
   const [activeBtn, setActiveBtn] = useState(0);
-  const [location, setLocation] = useState({});
-  const [loading, SetLoading] = useState(false);
-  const [eventData, setEventData] = useState([]);
+  const [eventData, setEventData] = useState<any>([]);
+
   const onPressBack = () => {
     navigation.goBack();
   };
@@ -32,8 +30,7 @@ const MapScreen = ({navigation}: any) => {
 
   const getLocation = () => {
     Geolocation.getCurrentPosition(
-      position => {
-        SetLoading(true);
+      (position: any) => {
         setUserLocation(position?.coords);
         console.log(position, 'hghg');
         if (position.coords) {
@@ -41,7 +38,6 @@ const MapScreen = ({navigation}: any) => {
         }
       },
       error => {
-        SetLoading(false);
         console.log(error.code, error.message, 'jiwhd');
       },
       {
@@ -67,7 +63,7 @@ const MapScreen = ({navigation}: any) => {
 
   const getLocationData = () => {
     getMapData()
-      .then(res => {
+      .then((res: any) => {
         console.log(res, 'res in getMapData');
         setEventData(res);
       })
@@ -131,7 +127,7 @@ const MapScreen = ({navigation}: any) => {
           {activeBtn == 0 ? (
             <>
               {eventData?.events?.map(
-                (item, index) => (
+                (item: any, index: number) => (
                   console.log(item, 'iii'),
                   (
                     <Marker
@@ -164,37 +160,29 @@ const MapScreen = ({navigation}: any) => {
             </>
           ) : (
             <>
-              {eventData?.users?.map(
-                (item, index) => (
-                  console.log(item, 'iii'),
-                  (
-                    <Marker
-                      key={index}
-                      coordinate={{
-                        latitude: item?.latitude,
-                        longitude: item?.longitude,
+              {eventData?.users?.map((item: any, index: number) => (
+                <Marker
+                  key={index}
+                  coordinate={{
+                    latitude: item?.latitude,
+                    longitude: item?.longitude,
+                  }}
+                  title={'My Marker'}
+                  description={'Some description'}>
+                  {item?.image_url && (
+                    <ImageComponent
+                      source={{uri: IMAGE_URL + item?.image_url}}
+                      style={{
+                        width: 30,
+                        height: 32,
+                        borderWidth: 1,
+                        borderColor: Colors.Pink,
+                        borderRadius: 5,
                       }}
-                      title={'My Marker'}
-                      description={'Some description'}
-                      // icon={{uri: item?.image_url, width: 30, height: 32}}
-                      // style={{ width: 30, height: 32, borderRadius: 20, borderWidth: 1, borderColor: "red" }}
-                    >
-                      {item?.image_url ? (
-                        <ImageComponent
-                          source={{uri: IMAGE_URL + item?.image_url}}
-                          style={{
-                            width: 30,
-                            height: 32,
-                            borderWidth: 1,
-                            borderColor: Colors.Pink,
-                            borderRadius: 5,
-                          }}
-                        />
-                      ) : null}
-                    </Marker>
-                  )
-                ),
-              )}
+                    />
+                  )}
+                </Marker>
+              ))}
             </>
           )}
           {userLocation && (
@@ -236,12 +224,17 @@ const MapScreen = ({navigation}: any) => {
               </TouchableOpacity>
             </View>
             <SizeBox size={5} />
-
             <FlatList
               data={eventData?.events}
               keyExtractor={(item, index) => index?.toString()}
               renderItem={({item, index}) => (
-                <View>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    navigation.navigate(NavigationStrings.EventDetails, {
+                      eventId: item?.id,
+                    });
+                  }}>
                   {item?.image_url ? (
                     <ImageComponent
                       source={{
@@ -255,7 +248,7 @@ const MapScreen = ({navigation}: any) => {
                       style={styles.img}
                     />
                   )}
-                </View>
+                </TouchableOpacity>
               )}
               horizontal={true}
               contentContainerStyle={{flexGrow: 1, zIndex: 300}}
@@ -295,7 +288,13 @@ const MapScreen = ({navigation}: any) => {
               data={eventData?.users}
               keyExtractor={(item, index) => index?.toString()}
               renderItem={({item, index}) => (
-                <View>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    navigation.navigate(NavigationStrings.OtherProfiles, {
+                      id: item?.id,
+                    });
+                  }}>
                   {item?.image_url ? (
                     <ImageComponent
                       source={{
@@ -309,7 +308,7 @@ const MapScreen = ({navigation}: any) => {
                       style={styles.img}
                     />
                   )}
-                </View>
+                </TouchableOpacity>
               )}
               horizontal={true}
               contentContainerStyle={{flexGrow: 1, zIndex: 300}}
