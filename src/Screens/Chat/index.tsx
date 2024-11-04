@@ -30,9 +30,11 @@ const Chat = ({navigation}: any) => {
   const onRec = () => {
     setButton('R');
   };
+
   const onSent = () => {
     setButton('S');
   };
+
   const onChat = (item: any) => {
     navigation.navigate(NavigationStrings.Messages, {
       userdata: {

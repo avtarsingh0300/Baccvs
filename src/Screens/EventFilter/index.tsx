@@ -29,13 +29,11 @@ import {horoscopeSigns, languages} from '../../Utilities/Constants';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 
 const EventFilter = ({navigation}: any) => {
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const [musicStyle, setMusicStyle] = useState([]);
   const [eventType, setEventType] = useState([]);
   const [venueType, setVenueType] = useState([]);
   const [modalVisibleLang, SetModalVisibleLang] = useState(false);
-  const [selectedLang, setSelectedLang] = useState([]);
+  const [selectedLang, setSelectedLang] = useState<any>([]);
   const [selectedValue, setSelected] = useState([0, 0]);
   const [selectedValues2, setSelectedValues2] = useState([0, 0]);
   const [selectedValue3, setSelected3] = useState([0, 0]);
@@ -50,7 +48,6 @@ const EventFilter = ({navigation}: any) => {
   const [musicSearchData, setMusicSearchData] = useState([]);
   const [venueSearch, setVenueSearch] = useState('');
   const [venueSearchData, setVenueSearchData] = useState([]);
-  const [language2, setLanguage2] = useState('');
   const [colors, setColors] = useState(0);
 
   useEffect(() => {
@@ -79,7 +76,7 @@ const EventFilter = ({navigation}: any) => {
 
   const getEventsTypes = () => {
     getEventTypes()
-      .then(res => {
+      .then((res: any) => {
         setMusicStyle(res?.musictype);
         setEventType(res?.eventtype);
         setVenueType(res?.venuetype);
@@ -317,7 +314,7 @@ const EventFilter = ({navigation}: any) => {
                 <SizeBox size={5} />
                 <FlatList
                   data={eventSearch?.length > 0 ? eventSearchData : eventType}
-                  renderItem={({item}) => (
+                  renderItem={({item}: any) => (
                     <TouchableOpacity
                       style={[
                         styles.flatcon,
@@ -420,7 +417,7 @@ const EventFilter = ({navigation}: any) => {
                 <FlatList
                   data={venueSearch?.length > 0 ? venueSearchData : venueType}
                   numColumns={2}
-                  renderItem={({item}) => (
+                  renderItem={({item}: any) => (
                     <TouchableOpacity
                       style={[
                         styles.flatcon,
@@ -485,7 +482,7 @@ const EventFilter = ({navigation}: any) => {
                 <FlatList
                   data={musicSearch?.length > 0 ? musicSearchData : musicStyle}
                   numColumns={2}
-                  renderItem={({item}) => (
+                  renderItem={({item}: any) => (
                     <TouchableOpacity
                       style={[
                         styles.flatcon,
@@ -743,7 +740,7 @@ const EventFilter = ({navigation}: any) => {
                 <FlatList
                   data={musicStyle}
                   numColumns={2}
-                  renderItem={({item}) => (
+                  renderItem={({item}: any) => (
                     <TouchableOpacity
                       style={[
                         styles.flatcon,

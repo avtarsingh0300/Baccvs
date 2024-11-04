@@ -45,13 +45,16 @@ import {
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import {styles} from './style';
 import {useSelector} from 'react-redux';
+import ProfileImagePreview from '../../Utilities/Component/ProfileImagePreview';
 
 const OtherProfiles = ({navigation, route}: any) => {
   const [showModal, setShowModal] = useState(false);
   const [loader, setLoader] = useState(false);
-  const [userData, setUserData] = useState({});
-  const [eventCount, setEventCount] = useState('');
-  const user = useSelector((data: object) => data?.auth?.userData);
+  const [userData, setUserData] = useState<any>({});
+  const [eventCount, setEventCount] = useState<any>('');
+  const user = useSelector((data: any) => data?.auth?.userData);
+  const [showPreview, setShowPreview] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
   // console.log(user?.user?.id);
   const onSocialpart = () => {
     setShowModal(false);
@@ -69,7 +72,7 @@ const OtherProfiles = ({navigation, route}: any) => {
     };
 
     getMemberDetails(data)
-      .then(res => {
+      .then((res: any) => {
         setLoader(false);
         setUserData(res?.user);
         setEventCount(res);
@@ -87,7 +90,7 @@ const OtherProfiles = ({navigation, route}: any) => {
     };
 
     getMemberDetails(data)
-      .then(res => {
+      .then((res: any) => {
         setLoader(false);
         setUserData(res?.user);
         setEventCount(res);
@@ -373,12 +376,19 @@ const OtherProfiles = ({navigation, route}: any) => {
             />
           </View>
           <View style={styles.postContainer}>
-            {userData?.pictures?.map((i, index) => (
-              <FastImage
-                source={{uri: IMAGE_URL + i}}
-                key={index}
-                style={styles.postImage}
-              />
+            {userData?.pictures?.map((i: any, index: number) => (
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => {
+                  setShowPreview(true);
+                  setSelectedImage(i);
+                }}>
+                <FastImage
+                  source={{uri: IMAGE_URL + i}}
+                  key={index}
+                  style={styles.postImage}
+                />
+              </TouchableOpacity>
             ))}
           </View>
           {/* <Text style={{...commonStyles.font16White, alignSelf: 'center'}}>
@@ -401,7 +411,7 @@ const OtherProfiles = ({navigation, route}: any) => {
             <>
               <Text style={styles.title}>Music Type</Text>
               <View style={styles.typeContainer}>
-                {userData?.music_type?.map((i, index) => (
+                {userData?.music_type?.map((i: any, index: number) => (
                   <View style={styles.type}>
                     <Text style={styles.typeText}>{i}</Text>
                   </View>
@@ -414,7 +424,7 @@ const OtherProfiles = ({navigation, route}: any) => {
             <>
               <Text style={styles.title}>Event Type</Text>
               <View style={styles.typeContainer}>
-                {userData?.event_type?.map((i, index) => (
+                {userData?.event_type?.map((i: any, index: number) => (
                   <View style={styles.type}>
                     <Text style={styles.typeText}>{i}</Text>
                   </View>
@@ -426,7 +436,7 @@ const OtherProfiles = ({navigation, route}: any) => {
             <>
               <Text style={styles.title}>Languages</Text>
               <View style={styles.typeContainer}>
-                {userData?.language?.map((i, index) => (
+                {userData?.language?.map((i: any, index: number) => (
                   <View style={styles.type}>
                     <Text style={styles.typeText}>{i}</Text>
                   </View>
@@ -482,6 +492,13 @@ const OtherProfiles = ({navigation, route}: any) => {
             </TouchableOpacity>
           </View>
         </Modal>
+        <ProfileImagePreview
+          setShowModal={setShowPreview}
+          // showModal={true}
+          data={userData}
+          image={selectedImage}
+          showModal={showPreview}
+        />
       </SafeAreaView>
     </LinearGradient>
   );
