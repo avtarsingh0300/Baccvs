@@ -12,7 +12,6 @@ import {SafeAreaView} from 'react-native';
 import {Colors} from '../../Utilities/Styles/colors';
 import styles from './style';
 import {
-  CommonBtn,
   Header,
   Loadingcomponent,
   SizeBox,
@@ -31,7 +30,7 @@ import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 const BlockAccount = ({navigation}: any) => {
   const [loader, setLoader] = useState(false);
   const [blockedlist, setBlockedlist] = useState([]);
-  const userid = useSelector((data: object) => data?.auth?.userData?.user?.id);
+  const userid = useSelector((data: any) => data?.auth?.userData?.user?.id);
   const onbackPress = () => {
     navigation.goBack();
   };
@@ -42,7 +41,7 @@ const BlockAccount = ({navigation}: any) => {
   const getBlockedUserList = () => {
     setLoader(true);
     getBlockedUser(userid)
-      .then(res => {
+      .then((res: any) => {
         setLoader(false);
         setBlockedlist(res?.blockedUsers);
       })
@@ -69,7 +68,7 @@ const BlockAccount = ({navigation}: any) => {
   };
   return (
     <LinearGradient
-      colors={[Colors.LinearBlack, Colors.Linear]}
+      colors={[Colors.backgroundNew, Colors.backgroundNew]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
@@ -80,7 +79,7 @@ const BlockAccount = ({navigation}: any) => {
         {blockedlist?.length > 0 ? (
           <FlatList
             data={blockedlist}
-            renderItem={({item}) => (
+            renderItem={({item}: any) => (
               <View style={styles.flatvw}>
                 <View style={styles.innervw}>
                   {item?.image_url ? (

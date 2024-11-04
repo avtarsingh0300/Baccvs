@@ -330,6 +330,8 @@ export function Drawer({
                   navigation.navigate(NavigationStrings.MyEvents);
                 } else if (item?.name == 'Likes') {
                   navigation.navigate(NavigationStrings.PeopleLikes);
+                } else if (item?.name == 'Feedback') {
+                  navigation.navigate(NavigationStrings.FeedBack);
                 } else {
                   navigation.navigate(item?.name);
                 }

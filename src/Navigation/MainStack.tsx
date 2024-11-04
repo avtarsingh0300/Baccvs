@@ -271,6 +271,16 @@ export default function MainStack(Stack: any) {
         component={screens.MatchPeople}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.FeedBack}
+        component={screens.FeedBack}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.BankingInfo}
+        component={screens.BankingInfo}
+        options={{headerShown: false}}
+      />
     </>
   );
 }

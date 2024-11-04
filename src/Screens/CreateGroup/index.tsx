@@ -36,7 +36,7 @@ import Modal from 'react-native-modal';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import styles from './style';
 import ImagePicker from 'react-native-image-crop-picker';
-import languages from '../../Utilities/Constants';
+import {languages} from '../../Utilities/Constants';
 import uuid from 'react-native-uuid';
 
 const CreateGroup = ({navigation}: any) => {

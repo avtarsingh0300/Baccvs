@@ -69,4 +69,6 @@ export default {
   DjBooking: 'DjBooking',
   DjInvoices: 'DjInvoices',
   MatchPeople: 'MatchPeople',
+  FeedBack: 'FeedBack',
+  BankingInfo: 'BankingInfo',
 };

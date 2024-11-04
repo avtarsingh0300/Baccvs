@@ -37,8 +37,9 @@ export default {
   Rectangle_new: require('../../Assets/images/Rectangle_new.png'),
   Activelocation: require('../../Assets/images/Activatelocation.png'),
   Arrow_Left_2: require('../../Assets/images/Arrow_Left_2.png'),
-
+  cash02: require('../../Assets/images/cash02.png'),
   VectorLike: require('../../Assets/images/Vector.png'),
-
   link_backward: require('../../Assets/images/link_backward.png'),
+  ChevronUp: require('../../Assets/images/ChevronUp.png'),
+  ChevronDown: require('../../Assets/images/ChevronDown.png'),
 };

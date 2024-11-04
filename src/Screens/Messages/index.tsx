@@ -68,7 +68,7 @@ const Messages = ({navigation, route}: any) => {
     const getChatHistory = () => {
       setLoader(true);
       chatHistory(roomid)
-        .then(res => {
+        .then((res: any) => {
           setLoader(false);
           setMessages(res?.data?.messages?.reverse());
         })
@@ -83,7 +83,7 @@ const Messages = ({navigation, route}: any) => {
     });
 
     socket.on('message', newMessage => {
-      setMessages(prevMessages => [...prevMessages, newMessage]);
+      setMessages((prevMessages): any => [...prevMessages, newMessage]);
     });
 
     socket.on('typing', ({userId}) => {
