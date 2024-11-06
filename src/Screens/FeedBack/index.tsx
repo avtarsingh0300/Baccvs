@@ -17,12 +17,18 @@ import {
   moderateScaleVertical,
 } from '../../Utilities/Styles/responsiveSize';
 import ImagePath from '../../Utilities/Constants/ImagePath';
-import {CommonInput, SizeBox} from '../../Utilities/Component/Helpers';
+import {
+  CommonInput,
+  showError,
+  showSuccess,
+  SizeBox,
+} from '../../Utilities/Component/Helpers';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import DropDownComponent from '../../Utilities/Component/DropDownComponent';
 import ImagePicker from 'react-native-image-crop-picker';
 import Modal from 'react-native-modal';
+import {sendfeedBank} from '../../Utilities/Constants/auth';
 
 const FeedBack = ({navigation}: any) => {
   const [problem, setProblem] = useState('');
@@ -34,8 +40,9 @@ const FeedBack = ({navigation}: any) => {
   const [other, setOther] = useState('');
   const [otherBio, setOtherBio] = useState('');
   const [showOptionModal, setShowOptionModal] = useState(false);
-  const [activeIndex, setActiveIndex] = useState<number>(0);
-  const [imagePathArray, setImagePathArray] = useState([]);
+  const [loader, setLoader] = useState(false);
+  const [activeIndex, setActiveIndex] = useState<number>();
+  const [imagePathArray, setImagePathArray] = useState<any>();
 
   const problemData = [
     {
@@ -99,10 +106,6 @@ const FeedBack = ({navigation}: any) => {
       label: 'Idea',
       value: 'Idea',
     },
-    {
-      label: 'Other (Describe your problem or idea)',
-      value: 'Other (Describe your problem or idea)',
-    },
   ];
 
   const pickImageFromGallery = () => {
@@ -110,18 +113,11 @@ const FeedBack = ({navigation}: any) => {
       width: 300,
       height: 400,
       cropping: true,
-      multiple: true,
+      // multiple: true,
       mediaType: 'any',
     })
       .then((image: any) => {
-        // setImage(image?.path);
-        var imageData: any = [];
-        image?.map((res: any) => {
-          imageData.push(res?.path);
-        });
-        // console.log(image, 'image');
-        // console.log(imageData, 'imageData');
-        setImagePathArray(imageData);
+        setImagePathArray(image);
         setShowOptionModal(false);
       })
       .catch(error => {
@@ -134,6 +130,73 @@ const FeedBack = ({navigation}: any) => {
         }
       });
   };
+
+  const sendFeedBackHandler = () => {
+    setLoader(true);
+    var formData = new FormData();
+    formData.append('reportProblemType', problem);
+    formData.append('reportProblemIssue', problemBio);
+    formData.append('improvementSuggestionsType', suggestions);
+    formData.append('improvementSuggestionsIssue', suggestionsBio);
+    formData.append('shareExperienceType', share);
+    formData.append('shareExperienceIssue', shareBio);
+    formData.append('otherType', other);
+    formData.append('otherIssue', otherBio);
+    if (activeIndex == 0) {
+      formData.append('reportProblemDocument', {
+        uri: imagePathArray?.uri ? imagePathArray?.uri : imagePathArray?.path,
+        name:
+          imagePathArray?.mime == 'video/mp4'
+            ? `video_${imagePathArray?.modificationDate}.mp4`
+            : `image_${imagePathArray?.modificationDate}.jpg`,
+        type: imagePathArray?.mime,
+      });
+    }
+    if (activeIndex == 1) {
+      formData.append('improvementSuggestionsDocument', {
+        uri: imagePathArray?.uri ? imagePathArray?.uri : imagePathArray?.path,
+        name:
+          imagePathArray?.mime == 'video/mp4'
+            ? `video_${imagePathArray?.modificationDate}.mp4`
+            : `image_${imagePathArray?.modificationDate}.jpg`,
+        type: imagePathArray?.mime,
+      });
+    }
+    if (activeIndex == 2) {
+      formData.append('shareExperienceDocument', {
+        uri: imagePathArray?.uri ? imagePathArray?.uri : imagePathArray?.path,
+        name:
+          imagePathArray?.mime == 'video/mp4'
+            ? `video_${imagePathArray?.modificationDate}.mp4`
+            : `image_${imagePathArray?.modificationDate}.jpg`,
+        type: imagePathArray?.mime,
+      });
+    }
+    if (activeIndex == 3) {
+      formData.append('otherDocument', {
+        uri: imagePathArray?.uri ? imagePathArray?.uri : imagePathArray?.path,
+        name:
+          imagePathArray?.mime == 'video/mp4'
+            ? `video_${imagePathArray?.modificationDate}.mp4`
+            : `image_${imagePathArray?.modificationDate}.jpg`,
+        type: imagePathArray?.mime,
+      });
+    }
+    sendfeedBank(formData)
+      .then((res: any) => {
+        showSuccess(res?.message);
+        // navigation.goBack();
+        // console.log(res, 'res in sendfeedBank');
+        setLoader(false);
+      })
+      .catch(err => {
+        setLoader(false);
+        showError(err?.message);
+        console.log(err, 'err in sendfeedBank');
+      });
+  };
+
+  console.log(imagePathArray?.mime, 'imagePathArray');
 
   return (
     <LinearGradient
@@ -222,6 +285,21 @@ const FeedBack = ({navigation}: any) => {
               Join document (screenshots, videos, pictures...)
             </Text>
           </TouchableOpacity>
+          <SizeBox size={7} />
+          {activeIndex == 0 && (
+            <Image
+              source={{
+                uri: imagePathArray?.uri
+                  ? imagePathArray?.uri
+                  : imagePathArray?.path,
+              }}
+              style={{
+                width: moderateScale(100),
+                height: moderateScaleVertical(100),
+                borderRadius: 10,
+              }}
+            />
+          )}
           <SizeBox size={15} />
           <Text style={styles.title}>Improvement Suggestions</Text>
           <SizeBox size={10} />
@@ -270,6 +348,21 @@ const FeedBack = ({navigation}: any) => {
               Join document (screenshots, videos, pictures...)
             </Text>
           </TouchableOpacity>
+          <SizeBox size={7} />
+          {activeIndex == 1 && (
+            <Image
+              source={{
+                uri: imagePathArray?.uri
+                  ? imagePathArray?.uri
+                  : imagePathArray?.path,
+              }}
+              style={{
+                width: moderateScale(100),
+                height: moderateScaleVertical(100),
+                borderRadius: 10,
+              }}
+            />
+          )}
           <SizeBox size={15} />
           <Text style={styles.title}>Share an Experience</Text>
           <SizeBox size={10} />
@@ -318,6 +411,21 @@ const FeedBack = ({navigation}: any) => {
               Join document (screenshots, videos, pictures...)
             </Text>
           </TouchableOpacity>
+          <SizeBox size={7} />
+          {activeIndex == 2 && (
+            <Image
+              source={{
+                uri: imagePathArray?.uri
+                  ? imagePathArray?.uri
+                  : imagePathArray?.path,
+              }}
+              style={{
+                width: moderateScale(100),
+                height: moderateScaleVertical(100),
+                borderRadius: 10,
+              }}
+            />
+          )}
           <SizeBox size={15} />
           <Text style={styles.title}>Other</Text>
           <SizeBox size={10} />
@@ -366,9 +474,25 @@ const FeedBack = ({navigation}: any) => {
               Join document (screenshots, videos, pictures...)
             </Text>
           </TouchableOpacity>
+          <SizeBox size={7} />
+          {activeIndex == 3 && (
+            <Image
+              source={{
+                uri: imagePathArray?.uri
+                  ? imagePathArray?.uri
+                  : imagePathArray?.path,
+              }}
+              style={{
+                width: moderateScale(100),
+                height: moderateScaleVertical(100),
+                borderRadius: 10,
+              }}
+            />
+          )}
           <SizeBox size={15} />
           <TouchableOpacity
             activeOpacity={0.8}
+            onPress={sendFeedBackHandler}
             style={{
               alignSelf: 'flex-end',
               marginRight: moderateScale(30),

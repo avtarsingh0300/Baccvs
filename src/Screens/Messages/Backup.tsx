@@ -80,7 +80,7 @@ const Messages = ({navigation, route}: any) => {
       chatHistory(roomid)
         .then((res: any) => {
           setLoader(false);
-          setMessages(res?.data?.messages?.reverse());
+          setMessages(res?.data?.messages);
         })
         .catch(err => {
           setLoader(false);
@@ -93,7 +93,7 @@ const Messages = ({navigation, route}: any) => {
     });
 
     socket.on('message', newMessage => {
-      setMessages((prevMessages): any => [...prevMessages, newMessage]);
+      setMessages(prevMessages => [...prevMessages, newMessage]);
     });
 
     socket.on('typing', ({userId}) => {
@@ -189,21 +189,25 @@ const Messages = ({navigation, route}: any) => {
     }
   };
 
+  console.log(messages, 'messsagesss');
+
   const renderItem = ({item, index}: any) => {
-    // console.log(item, 'ietmmmm', index);
-    const prevItem = index >= 0 ? messages[index - 1] : null;
-    const showDateSeparator =
-      index == 0 ||
-      !moment(item?.timestamp).isSame(moment(prevItem?.timestamp), 'day');
+    // console.log(index, 'index');
+    // const prevItem = index > 0 ? messages[index - 1] : null;
+    // const showDateSeparator = prevItem
+    //   ? moment(item?.timestamp).isSame(moment(prevItem?.timestamp), 'day')
+    //   : false;
+    // console.log(item, 'ietmmmm');
+    // console.log(showDateSeparator, 'showDateSeparator');
     return (
       <>
-        {showDateSeparator && (
+        {/* {!showDateSeparator && (
           <View style={styles.dateSeparator}>
             <Text style={styles.dateSeparatorText}>
               {getMessageTimeStatus(item?.timestamp)}
             </Text>
           </View>
-        )}
+        )} */}
         {item?.message?.trim()?.length > 0 || item?.attachment != null ? (
           <>
             {item?.attachment == null ? (
@@ -429,6 +433,7 @@ const Messages = ({navigation, route}: any) => {
                   keyExtractor={(item, index) => index.toString()}
                   contentContainerStyle={styles.messagesContainer}
                   showsVerticalScrollIndicator={false}
+                  inverted
                 />
               ) : (
                 <Text style={{...commonStyles.font14Center}}>

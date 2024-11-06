@@ -102,6 +102,18 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: Colors.white,
   },
+  dateSeparator: {
+    alignItems: 'center',
+    marginVertical: 16,
+  },
+  dateSeparatorText: {
+    color: Colors.white,
+    fontSize: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
 });
 
 export default styles;

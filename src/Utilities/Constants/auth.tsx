@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AWS from 'aws-sdk';
 
 import {
   ACCEPT_INVITES,
@@ -54,6 +55,7 @@ import {
   REGISTER_USER,
   REPORT_USER,
   SELL_TICKET,
+  SEND_FEEDBACK,
   SOLO_FILTER_DATA,
   TEAM_FILTER_DATA,
   UN_BLOCKED_USER,
@@ -256,6 +258,9 @@ export function deleteComment(iD: String) {
 export function editComment(data: object) {
   return apiPost(EDIT_COMMENT, data);
 }
+export function sendfeedBank(data: object) {
+  return apiPost(SEND_FEEDBACK, data, {'Content-Type': 'multipart/form-data'});
+}
 export function deleteEvent(id: String) {
   return apiGet(`${GET_DELETE_EVENT}?id=${id}`);
 }
@@ -301,3 +306,34 @@ export async function clearUserData() {
 export async function clearAllData() {
   return await AsyncStorage.clear();
 }
+
+const createS3Client = () => {
+  return new AWS.S3({
+    region: 'eu-north-1',
+    accessKeyId: 'AKIAZI2LDPUK6XIDJRHU',
+    secretAccessKey: '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',
+  });
+};
+
+export const generateSignedUrlToUploadOn = async (
+  roomid: string,
+  image: any,
+) => {
+  const s3 = createS3Client();
+  const uploadParams = {
+    Bucket: 'baccvsbucket',
+    Key:
+      image?.mime === 'video/mp4'
+        ? `attachment/${roomid}/video_${image?.modificationDate}.mp4`
+        : `attachment/${roomid}/image_${image?.modificationDate}.jpg`,
+    ContentType: image?.mime,
+  };
+
+  try {
+    const signedUrl = s3.getSignedUrl('putObject', uploadParams);
+    return signedUrl;
+  } catch (error) {
+    console.error('Error generating signed URL:', error);
+    throw error;
+  }
+};

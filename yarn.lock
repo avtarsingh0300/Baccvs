@@ -2939,6 +2939,22 @@ available-typed-arrays@^1.0.7:
   dependencies:
     possible-typed-array-names "^1.0.0"
 
+aws-sdk@^2.1691.0:
+  version "2.1691.0"
+  resolved "https://registry.npmjs.org/aws-sdk/-/aws-sdk-2.1691.0.tgz"
+  integrity sha512-/F2YC+DlsY3UBM2Bdnh5RLHOPNibS/+IcjUuhP8XuctyrN+MlL+fWDAiela32LTDk7hMy4rx8MTgvbJ+0blO5g==
+  dependencies:
+    buffer "4.9.2"
+    events "1.1.1"
+    ieee754 "1.1.13"
+    jmespath "0.16.0"
+    querystring "0.2.0"
+    sax "1.2.1"
+    url "0.10.3"
+    util "^0.12.4"
+    uuid "8.0.0"
+    xml2js "0.6.2"
+
 axios@^1.7.2:
   version "1.7.2"
   resolved "https://registry.npmjs.org/axios/-/axios-1.7.2.tgz"
@@ -3032,7 +3048,7 @@ base-64@^0.1.0, base-64@0.1.0:
   resolved "https://registry.npmjs.org/base-64/-/base-64-0.1.0.tgz"
   integrity sha512-Y5gU45svrR5tI2Vt/X9GPd3L0HNIKzGu202EjxrXMpuc2V2CiKgemAbUUsqYmZJvPtCXoUKjNZwBJzsNScUbXA==
 
-base64-js@^1.3.1, base64-js@^1.5.1:
+base64-js@^1.0.2, base64-js@^1.3.1, base64-js@^1.5.1:
   version "1.5.1"
 
 bin-links@^4.0.4:
@@ -3094,9 +3110,28 @@ buffer-from@^1.0.0:
 
 buffer@^5.5.0:
   version "5.7.1"
+  resolved "https://registry.npmjs.org/buffer/-/buffer-5.7.1.tgz"
+  integrity sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==
   dependencies:
     base64-js "^1.3.1"
     ieee754 "^1.1.13"
+
+buffer@^6.0.3:
+  version "6.0.3"
+  resolved "https://registry.npmjs.org/buffer/-/buffer-6.0.3.tgz"
+  integrity sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==
+  dependencies:
+    base64-js "^1.3.1"
+    ieee754 "^1.2.1"
+
+buffer@4.9.2:
+  version "4.9.2"
+  resolved "https://registry.npmjs.org/buffer/-/buffer-4.9.2.tgz"
+  integrity sha512-xq+q3SRMOxGivLhBNaUdC64hDTQwejJ+H0T/NB1XMtTVEwNTrfFF3gAxiyW0Bu/xWEGhjVKgUcMhCrUy2+uCWg==
+  dependencies:
+    base64-js "^1.0.2"
+    ieee754 "^1.1.4"
+    isarray "^1.0.0"
 
 bytes@3.0.0:
   version "3.0.0"
@@ -4082,6 +4117,11 @@ etag@~1.8.1:
 event-target-shim@^5.0.0, event-target-shim@^5.0.1:
   version "5.0.1"
 
+events@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.npmjs.org/events/-/events-1.1.1.tgz"
+  integrity sha512-kEcvvCBByWXGnZy6JUlgAp2gBIUjfCAV6P6TgT1/aaQKcmuAEC4OZTV1I4EWQLz2gxZw76atuVyvHhTxvi0Flw==
+
 execa@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/execa/-/execa-1.0.0.tgz"
@@ -4160,7 +4200,9 @@ fast-levenshtein@^2.0.6:
   version "2.0.6"
 
 fast-xml-parser@^4.0.12, fast-xml-parser@^4.2.4:
-  version "4.4.0"
+  version "4.4.1"
+  resolved "https://registry.npmjs.org/fast-xml-parser/-/fast-xml-parser-4.4.1.tgz"
+  integrity sha512-xkjOecfnKGkSsOwtZ5Pz7Us/T6mrbPQrq0nh+aCO5V9nk5NLWmasAHumTKjiPJPWANe+kAZ84Jc8ooJkzZ88Sw==
   dependencies:
     strnum "^1.0.5"
 
@@ -4624,8 +4666,13 @@ iconv-lite@^0.6.2:
   dependencies:
     safer-buffer ">= 2.1.2 < 3.0.0"
 
-ieee754@^1.1.13:
+ieee754@^1.1.13, ieee754@^1.2.1:
   version "1.2.1"
+
+ieee754@^1.1.4, ieee754@1.1.13:
+  version "1.1.13"
+  resolved "https://registry.npmjs.org/ieee754/-/ieee754-1.1.13.tgz"
+  integrity sha512-4vf7I2LYV/HaWerSo3XmlMkp5eZ83i+/CDluXi/IGTs/O1sejBNhTtnxzmRZfvOUqj7lZjqHkeTvpgSFDlWZTg==
 
 ignore-walk@^6.0.4:
   version "6.0.5"
@@ -4740,6 +4787,14 @@ ip-address@^9.0.5:
 ip-regex@^5.0.0:
   version "5.0.0"
 
+is-arguments@^1.0.4:
+  version "1.1.1"
+  resolved "https://registry.npmjs.org/is-arguments/-/is-arguments-1.1.1.tgz"
+  integrity sha512-8Q7EARjzEnKpt/PCD7e1cgUS0a6X8u5tdSiMqXhojOdoV9TsMsiO+9VLC5vAmO8N7/GmXn7yjR8qnA6bVAEzfA==
+  dependencies:
+    call-bind "^1.0.2"
+    has-tostringtag "^1.0.0"
+
 is-array-buffer@^3.0.4:
   version "3.0.4"
   dependencies:
@@ -4821,7 +4876,7 @@ is-fullwidth-code-point@^3.0.0:
 is-generator-fn@^2.0.0:
   version "2.1.0"
 
-is-generator-function@^1.0.10:
+is-generator-function@^1.0.10, is-generator-function@^1.0.7:
   version "1.0.10"
   dependencies:
     has-tostringtag "^1.0.0"
@@ -4906,7 +4961,7 @@ is-symbol@^1.0.2, is-symbol@^1.0.3:
   dependencies:
     has-symbols "^1.0.2"
 
-is-typed-array@^1.1.13:
+is-typed-array@^1.1.13, is-typed-array@^1.1.3:
   version "1.1.13"
   dependencies:
     which-typed-array "^1.1.14"
@@ -4935,6 +4990,11 @@ is-wsl@^2.1.1, is-wsl@^2.2.0:
   version "2.2.0"
   dependencies:
     is-docker "^2.0.0"
+
+isarray@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/isarray/-/isarray-1.0.0.tgz"
+  integrity sha512-VLghIWNM6ELQzo7zwmcg0NmTVyWKYjvIeM83yjp0wRDTmUnrM678fQbcKBo6n2CJEF0szoG//ytg+TKla89ALQ==
 
 isarray@^2.0.5:
   version "2.0.5"
@@ -5323,6 +5383,11 @@ jest@*, jest@^29.6.3:
     "@jest/types" "^29.6.3"
     import-local "^3.0.2"
     jest-cli "^29.7.0"
+
+jmespath@0.16.0:
+  version "0.16.0"
+  resolved "https://registry.npmjs.org/jmespath/-/jmespath-0.16.0.tgz"
+  integrity sha512-9FzQjJ7MATs1tSpnco1K6ayiYE3figslrXA72G2HQ/n76RzvYlofyi5QM+iX4YRs/pu3yzxlVQSST23+dMDknw==
 
 joi@^17.2.1:
   version "17.13.1"
@@ -6712,6 +6777,11 @@ pump@^3.0.0:
 punycode@^2.1.0:
   version "2.3.1"
 
+punycode@1.3.2:
+  version "1.3.2"
+  resolved "https://registry.npmjs.org/punycode/-/punycode-1.3.2.tgz"
+  integrity sha512-RofWgt/7fL5wP1Y7fxE7/EmTLzQVnB0ycyibJ0OOHIlJqTNzglYFxVwETOcIoJqJmpDXJ9xImDv+Fq34F/d4Dw==
+
 pure-rand@^6.0.0:
   version "6.1.0"
 
@@ -6739,6 +6809,11 @@ query-string@^7.1.3:
 
 querystring@^0.2.1:
   version "0.2.1"
+
+querystring@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npmjs.org/querystring/-/querystring-0.2.0.tgz"
+  integrity sha512-X/xY82scca2tau62i9mDyU9K+I+djTMUsvwf7xnUX5GLvVzgJybOJf4Y6o9Zx3oJK/LSXg5tTZBjwzqVPaPO2g==
 
 queue-microtask@^1.2.2:
   version "1.2.3"
@@ -7135,6 +7210,11 @@ react-native-vector-icons@*, react-native-vector-icons@^10.1.0:
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
+react-native-video@^6.7.0:
+  version "6.7.0"
+  resolved "https://registry.npmjs.org/react-native-video/-/react-native-video-6.7.0.tgz"
+  integrity sha512-9516km2AorwEbeJtpODCeZa7BJGYxoMtyArzZANqCWLioNJPWAbZJjbWp+JIKnoXvb/qniNuTJ1989Zdohc8XQ==
+
 react-native-web@*, "react-native-web@>= 0.11", react-native-web@0.9.x:
   version "0.9.13"
   resolved "https://registry.npmjs.org/react-native-web/-/react-native-web-0.9.13.tgz"
@@ -7492,6 +7572,11 @@ safe-regex-test@^1.0.3:
 
 "safer-buffer@>= 2.1.2 < 3.0.0":
   version "2.1.2"
+
+sax@>=0.6.0, sax@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.npmjs.org/sax/-/sax-1.2.1.tgz"
+  integrity sha512-8I2a3LovHTOpm7NV5yOyO8IHqgVsfK4+UuySrXU8YXkSRX7k6hCV9b3HrkKCr3nMpgj+0bmocaJJWpvp1oc7ZA==
 
 scheduler@^0.19.1:
   version "0.19.1"
@@ -8197,6 +8282,14 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
+url@0.10.3:
+  version "0.10.3"
+  resolved "https://registry.npmjs.org/url/-/url-0.10.3.tgz"
+  integrity sha512-hzSUW2q06EqL1gKM/a+obYHLIO6ct2hwPuviqTTOcfFVc61UbfJ2Q32+uGL/HCPxKqrdGB5QUwIe7UqlDgwsOQ==
+  dependencies:
+    punycode "1.3.2"
+    querystring "0.2.0"
+
 use-latest-callback@^0.1.5, use-latest-callback@^0.1.9:
   version "0.1.9"
   resolved "https://registry.npmjs.org/use-latest-callback/-/use-latest-callback-0.1.9.tgz"
@@ -8226,6 +8319,17 @@ util-deprecate@^1.0.1, util-deprecate@~1.0.1:
 util-deprecate@^1.0.2:
   version "1.0.2"
 
+util@^0.12.4:
+  version "0.12.5"
+  resolved "https://registry.npmjs.org/util/-/util-0.12.5.tgz"
+  integrity sha512-kZf/K6hEIrWHI6XqOFUiiMa+79wE/D8Q+NCNAWclkyg3b4d2k7s0QGepNjiABc+aR3N1PAyHL7p6UcLY6LmrnA==
+  dependencies:
+    inherits "^2.0.3"
+    is-arguments "^1.0.4"
+    is-generator-function "^1.0.7"
+    is-typed-array "^1.1.3"
+    which-typed-array "^1.1.2"
+
 utils-merge@1.0.1:
   version "1.0.1"
 
@@ -8238,6 +8342,11 @@ uuid@^8.3.0:
   version "8.3.2"
   resolved "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
+
+uuid@8.0.0:
+  version "8.0.0"
+  resolved "https://registry.npmjs.org/uuid/-/uuid-8.0.0.tgz"
+  integrity sha512-jOXGuXZAWdsTH7eZLtyXMqUb9EcWMGZNbL9YcGBJl4MH4nrxHmZJhEHvyLFrkxo+28uLb/NYRcStH48fnD0Vzw==
 
 v8-to-istanbul@^9.0.1:
   version "9.2.0"
@@ -8334,7 +8443,7 @@ which-collection@^1.0.1:
 which-module@^2.0.0:
   version "2.0.1"
 
-which-typed-array@^1.1.14, which-typed-array@^1.1.15, which-typed-array@^1.1.9:
+which-typed-array@^1.1.14, which-typed-array@^1.1.15, which-typed-array@^1.1.2, which-typed-array@^1.1.9:
   version "1.1.15"
   dependencies:
     available-typed-arrays "^1.0.7"
@@ -8457,6 +8566,19 @@ xml-parser@^1.2.1:
   integrity sha512-lPUzzmS0zdwcNtyNndCl2IwH172ozkUDqmfmH3FcuDzHVl552Kr6oNfsvteHabqTWhsrMgpijqZ/yT7Wo1/Pzw==
   dependencies:
     debug "^2.2.0"
+
+xml2js@0.6.2:
+  version "0.6.2"
+  resolved "https://registry.npmjs.org/xml2js/-/xml2js-0.6.2.tgz"
+  integrity sha512-T4rieHaC1EXcES0Kxxj4JWgaUQHDk+qwHcYOCFHfiwKz7tOVPLq7Hjq9dM1WCMhylqMEfP7hMcOIChvotiZegA==
+  dependencies:
+    sax ">=0.6.0"
+    xmlbuilder "~11.0.0"
+
+xmlbuilder@~11.0.0:
+  version "11.0.1"
+  resolved "https://registry.npmjs.org/xmlbuilder/-/xmlbuilder-11.0.1.tgz"
+  integrity sha512-fDlsI/kFEx7gLvbecc0/ohLG50fugQp8ryHzMTuW9vSa1GJ0XYWKnhsUx7oie3G98+r56aTQIUB4kht42R3JvA==
 
 xmlhttprequest-ssl@~2.1.1:
   version "2.1.1"

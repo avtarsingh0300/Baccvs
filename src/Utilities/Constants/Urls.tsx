@@ -1,5 +1,7 @@
 export const BASE_URL = 'https://www.baccvs.com/api/';
 export const IMAGE_URL = 'https://www.baccvs.com/';
+export const AWS_S3_FILE_URL =
+  'https://baccvsbucket.s3.eu-north-1.amazonaws.com/';
 
 export const getApiUrl = (endpoint: string) => `${BASE_URL}${endpoint}`;
 
@@ -61,5 +63,6 @@ export const CREATE_COMMENT = getApiUrl('create-comment');
 export const LIKE_EVENT = getApiUrl('like-event');
 export const DELETE_COMMENT = getApiUrl('delete-comment');
 export const EDIT_COMMENT = getApiUrl('edit-comment');
+export const SEND_FEEDBACK = getApiUrl('send-feedback');
 export const GET_DELETE_EVENT = getApiUrl('delete-event');
 export const GET_CHAT_HISTORY = getApiUrl('chat-history');
