@@ -19,6 +19,7 @@ import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {getUserLastChats} from '../../Utilities/Constants/auth';
 import moment from 'moment';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
+import {io} from 'socket.io-client';
 
 const Chat = ({navigation}: any) => {
   const [button, setButton] = useState('R');
@@ -26,6 +27,10 @@ const Chat = ({navigation}: any) => {
   const [chatHistory, setChatHistory] = useState([]);
   const [chatSearchHistory, setSearchChatHistory] = useState([]);
   const [loader, setLoader] = useState(false);
+  const socket = io('http://13.48.250.217:3003/', {
+    withCredentials: true,
+    transports: ['websocket'],
+  });
 
   const onRec = () => {
     setButton('R');
@@ -84,36 +89,40 @@ const Chat = ({navigation}: any) => {
   };
 
   const renderItem = ({item}: any) => (
-    <TouchableOpacity
-      style={styles.flex}
-      onPress={() => {
-        onChat(item);
-      }}>
-      <Image
-        source={
-          item?.otherUser?.image?.length > 0
-            ? {uri: IMAGE_URL + item?.otherUser?.image}
-            : ImagePath.ProfileImg
-        }
-        style={styles.userimg}
-      />
-      <View>
-        <Text numberOfLines={1} style={styles.heading}>
-          {item?.otherUser?.name}
-        </Text>
-        <SizeBox size={2} />
-        <Text
-          numberOfLines={1}
-          style={[styles.heading, {color: Colors.lightGrey}]}>
-          {item?.message}
-        </Text>
-      </View>
-      <View>
-        <Text style={[styles.heading, {color: Colors.lightGrey}]}>
-          {moment(item?.timestamp).startOf('day').fromNow()}
-        </Text>
-      </View>
-    </TouchableOpacity>
+    console.log(item?.timestamp, 'item?.timestamp'),
+    (
+      <TouchableOpacity
+        style={styles.flex}
+        onPress={() => {
+          onChat(item);
+        }}>
+        <Image
+          source={
+            item?.otherUser?.image?.length > 0
+              ? {uri: IMAGE_URL + item?.otherUser?.image}
+              : ImagePath.ProfileImg
+          }
+          style={styles.userimg}
+        />
+        <View>
+          <Text numberOfLines={1} style={styles.heading}>
+            {item?.otherUser?.name}
+          </Text>
+          <SizeBox size={2} />
+          <Text
+            numberOfLines={1}
+            style={[styles.heading, {color: Colors.lightGrey}]}>
+            {item?.message}
+          </Text>
+        </View>
+        <View>
+          <Text
+            style={[styles.heading, {color: Colors.lightGrey, paddingLeft: 0}]}>
+            {moment(item?.timestamp).startOf('day').fromNow()}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    )
   );
 
   const renderItemm = ({item}: any) => (
@@ -137,7 +146,7 @@ const Chat = ({navigation}: any) => {
       <SafeAreaView>
         <Loadingcomponent isVisible={loader} />
         <SizeBox size={10} />
-        <View style={styles.buttongroup}>
+        {/* <View style={styles.buttongroup}>
           <View>
             <Text
               onPress={onRec}
@@ -150,15 +159,24 @@ const Chat = ({navigation}: any) => {
             <View style={styles.reddot}>
               <Text style={styles.dottxt}>99+</Text>
             </View>
-          </View>
-          <Text
+          </View> */}
+        {/* <Text
             onPress={onSent}
             style={[
               {...commonStyles.font16WhiteBold},
               {color: button === 'S' ? Colors.Pink : Colors.white},
             ]}>
             Matchs
+          </Text> */}
+        {/* </View> */}
+        <View style={{alignSelf: 'center'}}>
+          <Text
+            style={[{...commonStyles.font18W700Center}, {color: Colors.white}]}>
+            Messages
           </Text>
+          <View style={styles.reddot}>
+            <Text style={styles.dottxt}>99+</Text>
+          </View>
         </View>
         <SizeBox size={10} />
         {button === 'R' ? (

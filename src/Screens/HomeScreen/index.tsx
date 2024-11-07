@@ -38,6 +38,8 @@ import {getHomedata, likeEvents} from '../../Utilities/Constants/auth';
 import Modal from 'react-native-modal';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import {useSelector} from 'react-redux';
+import {io} from 'socket.io-client';
+
 const HomeScreen = ({navigation}: any) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [location, setLocation] = useState(null);
@@ -52,6 +54,27 @@ const HomeScreen = ({navigation}: any) => {
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
   const user = useSelector((data: any) => data?.auth?.userData?.user);
+  // const userId = user?.id;
+  // const socket = io('http://13.48.250.217:3003/', {
+  //   withCredentials: true,
+  //   transports: ['websocket'],
+  // });
+  // console.log(user, 'user');
+  // useEffect(() => {
+  //   socket.on('connect', () => {
+  //     console.log('Connected to socket server');
+  //   });
+  //   socket.emit('user-online', {userId});
+
+  //   // Emit the offline status when the user disconnects
+  //   return () => {
+  //     socket.emit('user-offline', {
+  //       userId,
+  //       lastSeen: new Date().toISOString(),
+  //     });
+  //   };
+  //   // Listen for successful connection
+  // }, [user]);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);

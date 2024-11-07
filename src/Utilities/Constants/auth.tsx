@@ -40,6 +40,7 @@ import {
   GET_USER_FOLLOWER_LIST,
   GET_USER_FOLLOWING_LIST,
   GET_USER_LAST_CHAT,
+  GET_USER_LAST_SEEN,
   GET_USER_LIKES,
   GROUP_DETAILS,
   LIKE_EVENT,
@@ -56,6 +57,7 @@ import {
   REPORT_USER,
   SELL_TICKET,
   SEND_FEEDBACK,
+  SEND_USER_STATUS,
   SOLO_FILTER_DATA,
   TEAM_FILTER_DATA,
   UN_BLOCKED_USER,
@@ -258,6 +260,9 @@ export function deleteComment(iD: String) {
 export function editComment(data: object) {
   return apiPost(EDIT_COMMENT, data);
 }
+export function sendUserStatus(data: object) {
+  return apiPost(SEND_USER_STATUS, data);
+}
 export function sendfeedBank(data: object) {
   return apiPost(SEND_FEEDBACK, data, {'Content-Type': 'multipart/form-data'});
 }
@@ -266,6 +271,9 @@ export function deleteEvent(id: String) {
 }
 export function chatHistory(id: String) {
   return apiGet(`${GET_CHAT_HISTORY}/${id}`);
+}
+export function getUserLastSeen(id: String) {
+  return apiGet(`${GET_USER_LAST_SEEN}${id}`);
 }
 export function getHomedata(
   latitude: number,

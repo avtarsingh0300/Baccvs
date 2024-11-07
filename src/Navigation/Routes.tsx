@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Stack = createNativeStackNavigator();
 
 export default function Routes() {
-  const user = useSelector((data: object) => data?.auth?.userData);
+  const user = useSelector((data: any) => data?.auth?.userData);
 
   return (
     <NavigationContainer ref={navigationRef}>

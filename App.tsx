@@ -12,8 +12,6 @@ import store from './src/Redux/store';
 import fontFamily from './src/Utilities/Styles/fontFamily';
 import {getUserData} from './src/Utilities/Constants/auth';
 import Geolocation from '@react-native-community/geolocation';
-// import notifee from '@notifee/react-native';
-// import messaging from '@react-native-firebase/messaging';
 
 LogBox.ignoreAllLogs();
 const App = () => {
