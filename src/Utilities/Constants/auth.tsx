@@ -62,6 +62,7 @@ import {
   TEAM_FILTER_DATA,
   UN_BLOCKED_USER,
   UN_FOLLOW_USER,
+  UPDATE_READ_STATUS,
   UPDATE_USER_PROFILE,
   USER_DATA,
   USER_DELETE,
@@ -274,6 +275,9 @@ export function chatHistory(id: String) {
 }
 export function getUserLastSeen(id: String) {
   return apiGet(`${GET_USER_LAST_SEEN}${id}`);
+}
+export function readMessageHandler(id: String) {
+  return apiPost(`${UPDATE_READ_STATUS}${id}`);
 }
 export function getHomedata(
   latitude: number,

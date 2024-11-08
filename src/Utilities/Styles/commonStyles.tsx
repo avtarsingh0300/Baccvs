@@ -34,9 +34,15 @@ export default StyleSheet.create({
     color: Colors.white,
   },
   font20W400: {
-    fontSize: textScale(18),
+    fontSize: textScale(20),
     fontWeight: '400',
     color: Colors.LinearBlack,
+    fontFamily: fontFamily.regular,
+  },
+  font24W400: {
+    fontSize: textScale(24),
+    fontWeight: '400',
+    color: Colors.white,
     fontFamily: fontFamily.regular,
   },
   font18W700Center: {

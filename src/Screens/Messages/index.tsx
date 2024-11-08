@@ -48,7 +48,7 @@ import Video, {VideoRef} from 'react-native-video';
 import moment from 'moment';
 
 const Messages = ({navigation, route}: any) => {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<any>([]);
   const [newMessage, setNewMessage] = useState('');
   const [imageSelected, setImageSelected] = useState('');
   const [showModal, setShowModal] = useState(false);
@@ -87,17 +87,6 @@ const Messages = ({navigation, route}: any) => {
       });
       getChatHistory();
       scrollToBottom();
-      const data = {
-        status: true,
-        lastseen: '',
-      };
-      sendUserStatus(data)
-        .then(res => {
-          console.log(res, 'res in sendUserStatus');
-        })
-        .catch(err => {
-          console.log(err, 'err in sendUserStatus');
-        });
       userLastSeenHandler();
     });
     socket.on('connect_error', err => {
@@ -105,7 +94,8 @@ const Messages = ({navigation, route}: any) => {
     });
 
     socket.on('message', newMessage => {
-      setMessages((prevMessages): any => [...prevMessages, newMessage]);
+      userLastSeenHandler();
+      setMessages((preMessage: any) => [...(preMessage || []), newMessage]); // Use an empty array as a fallback if preMessage is undefined
     });
 
     socket.on('typing', ({userId}) => {
@@ -121,17 +111,6 @@ const Messages = ({navigation, route}: any) => {
     });
     return () => {
       socket.disconnect();
-      const data = {
-        status: false,
-        lastseen: new Date(),
-      };
-      sendUserStatus(data)
-        .then(res => {
-          console.log(res, 'res in sendUserStatus');
-        })
-        .catch(err => {
-          console.log(err, 'err in sendUserStatus');
-        });
     };
   }, [roomid]);
 
@@ -153,7 +132,7 @@ const Messages = ({navigation, route}: any) => {
     getUserLastSeen(user?.user?.id)
       .then((res: any) => {
         setUserLastSeenStatus(res);
-        // console.log(res, 'res in getUserLastSeen');
+        console.log(res, 'res in getUserLastSeen');
       })
       .catch(err => {
         console.log(err, 'error in getUserLastSeen');
@@ -189,6 +168,8 @@ const Messages = ({navigation, route}: any) => {
     }
   };
 
+  // console.log(moment(new Date()).format(), 'moment(new Date()).format()');
+
   const handleSend = () => {
     if (newMessage.trim().length > 0) {
       socket.emit('message', {
@@ -197,23 +178,38 @@ const Messages = ({navigation, route}: any) => {
         message: newMessage,
         attachment: null,
         isGroup: false,
+        createdate: moment(new Date()).format(),
       });
+      userLastSeenHandler();
     }
     socket.emit('stopTyping', {roomId: roomid, userId: myId});
     setNewMessage('');
   };
 
   const onGoBack = () => {
+    const data = {
+      status: false,
+      lastseen: new Date(),
+    };
+    sendUserStatus(data)
+      .then(res => {
+        // console.log(res, 'res in sendUserStatus');
+      })
+      .catch(err => {
+        console.log(err, 'err in sendUserStatus');
+      });
     navigation.goBack();
   };
 
   const onProfile = () => {
     setShowModal(true);
   };
+
   const onAdd = () => {
     setShowModal(false);
     navigation.navigate(NavigationStrings.AddPeople);
   };
+
   const onEdit = () => {
     setShowModal(false);
     navigation.navigate(NavigationStrings.EditGroup);
@@ -548,13 +544,18 @@ const Messages = ({navigation, route}: any) => {
               </Text>
               <SizeBox size={2} />
               <Text
-                style={{...commonStyles.font12Regular, color: Colors.greyTxt}}>
-                Last seen at{' '}
+                style={{
+                  ...commonStyles.font12Regular,
+                  color: userLastSeenStatus?.activestatus
+                    ? Colors.green
+                    : Colors.greyTxt,
+                  textAlign: 'center',
+                }}>
                 {userLastSeenStatus?.activestatus
                   ? 'Online'
-                  : moment(userLastSeenStatus?.lastSeen)
+                  : ` Last seen at ${moment(userLastSeenStatus?.lastSeen)
                       .add(1, 'days')
-                      .calendar()}
+                      .calendar()}`}
               </Text>
             </View>
             <TouchableOpacity

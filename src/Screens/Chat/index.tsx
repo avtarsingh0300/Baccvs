@@ -16,7 +16,11 @@ import VectorIcon from '../../Utilities/Component/vectorIcons';
 import {FlatList} from 'react-native';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
-import {getUserLastChats} from '../../Utilities/Constants/auth';
+import {
+  getUserLastChats,
+  readMessageHandler,
+  sendUserStatus,
+} from '../../Utilities/Constants/auth';
 import moment from 'moment';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import {io} from 'socket.io-client';
@@ -27,10 +31,6 @@ const Chat = ({navigation}: any) => {
   const [chatHistory, setChatHistory] = useState([]);
   const [chatSearchHistory, setSearchChatHistory] = useState([]);
   const [loader, setLoader] = useState(false);
-  const socket = io('http://13.48.250.217:3003/', {
-    withCredentials: true,
-    transports: ['websocket'],
-  });
 
   const onRec = () => {
     setButton('R');
@@ -50,19 +50,68 @@ const Chat = ({navigation}: any) => {
     });
   };
 
+  // useEffect(() => {
+  //   const socket = io('http://13.48.250.217:3003/', {
+  //     withCredentials: true,
+  //     transports: ['websocket'],
+  //   });
+  //   socket.on('message', newMessage => {
+  //     console.log(newMessage, 'newMessage');
+  //     // setMessages(prevMessages => [...prevMessages, newMessage]);
+  //     getChatHistory();
+  //   });
+
+  //   socket.on('connect_error', error => {
+  //     console.error('Connection error:', error);
+  //   });
+
+  //   socket.on('disconnect', reason => {
+  //     console.log('Disconnected:', reason);
+  //   });
+
+  //   // Clean up on component unmount
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, []);
+
+  useEffect(() => {
+    const _unsubscribe = navigation.addListener('focus', () => {
+      if (search?.length == 0) {
+        setLoader(true);
+        getChatHistory();
+        showStatusHandler();
+      }
+    });
+    return () => {
+      _unsubscribe();
+    };
+  }, [search]);
+
+  const showStatusHandler = () => {
+    const data = {
+      status: true,
+      lastseen: '',
+    };
+    sendUserStatus(data)
+      .then(res => {
+        console.log(res, 'res in sendUserStatus');
+      })
+      .catch(err => {
+        console.log(err, 'err in sendUserStatus');
+      });
+  };
+
   useEffect(() => {
     if (search?.length > 0) {
       getSearchData();
-    } else {
-      setLoader(true);
-      getChatHistory();
     }
   }, [search]);
 
   const getChatHistory = () => {
     getUserLastChats('')
       .then((res: any) => {
-        console.log(res, 'res in getUserLastChats');
+        // console.log(res, 'res in getUserLastChats');
         setChatHistory(res?.chats);
         setLoader(false);
       })
@@ -88,13 +137,28 @@ const Chat = ({navigation}: any) => {
     }, 1500);
   };
 
-  const renderItem = ({item}: any) => (
-    console.log(item?.timestamp, 'item?.timestamp'),
-    (
+  const updateReadMessageHandler = (item: any) => {
+    readMessageHandler(item?._id)
+      .then(res => {
+        onChat(item);
+        console.log(res, 'res in readMessage');
+      })
+      .catch(err => {
+        console.log(err, 'err in readMessage');
+      });
+  };
+
+  const renderItem = ({item}: any) => {
+    // console.log(item, 'item');
+    return (
       <TouchableOpacity
         style={styles.flex}
         onPress={() => {
-          onChat(item);
+          if (!item?.read_status) {
+            updateReadMessageHandler(item);
+          } else {
+            onChat(item);
+          }
         }}>
         <Image
           source={
@@ -118,12 +182,24 @@ const Chat = ({navigation}: any) => {
         <View>
           <Text
             style={[styles.heading, {color: Colors.lightGrey, paddingLeft: 0}]}>
-            {moment(item?.timestamp).startOf('day').fromNow()}
+            {moment(item?.createdate).startOf('day').fromNow()}
           </Text>
+          {!item?.read_status && (
+            <View
+              style={{
+                width: 10,
+                height: 10,
+                borderRadius: 10,
+                backgroundColor: Colors.white,
+                marginTop: 10,
+                marginLeft: 25,
+              }}
+            />
+          )}
         </View>
       </TouchableOpacity>
-    )
-  );
+    );
+  };
 
   const renderItemm = ({item}: any) => (
     <TouchableOpacity
@@ -174,9 +250,9 @@ const Chat = ({navigation}: any) => {
             style={[{...commonStyles.font18W700Center}, {color: Colors.white}]}>
             Messages
           </Text>
-          <View style={styles.reddot}>
+          {/* <View style={styles.reddot}>
             <Text style={styles.dottxt}>99+</Text>
-          </View>
+          </View> */}
         </View>
         <SizeBox size={10} />
         {button === 'R' ? (

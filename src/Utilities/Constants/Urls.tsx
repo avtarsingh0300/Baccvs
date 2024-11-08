@@ -68,3 +68,4 @@ export const SEND_FEEDBACK = getApiUrl('send-feedback');
 export const GET_DELETE_EVENT = getApiUrl('delete-event');
 export const GET_CHAT_HISTORY = getApiUrl('chat-history');
 export const GET_USER_LAST_SEEN = getApiUrl('get-last-seen/');
+export const UPDATE_READ_STATUS = getApiUrl('update-read-status/');
