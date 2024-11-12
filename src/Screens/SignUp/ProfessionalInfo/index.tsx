@@ -214,7 +214,11 @@ const ProfessionalInfo = (props: any) => {
                       renderItem={({item}) => (
                         <TouchableOpacity
                           onPress={() => {
-                            setSelectedProfession(item?.name);
+                            setSelectedProfession(
+                              item?.name == 'Event Organizer'
+                                ? 'Event_Organizer'
+                                : item?.name,
+                            );
                             setDropdown(!dropdown);
                           }}
                           style={{

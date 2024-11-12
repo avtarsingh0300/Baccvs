@@ -3,6 +3,7 @@ import AWS from 'aws-sdk';
 
 import {
   ACCEPT_INVITES,
+  ADD_PAYMENT_METHODS,
   BLOCKED_LIST,
   BLOCK_USER,
   BUY_TICKET,
@@ -52,6 +53,8 @@ import {
   MUSIC_LIST,
   OTP_MATCH,
   OTP_SEND,
+  PAYMENT_METHOD_LIST,
+  PROFILE_STATUS,
   REFUSE_INVITES,
   REGISTER_USER,
   REPORT_USER,
@@ -62,6 +65,7 @@ import {
   TEAM_FILTER_DATA,
   UN_BLOCKED_USER,
   UN_FOLLOW_USER,
+  UPDATE_ACCOUNT_DETAILS,
   UPDATE_READ_STATUS,
   UPDATE_USER_PROFILE,
   USER_DATA,
@@ -244,6 +248,12 @@ export function followUser(data: object) {
 export function unFollowUser(data: object) {
   return apiPost(UN_FOLLOW_USER, data);
 }
+export function getUserProfileStatus() {
+  return apiPost(PROFILE_STATUS);
+}
+export function updateUserAccountDetails(data: object) {
+  return apiPost(UPDATE_ACCOUNT_DETAILS, data);
+}
 export function registerUser(data: object) {
   return apiPost(REGISTER_USER, data, {'Content-Type': 'multipart/form-data'});
 }
@@ -261,6 +271,9 @@ export function deleteComment(iD: String) {
 export function editComment(data: object) {
   return apiPost(EDIT_COMMENT, data);
 }
+export function addPaymentMethods(data: object) {
+  return apiPost(ADD_PAYMENT_METHODS, data);
+}
 export function sendUserStatus(data: object) {
   return apiPost(SEND_USER_STATUS, data);
 }
@@ -272,6 +285,9 @@ export function deleteEvent(id: String) {
 }
 export function chatHistory(id: String) {
   return apiGet(`${GET_CHAT_HISTORY}/${id}`);
+}
+export function allCardDetails() {
+  return apiGet(PAYMENT_METHOD_LIST);
 }
 export function getUserLastSeen(id: String) {
   return apiGet(`${GET_USER_LAST_SEEN}${id}`);

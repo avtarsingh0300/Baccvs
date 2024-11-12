@@ -29,18 +29,23 @@ const UploadImage = (props: any) => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [loader, setLoader] = useState(false);
   const [data, setData] = useState(props.route.params.data);
+
   const onBack = () => {
     props.navigation.goBack();
   };
 
+  useEffect(() => {
+    console.log(props.route.params.data, 'props.route.params.data');
+    setData(props.route.params.data);
+  }, [props.route.params.data]);
+
   const onComplete = () => {
-    setLoader(true);
     if (selectedImages.length === 0) {
+      setLoader(false);
       return showError('Select image!');
     }
     const pictures = selectedImages.map(n => n.uri);
 
-    setLoader(true);
     const formadata = new FormData();
     formadata.append('full_name', data.full_name);
     formadata.append('email', data.email);
@@ -103,6 +108,7 @@ const UploadImage = (props: any) => {
     });
 
     console.log(props.route.params.key === 'profess' ? formadata : formadata2);
+    setLoader(true);
     registerUser(props.route.params.key === 'profess' ? formadata2 : formadata)
       .then(res => {
         setLoader(false), console.log(res);

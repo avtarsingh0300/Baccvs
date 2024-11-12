@@ -27,11 +27,9 @@ import commonStyles from '../../Utilities/Styles/commonStyles';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import {
   disLikeTeam,
-  getEventTypes,
   likeTeam,
   teamsDetails,
 } from '../../Utilities/Constants/auth';
-import languages from '../../Utilities/Constants';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import {useSelector} from 'react-redux';
 

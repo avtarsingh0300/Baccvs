@@ -1,4 +1,5 @@
 import {
+  FlatList,
   Image,
   ScrollView,
   Text,
@@ -6,26 +7,92 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Colors} from '../../Utilities/Styles/colors';
 import LinearGradient from 'react-native-linear-gradient';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {moderateScale} from '../../Utilities/Styles/responsiveSize';
 import commonStyles from '../../Utilities/Styles/commonStyles';
-import {SizeBox} from '../../Utilities/Component/Helpers';
+import {Loadingcomponent, SizeBox} from '../../Utilities/Component/Helpers';
 import Modal from 'react-native-modal';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import {styles} from './styles';
+import {
+  addPaymentMethods,
+  allCardDetails,
+} from '../../Utilities/Constants/auth';
 
 const BankingInfo = ({navigation}: any) => {
   const [showOptionModal, setShowOptionModal] = useState(false);
   const [showAddCardModal, setShowAddCardModal] = useState(false);
+  const [loader, setLoader] = useState(false);
   const [userName, setUserName] = useState('');
   const [cardNumber, setCardNumber] = useState('');
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
   const [CVC, setCVC] = useState('');
+  const [listData, setListData] = useState<any>([]);
+
+  useEffect(() => {
+    setLoader(true);
+    getUserData();
+  }, []);
+
+  const getUserData = () => {
+    allCardDetails()
+      .then((res: any) => {
+        setShowAddCardModal(false);
+        setLoader(false);
+        // console.log(res?.paymentMethods, 'res in allCardDetails');
+        setListData(res?.paymentMethods);
+      })
+      .catch((err: any) => {
+        setShowAddCardModal(false);
+        setLoader(false);
+        console.log(err, 'err in allCardDetails');
+      });
+  };
+
+  const addPaymentMethodHandler = () => {
+    if (
+      cardNumber?.length > 0 &&
+      year.length > 0 &&
+      userName.length > 0 &&
+      CVC.length > 0 &&
+      month.length > 0
+    ) {
+      const data = {
+        cardNumber: cardNumber,
+        expiryYear: year,
+        cardHolderName: userName,
+        expiryMonth: month,
+        cvv: CVC,
+      };
+      addPaymentMethods(data)
+        .then(res => {
+          setShowAddCardModal(false);
+          getUserData();
+          // console.log(res, 'res in addPaymentMethods');
+        })
+        .catch(err => {
+          setShowAddCardModal(false);
+          console.log(err, 'err i addPaymentMethods');
+        });
+    }
+  };
+
+  const renderItem = ({item, index}: any) => (
+    <View style={styles.cardContainer}>
+      <View>
+        <Text style={styles.label}>{item?.cardHolderName}</Text>
+        <Text style={styles.label}>{item?.cardNumber}</Text>
+      </View>
+      <Text style={styles.label}>
+        {item?.expiryMonth + '/' + item?.expiryYear}
+      </Text>
+    </View>
+  );
 
   return (
     <LinearGradient
@@ -34,6 +101,7 @@ const BankingInfo = ({navigation}: any) => {
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
       <SafeAreaView>
+        <Loadingcomponent isVisible={loader} />
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
             <TouchableOpacity
@@ -55,28 +123,35 @@ const BankingInfo = ({navigation}: any) => {
           </View>
           <Text style={styles.title}>Payment methods</Text>
           <SizeBox size={15} />
-          <View style={styles.cardContainer}>
-            <View>
-              <Text style={styles.label}>Josh Rua 08/26</Text>
-              <Text style={styles.label}>**** 2388</Text>
-            </View>
-            <Text style={styles.label}>08/26</Text>
-          </View>
-          <SizeBox size={15} />
-          <View style={styles.cardContainer}>
-            <View>
-              <Text style={styles.label}>Arthur Gem</Text>
-              <Text style={styles.label}>**** 2388</Text>
-            </View>
-            <Text style={styles.label}>11/28</Text>
-          </View>
-          <SizeBox size={25} />
-          <TouchableOpacity
-            activeOpacity={0.8}
-            style={styles.btn}
-            onPress={() => setShowOptionModal(true)}>
-            <Text style={styles.btnText}>Add payment method</Text>
-          </TouchableOpacity>
+          <FlatList
+            data={listData}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={renderItem}
+            showsVerticalScrollIndicator={false}
+            ItemSeparatorComponent={() => <SizeBox size={10} />}
+            ListEmptyComponent={() => (
+              <Text
+                style={{
+                  ...commonStyles.font16WhiteBold,
+                  color: Colors.white,
+                  alignSelf: 'center',
+                  textAlign: 'center',
+                }}>
+                No Data Found...
+              </Text>
+            )}
+            ListFooterComponent={() => (
+              <>
+                <SizeBox size={25} />
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.btn}
+                  onPress={() => setShowOptionModal(true)}>
+                  <Text style={styles.btnText}>Add payment method</Text>
+                </TouchableOpacity>
+              </>
+            )}
+          />
         </ScrollView>
       </SafeAreaView>
       <Modal
@@ -157,7 +232,6 @@ const BankingInfo = ({navigation}: any) => {
         onBackdropPress={() => setShowAddCardModal(false)}
         avoidKeyboard={true}
         style={{flex: 1, justifyContent: 'center', margin: 0}}
-        // isVisible={true}
         isVisible={showAddCardModal}
         backdropOpacity={0.5}>
         <LinearGradient
@@ -184,6 +258,7 @@ const BankingInfo = ({navigation}: any) => {
             onChangeText={(e: string) => {
               setCardNumber(e);
             }}
+            keyboardType="number-pad"
             placeholder="Card number"
             placeholderTextColor={'#637394'}
             style={styles.textInputStyle}
@@ -201,6 +276,8 @@ const BankingInfo = ({navigation}: any) => {
                   setMonth(e);
                 }}
                 placeholder="MM"
+                maxLength={2}
+                keyboardType="number-pad"
                 placeholderTextColor={'#637394'}
                 style={styles.textInputStyle2}
               />
@@ -210,6 +287,8 @@ const BankingInfo = ({navigation}: any) => {
                   setYear(e);
                 }}
                 placeholder="YY"
+                keyboardType="number-pad"
+                maxLength={2}
                 placeholderTextColor={'#637394'}
                 style={[styles.textInputStyle2, {marginLeft: 10}]}
               />
@@ -220,12 +299,17 @@ const BankingInfo = ({navigation}: any) => {
                 setCVC(e);
               }}
               placeholder="CVC"
+              maxLength={4}
+              keyboardType="number-pad"
               placeholderTextColor={'#637394'}
               style={[styles.textInputStyle2, {marginRight: 10}]}
             />
           </View>
           <SizeBox size={10} />
-          <TouchableOpacity activeOpacity={0.8} style={styles.modalInBtn}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.modalInBtn}
+            onPress={addPaymentMethodHandler}>
             <LinearGradient
               colors={['#FF8036', '#FC6D19']}
               start={{x: 0, y: 0}}

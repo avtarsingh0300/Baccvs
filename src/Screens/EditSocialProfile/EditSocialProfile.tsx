@@ -20,7 +20,7 @@ import {
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {getEventTypes} from '../../Utilities/Constants/auth';
-import languages from '../../Utilities/Constants';
+import {languages} from '../../Utilities/Constants';
 import {styles} from './styles';
 
 const EditSocialProfile = () => {
