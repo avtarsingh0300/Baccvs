@@ -116,7 +116,7 @@ const ProfessionalInfo = (props: any) => {
         data: data,
         key: 'profess',
       });
-      // console.log(fullName, email, date, password, confirmPassword);
+      console.log(data);
     }
   };
 

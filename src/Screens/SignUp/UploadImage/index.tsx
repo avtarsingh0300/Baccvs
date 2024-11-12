@@ -24,6 +24,7 @@ import NavigationStrings from '../../../Utilities/Constants/NavigationStrings';
 import ImagePicker from 'react-native-image-crop-picker';
 import {registerUser, setDataHandler} from '../../../Utilities/Constants/auth';
 import {saveUserData} from '../../../Redux/Action/auth';
+import moment from 'moment';
 
 const UploadImage = (props: any) => {
   const [selectedImages, setSelectedImages] = useState([]);
@@ -36,6 +37,7 @@ const UploadImage = (props: any) => {
 
   useEffect(() => {
     console.log(props.route.params.data, 'props.route.params.data');
+
     setData(props.route.params.data);
   }, [props.route.params.data]);
 
@@ -74,16 +76,15 @@ const UploadImage = (props: any) => {
     });
 
     const formadata2 = new FormData();
-    formadata2.append('full_name', data.full_name);
+    formadata2.append('full_name', data.fullName);
     formadata2.append('email', data.email);
-
-    formadata2.append('dob', data.dob);
-    formadata2.append('username', data.username);
+    formadata2.append('dob', moment(data.date).format('YYYY-MM-DD'));
+    formadata2.append('username', data?.username ? data?.username : '');
     formadata2.append('gender', data.gender);
     formadata2.append('bio', data.bio);
     formadata2.append('language', data.language);
     formadata2.append('password', data.password);
-    formadata2.append('phone_number', data.phone_number);
+    formadata2.append('phone_number', data.phoneNumber);
     formadata2.append('type', data?.selectedProfession);
     formadata2.append('business_name', data?.businessName);
     formadata2.append('business_address', data?.businessAddress);
@@ -107,7 +108,7 @@ const UploadImage = (props: any) => {
       });
     });
 
-    console.log(props.route.params.key === 'profess' ? formadata : formadata2);
+    console.log(props.route.params.key === 'profess' ? formadata2 : formadata);
     setLoader(true);
     registerUser(props.route.params.key === 'profess' ? formadata2 : formadata)
       .then(res => {
