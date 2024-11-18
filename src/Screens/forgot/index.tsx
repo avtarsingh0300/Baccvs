@@ -5,8 +5,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import { SizeBox } from '../../Utilities/Component/Helpers';
-import { CostExplorer } from 'aws-sdk';
-
 
 const forgot = () => {
 
