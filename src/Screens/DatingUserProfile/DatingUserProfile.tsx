@@ -47,7 +47,7 @@ const DatingUserProfile = ({navigation, route}: any) => {
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
   const [loading, SetLoading] = useState(false);
-  const user = useSelector((data: object) => data?.auth?.userData);
+  const user = useSelector((data: any) => data?.auth?.userData);
 
   useEffect(() => {
     setLoader(true);

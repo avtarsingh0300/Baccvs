@@ -12,18 +12,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   btn: {
-    width: '65%',
-    paddingVertical: moderateScaleVertical(10),
+    width: '80%',
+    paddingVertical: moderateScaleVertical(5),
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
-    borderWidth: 1,
-    borderColor: Colors.lightPink,
-    borderRadius: 15,
+    borderRadius: 5,
+    backgroundColor: '#330542',
   },
   btnText: {
     ...commonStyles.font16Regular,
-    color: Colors.lightPink,
+    color: Colors.white,
   },
 });
 

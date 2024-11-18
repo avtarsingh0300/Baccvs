@@ -116,7 +116,7 @@ const ProfessionalInfo = (props: any) => {
         data: data,
         key: 'profess',
       });
-      // console.log(fullName, email, date, password, confirmPassword);
+      console.log(data);
     }
   };
 
@@ -147,6 +147,7 @@ const ProfessionalInfo = (props: any) => {
                 placeholder="Fullname"
                 value={fullName}
                 onChangeText={(e: string) => setFullName(e)}
+                styless={{}}
               />
               <SizeBox size={10} />
               <CommonInput
@@ -154,6 +155,7 @@ const ProfessionalInfo = (props: any) => {
                 keyboardType="email-address"
                 value={email}
                 onChangeText={(e: string) => setEmail(e?.trim())}
+                styless={{}}
               />
               <SizeBox size={10} />
               <CommonInputBtn
@@ -166,6 +168,7 @@ const ProfessionalInfo = (props: any) => {
               <CommonInput
                 placeholder="Enter Password"
                 value={password}
+                styless={{}}
                 onChangeText={(e: string) => setPassword(e)}
               />
               <SizeBox size={10} />
@@ -173,6 +176,7 @@ const ProfessionalInfo = (props: any) => {
                 placeholder="Confirm your password"
                 value={confirmPassword}
                 onChangeText={(e: string) => setConfirmPassword(e)}
+                styless={{}}
               />
               <SizeBox size={40} />
             </>
@@ -194,6 +198,7 @@ const ProfessionalInfo = (props: any) => {
                 placeholder="Business Name"
                 value={businessName}
                 onChangeText={(e: string) => setBusinessName(e)}
+                styless={{}}
               />
               <SizeBox size={10} />
               <CommonInputBtn
@@ -214,7 +219,11 @@ const ProfessionalInfo = (props: any) => {
                       renderItem={({item}) => (
                         <TouchableOpacity
                           onPress={() => {
-                            setSelectedProfession(item?.name);
+                            setSelectedProfession(
+                              item?.name == 'Event Organizer'
+                                ? 'Event_Organizer'
+                                : item?.name,
+                            );
                             setDropdown(!dropdown);
                           }}
                           style={{
@@ -252,6 +261,7 @@ const ProfessionalInfo = (props: any) => {
                 placeholder="Business Address (Optional) "
                 value={businessAddress}
                 onChangeText={(e: string) => setBusinessAddress(e)}
+                styless={{}}
               />
               <SizeBox size={10} />
               <CommonInput
@@ -259,12 +269,14 @@ const ProfessionalInfo = (props: any) => {
                 keyboardType="phone-pad"
                 value={phoneNumber}
                 onChangeText={(e: string) => setPhoneNumber(e?.trim())}
+                styless={{}}
               />
               <SizeBox size={10} />
               <CommonInput
                 placeholder="Website (Optional)"
                 value={websiteOptional}
                 onChangeText={(e: string) => setWebsiteOptional(e?.trim())}
+                styless={{}}
               />
               <SizeBox size={40} />
             </>
@@ -285,6 +297,7 @@ const ProfessionalInfo = (props: any) => {
                 placeholder="Add social media links (optional)"
                 value={socialMedia}
                 onChangeText={(e: string) => setSocialMedia(e)}
+                styless={{}}
               />
               <SizeBox size={10} />
               <CommonInput
@@ -292,6 +305,7 @@ const ProfessionalInfo = (props: any) => {
                 value={servicesDescription}
                 multiline={true}
                 onChangeText={(e: string) => setServicesDescription(e)}
+                styless={{}}
               />
               <SizeBox size={40} />
             </>
@@ -301,7 +315,7 @@ const ProfessionalInfo = (props: any) => {
             modal
             open={open}
             date={new Date()}
-            onConfirm={date => {
+            onConfirm={(date: any) => {
               setOpen(false);
               setDate(date);
             }}

@@ -5,15 +5,13 @@ import Routes from './src/Navigation/Routes';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import FlashMessage from 'react-native-flash-message';
 import {moderateScale, textScale} from './src/Utilities/Styles/responsiveSize';
-import {Alert, LogBox, PermissionsAndroid, Platform} from 'react-native';
+import {AppState, LogBox, PermissionsAndroid, Platform} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import {Provider} from 'react-redux';
 import store from './src/Redux/store';
 import fontFamily from './src/Utilities/Styles/fontFamily';
-import {getUserData} from './src/Utilities/Constants/auth';
+import {getUserData, sendUserStatus} from './src/Utilities/Constants/auth';
 import Geolocation from '@react-native-community/geolocation';
-// import notifee from '@notifee/react-native';
-// import messaging from '@react-native-firebase/messaging';
 
 LogBox.ignoreAllLogs();
 const App = () => {
@@ -32,36 +30,30 @@ const App = () => {
     // getTokenHandler();
   }, []);
 
-  // useEffect(() => {
-  //   const unsubscribe = messaging().onMessage(async remoteMessage => {
-  //     Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-  //   });
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState: any) => {
+      if (nextAppState === 'background') {
+        // Run the function when the app goes to the background
+        const data = {
+          status: false,
+          lastseen: new Date(),
+        };
+        sendUserStatus(data)
+          .then(res => {
+            // console.log(res, 'res in sendUserStatus');
+          })
+          .catch(err => {
+            console.log(err, 'err in sendUserStatus');
+          });
+      }
+    };
 
-  //   return unsubscribe;
-  // }, []);
+    AppState.addEventListener('change', handleAppStateChange);
 
-  // async function requestUserPermission() {
-  //   const authStatus = await messaging().requestPermission();
-  //   const enabled =
-  //     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-  //     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-  //   PermissionsAndroid.request(
-  //     PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-  //   );
-  //   if (enabled) {
-  //     console.log('Authorization status:', authStatus);
-  //   }
-  // }
-
-  // const getTokenHandler = async () => {
-  //   try {
-  //     await messaging().registerDeviceForRemoteMessages();
-  //     const token = await messaging().getToken();
-  //     console.log(token, 'token');
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+    return () => {
+      AppState.removeEventListener('change', handleAppStateChange);
+    };
+  }, []);
 
   const requestLocationPermission = async () => {
     try {

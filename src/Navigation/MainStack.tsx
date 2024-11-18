@@ -3,9 +3,16 @@ import React from 'react';
 import NavigationStrings from '../Utilities/Constants/NavigationStrings';
 import TabRoutes from './TabRoutes';
 import * as screens from './index';
-export default function MainStack(Stack: any) {
+export default function MainStack(Stack: any, user: any) {
   return (
     <>
+      {user?.role != 'user' && (
+        <Stack.Screen
+          name={NavigationStrings.HomeNight}
+          component={screens.HomeNight}
+          options={{headerShown: false}}
+        />
+      )}
       <Stack.Screen
         name={NavigationStrings?.TabRoutes}
         component={TabRoutes}
@@ -182,11 +189,6 @@ export default function MainStack(Stack: any) {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name={NavigationStrings.HomeNight}
-        component={screens.HomeNight}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
         name={NavigationStrings.MarketingTools}
         component={screens.MarketingTools}
         options={{headerShown: false}}
@@ -256,11 +258,11 @@ export default function MainStack(Stack: any) {
         component={screens.SetPriceScreen}
         options={{headerShown: false}}
       />
-      {/* <Stack.Screen
+      <Stack.Screen
         name={NavigationStrings.DjBooking}
         component={screens.DjBooking}
         options={{headerShown: false}}
-      /> */}
+      />
       <Stack.Screen
         name={NavigationStrings.DjInvoices}
         component={screens.DjInvoices}

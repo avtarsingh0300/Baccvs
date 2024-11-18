@@ -29,7 +29,7 @@ interface TeamsCardCardProps {
   likeUserProfileHanlder: (type: string, item: object) => void;
   swipe: Animated.ValueXY;
   [key: string]: any; // To handle any additional props
-  item: object;
+  item: any;
   isFirst: boolean;
 }
 
@@ -74,7 +74,7 @@ const TeamsCard: React.FC<TeamsCardCardProps> = ({
             height: height / 3,
             width: width,
           }}>
-          {item?.members?.map(i => (
+          {item?.members?.map((i: any) => (
             <ImageBackground
               borderRadius={10}
               source={
@@ -100,7 +100,7 @@ const TeamsCard: React.FC<TeamsCardCardProps> = ({
           style={{
             width: width,
           }}>
-          {item?.members?.map(i => (
+          {item?.members?.map((i: any) => (
             <ImageBackground
               borderRadius={10}
               source={{uri: IMAGE_URL + i?.picture}}

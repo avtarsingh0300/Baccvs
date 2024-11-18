@@ -29,7 +29,7 @@ interface MeetPeopleCardProps {
   likeUserProfileHanlder: (type: string, item?: object) => void;
   swipe: Animated.ValueXY;
   [key: string]: any;
-  item: object;
+  item: any;
   isFirst: boolean;
 }
 
@@ -74,7 +74,7 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
         contentContainerStyle={{borderRadius: 10}}
         index={activeIndex}
         onIndexChanged={index => setActiveIndex(index)}>
-        {item?.pictures?.map((i, ind) => (
+        {item?.pictures?.map((i: any, ind: number) => (
           <TouchableOpacity
             activeOpacity={0.9}
             // onPress={() => {
@@ -98,8 +98,10 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
                   alignSelf: 'center',
                   flexDirection: 'row',
                   marginTop: moderateScaleVertical(20),
+                  width: '100%',
+                  justifyContent: 'center',
                 }}>
-                {item?.pictures?.map((i, ind) => (
+                {item?.pictures?.map((i: any, ind: number) => (
                   <TouchableOpacity
                     activeOpacity={0.8}
                     style={{paddingVertical: 5}}
@@ -236,8 +238,8 @@ const styles = StyleSheet.create({
     marginLeft: moderateScale(10),
   },
   bar: {
-    width: 59,
-    height: 1,
+    width: 30,
+    height: 2,
     marginRight: 10,
   },
   invw: {

@@ -15,13 +15,18 @@ import {
 import {login, setDataHandler} from '../../Utilities/Constants/auth';
 import {Keyboard} from 'react-native';
 import {saveUserData} from '../../Redux/Action/auth';
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 const Login = ({navigation}: any) => {
+  // const [username, setUsername] = useState('Moosa@yopmail.com');
+  // const [password, setPassword] = useState('Avtar@123');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loader, setLoader] = useState(false);
+
   const onBack = () => {
     navigation.goBack();
   };
+
   const onLogin = () => {
     if (!username) {
       return showError('Please enter username');
@@ -29,19 +34,23 @@ const Login = ({navigation}: any) => {
     if (!password) {
       return showError('Please enter password');
     }
-    setLoader(true);
     const formData = {
       identifier: username,
       password: password,
     };
-    // console.log(formData);
+    setLoader(true);
     login(formData)
-      .then(res => {
+      .then((res: any) => {
         setLoader(false);
-        // console.log(res, 'res');
+        console.log(res?.role, 'res');
         setTimeout(() => {
           setDataHandler(res);
           saveUserData(res);
+          // if (res?.role != 'user') {
+          //   navigation.navigate(NavigationStrings.HomeNight);
+          // } else {
+          //   navigation.navigate(NavigationStrings.TabRoutes);
+          // }
         }, 1000);
         Keyboard.dismiss();
         showSuccess(res?.message);
@@ -52,12 +61,15 @@ const Login = ({navigation}: any) => {
         console.log(err, 'erro');
       });
   };
+
   const handleChangeUser = (value: any) => {
     setUsername(value);
   };
+
   const handleChangePass = (value: any) => {
     setPassword(value);
   };
+
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
@@ -105,4 +117,5 @@ const Login = ({navigation}: any) => {
     </LinearGradient>
   );
 };
+
 export default Login;

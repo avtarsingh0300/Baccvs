@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
   },
   messagesContainer: {
     paddingHorizontal: 10,
+    flexGrow: 1,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: moderateScale(10),
     alignItems: 'center',
     flexDirection: 'row',
-    backgroundColor: Colors.appColor,
+    backgroundColor: Colors.white,
     justifyContent: 'center',
     borderRadius: 30,
   },
@@ -100,7 +101,7 @@ const styles = StyleSheet.create({
   optionText2: {
     ...commonStyles.font14,
     fontWeight: '600',
-    color: Colors.white,
+    color: Colors.lightPink,
   },
   dateSeparator: {
     alignItems: 'center',

@@ -27,14 +27,14 @@ import {height} from '../../../Utilities/Styles/responsiveSize';
 import NavigationStrings from '../../../Utilities/Constants/NavigationStrings';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
-import languages from '../../../Utilities/Constants';
+import {languages} from '../../../Utilities/Constants';
 
 const RegisterScreen = (props: any) => {
   const scrollConfig = useScroll();
   const [h, setH] = useState(0);
   const {focusAction, scrollRef} = scrollConfig;
   const [selectedGender, setSelectedGender] = useState('');
-  const [selectedLang, setSelectedLang] = useState([]);
+  const [selectedLang, setSelectedLang] = useState<any>([]);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [modalLanguageVisible, setModalLanguageVisible] =
     useState<boolean>(false);
@@ -44,9 +44,9 @@ const RegisterScreen = (props: any) => {
   const [userBio, setUserBio] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [userConfirmPassword, setUserConfirmPassword] = useState('');
-  const genders = ['Male', 'Female', 'Other'];
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
+  const genders = ['Male', 'Female', 'Other'];
   const onBack = () => {
     props.navigation.goBack();
   };
@@ -146,6 +146,7 @@ const RegisterScreen = (props: any) => {
             placeholder="Fullname"
             value={fullName}
             onChangeText={(e: string) => setFullName(e)}
+            styless={{}}
           />
           <SizeBox size={10} />
           <Text
@@ -162,6 +163,7 @@ const RegisterScreen = (props: any) => {
             keyboardType="email-address"
             value={email}
             onChangeText={(e: string) => setEmail(e?.trim())}
+            styless={{}}
           />
           <SizeBox size={10} />
           <Text
@@ -191,6 +193,7 @@ const RegisterScreen = (props: any) => {
             placeholder="@johndoe"
             value={userName}
             onChangeText={(e: string) => setUserName(e)}
+            styless={{}}
           />
           <SizeBox size={10} />
           <Text
@@ -242,7 +245,7 @@ const RegisterScreen = (props: any) => {
                 <View style={styles.modalContainer}>
                   <FlatList
                     data={modalLanguageVisible ? languages : genders}
-                    renderItem={({item, index}) => {
+                    renderItem={({item, index}: any) => {
                       const filterData = selectedLang?.filter(
                         (i: any) => i == item?.name,
                       );
@@ -299,6 +302,7 @@ const RegisterScreen = (props: any) => {
             placeholder="Write a little bio to make people know you better."
             value={userBio}
             onChangeText={(e: string) => setUserBio(e)}
+            styless={{}}
           />
           <SizeBox size={10} />
           <Text
@@ -315,7 +319,7 @@ const RegisterScreen = (props: any) => {
               activeOpacity={0.8}
               onPress={() => setModalLanguageVisible(true)}
               style={styles.langContainer}>
-              {selectedLang?.map(item => (
+              {selectedLang?.map((item: any) => (
                 <TouchableOpacity
                   style={styles.langItem}
                   activeOpacity={0.8}
@@ -341,12 +345,14 @@ const RegisterScreen = (props: any) => {
             value={userPassword}
             onChangeText={(e: string) => setUserPassword(e?.trim())}
             secureTextEntry={true}
+            styless={{}}
           />
           <SizeBox size={10} />
           <CommonInput
             placeholder="Confirm password"
             value={userConfirmPassword}
             onChangeText={(e: string) => setUserConfirmPassword(e?.trim())}
+            styless={{}}
           />
           <SizeBox size={20} />
           <CommonBtn onPress={onContinue} title={'Continue'} />

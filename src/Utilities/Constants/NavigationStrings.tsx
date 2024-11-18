@@ -71,4 +71,5 @@ export default {
   MatchPeople: 'MatchPeople',
   FeedBack: 'FeedBack',
   BankingInfo: 'BankingInfo',
+  forgot: 'forgot',
 };
