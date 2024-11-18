@@ -19,6 +19,9 @@ const WelcomeScreen = (props: any) => {
   const onRoleClick = () => {
     props.navigation.navigate(NavigationStrings.ChooseRoles);
   };
+  const onForget = () => {
+    props.navigation.navigate(NavigationStrings.forgot);
+  };
   return (
     <LinearGradient
       colors={[Colors.LinearBlack, Colors.Linear]}
@@ -58,7 +61,7 @@ const WelcomeScreen = (props: any) => {
                 Member access
               </Text>
           </TouchableOpacity>
-          <Text style={styles.forgetTxt}>Forgot password?</Text>
+          <Text style={styles.forgetTxt} onPress={onForget}>Forgot password?</Text>
           <Text style={styles.signTxt}>
             By signing up you accept our Terms of use and Privacy Policy
           </Text>
