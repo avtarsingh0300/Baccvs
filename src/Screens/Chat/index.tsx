@@ -24,6 +24,7 @@ import {
 import moment from 'moment';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import {io} from 'socket.io-client';
+import {useSelector} from 'react-redux';
 
 const Chat = ({navigation}: any) => {
   const [button, setButton] = useState('R');
@@ -31,6 +32,7 @@ const Chat = ({navigation}: any) => {
   const [chatHistory, setChatHistory] = useState([]);
   const [chatSearchHistory, setSearchChatHistory] = useState([]);
   const [loader, setLoader] = useState(false);
+  const user = useSelector((data: any) => data?.auth?.userData);
 
   const onRec = () => {
     setButton('R');
@@ -95,7 +97,7 @@ const Chat = ({navigation}: any) => {
     };
     sendUserStatus(data)
       .then(res => {
-        console.log(res, 'res in sendUserStatus');
+        // console.log(res, 'res in sendUserStatus');
       })
       .catch(err => {
         console.log(err, 'err in sendUserStatus');
@@ -126,7 +128,7 @@ const Chat = ({navigation}: any) => {
       setLoader(true);
       getUserLastChats(`?username=${search}`)
         .then((res: any) => {
-          console.log(res, 'res in getSearchData');
+          // console.log(res, 'res in getSearchData');
           setSearchChatHistory(res?.chats);
           setLoader(false);
         })
@@ -184,7 +186,7 @@ const Chat = ({navigation}: any) => {
             style={[styles.heading, {color: Colors.lightGrey, paddingLeft: 0}]}>
             {moment(item?.createdate).startOf('day').fromNow()}
           </Text>
-          {!item?.read_status && (
+          {!item?.read_status && user?.user?.id != item?.sender && (
             <View
               style={{
                 width: 10,

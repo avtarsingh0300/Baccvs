@@ -54,6 +54,7 @@ const HomeScreen = ({navigation}: any) => {
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
   const user = useSelector((data: any) => data?.auth?.userData?.user);
+  // console.log(user, 'user');
   // const userId = user?.id;
   // const socket = io('http://13.48.250.217:3003/', {
   //   withCredentials: true,

@@ -16,7 +16,9 @@ export default function Routes() {
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
-        {user != null && user?.token ? MainStack(Stack) : AuthStack(Stack)}
+        {user != null && user?.token
+          ? MainStack(Stack, user)
+          : AuthStack(Stack)}
       </Stack.Navigator>
     </NavigationContainer>
   );

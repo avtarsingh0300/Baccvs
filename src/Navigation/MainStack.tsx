@@ -3,9 +3,16 @@ import React from 'react';
 import NavigationStrings from '../Utilities/Constants/NavigationStrings';
 import TabRoutes from './TabRoutes';
 import * as screens from './index';
-export default function MainStack(Stack: any) {
+export default function MainStack(Stack: any, user: any) {
   return (
     <>
+      {user?.role != 'user' && (
+        <Stack.Screen
+          name={NavigationStrings.HomeNight}
+          component={screens.HomeNight}
+          options={{headerShown: false}}
+        />
+      )}
       <Stack.Screen
         name={NavigationStrings?.TabRoutes}
         component={TabRoutes}
@@ -179,11 +186,6 @@ export default function MainStack(Stack: any) {
       <Stack.Screen
         name={NavigationStrings.DatingUserProfile}
         component={screens.DatingUserProfile}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name={NavigationStrings.HomeNight}
-        component={screens.HomeNight}
         options={{headerShown: false}}
       />
       <Stack.Screen

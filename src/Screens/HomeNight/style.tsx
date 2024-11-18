@@ -1,7 +1,9 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import {
+  height,
   moderateScale,
   moderateScaleVertical,
+  width,
 } from '../../Utilities/Styles/responsiveSize';
 import {Colors} from '../../Utilities/Styles/colors';
 
@@ -28,6 +30,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 20,
     paddingHorizontal: moderateScale(10),
+  },
+  dawerContainer: {
+    paddingHorizontal: moderateScale(15),
+    paddingVertical: moderateScaleVertical(15),
+    borderRadius: 7,
+    width: '60%',
+    position: 'absolute',
+    top: Platform.OS == 'android' ? height / 10 : height / 6.4,
+    left: width / 14,
+    borderWidth: 1,
+    borderColor: Colors.lightPink,
   },
 });
 export default styles;

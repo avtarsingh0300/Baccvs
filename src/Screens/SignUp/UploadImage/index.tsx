@@ -46,7 +46,7 @@ const UploadImage = (props: any) => {
       setLoader(false);
       return showError('Select image!');
     }
-    const pictures = selectedImages.map(n => n.uri);
+    const pictures = selectedImages.map((n: any) => n.uri);
 
     const formadata = new FormData();
     formadata.append('full_name', data.full_name);
@@ -131,7 +131,8 @@ const UploadImage = (props: any) => {
       height: 400,
       cropping: true,
     }).then(image => {
-      setSelectedImages(prevImages => [
+      // console.log(image, 'image');
+      setSelectedImages((prevImages): any => [
         ...prevImages,
         {id: prevImages.length, uri: image.path},
       ]);
@@ -140,7 +141,7 @@ const UploadImage = (props: any) => {
 
   const removeImg = (id: any) => {
     setSelectedImages(prevImages =>
-      prevImages.filter(image => image.id !== id),
+      prevImages.filter((image: any) => image.id !== id),
     );
   };
 
@@ -184,7 +185,7 @@ const UploadImage = (props: any) => {
             </View>
           )}
           numColumns={3}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={(item: any) => item.id.toString()}
         />
         <SizeBox size={10} />
         <TouchableOpacity onPress={addImg} style={styles.imageContainer}>
