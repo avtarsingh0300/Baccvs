@@ -254,7 +254,7 @@ const Messages = ({navigation, route}: any) => {
       height: 400,
       cropping: true,
       multiple: false,
-      mediaType: 'any',
+      mediaType: 'video',
     })
       .then((images: any) => {
         generateSignedUrlToUploadOn(roomid, images)
@@ -289,7 +289,7 @@ const Messages = ({navigation, route}: any) => {
 
   const captureImageWithCamera = () => {
     ImagePicker.openCamera({
-      mediaType: 'any',
+      mediaType: 'video',
     })
       .then((images: any) => {
         generateSignedUrlToUploadOn(roomid, images)
