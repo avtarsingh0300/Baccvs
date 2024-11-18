@@ -21,6 +21,7 @@ import {
   EVENT_DETAIL,
   EVENT_SEARCH,
   FOLLOW_USER,
+  FORGOT_PASSWORD,
   GET_ALL_MEET_GROUPS,
   GET_ALL_USERS,
   GET_BUYTICKET_LIST,
@@ -119,39 +120,55 @@ export function getMapData() {
 export function getSearchData(data: object) {
   return apiPost(EVENT_SEARCH, data);
 }
+
 export function changePass(data: object) {
   return apiPost(CHANGE_PASS, data);
 }
+
+export function forgotPassword(data: object) {
+  return apiPost(FORGOT_PASSWORD, data);
+}
+
 export function unBlockUser(data: object) {
   return apiPost(UN_BLOCKED_USER, data);
 }
+
 export function blockUser(data: object) {
   return apiPost(BLOCK_USER, data);
 }
+
 export function reportUser(data: object) {
   return apiPost(REPORT_USER, data);
 }
+
 export function sellTicket(data: object) {
   return apiPost(SELL_TICKET, data);
 }
+
 export function inviteAccpet(data: object) {
   return apiPost(ACCEPT_INVITES, data);
 }
+
 export function inviteRefuse(data: object) {
   return apiPost(REFUSE_INVITES, data);
 }
+
 export function cancelInvites(data: object) {
   return apiPost(CANCEL_INVITES, data);
 }
+
 export function soloFilterData(data: object) {
   return apiPost(SOLO_FILTER_DATA, data);
 }
+
 export function teamFilterData(data: object) {
   return apiPost(TEAM_FILTER_DATA, data);
 }
+
 export function userDelete() {
   return apiPost(USER_DELETE);
 }
+
 export function createEvent(data: object) {
   return apiPost(CREATE_EVENT, data, {'Content-Type': 'multipart/form-data'});
 }
@@ -160,6 +177,7 @@ export function createMeetGroup(data: object) {
     'Content-Type': 'multipart/form-data',
   });
 }
+
 export function getUserProfile() {
   return apiGet(USER_DATA);
 }
@@ -167,9 +185,11 @@ export function getUserProfile() {
 export function getEventTypes() {
   return apiGet(GET_EVENT_TYPE);
 }
+
 export function getFollowerList() {
   return apiGet(GET_FOLLOWER_LIST);
 }
+
 export function getNotification() {
   return apiGet(GET_NOTIFICATION);
 }
@@ -188,72 +208,95 @@ export function getRefCode() {
 export function createRefCode() {
   return apiPost(CREATE_REF_CODE);
 }
+
 export function getEventDetail(id: any) {
   return apiGet(`${EVENT_DETAIL}/${id}`);
 }
+
 export function getBlockedUser(id: string) {
   return apiGet(`${BLOCKED_LIST}?id=${id}`);
 }
+
 export function getMyEvent(status: string) {
   return apiGet(`${GET_MY_EVENT}?filter=${status}`);
 }
+
 export function getAllUsers() {
   return apiGet(`${GET_ALL_USERS}?page=1&limit=100`);
 }
+
 export function getUserLikes() {
   return apiGet(`${GET_USER_LIKES}`);
 }
+
 export function getUserFollowing() {
   return apiGet(`${GET_USER_FOLLOWING_LIST}`);
 }
+
 export function getUserFollower() {
   return apiGet(`${GET_USER_FOLLOWER_LIST}`);
 }
+
 export function getUserLastChats(text?: string) {
   return apiGet(`${GET_USER_LAST_CHAT}${text}`);
 }
+
 export function getUserForLike() {
   return apiGet(`${GET_LIKES_FOR_USER}`);
 }
+
 export function getMemberDetails(data: object) {
   return apiPost(`${MEMBER_DETAILS}`, data);
 }
+
 export function getTickets() {
   return apiGet(GET_MY_TICKETS);
 }
+
 export function getBuyTicketList() {
   return apiGet(GET_BUYTICKET_LIST);
 }
+
 export function getAllMeetGroups() {
   return apiGet(`${GET_ALL_MEET_GROUPS}`);
 }
+
 export function getMyGroups() {
   return apiGet(GET_MY_GROUPS);
 }
+
 export function getInvitesList() {
   return apiGet(GET_INVITES);
 }
+
 export function getSellTickets() {
   return apiGet(GET_SELL_TICKETS);
 }
+
 export function cancelSellTicket(data: object) {
   return apiPost(CANCEL_SELL_TICKET, data);
 }
+
 export function buyTicket(data: object) {
   return apiPost(BUY_TICKET, data);
 }
+
 export function followUser(data: object) {
   return apiPost(FOLLOW_USER, data);
 }
+
 export function unFollowUser(data: object) {
   return apiPost(UN_FOLLOW_USER, data);
 }
+
 export function getUserProfileStatus() {
   return apiPost(PROFILE_STATUS);
 }
+
 export function updateUserAccountDetails(data: object) {
   return apiPost(UPDATE_ACCOUNT_DETAILS, data);
 }
+
 export function registerUser(data: object) {
   return apiPost(REGISTER_USER, data, {'Content-Type': 'multipart/form-data'});
 }
@@ -265,36 +308,47 @@ export function createCommets(data: object) {
 export function likeEvents(data: object) {
   return apiPost(LIKE_EVENT, data);
 }
+
 export function deleteComment(iD: String) {
   return apiPost(`${DELETE_COMMENT}?id=${iD}`);
 }
+
 export function editComment(data: object) {
   return apiPost(EDIT_COMMENT, data);
 }
+
 export function addPaymentMethods(data: object) {
   return apiPost(ADD_PAYMENT_METHODS, data);
 }
+
 export function sendUserStatus(data: object) {
   return apiPost(SEND_USER_STATUS, data);
 }
+
 export function sendfeedBank(data: object) {
   return apiPost(SEND_FEEDBACK, data, {'Content-Type': 'multipart/form-data'});
 }
+
 export function deleteEvent(id: String) {
   return apiGet(`${GET_DELETE_EVENT}?id=${id}`);
 }
+
 export function chatHistory(id: String) {
   return apiGet(`${GET_CHAT_HISTORY}/${id}`);
 }
+
 export function allCardDetails() {
   return apiGet(PAYMENT_METHOD_LIST);
 }
+
 export function getUserLastSeen(id: String) {
   return apiGet(`${GET_USER_LAST_SEEN}${id}`);
 }
+
 export function readMessageHandler(id: String) {
   return apiPost(`${UPDATE_READ_STATUS}${id}`);
 }
+
 export function getHomedata(
   latitude: number,
   longitude: number,
