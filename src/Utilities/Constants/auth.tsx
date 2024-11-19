@@ -9,6 +9,7 @@ import {
   BUY_TICKET,
   CANCEL_INVITES,
   CANCEL_SELL_TICKET,
+  CHANGE_FORGOT_PASSWORD,
   CHANGE_PASS,
   CREATE_COMMENT,
   CREATE_EVENT,
@@ -127,6 +128,10 @@ export function changePass(data: object) {
 
 export function forgotPassword(data: object) {
   return apiPost(FORGOT_PASSWORD, data);
+}
+
+export function changeForgotPassword(data: object) {
+  return apiPost(CHANGE_FORGOT_PASSWORD, data);
 }
 
 export function unBlockUser(data: object) {

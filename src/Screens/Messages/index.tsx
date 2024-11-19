@@ -311,6 +311,10 @@ const Messages = ({navigation, route}: any) => {
 
   const pickImageFromGallery = () => {
     ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true,
+      multiple: false,
       mediaType: 'photo',
     })
       .then((images: any) => {

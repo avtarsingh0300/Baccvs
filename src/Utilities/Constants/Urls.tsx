@@ -23,6 +23,7 @@ export const EVENT_DETAIL = getApiUrl('event');
 export const GET_NOTIFICATION = getApiUrl('notification-list');
 export const CHANGE_PASS = getApiUrl('change-password');
 export const FORGOT_PASSWORD = getApiUrl('forgot-password');
+export const CHANGE_FORGOT_PASSWORD = getApiUrl('fpassword-change');
 export const USER_DELETE = getApiUrl('deactivate-account');
 export const BLOCKED_LIST = getApiUrl('block-user-list');
 export const UN_BLOCKED_USER = getApiUrl('unblock-user');
