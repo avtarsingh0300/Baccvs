@@ -69,6 +69,9 @@ const Login = ({navigation}: any) => {
   const handleChangePass = (value: any) => {
     setPassword(value);
   };
+  const onForget = () => {
+  navigation.navigate(NavigationStrings.forgot);
+  };
 
   return (
     <LinearGradient
@@ -108,7 +111,7 @@ const Login = ({navigation}: any) => {
           style={{
             alignSelf: 'flex-end',
             ...commonStyles.font16White,
-          }}>
+          }} onPress={onForget}>
           Forgot password?
         </Text>
         <SizeBox size={10} />

@@ -283,6 +283,11 @@ export default function MainStack(Stack: any, user: any) {
         component={screens.BankingInfo}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.forgotMain}
+        component={screens.forgotMain}
+        options={{headerShown: false}}
+      />
     </>
   );
 }

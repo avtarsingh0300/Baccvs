@@ -14,6 +14,7 @@ import {
 } from '../../Utilities/Component/Helpers';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import {changePass} from '../../Utilities/Constants/auth';
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 
 const ChangePass = ({navigation}: any) => {
   const [currentpass, setCurrentPass] = useState('');
@@ -48,6 +49,10 @@ const ChangePass = ({navigation}: any) => {
         showError(err.message);
       });
   };
+
+  const onForgotPassword = () =>{
+  navigation.navigate (NavigationStrings.forgotMain)
+  }
 
   return (
     <LinearGradient
@@ -84,7 +89,7 @@ const ChangePass = ({navigation}: any) => {
           styless={styles.input}
         />
         <SizeBox size={10} />
-        <Text style={{...commonStyles.font12Bold, color: Colors.lightPink}}>
+        <Text style={{...commonStyles.font12Bold, color: Colors.lightPink}} onPress={onForgotPassword}>
           forgot password?
         </Text>
         <SizeBox size={20} />

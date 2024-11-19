@@ -72,4 +72,5 @@ export default {
   FeedBack: 'FeedBack',
   BankingInfo: 'BankingInfo',
   forgot: 'forgot',
+  forgotMain: 'forgotMain',
 };
