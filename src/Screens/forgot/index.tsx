@@ -189,6 +189,7 @@ const forgot = ({navigation}: any) => {
                 value={password}
                 onChangeText={text => setPassword(text?.trim())}
               />
+              <SizeBox size={10}/>
               <TextInput
                 style={styles.input}
                 placeholder="Confirm Password"

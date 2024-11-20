@@ -3,9 +3,10 @@ import React, { useState } from 'react'
 import LinearGradient from 'react-native-linear-gradient';
 import { Colors } from '../../Utilities/Styles/colors';
 import styles from './style';
-import { Loadingcomponent, SizeBox } from '../../Utilities/Component/Helpers';
+import { Loadingcomponent, showError, showSuccess, SizeBox } from '../../Utilities/Component/Helpers';
 import { CodeField, Cursor ,useBlurOnFulfill,
     useClearByFocusCell,} from 'react-native-confirmation-code-field';
+import { changeForgotPassword, forgotPassword, otpMatch } from '../../Utilities/Constants/auth';
 
 const forgotMain = ({navigation}:any) => {
     const [email, setEmail] = useState('');
@@ -104,12 +105,12 @@ const forgotMain = ({navigation}:any) => {
         <SizeBox size={20} />
         {activeIndex == 0 && (
           <TextInput
-            style={styles.input}
-            placeholder="Email"
-            placeholderTextColor="black"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={text => setEmail(text?.trim())}
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor="black"
+          keyboardType="email-address"
+          value={email}
+          onChangeText={text => setEmail(text?.trim())}
           />
         )}
         {activeIndex == 1 && (
@@ -133,16 +134,16 @@ const forgotMain = ({navigation}:any) => {
               renderCell={({index, symbol, isFocused}) => {
                 return (
                   <Text
-                    key={index}
-                    style={{
-                      ...styles.cell,
-
-                      borderColor: isFocused ? Colors.Pink : Colors.white,
-                      borderWidth: isFocused ? 2.3 : 1.3,
-                    }}
-                    onLayout={() => {
-                      getCellOnLayoutHandler(index);
-                    }}>
+                  key={index}
+                  style={{
+                    ...styles.cell,
+                    
+                    borderColor: isFocused ? Colors.Pink : Colors.white,
+                    borderWidth: isFocused ? 2.3 : 1.3,
+                  }}
+                  onLayout={() => {
+                    getCellOnLayoutHandler(index);
+                  }}>
                     {symbol || (isFocused ? <Cursor /> : null)}
                   </Text>
                 );
@@ -159,6 +160,8 @@ const forgotMain = ({navigation}:any) => {
               value={password}
               onChangeText={text => setPassword(text?.trim())}
             />
+          <SizeBox size={10} />
+            
             <TextInput
               style={styles.input}
               placeholder="Confirm Password"
@@ -175,7 +178,7 @@ const forgotMain = ({navigation}:any) => {
           onPress={() => {
             if (activeIndex == 0) {
               forgotPasswordHandler();
-            } else if (activeIndex == 0) {
+            } else if (activeIndex == 1) {
               onContinue();
             } else {
               changePassword();
