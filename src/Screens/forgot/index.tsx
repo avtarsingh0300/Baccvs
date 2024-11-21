@@ -103,7 +103,7 @@ const forgot = ({navigation}: any) => {
       };
       changeForgotPassword(formData)
         .then(res => {
-          navigation.navigate(NavigationStrings.LoginScreen);
+          navigation.navigate(NavigationStrings.WelcomScreen);
           console.log(res, 'res in changeForgotPassword');
         })
         .catch(err => {
@@ -189,7 +189,7 @@ const forgot = ({navigation}: any) => {
                 value={password}
                 onChangeText={text => setPassword(text?.trim())}
               />
-              <SizeBox size={10}/>
+              <SizeBox size={10} />
               <TextInput
                 style={styles.input}
                 placeholder="Confirm Password"
@@ -206,7 +206,7 @@ const forgot = ({navigation}: any) => {
             onPress={() => {
               if (activeIndex == 0) {
                 forgotPasswordHandler();
-              } else if (activeIndex == 0) {
+              } else if (activeIndex == 1) {
                 onContinue();
               } else {
                 changePassword();
