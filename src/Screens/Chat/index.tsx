@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  FlatList,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
@@ -13,7 +14,6 @@ import commonStyles from '../../Utilities/Styles/commonStyles';
 import styles from './style';
 import {Loadingcomponent, SizeBox} from '../../Utilities/Component/Helpers';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
-import {FlatList} from 'react-native';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {
@@ -23,7 +23,6 @@ import {
 } from '../../Utilities/Constants/auth';
 import moment from 'moment';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
-import {io} from 'socket.io-client';
 import {useSelector} from 'react-redux';
 
 const Chat = ({navigation}: any) => {

@@ -56,10 +56,6 @@ const OtherProfiles = ({navigation, route}: any) => {
   const [showPreview, setShowPreview] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
   // console.log(user?.user?.id);
-  const onSocialpart = () => {
-    setShowModal(false);
-    navigation.navigate(NavigationStrings.SocialPart);
-  };
 
   useEffect(() => {
     getUserData();
@@ -76,7 +72,7 @@ const OtherProfiles = ({navigation, route}: any) => {
         setLoader(false);
         setUserData(res?.user);
         setEventCount(res);
-        console.log(res);
+        // console.log(res);
       })
       .catch(err => {
         setLoader(false);
@@ -94,7 +90,7 @@ const OtherProfiles = ({navigation, route}: any) => {
         setLoader(false);
         setUserData(res?.user);
         setEventCount(res);
-        console.log(res);
+        // console.log(res);
       })
       .catch(err => {
         setLoader(false);
@@ -216,6 +212,8 @@ const OtherProfiles = ({navigation, route}: any) => {
     </View>
   );
 
+  // console.log(userData, 'userData');
+
   return (
     <LinearGradient
       colors={[Colors.backgroundNew, Colors.backgroundNew]}
@@ -259,7 +257,7 @@ const OtherProfiles = ({navigation, route}: any) => {
           </Text>
           {userData?.pictures?.length > 0 ? (
             <Image
-              source={{uri: IMAGE_URL + userData?.pictures[0]}}
+              source={{uri: IMAGE_URL + userData?.pictures[0]?.url}}
               style={styles.profileImage}
             />
           ) : (
@@ -380,11 +378,16 @@ const OtherProfiles = ({navigation, route}: any) => {
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => {
-                  setShowPreview(true);
-                  setSelectedImage(i);
+                  // setShowPreview(true);
+                  // setSelectedImage(i?.url);
+                  navigation.navigate(NavigationStrings.ImagePreview, {
+                    data: userData,
+                    image: i,
+                    id: route?.params?.id,
+                  });
                 }}>
                 <FastImage
-                  source={{uri: IMAGE_URL + i}}
+                  source={{uri: IMAGE_URL + i?.url}}
                   key={index}
                   style={styles.postImage}
                 />

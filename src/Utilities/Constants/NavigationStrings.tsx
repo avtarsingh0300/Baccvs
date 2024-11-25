@@ -73,4 +73,5 @@ export default {
   BankingInfo: 'BankingInfo',
   forgot: 'forgot',
   forgotMain: 'forgotMain',
+  ImagePreview: 'ImagePreview',
 };

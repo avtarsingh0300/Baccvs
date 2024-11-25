@@ -44,7 +44,7 @@ const ProfileImagePreview = ({showModal, setShowModal, data, image}: any) => {
             {data?.pictures?.length > 0 && (
               <Image
                 style={styles.smallIcon}
-                source={{uri: IMAGE_URL + data?.pictures[0]}}
+                source={{uri: IMAGE_URL + data?.pictures[0]?.url}}
               />
             )}
           </View>

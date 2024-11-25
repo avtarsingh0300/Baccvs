@@ -45,6 +45,7 @@ import commonStyles from '../../Utilities/Styles/commonStyles';
 import {useSelector} from 'react-redux';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import fontFamily from '../../Utilities/Styles/fontFamily';
+import Video from 'react-native-video';
 
 const EventDetails = ({navigation, route}: any) => {
   const refRBSheet: any = useRef();
@@ -54,11 +55,11 @@ const EventDetails = ({navigation, route}: any) => {
   const refMapRBSheet: any = useRef();
   const refTicketsRBSheet: any = useRef();
   const [loading, setLoading] = useState(false);
-  const [eventData, setEventData] = useState({});
+  const [eventData, setEventData] = useState<any>({});
   const [commentvalue, setCommentValue] = useState('');
   const [commentid, setCommentId] = useState('');
 
-  const user = useSelector((data: object) => data?.auth?.userData);
+  const user = useSelector((data: any) => data?.auth?.userData);
 
   const onPressBack = () => {
     navigation.goBack();
@@ -144,7 +145,7 @@ const EventDetails = ({navigation, route}: any) => {
         });
     } else {
       createCommets(data)
-        .then(res => {
+        .then((res: any) => {
           showSuccess(res?.message);
           setCommentValue('');
           setCommentId('');
@@ -187,7 +188,7 @@ const EventDetails = ({navigation, route}: any) => {
         console.log(err);
       });
   };
-  const onEditPress = item => {
+  const onEditPress = (item: any) => {
     setCommentId(item?.id);
     setCommentValue(item?.description);
   };
@@ -368,6 +369,8 @@ const EventDetails = ({navigation, route}: any) => {
     </View>
   );
 
+  console.log(eventData, 'eventData');
+
   return (
     <LinearGradient
       colors={[Colors.backgroundNew, Colors.backgroundNew]}
@@ -376,122 +379,103 @@ const EventDetails = ({navigation, route}: any) => {
       style={styles.LinearConatiner}>
       <SafeAreaView>
         <Loadingcomponent isVisible={loading} />
-        <ImageBackground
-          source={
-            thumbnailUrl ? {uri: IMAGE_URL + thumbnailUrl} : ImagePath.eventback
-          }
-          style={{height: height, width: width}}>
-          <View style={styles.headerRow}>
-            <VectorIcon
-              groupName={'Ionicons'}
-              name={'chevron-back'}
-              size={25}
-              onPress={onPressBack}
+        {eventData?.video_urls?.length > 0 ? (
+          <View style={{height: height, width: width}}>
+            <Video
+              repeat={true}
+              source={{uri: IMAGE_URL + eventData?.video_urls}}
+              style={{
+                height: height,
+                width: width,
+                position: 'absolute',
+              }}
+              resizeMode="stretch"
             />
-            <Text style={styles.headerTxt}>{eventData?.event_name}</Text>
-            <View style={{flexDirection: 'row'}}>
-              {/* <VectorIcon
+            <View style={styles.headerRow}>
+              <VectorIcon
+                groupName={'Ionicons'}
+                name={'chevron-back'}
+                size={25}
+                onPress={onPressBack}
+              />
+              <Text style={styles.headerTxt}>{eventData?.event_name}</Text>
+              <View style={{flexDirection: 'row'}}>
+                {/* <VectorIcon
                 groupName={'MaterialCommunityIcons'}
                 name={'share-outline'}
                 size={25}
                 color={Colors.white}
                 onPress={onShare}
               /> */}
-              <TouchableOpacity
-                style={{marginLeft: 10, justifyContent: 'center'}}
-                activeOpacity={0.8}
-                onPress={onReport}>
-                <Image
-                  style={{
-                    width: moderateScale(16),
-                    height: moderateScaleVertical(18),
-                    alignSelf: 'center',
-                    tintColor: Colors.white,
-                  }}
-                  source={ImagePath.Security_Rules}
-                />
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={{marginLeft: 10, justifyContent: 'center'}}
+                  activeOpacity={0.8}
+                  onPress={onReport}>
+                  <Image
+                    style={{
+                      width: moderateScale(16),
+                      height: moderateScaleVertical(18),
+                      alignSelf: 'center',
+                      tintColor: Colors.white,
+                    }}
+                    source={ImagePath.Security_Rules}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-          {/* <LinearGradient
-            colors={[Colors.headerlinear, Colors.Linear]}
-            start={{x: 0, y: 0}}
-            end={{x: 1.3, y: 0.9}}
-            style={styles.secondHeader}>
-            <Text style={styles.timeText}>
-              {formatTime(eventData?.start_time)} -
-              {formatTime(eventData?.end_time)}
-            </Text>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={styles.ticketContainer}>
-              <Image source={ImagePath.Ticket} />
-              <Text style={styles.ticketPrice}> €{eventData?.price_type}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{flexDirection: 'row'}}
-              onPress={() => {
-                refMapRBSheet.current.open();
-              }}>
-              <Text style={styles.distanceText}>{eventData?.distance}</Text>
-              <Image source={ImagePath.Pin_alt} />
-            </TouchableOpacity>
-          </LinearGradient> */}
-          <View style={styles.abview}>
-            <View style={styles.bottomBar}>
-              <SizeBox size={5} />
-              <VectorIcon
-                groupName={'MaterialCommunityIcons'}
-                name={'share-outline'}
-                size={25}
-                color={Colors.white}
-                onPress={onShare}
-              />
-              <SizeBox size={5} />
-              <TouchableOpacity
-                style={{flexDirection: 'row'}}
-                onPress={() => {
-                  refMapRBSheet.current.open();
-                }}>
-                {/* <Text style={styles.distanceText}>{eventData?.distance}</Text> */}
-                <Image source={ImagePath.Pin_alt} />
-              </TouchableOpacity>
-              <SizeBox size={5} />
-              <TouchableOpacity
-                style={styles.likebtn}
-                activeOpacity={0.8}
-                onPress={() => {
-                  refComRBSheet.current.open();
-                }}>
+            <View style={styles.abview}>
+              <View style={styles.bottomBar}>
+                <SizeBox size={5} />
                 <VectorIcon
-                  groupName="Ionicons"
-                  name="chatbubble-ellipses-outline"
-                  size={24}
+                  groupName={'MaterialCommunityIcons'}
+                  name={'share-outline'}
+                  size={25}
                   color={Colors.white}
+                  onPress={onShare}
                 />
-                <Text style={styles.bottomBarText}>
-                  {eventData?.comments?.length}
-                </Text>
-              </TouchableOpacity>
-              <SizeBox size={5} />
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={[styles.likebtn]}
-                onPress={() => {
-                  refRBSheet.current.open();
-                }}>
-                <Image
-                  source={ImagePath.likes}
-                  resizeMode="contain"
-                  style={{width: 24, height: 24}}
-                />
-                <Text style={styles.bottomBarText}>
-                  {eventData?.likes?.length}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={
-                  () => {
+                <SizeBox size={5} />
+                <TouchableOpacity
+                  style={{flexDirection: 'row'}}
+                  onPress={() => {
+                    refMapRBSheet.current.open();
+                  }}>
+                  <Image source={ImagePath.Pin_alt} />
+                </TouchableOpacity>
+                <SizeBox size={5} />
+                <TouchableOpacity
+                  style={styles.likebtn}
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    refComRBSheet.current.open();
+                  }}>
+                  <VectorIcon
+                    groupName="Ionicons"
+                    name="chatbubble-ellipses-outline"
+                    size={24}
+                    color={Colors.white}
+                  />
+                  <Text style={styles.bottomBarText}>
+                    {eventData?.comments?.length}
+                  </Text>
+                </TouchableOpacity>
+                <SizeBox size={5} />
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={[styles.likebtn]}
+                  onPress={() => {
+                    refRBSheet.current.open();
+                  }}>
+                  <Image
+                    source={ImagePath.likes}
+                    resizeMode="contain"
+                    style={{width: 24, height: 24}}
+                  />
+                  <Text style={styles.bottomBarText}>
+                    {eventData?.likes?.length}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
                     if (eventData?.user?.id === user?.user?.id) {
                       navigation.navigate(NavigationStrings.UserProfile);
                     } else {
@@ -499,700 +483,838 @@ const EventDetails = ({navigation, route}: any) => {
                         id: eventData?.user?.id,
                       });
                     }
-                  }
-                  // console.log(eventData?.user?.id, user?.user?.id)
-                  // navigation.navigate(NavigationStrings.OtherProfiles, {
-                  //   id: eventData?.user?.id,
-                  // })
-                }
-                style={[
-                  styles.likebtn,
-                  {
-                    bottom: moderateScaleVertical(-10),
-                  },
-                ]}>
+                  }}
+                  style={[
+                    styles.likebtn,
+                    {
+                      bottom: moderateScaleVertical(-10),
+                    },
+                  ]}>
+                  <Image
+                    source={
+                      thumbnailUrl
+                        ? {uri: IMAGE_URL + eventData?.user?.image}
+                        : ImagePath.ProfileImg
+                    }
+                    style={styles.profileimg}
+                  />
+                  <Text
+                    style={[styles.bottomBarText, {fontSize: textScale(14)}]}>
+                    {eventData?.user?.name}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => {
+                  refTicketsRBSheet.current.open();
+                }}
+                style={styles.ticketContainer}>
                 <Image
-                  source={
-                    thumbnailUrl
-                      ? {uri: IMAGE_URL + eventData?.user?.image}
-                      : ImagePath.ProfileImg
-                  }
-                  style={styles.profileimg}
+                  source={ImagePath.Ticket}
+                  style={{tintColor: Colors.white}}
                 />
-                <Text style={[styles.bottomBarText, {fontSize: textScale(14)}]}>
-                  {eventData?.user?.name}
+                <Text style={styles.ticketPrice}>
+                  {' '}
+                  €{eventData?.early_price}
                 </Text>
               </TouchableOpacity>
-            </View>
-
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => {
-                refTicketsRBSheet.current.open();
-              }}
-              style={styles.ticketContainer}>
-              <Image
-                source={ImagePath.Ticket}
-                style={{tintColor: Colors.white}}
-              />
-              <Text style={styles.ticketPrice}> €{eventData?.early_price}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => {
-                refInfoRBSheet.current.open();
-              }}>
-              <Image
-                source={ImagePath.openSheet}
-                style={{
-                  resizeMode: 'contain',
-                  width: moderateScale(40),
-                  height: moderateScaleVertical(40),
-                }}
-              />
-            </TouchableOpacity>
-          </View>
-          <RBSheet
-            ref={refRBSheet}
-            closeOnPressMask={true}
-            height={height / 1.7}
-            customStyles={{
-              wrapper: {
-                backgroundColor: 'transparent',
-                width: '90%',
-                bottom: height / 30,
-                alignSelf: 'center',
-              },
-              container: {
-                borderRadius: 10,
-              },
-            }}>
-            <LinearGradient
-              colors={[Colors.backgroundNew, Colors.backgroundNew]}
-              start={{x: 0, y: 0}}
-              end={{x: 1.3, y: 0.9}}
-              style={styles.sheetContent}>
-              <VectorIcon
-                groupName="Fontisto"
-                name="close-a"
-                size={15}
-                color={Colors.white}
-                style={{alignSelf: 'flex-end', top: 10, right: 10}}
-                onPress={() => refRBSheet.current.close()}
-              />
-              <Text
-                style={[
-                  styles.timeText,
-                  {
-                    fontSize: textScale(16),
-                    textAlign: 'center',
-                    marginTop: 10,
-                  },
-                ]}>
-                Likes
-              </Text>
-              <FlatList
-                data={eventData?.likes}
-                keyExtractor={item => item?.id?.toString()}
-                renderItem={renderItem}
-              />
               <TouchableOpacity
-                onPress={onLikePress}
                 activeOpacity={0.8}
-                style={{
-                  alignSelf: 'center',
-                  position: 'absolute',
-                  bottom: moderateScale(20),
+                onPress={() => {
+                  refInfoRBSheet.current.open();
                 }}>
                 <Image
-                  source={ImagePath.likes}
-                  resizeMode="contain"
-                  style={{width: 24, height: 24}}
+                  source={ImagePath.openSheet}
+                  style={{
+                    resizeMode: 'contain',
+                    width: moderateScale(40),
+                    height: moderateScaleVertical(40),
+                  }}
                 />
               </TouchableOpacity>
-            </LinearGradient>
-          </RBSheet>
-          <RBSheet
-            ref={refComRBSheet}
-            closeOnPressMask={true}
-            height={height / 1.7}
-            customStyles={{
-              wrapper: {
-                backgroundColor: 'transparent',
-                width: '90%',
-                bottom: height / 30,
-                alignSelf: 'center',
-              },
-              container: {
-                borderRadius: 10,
-              },
-            }}>
-            <LinearGradient
-              colors={[Colors.backgroundNew, Colors.backgroundNew]}
-              start={{x: 0, y: 0}}
-              end={{x: 1.3, y: 0.9}}
-              style={styles.sheetContent}>
-              {/* <KeyboardAwareScrollView showsVerticalScrollIndicator={false}> */}
+            </View>
+          </View>
+        ) : (
+          <ImageBackground
+            source={
+              thumbnailUrl
+                ? {uri: IMAGE_URL + thumbnailUrl}
+                : ImagePath.eventback
+            }
+            style={{height: height, width: width}}>
+            <View style={styles.headerRow}>
               <VectorIcon
-                groupName="Fontisto"
-                name="close-a"
-                size={15}
+                groupName={'Ionicons'}
+                name={'chevron-back'}
+                size={25}
+                onPress={onPressBack}
+              />
+              <Text style={styles.headerTxt}>{eventData?.event_name}</Text>
+              <View style={{flexDirection: 'row'}}>
+                {/* <VectorIcon
+                groupName={'MaterialCommunityIcons'}
+                name={'share-outline'}
+                size={25}
                 color={Colors.white}
-                style={{alignSelf: 'flex-end', top: 10, right: 10}}
-                onPress={() => refComRBSheet.current.close()}
-              />
-              <Text
-                style={[
-                  styles.timeText,
-                  {
-                    fontSize: textScale(16),
-                    textAlign: 'center',
-                    marginTop: 10,
-                  },
-                ]}>
-                Comments
-              </Text>
-              <FlatList
-                data={eventData?.comments}
-                keyExtractor={item => item?.id?.toString()}
-                renderItem={comItem}
-              />
-              <SizeBox size={10} />
-
-              <View
-                style={{
-                  backgroundColor: Colors.white,
-                  width: '90%',
-                  minHeight: 40,
-                  alignSelf: 'center',
-                  borderRadius: 5,
-                  justifyContent: 'space-between',
-                  flexDirection: 'row',
-                  paddingHorizontal: 10,
-                  alignItems: 'center',
-                }}>
-                <TextInput
-                  placeholder="Type here"
-                  multiline
-                  value={commentvalue}
-                  onChangeText={(text: string) => {
-                    setCommentValue(text);
-                    text.length == 0 && setCommentId('');
-                  }}
-                  style={{
-                    width: '90%',
-                    paddingVertical: 5,
-                    color: Colors.black,
-                    fontFamily: fontFamily.regular,
-                  }}
-                />
-                <VectorIcon
-                  groupName="Ionicons"
-                  name="send-outline"
-                  onPress={onSendComments}
-                  size={20}
-                  color={Colors.lightPink}
-                />
+                onPress={onShare}
+              /> */}
+                <TouchableOpacity
+                  style={{marginLeft: 10, justifyContent: 'center'}}
+                  activeOpacity={0.8}
+                  onPress={onReport}>
+                  <Image
+                    style={{
+                      width: moderateScale(16),
+                      height: moderateScaleVertical(18),
+                      alignSelf: 'center',
+                      tintColor: Colors.white,
+                    }}
+                    source={ImagePath.Security_Rules}
+                  />
+                </TouchableOpacity>
               </View>
-              <SizeBox size={5} />
-              {/* </KeyboardAwareScrollView> */}
-            </LinearGradient>
-          </RBSheet>
-          <RBSheet
-            ref={refInfoRBSheet}
-            closeOnPressMask={true}
-            height={height / 1.2}
-            customStyles={{
-              wrapper: {
-                backgroundColor: 'transparent',
-                width: '90%',
-                bottom: height / 30,
+            </View>
+            <View style={styles.abview}>
+              <View style={styles.bottomBar}>
+                <SizeBox size={5} />
+                <VectorIcon
+                  groupName={'MaterialCommunityIcons'}
+                  name={'share-outline'}
+                  size={25}
+                  color={Colors.white}
+                  onPress={onShare}
+                />
+                <SizeBox size={5} />
+                <TouchableOpacity
+                  style={{flexDirection: 'row'}}
+                  onPress={() => {
+                    refMapRBSheet.current.open();
+                  }}>
+                  <Image source={ImagePath.Pin_alt} />
+                </TouchableOpacity>
+                <SizeBox size={5} />
+                <TouchableOpacity
+                  style={styles.likebtn}
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    refComRBSheet.current.open();
+                  }}>
+                  <VectorIcon
+                    groupName="Ionicons"
+                    name="chatbubble-ellipses-outline"
+                    size={24}
+                    color={Colors.white}
+                  />
+                  <Text style={styles.bottomBarText}>
+                    {eventData?.comments?.length}
+                  </Text>
+                </TouchableOpacity>
+                <SizeBox size={5} />
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={[styles.likebtn]}
+                  onPress={() => {
+                    refRBSheet.current.open();
+                  }}>
+                  <Image
+                    source={ImagePath.likes}
+                    resizeMode="contain"
+                    style={{width: 24, height: 24}}
+                  />
+                  <Text style={styles.bottomBarText}>
+                    {eventData?.likes?.length}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (eventData?.user?.id === user?.user?.id) {
+                      navigation.navigate(NavigationStrings.UserProfile);
+                    } else {
+                      navigation.navigate(NavigationStrings.OtherProfiles, {
+                        id: eventData?.user?.id,
+                      });
+                    }
+                  }}
+                  style={[
+                    styles.likebtn,
+                    {
+                      bottom: moderateScaleVertical(-10),
+                    },
+                  ]}>
+                  <Image
+                    source={
+                      thumbnailUrl
+                        ? {uri: IMAGE_URL + eventData?.user?.image}
+                        : ImagePath.ProfileImg
+                    }
+                    style={styles.profileimg}
+                  />
+                  <Text
+                    style={[styles.bottomBarText, {fontSize: textScale(14)}]}>
+                    {eventData?.user?.name}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => {
+                  refTicketsRBSheet.current.open();
+                }}
+                style={styles.ticketContainer}>
+                <Image
+                  source={ImagePath.Ticket}
+                  style={{tintColor: Colors.white}}
+                />
+                <Text style={styles.ticketPrice}>
+                  {' '}
+                  €{eventData?.early_price}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => {
+                  refInfoRBSheet.current.open();
+                }}>
+                <Image
+                  source={ImagePath.openSheet}
+                  style={{
+                    resizeMode: 'contain',
+                    width: moderateScale(40),
+                    height: moderateScaleVertical(40),
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+          </ImageBackground>
+        )}
+        <RBSheet
+          ref={refRBSheet}
+          closeOnPressMask={true}
+          height={height / 1.7}
+          customStyles={{
+            wrapper: {
+              backgroundColor: 'transparent',
+              width: '90%',
+              bottom: height / 30,
+              alignSelf: 'center',
+            },
+            container: {
+              borderRadius: 10,
+            },
+          }}>
+          <LinearGradient
+            colors={[Colors.backgroundNew, Colors.backgroundNew]}
+            start={{x: 0, y: 0}}
+            end={{x: 1.3, y: 0.9}}
+            style={styles.sheetContent}>
+            <VectorIcon
+              groupName="Fontisto"
+              name="close-a"
+              size={15}
+              color={Colors.white}
+              style={{alignSelf: 'flex-end', top: 10, right: 10}}
+              onPress={() => refRBSheet.current.close()}
+            />
+            <Text
+              style={[
+                styles.timeText,
+                {
+                  fontSize: textScale(16),
+                  textAlign: 'center',
+                  marginTop: 10,
+                },
+              ]}>
+              Likes
+            </Text>
+            <FlatList
+              data={eventData?.likes}
+              keyExtractor={item => item?.id?.toString()}
+              renderItem={renderItem}
+            />
+            <TouchableOpacity
+              onPress={onLikePress}
+              activeOpacity={0.8}
+              style={{
                 alignSelf: 'center',
-              },
-              container: {
-                borderRadius: 10,
-              },
-            }}>
-            <LinearGradient
-              colors={[Colors.backgroundNew, Colors.backgroundNew]}
-              start={{x: 0, y: 0}}
-              end={{x: 1.3, y: 0.9}}
-              style={styles.sheetContent}>
-              <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={{paddingHorizontal: 15}}>
-                  <SizeBox size={10} />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      paddingHorizontal: 8,
-                    }}>
-                    <Text style={{...commonStyles.font16Regular}}>
-                      Event details
-                    </Text>
-                    <Image
-                      style={{
-                        width: moderateScale(16),
-                        height: moderateScaleVertical(18),
-                        alignSelf: 'center',
-                        tintColor: Colors.white,
-                      }}
-                      source={ImagePath.Security_Rules}
-                    />
-                  </View>
-                  <SizeBox size={10} />
-                  <Text
-                    style={{
-                      ...commonStyles.font12Regular,
-                      paddingHorizontal: 5,
-                    }}>
-                    This party about having fun, bring your stuff and come enjoy
-                    the moment with us.
-                  </Text>
-                  <Text
-                    style={{
-                      ...commonStyles.font12Regular,
-                      paddingHorizontal: 3,
-                    }}>
-                    {' '}
-                    Free entry, be respectful of others.
-                  </Text>
-                  <SizeBox size={10} />
-                  <Text
-                    style={{
-                      ...commonStyles.font16Regular,
-                      paddingHorizontal: 5,
-                    }}>
-                    Details
-                  </Text>
-                  <SizeBox size={10} />
-                  <View style={{flexDirection: 'row'}}>
-                    <VectorIcon
-                      groupName="Feather"
-                      name="speaker"
-                      size={25}
-                      color={Colors.white}
-                    />
-                    <FlatList
-                      showsHorizontalScrollIndicator={false}
-                      horizontal
-                      data={eventData?.music_type}
-                      renderItem={({item}) => (
-                        <TouchableOpacity style={styles.allBtn}>
-                          <Text style={styles.timeText}>{item}</Text>
-                        </TouchableOpacity>
-                      )}
-                    />
-                  </View>
-                  <SizeBox size={10} />
-                  <View style={{flexDirection: 'row'}}>
-                    <Image source={ImagePath.Pin_alt} />
-                    <Text style={styles.distanceText}>
-                      {`  `}
-                      {eventData?.distance}
-                    </Text>
-                  </View>
-                </View>
+                position: 'absolute',
+                bottom: moderateScale(20),
+              }}>
+              <Image
+                source={ImagePath.likes}
+                resizeMode="contain"
+                style={{width: 24, height: 24}}
+              />
+            </TouchableOpacity>
+          </LinearGradient>
+        </RBSheet>
+        <RBSheet
+          ref={refComRBSheet}
+          closeOnPressMask={true}
+          height={height / 1.7}
+          customStyles={{
+            wrapper: {
+              backgroundColor: 'transparent',
+              width: '90%',
+              bottom: height / 30,
+              alignSelf: 'center',
+            },
+            container: {
+              borderRadius: 10,
+            },
+          }}>
+          <LinearGradient
+            colors={[Colors.backgroundNew, Colors.backgroundNew]}
+            start={{x: 0, y: 0}}
+            end={{x: 1.3, y: 0.9}}
+            style={styles.sheetContent}>
+            <VectorIcon
+              groupName="Fontisto"
+              name="close-a"
+              size={15}
+              color={Colors.white}
+              style={{alignSelf: 'flex-end', top: 10, right: 10}}
+              onPress={() => refComRBSheet.current.close()}
+            />
+            <Text
+              style={[
+                styles.timeText,
+                {
+                  fontSize: textScale(16),
+                  textAlign: 'center',
+                  marginTop: 10,
+                },
+              ]}>
+              Comments
+            </Text>
+            <FlatList
+              data={eventData?.comments}
+              keyExtractor={item => item?.id?.toString()}
+              renderItem={comItem}
+            />
+            <SizeBox size={10} />
+            <View
+              style={{
+                backgroundColor: Colors.white,
+                width: '90%',
+                minHeight: 40,
+                alignSelf: 'center',
+                borderRadius: 5,
+                justifyContent: 'space-between',
+                flexDirection: 'row',
+                paddingHorizontal: 10,
+                alignItems: 'center',
+              }}>
+              <TextInput
+                placeholder="Type here"
+                multiline
+                value={commentvalue}
+                onChangeText={(text: string) => {
+                  setCommentValue(text);
+                  text.length == 0 && setCommentId('');
+                }}
+                style={{
+                  width: '90%',
+                  paddingVertical: 5,
+                  color: Colors.black,
+                  fontFamily: fontFamily.regular,
+                }}
+              />
+              <VectorIcon
+                groupName="Ionicons"
+                name="send-outline"
+                onPress={onSendComments}
+                size={20}
+                color={Colors.lightPink}
+              />
+            </View>
+            <SizeBox size={5} />
+          </LinearGradient>
+        </RBSheet>
+        <RBSheet
+          ref={refInfoRBSheet}
+          closeOnPressMask={true}
+          height={height / 1.2}
+          customStyles={{
+            wrapper: {
+              backgroundColor: 'transparent',
+              width: '90%',
+              bottom: height / 30,
+              alignSelf: 'center',
+            },
+            container: {
+              borderRadius: 10,
+            },
+          }}>
+          <LinearGradient
+            colors={[Colors.backgroundNew, Colors.backgroundNew]}
+            start={{x: 0, y: 0}}
+            end={{x: 1.3, y: 0.9}}
+            style={styles.sheetContent}>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <View style={{paddingHorizontal: 15}}>
                 <SizeBox size={10} />
                 <View
                   style={{
                     flexDirection: 'row',
-                    alignItems: 'center',
-                    paddingHorizontal: 17,
+                    justifyContent: 'space-between',
+                    paddingHorizontal: 8,
                   }}>
+                  <Text style={{...commonStyles.font16Regular}}>
+                    Event details
+                  </Text>
+                  <Image
+                    style={{
+                      width: moderateScale(16),
+                      height: moderateScaleVertical(18),
+                      alignSelf: 'center',
+                      tintColor: Colors.white,
+                    }}
+                    source={ImagePath.Security_Rules}
+                  />
+                </View>
+                <SizeBox size={10} />
+                <Text
+                  style={{
+                    ...commonStyles.font12Regular,
+                    paddingHorizontal: 5,
+                  }}>
+                  {eventData?.description}
+                </Text>
+                <SizeBox size={10} />
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    paddingHorizontal: 5,
+                  }}>
+                  Details
+                </Text>
+                <SizeBox size={10} />
+                <View style={{flexDirection: 'row'}}>
                   <VectorIcon
-                    groupName="Fontisto"
-                    name="stopwatch"
+                    groupName="Feather"
+                    name="speaker"
                     size={25}
                     color={Colors.white}
                   />
-                  <Text style={[styles.timeText, {color: Colors.white}]}>
-                    {`  `}
-                    {calculateDuration(
-                      eventData?.start_time,
-                      eventData?.end_time,
+                  <FlatList
+                    showsHorizontalScrollIndicator={false}
+                    horizontal
+                    data={eventData?.music_type}
+                    renderItem={({item}) => (
+                      <TouchableOpacity style={styles.allBtn}>
+                        <Text style={styles.timeText}>{item}</Text>
+                      </TouchableOpacity>
                     )}
-                  </Text>
-                </View>
-                <SizeBox size={10} />
-                <Text style={{...commonStyles.font16Regular, marginLeft: 18}}>
-                  Hosted by
-                </Text>
-                <SizeBox size={10} />
-                <FlatList
-                  data={[{id: 1}, {id: 1}]}
-                  showsHorizontalScrollIndicator={false}
-                  horizontal
-                  renderItem={renderHost}
-                />
-                <SizeBox size={10} />
-                <Text style={{...commonStyles.font16Regular, marginLeft: 18}}>
-                  Line Up
-                </Text>
-                <SizeBox size={10} />
-                <FlatList
-                  data={[{id: 1}, {id: 1}]}
-                  showsHorizontalScrollIndicator={false}
-                  horizontal
-                  renderItem={renderLineUp}
-                />
-                <SizeBox size={10} />
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Text style={{...commonStyles.font16Regular, marginLeft: 18}}>
-                    Participants{' '}
-                  </Text>
-                  <VectorIcon
-                    groupName="Octicons"
-                    name="dot-fill"
-                    size={20}
-                    color={Colors.white}
                   />
-                  <Text style={{...commonStyles.font16Regular}}> 18</Text>
                 </View>
                 <SizeBox size={10} />
-                <FlatList
-                  data={[
-                    {id: 1},
-                    {id: 1},
-                    {id: 1},
-                    {id: 1},
-                    {id: 1},
-                    {id: 1},
-                    {id: 1},
-                    {id: 1},
-                  ]}
-                  showsHorizontalScrollIndicator={false}
-                  horizontal
-                  renderItem={renderParticipants}
-                />
-                <SizeBox size={10} />
-              </ScrollView>
-            </LinearGradient>
-          </RBSheet>
-          <RBSheet
-            ref={refPeopleRBSheet}
-            closeOnPressMask={true}
-            height={height / 1.7}
-            customStyles={{
-              wrapper: {
-                backgroundColor: 'transparent',
-                width: '90%',
-                bottom: height / 30,
-                alignSelf: 'center',
-              },
-              container: {
-                borderRadius: 10,
-              },
-            }}>
-            <LinearGradient
-              colors={[Colors.backgroundNew, Colors.backgroundNew]}
-              start={{x: 0, y: 0}}
-              end={{x: 1.3, y: 0.9}}
-              style={styles.sheetContent}>
-              <VectorIcon
-                groupName="Fontisto"
-                name="close-a"
-                size={15}
-                color={Colors.white}
-                style={{alignSelf: 'flex-end', top: 10, right: 10}}
-                onPress={() => refPeopleRBSheet.current.close()}
-              />
-              <Text
-                style={[
-                  styles.timeText,
-                  {
-                    fontSize: textScale(16),
-                    textAlign: 'center',
-                    marginTop: 10,
-                  },
-                ]}>
-                Event members
-              </Text>
-              {eventData?.members_names ? (
-                <FlatList
-                  data={eventData?.members_names}
-                  keyExtractor={item => item?.id?.toString()}
-                  renderItem={renderMembers}
-                />
-              ) : (
-                <Text
-                  style={[
-                    styles.cmttxt,
-                    {
-                      fontSize: textScale(10),
-                      alignSelf: 'center',
-                      marginTop: 20,
-                    },
-                  ]}>
-                  No data found ..
-                </Text>
-              )}
-            </LinearGradient>
-          </RBSheet>
-          <RBSheet
-            ref={refMapRBSheet}
-            // closeOnDragDown={true}
-            closeOnPressMask={true}
-            height={height / 1.3}
-            customStyles={{
-              wrapper: {
-                backgroundColor: 'transparent',
-                width: '90%',
-                bottom: height / 30,
-                alignSelf: 'center',
-              },
-              container: {
-                borderRadius: 10,
-              },
-            }}>
-            <LinearGradient
-              colors={[Colors.backgroundNew, Colors.backgroundNew]}
-              start={{x: 0, y: 0}}
-              end={{x: 1.3, y: 0.9}}
-              style={styles.sheetContent}>
-              <VectorIcon
-                groupName="Fontisto"
-                name="close-a"
-                size={15}
-                color={Colors.white}
-                style={{alignSelf: 'flex-end', top: 10, right: 10}}
-                onPress={() => refMapRBSheet.current.close()}
-              />
-              <Text
-                style={[
-                  styles.timeText,
-                  {
-                    fontSize: textScale(16),
-                    textAlign: 'center',
-                    marginTop: 10,
-                  },
-                ]}>
-                Maps
-              </Text>
+                <View style={{flexDirection: 'row'}}>
+                  <Image source={ImagePath.Pin_alt} />
+                  <Text style={styles.distanceText}>
+                    {`  `}
+                    {eventData?.distance}
+                  </Text>
+                </View>
+              </View>
               <SizeBox size={10} />
               <View
                 style={{
-                  height: height,
-                  borderWidth: 1,
-                  borderColor: Colors.Pink,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingHorizontal: 17,
                 }}>
-                <MapView style={styles.map} initialRegion={initialRegion}>
-                  <Marker
-                    coordinate={{
-                      latitude: eventData?.latitude
-                        ? eventData?.latitude
-                        : 37.78825,
-                      longitude: eventData?.longitude
-                        ? eventData?.longitude
-                        : -122.4324,
-                    }}
-                    title={'My Marker'}
-                    description={'Some description'}
-                  />
-                </MapView>
+                <VectorIcon
+                  groupName="Fontisto"
+                  name="stopwatch"
+                  size={25}
+                  color={Colors.white}
+                />
+                <Text style={[styles.timeText, {color: Colors.white}]}>
+                  {`  `}
+                  {calculateDuration(
+                    eventData?.start_time,
+                    eventData?.end_time,
+                  )}
+                </Text>
               </View>
-            </LinearGradient>
-          </RBSheet>
-          <RBSheet
-            ref={refTicketsRBSheet}
-            // closeOnDragDown={true}
-            closeOnPressMask={true}
-            height={height / 1.8}
-            customStyles={{
-              wrapper: {
-                backgroundColor: 'transparent',
-                width: '90%',
-                bottom: height / 30,
+              <SizeBox size={10} />
+              <Text style={{...commonStyles.font16Regular, marginLeft: 18}}>
+                Hosted by
+              </Text>
+              <SizeBox size={10} />
+              <FlatList
+                data={[{id: 1}, {id: 1}]}
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                renderItem={renderHost}
+              />
+              <SizeBox size={10} />
+              <Text style={{...commonStyles.font16Regular, marginLeft: 18}}>
+                Line Up
+              </Text>
+              <SizeBox size={10} />
+              <FlatList
+                data={[{id: 1}, {id: 1}]}
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                renderItem={renderLineUp}
+              />
+              <SizeBox size={10} />
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text style={{...commonStyles.font16Regular, marginLeft: 18}}>
+                  Participants{' '}
+                </Text>
+                <VectorIcon
+                  groupName="Octicons"
+                  name="dot-fill"
+                  size={20}
+                  color={Colors.white}
+                />
+                <Text style={{...commonStyles.font16Regular}}> 18</Text>
+              </View>
+              <SizeBox size={10} />
+              <FlatList
+                data={[
+                  {id: 1},
+                  {id: 1},
+                  {id: 1},
+                  {id: 1},
+                  {id: 1},
+                  {id: 1},
+                  {id: 1},
+                  {id: 1},
+                ]}
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                renderItem={renderParticipants}
+              />
+              <SizeBox size={10} />
+            </ScrollView>
+          </LinearGradient>
+        </RBSheet>
+        <RBSheet
+          ref={refPeopleRBSheet}
+          closeOnPressMask={true}
+          height={height / 1.7}
+          customStyles={{
+            wrapper: {
+              backgroundColor: 'transparent',
+              width: '90%',
+              bottom: height / 30,
+              alignSelf: 'center',
+            },
+            container: {
+              borderRadius: 10,
+            },
+          }}>
+          <LinearGradient
+            colors={[Colors.backgroundNew, Colors.backgroundNew]}
+            start={{x: 0, y: 0}}
+            end={{x: 1.3, y: 0.9}}
+            style={styles.sheetContent}>
+            <VectorIcon
+              groupName="Fontisto"
+              name="close-a"
+              size={15}
+              color={Colors.white}
+              style={{alignSelf: 'flex-end', top: 10, right: 10}}
+              onPress={() => refPeopleRBSheet.current.close()}
+            />
+            <Text
+              style={[
+                styles.timeText,
+                {
+                  fontSize: textScale(16),
+                  textAlign: 'center',
+                  marginTop: 10,
+                },
+              ]}>
+              Event members
+            </Text>
+            {eventData?.members_names ? (
+              <FlatList
+                data={eventData?.members_names}
+                keyExtractor={item => item?.id?.toString()}
+                renderItem={renderMembers}
+              />
+            ) : (
+              <Text
+                style={[
+                  styles.cmttxt,
+                  {
+                    fontSize: textScale(10),
+                    alignSelf: 'center',
+                    marginTop: 20,
+                  },
+                ]}>
+                No data found ..
+              </Text>
+            )}
+          </LinearGradient>
+        </RBSheet>
+        <RBSheet
+          ref={refMapRBSheet}
+          closeOnPressMask={true}
+          height={height / 1.3}
+          customStyles={{
+            wrapper: {
+              backgroundColor: 'transparent',
+              width: '90%',
+              bottom: height / 30,
+              alignSelf: 'center',
+            },
+            container: {
+              borderRadius: 10,
+            },
+          }}>
+          <LinearGradient
+            colors={[Colors.backgroundNew, Colors.backgroundNew]}
+            start={{x: 0, y: 0}}
+            end={{x: 1.3, y: 0.9}}
+            style={styles.sheetContent}>
+            <VectorIcon
+              groupName="Fontisto"
+              name="close-a"
+              size={15}
+              color={Colors.white}
+              style={{alignSelf: 'flex-end', top: 10, right: 10}}
+              onPress={() => refMapRBSheet.current.close()}
+            />
+            <Text
+              style={[
+                styles.timeText,
+                {
+                  fontSize: textScale(16),
+                  textAlign: 'center',
+                  marginTop: 10,
+                },
+              ]}>
+              Maps
+            </Text>
+            <SizeBox size={10} />
+            <View
+              style={{
+                height: height,
+                borderWidth: 1,
+                borderColor: Colors.Pink,
+              }}>
+              <MapView style={styles.map} initialRegion={initialRegion}>
+                <Marker
+                  coordinate={{
+                    latitude: eventData?.latitude
+                      ? eventData?.latitude
+                      : 37.78825,
+                    longitude: eventData?.longitude
+                      ? eventData?.longitude
+                      : -122.4324,
+                  }}
+                  title={'My Marker'}
+                  description={'Some description'}
+                />
+              </MapView>
+            </View>
+          </LinearGradient>
+        </RBSheet>
+        <RBSheet
+          ref={refTicketsRBSheet}
+          // closeOnDragDown={true}
+          closeOnPressMask={true}
+          height={height / 1.8}
+          customStyles={{
+            wrapper: {
+              backgroundColor: 'transparent',
+              width: '90%',
+              bottom: height / 30,
+              alignSelf: 'center',
+            },
+            container: {
+              height: height / 1.8,
+              borderRadius: 10,
+            },
+          }}>
+          <LinearGradient
+            colors={[Colors.backgroundNew, Colors.backgroundNew]}
+            start={{x: 0, y: 0}}
+            end={{x: 1.3, y: 0.9}}
+            style={styles.sheetContent}>
+            <SizeBox size={10} />
+            <Text
+              style={{
+                ...commonStyles.font16WhiteBold,
+                fontSize: textScale(20),
                 alignSelf: 'center',
-              },
-              container: {
-                height: height / 1.8,
-                borderRadius: 10,
-              },
-            }}>
-            <LinearGradient
-              colors={[Colors.backgroundNew, Colors.backgroundNew]}
-              start={{x: 0, y: 0}}
-              end={{x: 1.3, y: 0.9}}
-              style={styles.sheetContent}>
-              <SizeBox size={10} />
-              <Text
-                style={{
-                  ...commonStyles.font16WhiteBold,
-                  fontSize: textScale(20),
-                  alignSelf: 'center',
-                }}>
-                Tickets
-              </Text>
-              <SizeBox size={2} />
-              <Text
-                style={{
-                  ...styles.ticketText,
-                  alignSelf: 'center',
-                  color: Colors.greyTxt,
-                }}>
-                Select a ticket
-              </Text>
-              <SizeBox size={10} />
-              <View style={styles.row}>
-                <View style={{width: '30%'}}>
-                  <Text style={styles.ticketText}>Free ticket</Text>
-                </View>
-                <View style={{flexDirection: 'row'}}>
-                  <VectorIcon
-                    groupName="AntDesign"
-                    name="minuscircleo"
-                    color={Colors.white}
-                    size={24}
-                  />
-                  <View style={{width: 10}} />
-                  <Text
-                    style={{
-                      ...commonStyles.font14Bold,
-                      color: Colors.white,
-                    }}>
-                    0
-                  </Text>
-                  <View style={{width: 10}} />
-                  <VectorIcon
-                    groupName="AntDesign"
-                    name="pluscircleo"
-                    color={Colors.white}
-                    size={24}
-                  />
-                </View>
-                <View style={styles.soldBox}>
-                  <Text style={styles.ticketText}>Sold out</Text>
-                </View>
-                <Text style={styles.ticketText}>€</Text>
+              }}>
+              Tickets
+            </Text>
+            <SizeBox size={2} />
+            <Text
+              style={{
+                ...styles.ticketText,
+                alignSelf: 'center',
+                color: Colors.greyTxt,
+              }}>
+              Select a ticket
+            </Text>
+            <SizeBox size={10} />
+            <View style={styles.row}>
+              <View style={{width: '30%'}}>
+                <Text style={styles.ticketText}>Free ticket</Text>
               </View>
-              <SizeBox size={10} />
-              <View style={styles.row}>
-                <View style={{width: '30%'}}>
-                  <Text style={styles.ticketText}>Early tickets</Text>
-                  <Text
-                    style={{
-                      ...commonStyles.font12Bold,
-                      color: Colors.greyTxt,
-                    }}>
-                    Before 22h00
-                  </Text>
-                </View>
-                <View style={{flexDirection: 'row'}}>
-                  <VectorIcon
-                    groupName="AntDesign"
-                    name="minuscircleo"
-                    color={Colors.white}
-                    size={24}
-                  />
-                  <View style={{width: 10}} />
-                  <Text
-                    style={{
-                      ...commonStyles.font14Bold,
-                      color: Colors.white,
-                    }}>
-                    0
-                  </Text>
-                  <View style={{width: 10}} />
-                  <VectorIcon
-                    groupName="AntDesign"
-                    name="pluscircleo"
-                    color={Colors.white}
-                    size={24}
-                  />
-                </View>
-                <View style={styles.soldBox}>
-                  <Text style={styles.ticketText}>Sold out</Text>
-                </View>
-                <Text style={styles.ticketText}>€</Text>
+              <View style={{flexDirection: 'row'}}>
+                <VectorIcon
+                  groupName="AntDesign"
+                  name="minuscircleo"
+                  color={Colors.white}
+                  size={24}
+                />
+                <View style={{width: 10}} />
+                <Text
+                  style={{
+                    ...commonStyles.font14Bold,
+                    color: Colors.white,
+                  }}>
+                  0
+                </Text>
+                <View style={{width: 10}} />
+                <VectorIcon
+                  groupName="AntDesign"
+                  name="pluscircleo"
+                  color={Colors.white}
+                  size={24}
+                />
               </View>
-              <SizeBox size={10} />
-              <View style={styles.row}>
-                <View style={{width: '30%'}}>
-                  <Text style={styles.ticketText}>Regular tickets</Text>
-                </View>
-                <View style={{flexDirection: 'row'}}>
-                  <VectorIcon
-                    groupName="AntDesign"
-                    name="minuscircleo"
-                    color={Colors.white}
-                    size={24}
-                  />
-                  <View style={{width: 10}} />
-                  <Text
-                    style={{
-                      ...commonStyles.font14Bold,
-                      color: Colors.white,
-                    }}>
-                    0
-                  </Text>
-                  <View style={{width: 10}} />
-                  <VectorIcon
-                    groupName="AntDesign"
-                    name="pluscircleo"
-                    color={Colors.white}
-                    size={24}
-                  />
-                </View>
-                <View style={styles.soldBox}>
-                  <Text style={styles.ticketText}>15,99</Text>
-                </View>
-                <Text style={styles.ticketText}>€</Text>
+              <View style={styles.soldBox}>
+                <Text style={styles.ticketText}>Sold out</Text>
               </View>
-              <SizeBox size={10} />
-              <View style={styles.row}>
-                <View style={{width: '30%'}}>
-                  <Text style={styles.ticketText}>Late tickets</Text>
-                </View>
-                <View style={{flexDirection: 'row'}}>
-                  <VectorIcon
-                    groupName="AntDesign"
-                    name="minuscircleo"
-                    color={Colors.white}
-                    size={24}
-                  />
-                  <View style={{width: 10}} />
-                  <Text
-                    style={{
-                      ...commonStyles.font14Bold,
-                      color: Colors.white,
-                    }}>
-                    0
-                  </Text>
-                  <View style={{width: 10}} />
-                  <VectorIcon
-                    groupName="AntDesign"
-                    name="pluscircleo"
-                    color={Colors.white}
-                    size={24}
-                  />
-                </View>
-                <View style={styles.soldBox}>
-                  <Text style={styles.ticketText}>19,99</Text>
-                </View>
-                <Text style={styles.ticketText}>€</Text>
+              <Text style={styles.ticketText}>€</Text>
+            </View>
+            <SizeBox size={10} />
+            <View style={styles.row}>
+              <View style={{width: '30%'}}>
+                <Text style={styles.ticketText}>Early tickets</Text>
+                <Text
+                  style={{
+                    ...commonStyles.font12Bold,
+                    color: Colors.greyTxt,
+                  }}>
+                  Before 22h00
+                </Text>
               </View>
-              <SizeBox size={10} />
-              <Text
-                style={{
-                  ...commonStyles.font16WhiteBold,
-                  alignSelf: 'center',
-                }}>
-                Total : €{eventData?.early_price}
-              </Text>
-              <SizeBox size={10} />
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={{
-                  ...styles.soldBox,
-                  width: '50%',
-                  alignSelf: 'center',
-                }}>
-                <Text style={styles.ticketText}>Confirm Purchase</Text>
-              </TouchableOpacity>
-            </LinearGradient>
-          </RBSheet>
-        </ImageBackground>
+              <View style={{flexDirection: 'row'}}>
+                <VectorIcon
+                  groupName="AntDesign"
+                  name="minuscircleo"
+                  color={Colors.white}
+                  size={24}
+                />
+                <View style={{width: 10}} />
+                <Text
+                  style={{
+                    ...commonStyles.font14Bold,
+                    color: Colors.white,
+                  }}>
+                  0
+                </Text>
+                <View style={{width: 10}} />
+                <VectorIcon
+                  groupName="AntDesign"
+                  name="pluscircleo"
+                  color={Colors.white}
+                  size={24}
+                />
+              </View>
+              <View style={styles.soldBox}>
+                <Text style={styles.ticketText}>Sold out</Text>
+              </View>
+              <Text style={styles.ticketText}>€</Text>
+            </View>
+            <SizeBox size={10} />
+            <View style={styles.row}>
+              <View style={{width: '30%'}}>
+                <Text style={styles.ticketText}>Regular tickets</Text>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <VectorIcon
+                  groupName="AntDesign"
+                  name="minuscircleo"
+                  color={Colors.white}
+                  size={24}
+                />
+                <View style={{width: 10}} />
+                <Text
+                  style={{
+                    ...commonStyles.font14Bold,
+                    color: Colors.white,
+                  }}>
+                  0
+                </Text>
+                <View style={{width: 10}} />
+                <VectorIcon
+                  groupName="AntDesign"
+                  name="pluscircleo"
+                  color={Colors.white}
+                  size={24}
+                />
+              </View>
+              <View style={styles.soldBox}>
+                <Text style={styles.ticketText}>15,99</Text>
+              </View>
+              <Text style={styles.ticketText}>€</Text>
+            </View>
+            <SizeBox size={10} />
+            <View style={styles.row}>
+              <View style={{width: '30%'}}>
+                <Text style={styles.ticketText}>Late tickets</Text>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <VectorIcon
+                  groupName="AntDesign"
+                  name="minuscircleo"
+                  color={Colors.white}
+                  size={24}
+                />
+                <View style={{width: 10}} />
+                <Text
+                  style={{
+                    ...commonStyles.font14Bold,
+                    color: Colors.white,
+                  }}>
+                  0
+                </Text>
+                <View style={{width: 10}} />
+                <VectorIcon
+                  groupName="AntDesign"
+                  name="pluscircleo"
+                  color={Colors.white}
+                  size={24}
+                />
+              </View>
+              <View style={styles.soldBox}>
+                <Text style={styles.ticketText}>19,99</Text>
+              </View>
+              <Text style={styles.ticketText}>€</Text>
+            </View>
+            <SizeBox size={10} />
+            <Text
+              style={{
+                ...commonStyles.font16WhiteBold,
+                alignSelf: 'center',
+              }}>
+              Total : €{eventData?.early_price}
+            </Text>
+            <SizeBox size={10} />
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={{
+                ...styles.soldBox,
+                width: '50%',
+                alignSelf: 'center',
+              }}>
+              <Text style={styles.ticketText}>Confirm Purchase</Text>
+            </TouchableOpacity>
+          </LinearGradient>
+        </RBSheet>
       </SafeAreaView>
     </LinearGradient>
   );

@@ -34,6 +34,7 @@ import {
   GET_HOME_DATA,
   GET_INVITES,
   GET_LIKES_FOR_USER,
+  GET_MEDIA_DETAILS,
   GET_MY_EVENT,
   GET_MY_GROUPS,
   GET_MY_TICKETS,
@@ -47,6 +48,7 @@ import {
   GET_USER_LIKES,
   GROUP_DETAILS,
   LIKE_EVENT,
+  LIKE_MEDIA,
   LIKE_TEAM,
   LIKE_USER_PROFILE,
   LOGIN,
@@ -330,6 +332,10 @@ export function sendUserStatus(data: object) {
   return apiPost(SEND_USER_STATUS, data);
 }
 
+export function likeUserPhoto(data: object) {
+  return apiPost(LIKE_MEDIA, data);
+}
+
 export function sendfeedBank(data: object) {
   return apiPost(SEND_FEEDBACK, data, {'Content-Type': 'multipart/form-data'});
 }
@@ -348,6 +354,10 @@ export function allCardDetails() {
 
 export function getUserLastSeen(id: String) {
   return apiGet(`${GET_USER_LAST_SEEN}${id}`);
+}
+
+export function getUserMediaDetails(data: object) {
+  return apiGet(GET_MEDIA_DETAILS, data);
 }
 
 export function readMessageHandler(id: String) {
