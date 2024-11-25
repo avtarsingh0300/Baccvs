@@ -61,10 +61,6 @@ const UserProfile = ({navigation}: any) => {
         console.log(err, 'err in getUserProfile');
       });
   };
-  const onBack = () => {
-    navigation.goBack();
-  };
-
   const renderItem = ({item, index}: any) => (
     <View>
       <View style={styles.listContainer}>
@@ -77,6 +73,8 @@ const UserProfile = ({navigation}: any) => {
       </View>
     </View>
   );
+
+  // console.log(JSON.stringify(userData), 'userData');
 
   return (
     <LinearGradient

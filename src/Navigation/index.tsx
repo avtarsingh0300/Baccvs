@@ -67,6 +67,7 @@ export {default as DjInvoices} from '../Screens/DjInvoices';
 export {default as MatchPeople} from '../Screens/MatchPeople';
 export {default as FeedBack} from '../Screens/FeedBack';
 export {default as BankingInfo} from '../Screens/BankingInfo';
-export {default as DjBooking} from '../Screens/DjBooking';
 export {default as forgot} from '../Screens/forgot';
 export {default as forgotMain} from '../Screens/forgotMain';
+export {default as DjBooking} from '../Screens/DJBooking';
+export {default as ImagePreview} from '../Screens/ImagePreview';

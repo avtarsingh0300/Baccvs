@@ -288,6 +288,11 @@ export default function MainStack(Stack: any, user: any) {
         component={screens.forgotMain}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.ImagePreview}
+        component={screens.ImagePreview}
+        options={{headerShown: false}}
+      />
     </>
   );
 }
