@@ -74,4 +74,6 @@ export default {
   forgot: 'forgot',
   forgotMain: 'forgotMain',
   ImagePreview: 'ImagePreview',
+  TransferTicket: 'TransferTicket',
+  BuyTickets: 'BuyTickets',
 };

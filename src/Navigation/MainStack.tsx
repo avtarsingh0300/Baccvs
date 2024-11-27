@@ -293,6 +293,16 @@ export default function MainStack(Stack: any, user: any) {
         component={screens.ImagePreview}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.TransferTicket}
+        component={screens.TransferTicket}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.BuyTickets}
+        component={screens.BuyTickets}
+        options={{headerShown: false}}
+      />
     </>
   );
 }

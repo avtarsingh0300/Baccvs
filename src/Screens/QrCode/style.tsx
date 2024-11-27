@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     textscanner:{
         alignItems:"center",
         justifyContent:"center",
-        marginVertical:10
+        marginVertical:10,
     },
     datetxt:{
         fontSize:10,
@@ -91,10 +91,34 @@ const styles = StyleSheet.create({
     txticonbtn:{
         flexDirection:"row",
         alignItems:"center",
-        justifyContent:"space-between"
+        justifyContent:"space-between",paddingHorizontal:40
     },
       qrCode: {
-       
+      },
+      solumtxt:{
+        fontSize:20,
+        fontFamily:fontFamily.time_regular,
+        fontWeight:"600",
+        color:Colors.white,
+        width:"80%"
+      },
+      button: {
+        borderWidth: 0.25,
+        borderLeftWidth: 0.25,
+        borderColor: Colors.greyTxt,
+        borderRadius: 2,
+        alignItems: 'center',
+        marginHorizontal: 5,
+        marginVertical: 5,
+        width:moderateScale(80),
+        paddingVertical:10
+      },
+      buttonText: {
+        color: Colors.white,
+        fontSize: 12,
+        fontFamily: fontFamily.regular,
+        alignSelf:"center",
+        fontWeight:"400"
       },
 })
 

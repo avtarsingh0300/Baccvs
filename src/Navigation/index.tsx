@@ -1,3 +1,5 @@
+import BuyTickets from '../Screens/BuyTickets';
+
 export {default as LoginScreen} from '../Screens/Login';
 export {default as WelcomeScreen} from '../Screens/WelcomeScreen';
 export {default as ReferalCode} from '../Screens/SignUp/ReferalCode';
@@ -71,3 +73,5 @@ export {default as forgot} from '../Screens/forgot';
 export {default as forgotMain} from '../Screens/forgotMain';
 export {default as DjBooking} from '../Screens/DJBooking';
 export {default as ImagePreview} from '../Screens/ImagePreview';
+export {default as TransferTicket} from '../Screens/TransferTicket';
+export {default as BuyTickets} from '../Screens/BuyTickets'
