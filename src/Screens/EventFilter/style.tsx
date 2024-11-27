@@ -76,11 +76,13 @@ const styles = StyleSheet.create({
   flatcon: {
     borderWidth: 1,
     backgroundColor: Colors.lightPink,
-    width: '30%',
+    width: '45%',
     justifyContent: 'center',
     alignItems: 'center',
     height: moderateScaleVertical(28),
     borderRadius: 2,
+    marginHorizontal: 5,
+    marginVertical: 5,
   },
   flatcontainer: {
     borderWidth: 1,
@@ -103,7 +105,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
   },
-
   tickvw: {
     height: 15,
     width: 15,
