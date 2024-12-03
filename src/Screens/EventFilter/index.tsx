@@ -27,6 +27,7 @@ import Modal from 'react-native-modal';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import {horoscopeSigns, languages} from '../../Utilities/Constants';
 import ImagePath from '../../Utilities/Constants/ImagePath';
+import DropComponentNew from '../../Utilities/Component/DropComponentNew';
 
 const EventFilter = ({navigation}: any) => {
   const [musicStyle, setMusicStyle] = useState([]);
@@ -62,7 +63,11 @@ const EventFilter = ({navigation}: any) => {
         {
           backgroundColor: selectedItemsSign?.includes(item?.id)
             ? Colors.darkPink
-            : Colors.Linear,
+            : Colors.tranparent,
+          borderWidth: 1,
+          borderColor: selectedItemsSign?.includes(item?.id)
+            ? Colors.tranparent
+            : Colors.darkPink,
         },
       ]}
       activeOpacity={0.8}
@@ -78,9 +83,36 @@ const EventFilter = ({navigation}: any) => {
   const getEventsTypes = () => {
     getEventTypes()
       .then((res: any) => {
-        setMusicStyle(res?.musictype);
-        setEventType(res?.eventtype);
-        setVenueType(res?.venuetype);
+        let musicStyleData: any = [];
+        res?.MusicStyle?.map((i: any, index: number) => {
+          musicStyleData.push({
+            label: i?.name,
+            value: i?.name,
+            _id: i?._id,
+            name: i?.name,
+          });
+        });
+        setMusicStyle(musicStyleData);
+        let eventTypeData: any = [];
+        res?.eventtype?.map((i: any, index: number) => {
+          eventTypeData.push({
+            label: i?.name,
+            value: i?.name,
+            _id: i?._id,
+            name: i?.name,
+          });
+        });
+        let venuetypeData: any = [];
+        res?.venuetype?.map((i: any, index: number) => {
+          venuetypeData.push({
+            label: i?.name,
+            value: i?.name,
+            _id: i?._id,
+            name: i?.name,
+          });
+        });
+        setEventType(eventTypeData);
+        setVenueType(venuetypeData);
         // console.log(res, 'ressss');
       })
       .catch(err => {
@@ -113,52 +145,22 @@ const EventFilter = ({navigation}: any) => {
     setSelectedValues4(values);
   };
   const toggleSelection = (item: any) => {
-    setSelectedItems((prevSelectedItems: any) => {
-      if (prevSelectedItems.includes(item._id)) {
-        return prevSelectedItems.filter((id: any) => id !== item._id);
-      } else {
-        return [...prevSelectedItems, item._id];
-      }
-    });
+    setSelectedItems(item);
   };
   const toggleSelectionInterest = (item: any) => {
-    setSelectedInterest((prevSelectedItems: any) => {
-      if (prevSelectedItems.includes(item.name)) {
-        return prevSelectedItems.filter((i: any) => i !== item.name);
-      } else {
-        return [...prevSelectedItems, item.name];
-      }
-    });
+    setSelectedInterest(item);
   };
 
   const toggleSelection2 = (item: any) => {
-    setSelectedItems2((prevSelectedItems: any) => {
-      if (prevSelectedItems.includes(item._id)) {
-        return prevSelectedItems.filter(id => id !== item._id);
-      } else {
-        return [...prevSelectedItems, item._id];
-      }
-    });
+    setSelectedItems2(item);
   };
 
   const toggleSelection3 = (item: any) => {
-    setSelectedItems3((prevSelectedItems: any) => {
-      if (prevSelectedItems.includes(item._id)) {
-        return prevSelectedItems.filter(id => id !== item._id);
-      } else {
-        return [...prevSelectedItems, item._id];
-      }
-    });
+    setSelectedItems3(item);
   };
 
   const toggleSelectionSign = (item: any) => {
-    setSelectedItemsSign((prevSelectedItems: any) => {
-      if (prevSelectedItems.includes(item?.id)) {
-        return prevSelectedItems.filter((id: any) => id !== item?.id);
-      } else {
-        return [...prevSelectedItems, item.id];
-      }
-    });
+    setSelectedItemsSign(item);
   };
 
   const onbackPress = () => {
@@ -177,12 +179,12 @@ const EventFilter = ({navigation}: any) => {
     setSelectedValues2([0, 0]);
   };
 
-  useEffect(() => {
-    const filteredData = eventType.filter((item: any) =>
-      item?.name.toLowerCase().includes(eventSearch.toLowerCase()),
-    );
-    setEventSearchData(filteredData);
-  }, [eventSearch, eventType]);
+  // useEffect(() => {
+  //   const filteredData = eventType.filter((item: any) =>
+  //     item?.name.toLowerCase().includes(eventSearch.toLowerCase()),
+  //   );
+  //   setEventSearchData(filteredData);
+  // }, [eventSearch, eventType]);
 
   useEffect(() => {
     const filteredData = musicStyle.filter((item: any) =>
@@ -197,6 +199,11 @@ const EventFilter = ({navigation}: any) => {
     );
     setVenueSearchData(filteredData);
   }, [venueSearch, venueType]);
+
+  const handleSelection = (selectedValues: string[]) => {
+    console.log('Selected venue types:', selectedValues);
+    toggleSelection(selectedValues);
+  };
 
   return (
     <LinearGradient
@@ -298,7 +305,12 @@ const EventFilter = ({navigation}: any) => {
                     }}>
                     Event type
                   </Text>
-                  <View
+                  <DropComponentNew
+                    items={eventType}
+                    onValueChange={handleSelection}
+                    newStyle={{zIndex: 900}}
+                  />
+                  {/* <View
                     style={{
                       width: moderateScale(227),
                       height: moderateScaleVertical(35),
@@ -323,11 +335,11 @@ const EventFilter = ({navigation}: any) => {
                       }}
                     />
                     <Image source={ImagePath.SearchNewGroup} />
-                  </View>
+                  </View> */}
                 </View>
-                <SizeBox size={5} />
+                <SizeBox size={10} />
                 <FlatList
-                  data={eventSearch?.length > 0 ? eventSearchData : eventType}
+                  data={eventType}
                   renderItem={({item}: any) => (
                     <TouchableOpacity
                       style={[
@@ -406,7 +418,7 @@ const EventFilter = ({navigation}: any) => {
                   }}>
                   Venue type
                 </Text>
-                <View
+                {/* <View
                   style={{
                     width: moderateScale(227),
                     height: moderateScaleVertical(35),
@@ -431,12 +443,17 @@ const EventFilter = ({navigation}: any) => {
                     }}
                   />
                   <Image source={ImagePath.SearchNewGroup} />
-                </View>
+                </View> */}
+                <DropComponentNew
+                  items={venueType}
+                  onValueChange={toggleSelection2}
+                  newStyle={{zIndex: 700}}
+                />
               </View>
-              <SizeBox size={5} />
+              <SizeBox size={10} />
               <View style={styles.flexout}>
                 <FlatList
-                  data={venueSearch?.length > 0 ? venueSearchData : venueType}
+                  data={venueType}
                   numColumns={2}
                   renderItem={({item}: any) => (
                     <TouchableOpacity
@@ -479,7 +496,7 @@ const EventFilter = ({navigation}: any) => {
                     }}>
                     Music type
                   </Text>
-                  <View
+                  {/* <View
                     style={{
                       width: moderateScale(227),
                       height: moderateScaleVertical(35),
@@ -504,11 +521,16 @@ const EventFilter = ({navigation}: any) => {
                       }}
                     />
                     <Image source={ImagePath.SearchNewGroup} />
-                  </View>
+                  </View> */}
+                  <DropComponentNew
+                    items={musicStyle}
+                    onValueChange={toggleSelection3}
+                    newStyle={{zIndex: 500}}
+                  />
                 </View>
-                <SizeBox size={5} />
+                <SizeBox size={10} />
                 <FlatList
-                  data={musicSearch?.length > 0 ? musicSearchData : musicStyle}
+                  data={musicStyle}
                   numColumns={2}
                   renderItem={({item}: any) => (
                     <TouchableOpacity

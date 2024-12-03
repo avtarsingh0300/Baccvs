@@ -86,12 +86,14 @@ const styles = StyleSheet.create({
   },
   flatcontainer: {
     borderWidth: 1,
-    backgroundColor: Colors.lightPink,
+    backgroundColor: Colors.darkPink,
     width: moderateScale(81),
     justifyContent: 'center',
     alignItems: 'center',
     height: moderateScaleVertical(28),
     borderRadius: 2,
+    marginHorizontal: 5,
+    marginVertical: 5,
   },
   flatcon2: {
     flexDirection: 'row',
@@ -202,6 +204,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontFamily: fontFamily.regular,
   },
+  // here is the new
 });
 
 export default styles;
