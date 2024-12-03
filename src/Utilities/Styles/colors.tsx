@@ -14,6 +14,8 @@ export const Colors = {
   lightGrey: '#8F8F8F',
   tranparent: 'transparent',
   lightPink: '#B69CFF',
+  darkPink: '#330542',
+  midDarkPink: '#7464A3',
   dashBordervw: '#21262E',
   dashBorder: '#3C444F',
   calenderback: '#1a151f',
@@ -31,5 +33,5 @@ export const Colors = {
   memberaccess: '#5F09AF',
   brown: '#b04341',
   lightbrown: '#763033',
-  btnback:'#1C1C24',
+  btnback: '#1C1C24',
 };

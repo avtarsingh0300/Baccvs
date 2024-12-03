@@ -88,6 +88,11 @@ const BuyTickets = ({ navigation }: any) => {
           }}
         />
         <SizeBox size={10} />
+        <View style={{flexDirection:"row",alignItems:"flex-end"}}>
+          <Image source={ImagePath.blurpic} style={{width:40,height:40,borderWidth:1,borderColor:Colors.lightPink,borderRadius:5}}/>
+          <Text style={{...commonStyles.font12Regular,paddingLeft:5}}>Kingson</Text>
+          </View>
+        <SizeBox size={10} />
         <Text style={styles.solumtxt}>Babylone - Solum - Esposito B2B Gianni romano</Text>
         <SizeBox size={10} />
         <FlatList
@@ -120,7 +125,7 @@ const BuyTickets = ({ navigation }: any) => {
           <Text style={{ ...commonStyles.font12Regular, color: '#637394', width: '25%' }}>Early ticket</Text>
           <Text style={{ ...commonStyles.font12Regular, color: '#ffffff' }}>Entry before 00h30</Text>
         </View>
-        <SizeBox size={40} />
+        <SizeBox size={15} />
 
         <TouchableOpacity
           style={{
@@ -144,7 +149,7 @@ const BuyTickets = ({ navigation }: any) => {
         >
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <View style={{ backgroundColor: Colors.backgroundNew, padding: 20, borderRadius: 10, width: '80%', borderWidth: 1, borderColor: "#291846" }}>
-              <Text style={{ ...commonStyles.font14Regular, textAlign: "center" }}>Are you sure you want to transfer this ticket?</Text>
+              <Text style={{ ...commonStyles.font14Regular, textAlign: "center" }}>Are you sure you want to buy this ticket for 10,99€ ? </Text>
               <View style={{ borderBottomWidth: 1, borderColor: Colors.black, paddingTop: 10 }} />
               <View style={{ justifyContent: 'space-between' }}>
                 <TouchableOpacity
@@ -173,10 +178,9 @@ const BuyTickets = ({ navigation }: any) => {
         >
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <View style={{ backgroundColor:Colors.backgroundNew, padding: 20, borderRadius: 10, width: '80%',borderWidth:1,borderColor:"#291846" }}>
-              <Text style={{ ...commonStyles.font14Regular, textAlign: 'center',color:Colors.lightgreen }}>You have successfully purchased this ticket.</Text>
+              <Text style={{ ...commonStyles.font12Regular, textAlign: 'center',color:Colors.lightgreen }}>You have successfully purchased this ticket.</Text>
               <View style={{borderBottomWidth:1,borderColor:Colors.black,paddingBottom:10}}/>
               <TouchableOpacity
-                
                 onPress={()=>{navigation.navigate(NavigationStrings.QrCode)}}
               >
                 <Text style={{...commonStyles.font16Regular,color:Colors.lightPink,textAlign:"center",paddingVertical:10}}>See my ticket</Text>

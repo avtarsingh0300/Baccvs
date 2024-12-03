@@ -41,6 +41,7 @@ const EventFilter = ({navigation}: any) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedItems2, setSelectedItems2] = useState([]);
   const [selectedItems3, setSelectedItems3] = useState([]);
+  const [selectedInterest, setSelectedInterest] = useState([]);
   const [selectedItemsSign, setSelectedItemsSign] = useState([]);
   const [eventSearch, setEventSearch] = useState('');
   const [eventSearchData, setEventSearchData] = useState([]);
@@ -60,8 +61,8 @@ const EventFilter = ({navigation}: any) => {
         styles.flatcontainer,
         {
           backgroundColor: selectedItemsSign?.includes(item?.id)
-            ? Colors.Linear
-            : Colors.lightPink,
+            ? Colors.darkPink
+            : Colors.Linear,
         },
       ]}
       activeOpacity={0.8}
@@ -120,6 +121,15 @@ const EventFilter = ({navigation}: any) => {
       }
     });
   };
+  const toggleSelectionInterest = (item: any) => {
+    setSelectedInterest((prevSelectedItems: any) => {
+      if (prevSelectedItems.includes(item.name)) {
+        return prevSelectedItems.filter((i: any) => i !== item.name);
+      } else {
+        return [...prevSelectedItems, item.name];
+      }
+    });
+  };
 
   const toggleSelection2 = (item: any) => {
     setSelectedItems2((prevSelectedItems: any) => {
@@ -159,6 +169,7 @@ const EventFilter = ({navigation}: any) => {
     setSelectedItems([]);
     setSelectedItems2([]);
     setSelectedItems3([]);
+    setSelectedInterest([]);
     setSelectedLang([]);
     setSelectedValues2([0, 0]);
     setSelected([0, 0]);
@@ -208,7 +219,7 @@ const EventFilter = ({navigation}: any) => {
                 style={[
                   styles.eventtxt,
                   {
-                    color: colors == 0 ? Colors.lightPink : Colors.white,
+                    color: colors == 0 ? '#7464A3' : Colors.white,
                   },
                 ]}
                 onPress={() => setColors(0)}>
@@ -220,7 +231,7 @@ const EventFilter = ({navigation}: any) => {
                 style={[
                   styles.eventtxt,
                   {
-                    color: colors == 1 ? Colors.lightPink : Colors.white,
+                    color: colors == 1 ? '#7464A3' : Colors.white,
                   },
                 ]}
                 onPress={() => setColors(1)}>
@@ -291,11 +302,13 @@ const EventFilter = ({navigation}: any) => {
                     style={{
                       width: moderateScale(227),
                       height: moderateScaleVertical(35),
-                      borderRadius: 20,
-                      backgroundColor: Colors.white,
+                      borderRadius: 10,
+                      backgroundColor: Colors.black,
                       flexDirection: 'row',
                       justifyContent: 'space-around',
                       alignItems: 'center',
+                      borderWidth: 1,
+                      borderColor: Colors.darkPink,
                     }}>
                     <TextInput
                       placeholder="Enter something here..."
@@ -306,6 +319,7 @@ const EventFilter = ({navigation}: any) => {
                       }}
                       style={{
                         ...commonStyles.font10Bold,
+                        color: Colors.white,
                       }}
                     />
                     <Image source={ImagePath.SearchNewGroup} />
@@ -320,8 +334,12 @@ const EventFilter = ({navigation}: any) => {
                         styles.flatcon,
                         {
                           backgroundColor: selectedItems?.includes(item?._id)
-                            ? Colors.Linear
-                            : Colors.lightPink,
+                            ? Colors.darkPink
+                            : Colors.tranparent,
+                          borderWidth: 1,
+                          borderColor: selectedItems?.includes(item?._id)
+                            ? Colors.tranparent
+                            : Colors.darkPink,
                         },
                       ]}
                       onPress={() => toggleSelection(item)}>
@@ -392,11 +410,13 @@ const EventFilter = ({navigation}: any) => {
                   style={{
                     width: moderateScale(227),
                     height: moderateScaleVertical(35),
-                    borderRadius: 20,
-                    backgroundColor: Colors.white,
+                    borderRadius: 10,
+                    backgroundColor: Colors.black,
                     flexDirection: 'row',
                     justifyContent: 'space-around',
                     alignItems: 'center',
+                    borderWidth: 1,
+                    borderColor: Colors.darkPink,
                   }}>
                   <TextInput
                     placeholder="Enter something here..."
@@ -407,6 +427,7 @@ const EventFilter = ({navigation}: any) => {
                     }}
                     style={{
                       ...commonStyles.font10Bold,
+                      color: Colors.white,
                     }}
                   />
                   <Image source={ImagePath.SearchNewGroup} />
@@ -422,9 +443,13 @@ const EventFilter = ({navigation}: any) => {
                       style={[
                         styles.flatcon,
                         {
-                          backgroundColor: selectedItems2.includes(item._id)
-                            ? Colors.Linear
-                            : Colors.lightPink,
+                          backgroundColor: selectedItems2?.includes(item?._id)
+                            ? Colors.darkPink
+                            : Colors.tranparent,
+                          borderWidth: 1,
+                          borderColor: selectedItems2?.includes(item?._id)
+                            ? Colors.tranparent
+                            : Colors.darkPink,
                         },
                       ]}
                       onPress={() => toggleSelection2(item)}>
@@ -458,11 +483,13 @@ const EventFilter = ({navigation}: any) => {
                     style={{
                       width: moderateScale(227),
                       height: moderateScaleVertical(35),
-                      borderRadius: 20,
-                      backgroundColor: Colors.white,
+                      borderRadius: 10,
+                      backgroundColor: Colors.black,
                       flexDirection: 'row',
                       justifyContent: 'space-around',
                       alignItems: 'center',
+                      borderWidth: 1,
+                      borderColor: Colors.darkPink,
                     }}>
                     <TextInput
                       placeholder="Enter something here..."
@@ -473,6 +500,7 @@ const EventFilter = ({navigation}: any) => {
                       }}
                       style={{
                         ...commonStyles.font10Bold,
+                        color: Colors.white,
                       }}
                     />
                     <Image source={ImagePath.SearchNewGroup} />
@@ -487,9 +515,14 @@ const EventFilter = ({navigation}: any) => {
                       style={[
                         styles.flatcon,
                         {
-                          backgroundColor: selectedItems3.includes(item._id)
-                            ? Colors.Linear
-                            : Colors.lightPink,
+                          width: '45%',
+                          backgroundColor: selectedItems3?.includes(item?._id)
+                            ? Colors.darkPink
+                            : Colors.tranparent,
+                          borderWidth: 1,
+                          borderColor: selectedItems3?.includes(item?._id)
+                            ? Colors.tranparent
+                            : Colors.darkPink,
                         },
                       ]}
                       onPress={() => toggleSelection3(item)}>
@@ -535,7 +568,7 @@ const EventFilter = ({navigation}: any) => {
               <SizeBox size={15} />
               <View style={styles.Btnmain}>
                 <LinearGradient
-                  colors={[Colors.lightPink, Colors.lightPink]}
+                  colors={[Colors.darkPink, Colors.darkPink]}
                   style={styles.btn}>
                   <TouchableOpacity
                     style={styles.button}
@@ -603,17 +636,37 @@ const EventFilter = ({navigation}: any) => {
                 </Text>
                 <SizeBox size={5} />
                 <FlatList
-                  data={[{id: 1}]}
-                  renderItem={({item}) => (
+                  key={2}
+                  data={[
+                    {id: 0, name: 'Everyone'},
+                    {id: 1, name: 'Male'},
+                    {id: 2, name: 'Female'},
+                  ]}
+                  keyExtractor={(item, index) => index.toString()}
+                  numColumns={2}
+                  renderItem={({item, index}: any) => (
                     <TouchableOpacity
-                      style={styles.flatcontainer}
-                      onPress={() => toggleSelection(item)}>
+                      style={[
+                        styles.flatcontainer,
+                        {
+                          backgroundColor: selectedInterest?.includes(
+                            item?.name,
+                          )
+                            ? Colors.darkPink
+                            : Colors.tranparent,
+                          borderWidth: 1,
+                          borderColor: selectedInterest?.includes(item?.name)
+                            ? Colors.tranparent
+                            : Colors.darkPink,
+                        },
+                      ]}
+                      onPress={() => toggleSelectionInterest(item)}>
                       <Text
                         style={{
                           ...commonStyles.font12Regular,
                           color: Colors.white,
                         }}>
-                        Everyone
+                        {item.name}
                       </Text>
                     </TouchableOpacity>
                   )}
@@ -716,11 +769,13 @@ const EventFilter = ({navigation}: any) => {
                     style={{
                       width: moderateScale(227),
                       height: moderateScaleVertical(35),
-                      borderRadius: 20,
-                      backgroundColor: Colors.white,
+                      borderRadius: 10,
+                      backgroundColor: Colors.black,
                       flexDirection: 'row',
                       justifyContent: 'space-around',
                       alignItems: 'center',
+                      borderWidth: 1,
+                      borderColor: Colors.darkPink,
                     }}>
                     <TextInput
                       placeholder="Enter something here..."
@@ -731,6 +786,7 @@ const EventFilter = ({navigation}: any) => {
                       }}
                       style={{
                         ...commonStyles.font10Bold,
+                        color: Colors.white,
                       }}
                     />
                     <Image source={ImagePath.SearchNewGroup} />
@@ -745,9 +801,13 @@ const EventFilter = ({navigation}: any) => {
                       style={[
                         styles.flatcon,
                         {
-                          backgroundColor: selectedItems3.includes(item?._id)
-                            ? Colors.Linear
-                            : Colors.lightPink,
+                          backgroundColor: selectedItems3?.includes(item?._id)
+                            ? Colors.darkPink
+                            : Colors.tranparent,
+                          borderWidth: 1,
+                          borderColor: selectedItems3?.includes(item?._id)
+                            ? Colors.tranparent
+                            : Colors.darkPink,
                         },
                       ]}
                       onPress={() => toggleSelection3(item)}>
@@ -811,7 +871,7 @@ const EventFilter = ({navigation}: any) => {
               <SizeBox size={15} />
               <View style={styles.Btnmain}>
                 <LinearGradient
-                  colors={[Colors.lightPink, Colors.lightPink]}
+                  colors={[Colors.darkPink, Colors.darkPink]}
                   style={styles.btn}>
                   <TouchableOpacity
                     style={styles.button}

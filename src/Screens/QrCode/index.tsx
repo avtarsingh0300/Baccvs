@@ -22,7 +22,7 @@ const QrCode = ({ navigation,route }:any) => {
   // const handleGenerateQr = () => {
   //   onGenerate(inputValue);
   // };
-  console.log(route.params.data)
+  console.log(route?.params?.data)
 
   const renderItems = ({item}: any) => (
     <View>
