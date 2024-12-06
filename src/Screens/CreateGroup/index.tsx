@@ -240,7 +240,7 @@ const CreateGroup = ({navigation}: any) => {
 
   return (
     <LinearGradient
-      colors={[Colors.Linear, Colors.LinearBlack, Colors.LinearBlack]}
+      colors={[Colors.backgroundNew, Colors.backgroundNew, Colors.backgroundNew]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>

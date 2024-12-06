@@ -266,7 +266,7 @@ export function Drawer({
       isVisible={isVisible}
       backdropOpacity={0.8}>
       <LinearGradient
-        colors={[Colors.Linear, Colors.LinearBlack]}
+        colors={[Colors.backgroundNew, Colors.backgroundNew]}
         start={{x: 0, y: 0}}
         end={{x: 1.3, y: 0.9}}
         style={styles.drawerCon}>

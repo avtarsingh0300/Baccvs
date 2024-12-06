@@ -32,7 +32,7 @@ import moment from 'moment';
 import {height} from '../../Utilities/Styles/responsiveSize';
 import Modal from 'react-native-modal';
 
-const Tickets = ({navigation}: any) => {
+const Tickets = ({navigation,route}: any) => {
   const [colors, setColors] = useState(0);
   const [userData, setUserData] = useState([]);
   const [buyticketdata, setBuyTicket] = useState([]);
@@ -43,7 +43,18 @@ const Tickets = ({navigation}: any) => {
   useEffect(() => {
     getMyTickets();
     getSellTick();
-  }, []);
+    console.log(route?.params)
+  
+    const _unsubscribe = navigation.addListener('focus', () => {
+    
+      if(route?.params?.sell === 2){
+        setColors(2)
+      }
+    });
+    return () => {
+      _unsubscribe();
+    };
+  }, [route?.params?.sell]);
 
   const getMyTickets = () => {
     setLoader(true);
@@ -244,7 +255,7 @@ const Tickets = ({navigation}: any) => {
 
   return (
     <LinearGradient
-      colors={[Colors.LinearBlack, Colors.Linear]}
+      colors={[Colors.backgroundNew, Colors.backgroundNew]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
@@ -318,12 +329,15 @@ const Tickets = ({navigation}: any) => {
                 style={[
                   styles.tickets,
                   {color: Colors.white, alignSelf: 'center'},
-                ]}>
+                ]} onPress={()=>{
+                  navigation.navigate(NavigationStrings.QrCode,{data:{}})
+                }}>
                 No data found ...
               </Text>
             )}
           </>
         ) : null}
+
 
         {colors == 1 ? (
           <>
@@ -349,7 +363,7 @@ const Tickets = ({navigation}: any) => {
                 style={[
                   styles.tickets,
                   {color: Colors.white, alignSelf: 'center'},
-                ]}>
+                ]} onPress={()=>{navigation.navigate(NavigationStrings.BuyTickets)}}>
                 No data found ...
               </Text>
             )}
