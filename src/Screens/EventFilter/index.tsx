@@ -28,6 +28,7 @@ import fontFamily from '../../Utilities/Styles/fontFamily';
 import {horoscopeSigns, languages} from '../../Utilities/Constants';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import DropComponentNew from '../../Utilities/Component/DropComponentNew';
+import {SectionList} from 'react-native';
 
 const EventFilter = ({navigation}: any) => {
   const [musicStyle, setMusicStyle] = useState([]);
@@ -132,6 +133,38 @@ const EventFilter = ({navigation}: any) => {
     } else {
     }
   };
+
+  const selectModalTitleHandler = (title: string) => {
+    if (modalVisibleLang) {
+      const filterData = languages
+        .filter(i => i.title === title) // Get only the category with the given title
+        .flatMap(i => i.data.map(item => item.name)); // Extract and flatten the names
+
+      // console.log(filterData, 'filterData');
+
+      // Update selectedLang by toggling the filtered data
+      setSelectedLang((prevSelectedLang: any) => {
+        // Check if all `filterData` items are already selected
+        const allSelected = filterData.every(item =>
+          prevSelectedLang.includes(item),
+        );
+
+        if (allSelected) {
+          // If all are selected, remove them from the selectedLang array
+          return prevSelectedLang.filter(
+            (item: any) => !filterData.includes(item),
+          );
+        } else {
+          // If not all are selected, add the remaining items to the array
+          const newItems = filterData.filter(
+            item => !prevSelectedLang.includes(item),
+          );
+          return [...prevSelectedLang, ...newItems];
+        }
+      });
+    }
+  };
+
   const onValuesChangeFinish = (values: any) => {
     setSelected(values);
   };
@@ -787,7 +820,7 @@ const EventFilter = ({navigation}: any) => {
                     }}>
                     Music type
                   </Text>
-                  <View
+                  {/* <View
                     style={{
                       width: moderateScale(227),
                       height: moderateScaleVertical(35),
@@ -812,7 +845,13 @@ const EventFilter = ({navigation}: any) => {
                       }}
                     />
                     <Image source={ImagePath.SearchNewGroup} />
-                  </View>
+                  </View> */}
+
+                  <DropComponentNew
+                    items={musicStyle}
+                    onValueChange={toggleSelection3}
+                    newStyle={{zIndex: 500}}
+                  />
                 </View>
                 <SizeBox size={5} />
                 <FlatList
@@ -928,12 +967,128 @@ const EventFilter = ({navigation}: any) => {
             <View
               style={{
                 minHeight: height / 5,
-                maxHeight: height / 3,
+                maxHeight: height / 1.5,
                 width: '95%',
                 alignSelf: 'center',
               }}>
               <View style={styles.modalContainer}>
-                <FlatList
+                <SectionList
+                  sections={languages}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({item, index}) => {
+                    const lengthFlag = languages?.length;
+
+                    const filterData = selectedLang?.filter(
+                      (i: any) => i == item?.name,
+                    );
+
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => {
+                          selectModalHandler(item);
+                        }}
+                        style={[
+                          {
+                            width: '85%',
+                            alignSelf: 'center',
+                            // borderBottomWidth: lengthFlag - 1 == index ? 0 : 1,
+                          },
+                          styles.mondaInvw,
+                        ]}>
+                        <Text
+                          style={{
+                            ...commonStyles.font10Regular,
+                            color: Colors.white,
+                            padding: 5,
+                            fontWeight: '600',
+                            fontFamily: fontFamily.time_regular,
+                          }}>
+                          {item?.name}
+                        </Text>
+                        <View
+                          style={{
+                            width: 14,
+                            height: 14,
+                            backgroundColor: Colors.white,
+                            borderRadius: 2,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}>
+                          {filterData[0] == item?.name && (
+                            <VectorIcon
+                              groupName="FontAwesome"
+                              name={'check'}
+                              size={10}
+                              color={Colors.black}
+                            />
+                          )}
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  }}
+                  renderSectionHeader={({section: {title}}) => {
+                    const filterData = languages
+                      .filter(i => i.title === title) // Get only the category with the given title
+                      .flatMap(i => i.data.map(item => item.name)); // Extract and flatten the names
+                    // console.log(title, 'title');
+                    var allSelected = filterData.every(item =>
+                      selectedLang.includes(item),
+                    );
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => {
+                          selectModalTitleHandler(title);
+                        }}
+                        style={[
+                          {
+                            // borderBottomWidth: lengthFlag - 1 == index ? 0 : 1,
+                          },
+                          styles.mondaInvw,
+                        ]}>
+                        <Text
+                          style={{
+                            ...commonStyles.font16White,
+                            padding: 5,
+                            fontWeight: '600',
+                            fontFamily: fontFamily.time_regular,
+                          }}>
+                          {title}
+                        </Text>
+                        <View
+                          style={{
+                            width: 16,
+                            height: 16,
+                            backgroundColor: Colors.white,
+                            borderRadius: 2,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}>
+                          {allSelected && (
+                            <VectorIcon
+                              groupName="FontAwesome"
+                              name={'check'}
+                              size={12}
+                              color={Colors.black}
+                            />
+                          )}
+                        </View>
+                        {/* <VectorIcon
+                        groupName="MaterialCommunityIcons"
+                        // name={
+                        //   filterData[0] == item?.name
+                        //     ? 'radiobox-marked'
+                        //     : 'radiobox-blank'
+                        // }
+                        name={'radiobox-blank'}
+                        size={18}
+                      /> */}
+                      </TouchableOpacity>
+                    );
+                  }}
+                />
+                {/* <FlatList
                   data={languages}
                   keyExtractor={(item, index) => index?.toString()}
                   renderItem={({item, index}) => {
@@ -951,7 +1106,7 @@ const EventFilter = ({navigation}: any) => {
                         }}
                         style={[
                           {
-                            borderBottomWidth: lengthFlag - 1 == index ? 0 : 1,
+                            // borderBottomWidth: lengthFlag - 1 == index ? 0 : 1,
                           },
                           styles.mondaInvw,
                         ]}>
@@ -976,7 +1131,7 @@ const EventFilter = ({navigation}: any) => {
                       </TouchableOpacity>
                     );
                   }}
-                />
+                /> */}
               </View>
             </View>
           </Modal>
