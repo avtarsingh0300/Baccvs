@@ -928,7 +928,7 @@ const EventFilter = ({navigation}: any) => {
             <View
               style={{
                 minHeight: height / 5,
-                maxHeight: height / 3,
+                maxHeight: height / 1.5,
                 width: '95%',
                 alignSelf: 'center',
               }}>
@@ -951,7 +951,7 @@ const EventFilter = ({navigation}: any) => {
                         }}
                         style={[
                           {
-                            borderBottomWidth: lengthFlag - 1 == index ? 0 : 1,
+                            borderBottomWidth: lengthFlag - 1 == index ? 0 : 0,
                           },
                           styles.mondaInvw,
                         ]}>
