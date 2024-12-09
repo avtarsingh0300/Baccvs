@@ -76,4 +76,5 @@ export default {
   ImagePreview: 'ImagePreview',
   TransferTicket: 'TransferTicket',
   BuyTickets: 'BuyTickets',
+  MusicStyle: 'MusicStyle',
 };
