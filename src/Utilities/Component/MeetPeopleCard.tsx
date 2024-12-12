@@ -50,7 +50,7 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
 
   const navigation = useNavigation();
 
-  // console.log(item, 'item');
+  console.log(item, 'item');
 
   return (
     <Animated.View
