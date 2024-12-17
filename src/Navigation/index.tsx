@@ -71,7 +71,7 @@ export {default as FeedBack} from '../Screens/FeedBack';
 export {default as BankingInfo} from '../Screens/BankingInfo';
 export {default as forgot} from '../Screens/forgot';
 export {default as forgotMain} from '../Screens/forgotMain';
-export {default as DjBooking} from '../Screens/DJBooking';
+export {default as DjBooking} from '../Screens/DjBooking';
 export {default as ImagePreview} from '../Screens/ImagePreview';
 export {default as TransferTicket} from '../Screens/TransferTicket';
-export {default as BuyTickets} from '../Screens/BuyTickets'
+export {default as BuyTickets} from '../Screens/BuyTickets';
