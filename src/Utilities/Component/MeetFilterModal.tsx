@@ -173,9 +173,9 @@ const MeetFilterModal = ({
       };
       // console.log(data, 'data');
       soloFilterData(data)
-        .then(res => {
+        .then((res: any) => {
           console.log(res, 'res in soloFilterData');
-          setUserData(res?.data);
+          setUserData(res?.users);
           setShowModal(false);
         })
         .catch(err => {

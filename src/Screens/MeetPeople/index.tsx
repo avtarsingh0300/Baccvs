@@ -33,6 +33,7 @@ import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import MeetPeopleCard from '../../Utilities/Component/MeetPeopleCard';
 import MeetFilterModal from '../../Utilities/Component/MeetFilterModal';
 import TeamsCard from '../../Utilities/Component/TeamsCard';
+import {DatingFilter} from '../../Redux/Action/DatingFilter';
 
 const MeetPeople = ({navigation}: any) => {
   const [button, setButton] = useState('online');
@@ -41,6 +42,8 @@ const MeetPeople = ({navigation}: any) => {
   const [userData, setUserData] = useState([]);
   const [groupData, setGroupData] = useState([]);
   const user = useSelector((data: any) => data?.auth?.userData);
+  const fetchFilter = useSelector((data: any) => data?.DatingFilter?.data);
+  // console.log(fetchAllUsers, 'fetchAllUsers');
   const [showModal, setShowModal] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [activeIndexModal, setActiveIndexModal] = useState(0);
@@ -50,6 +53,12 @@ const MeetPeople = ({navigation}: any) => {
 
   useEffect(() => {
     if (button == 'online') {
+      // if (fetchFilter?.length > 0) {
+      //   setUserData(fetchFilter);
+      // } else {
+      //   setLoader(true);
+      //   getAllUserHandler();
+      // }
       setLoader(true);
       getAllUserHandler();
     } else {
@@ -373,7 +382,7 @@ const MeetPeople = ({navigation}: any) => {
         start={{x: 0, y: 0}}
         end={{x: 1.3, y: 0.9}}
         style={styles.LinearConatiner}>
-        <SafeAreaView>
+        <SafeAreaView style={{flex: 1}}>
           <SizeBox size={10} />
           <View style={styles.heading}>
             <View style={styles.invw}>

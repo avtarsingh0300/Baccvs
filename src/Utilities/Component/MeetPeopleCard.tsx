@@ -50,7 +50,7 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
 
   const navigation = useNavigation();
 
-  console.log(item, 'item');
+  // console.log(item, 'item');
 
   return (
     <Animated.View
@@ -74,7 +74,7 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
         contentContainerStyle={{borderRadius: 10}}
         index={activeIndex}
         onIndexChanged={index => setActiveIndex(index)}>
-        {item?.pictures?.map((i: any, ind: number) => (
+        {item?.pictureUrls?.map((i: any, ind: number) => (
           <TouchableOpacity
             activeOpacity={0.9}
             // onPress={() => {
@@ -85,7 +85,7 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
           >
             <ImageBackground
               borderRadius={10}
-              source={{uri: IMAGE_URL + i}}
+              source={{uri: IMAGE_URL + i?.url}}
               // source={ImagePath.ProfileImg}
               style={{
                 width: '100%',
@@ -101,7 +101,7 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
                   width: '100%',
                   justifyContent: 'center',
                 }}>
-                {item?.pictures?.map((i: any, ind: number) => (
+                {item?.pictureUrls?.map((i: any, ind: number) => (
                   <TouchableOpacity
                     activeOpacity={0.8}
                     style={{paddingVertical: 5}}

@@ -60,7 +60,7 @@ const MeetPeopleFilter = ({navigation}: any) => {
       });
   };
 
-  console.log(musicType);
+  // console.log(musicType);
 
   const signData = [
     'Aries',

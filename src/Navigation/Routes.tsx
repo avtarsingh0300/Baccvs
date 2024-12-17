@@ -12,6 +12,7 @@ const Stack = createNativeStackNavigator();
 
 export default function Routes() {
   const user = useSelector((data: any) => data?.auth?.userData);
+  // console.log(user?.token, 'user');
 
   return (
     <NavigationContainer ref={navigationRef}>
