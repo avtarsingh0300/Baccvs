@@ -143,7 +143,7 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
                   }}
                   activeOpacity={0.8}
                   style={styles.bottomBtn}>
-                  <Image source={ImagePath.sent} />
+                  <Image source={ImagePath.sent} resizeMode="contain" />
                 </TouchableOpacity>
                 <TouchableOpacity
                   activeOpacity={0.8}
@@ -195,6 +195,7 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
                   ]}>
                   <Image
                     source={ImagePath.openSheet}
+                    resizeMode="contain"
                     style={{height: 40, width: 40}}
                   />
                 </TouchableOpacity>
@@ -229,8 +230,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   bottomBtn: {
-    height: moderateScaleVertical(40),
-    width: moderateScale(40),
+    height: 40,
+    width: 40,
     borderRadius: 40,
     backgroundColor: '#252131',
     justifyContent: 'center',

@@ -41,7 +41,7 @@ const EventFilter = ({navigation}: any) => {
   const [selectedValue3, setSelected3] = useState([0, 0]);
   const [selectedValues4, setSelectedValues4] = useState([0, 0]);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [selectedItems2, setSelectedItems2] = useState([]);
+  const [selectedItems2, setSelectedItems2] = useState<string[]>([]);
   const [selectedItems3, setSelectedItems3] = useState([]);
   const [selectedInterest, setSelectedInterest] = useState([]);
   const [selectedItemsSign, setSelectedItemsSign] = useState([]);
@@ -183,9 +183,13 @@ const EventFilter = ({navigation}: any) => {
   const toggleSelectionInterest = (item: any) => {
     setSelectedInterest(item);
   };
-
   const toggleSelection2 = (item: any) => {
-    setSelectedItems2(item);
+    setSelectedItems2(
+      prev =>
+        prev.includes(item._id)
+          ? prev.filter(id => id !== item._id) // Remove if already selected
+          : [...prev, item._id], // Add if not selected
+    );
   };
 
   const toggleSelection3 = (item: any) => {
@@ -480,7 +484,7 @@ const EventFilter = ({navigation}: any) => {
                 <DropComponentNew
                   items={venueType}
                   onValueChange={toggleSelection2}
-                  newStyle={{zIndex: 700}}
+                  // newStyle={{zIndex: 500}}
                 />
               </View>
               <SizeBox size={10} />
@@ -529,32 +533,6 @@ const EventFilter = ({navigation}: any) => {
                     }}>
                     Music type
                   </Text>
-                  {/* <View
-                    style={{
-                      width: moderateScale(227),
-                      height: moderateScaleVertical(35),
-                      borderRadius: 10,
-                      backgroundColor: Colors.black,
-                      flexDirection: 'row',
-                      justifyContent: 'space-around',
-                      alignItems: 'center',
-                      borderWidth: 1,
-                      borderColor: Colors.darkPink,
-                    }}>
-                    <TextInput
-                      placeholder="Enter something here..."
-                      value={musicSearch}
-                      placeholderTextColor={Colors.greyTxt}
-                      onChangeText={(e: string) => {
-                        setMusicSearch(e);
-                      }}
-                      style={{
-                        ...commonStyles.font10Bold,
-                        color: Colors.white,
-                      }}
-                    />
-                    <Image source={ImagePath.SearchNewGroup} />
-                  </View> */}
                   <DropComponentNew
                     items={musicStyle}
                     onValueChange={toggleSelection3}

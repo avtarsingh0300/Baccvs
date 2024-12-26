@@ -140,14 +140,19 @@ const DatingUserProfile = ({navigation, route}: any) => {
 
     calculateDistance(start, end);
   };
+  const onEventDetails = (item: any) => {
+    navigation.navigate(NavigationStrings.EventDetails, {eventId: item?._id});
+  };
 
   const renderItem = ({item}: any) => (
-    console.log(item, 'item'),
+    console.log(JSON.stringify(item), 'item'),
     (
       <TouchableOpacity
         activeOpacity={0.8}
         style={{alignSelf: 'center', marginTop: 20}}
-        onPress={() => {}}>
+        onPress={() => {
+          onEventDetails(item);
+        }}>
         <ImageBackground
           source={
             item?.pictures?.length > 0
@@ -165,7 +170,7 @@ const DatingUserProfile = ({navigation, route}: any) => {
           <Image
             source={
               item?.members?.length > 0
-                ? {uri: IMAGE_URL + item?.members[0]?.picture}
+                ? {uri: IMAGE_URL + item?.members[0]?.picture[0]?.url}
                 : ImagePath.ProfileImg
             }
             style={styles.bottomListMediumImg}
@@ -173,7 +178,7 @@ const DatingUserProfile = ({navigation, route}: any) => {
           <Image
             source={
               item?.members?.length > 0
-                ? {uri: IMAGE_URL + item?.members[1]?.picture}
+                ? {uri: IMAGE_URL + item?.members[1]?.picture[0]?.url}
                 : ImagePath.ProfileImg
             }
             style={styles.bottomListSmallImg}
@@ -261,6 +266,7 @@ const DatingUserProfile = ({navigation, route}: any) => {
         backgroundColor: Colors.backgroundNew,
         // paddingHorizontal: moderateScale(22),
       }}>
+      <Loadingcomponent isVisible={loader} />
       <SafeAreaView>
         <ScrollView showsVerticalScrollIndicator={false}>
           <Loadingcomponent isVisible={false} />

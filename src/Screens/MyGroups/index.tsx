@@ -21,7 +21,7 @@ import styles from './styles';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import Modal from 'react-native-modal';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
-import {getMyGroups} from '../../Utilities/Constants/auth';
+import {getMyGroups, selectTeam} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import {moderateScale} from '../../Utilities/Styles/responsiveSize';
 import moment from 'moment';
@@ -29,7 +29,6 @@ const MyGroups = ({navigation, route}: any) => {
   const [showModal, setShowModal] = useState(false);
   const [loader, setLoader] = useState(false);
   const [groupData, setGroupData] = useState([]);
-  // const [selectTeam, setSelectTeam] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const onList = () => {
     // setShowModal(!showModal);
@@ -42,10 +41,60 @@ const MyGroups = ({navigation, route}: any) => {
   const getGroups = () => {
     setLoader(true);
     getMyGroups()
-      .then(res => {
+      .then((res: any) => {
+        let filteData = res?.data?.filter((i: any) => i?.status == 1);
+        if (filteData?.length == 0) {
+          selectTeamHandler2(res?.data[0]?._id, false);
+        } else {
+          setLoader(false);
+          setGroupData(res?.data);
+        }
+      })
+      .catch(err => {
         setLoader(false);
+        showError(err?.message);
+        console.log(err);
+      });
+  };
+
+  const selectTeamHandler2 = (id: string, flag: boolean) => {
+    const formData = {
+      id: id,
+      status: flag ? 0 : 1,
+    };
+    selectTeam(formData)
+      .then(res => {
+        getGroups2();
+      })
+      .catch(err => {
+        setLoader(false);
+        showError(err?.message);
+        console.log(err);
+      });
+  };
+
+  const getGroups2 = () => {
+    getMyGroups()
+      .then((res: any) => {
         setGroupData(res?.data);
-        // console.log(JSON.stringify(res));
+        setLoader(false);
+      })
+      .catch(err => {
+        setLoader(false);
+        showError(err?.message);
+        console.log(err);
+      });
+  };
+
+  const selectTeamHandler = (id: string, flag: boolean) => {
+    const formData = {
+      id: id,
+      status: flag ? 0 : 1,
+    };
+    selectTeam(formData)
+      .then(res => {
+        getGroups();
+        console.log(res, 'res inselectTeam');
       })
       .catch(err => {
         setLoader(false);
@@ -56,42 +105,18 @@ const MyGroups = ({navigation, route}: any) => {
 
   const renderItem = useCallback(
     ({item, index}: any) => {
-      // const filterData = selectTeam?.filter(i => i?._id === item?._id);
-      const filterData = activeIndex === index;
-      // return (
-      //   <>
-      //     <TouchableOpacity
-      //       activeOpacity={route?.params?.name === 'Select team' ? 0.8 : 1}
-      //       style={{
-      //         backgroundColor:
-      //           filterData?.length > 0 ? '#7464A3' : Colors.tranparent,
-      //       }}
-      //       onPress={() => {
-      //         if (route?.params?.name === 'Select team') {
-      //           if (filterData?.length >0) {
-      //             const filterData = selectTeam?.filter(
-      //               i => i?._id !== item?._id,
-      //             );
-      //             setSelectTeam(filterData);
-      //           } else {
-      //             const customData = [...selectTeam, item];
-      //             setSelectTeam(customData);
-      //           }
-      //         }
-      //       }}>
+      const filterData = item?.status == 1;
       return (
         <>
-        <TouchableOpacity
-          activeOpacity={route?.params?.name === 'Select team' ? 0.8 : 1}
-          style={{
-            backgroundColor: filterData ? '#7464A3' : Colors.transparent,
-          }}
-          onPress={() => {
-            if (route?.params?.name === 'Select team') {
-              setActiveIndex(filterData ? null : index);
-            }
-          }}
-        > 
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={{
+              backgroundColor: filterData ? '#7464A3' : Colors.transparent,
+            }}
+            onPress={() => {
+              setLoader(true);
+              selectTeamHandler(item?._id, filterData);
+            }}>
             <SizeBox size={7} />
             <FlatList
               horizontal
@@ -128,20 +153,14 @@ const MyGroups = ({navigation, route}: any) => {
               </View>
             </View>
             <SizeBox size={7} />
-            {groupData.length - 1 !== index && filterData?.length == 0 && (
-              <View style={styles.border} />
-            )}
+            {groupData.length - 1 !== index && <View style={styles.border} />}
           </TouchableOpacity>
           <SizeBox size={1} />
         </>
-);
-},
-[activeIndex, route?.params?.name]
-);
-  //     );
-  //   },
-  //   [groupData],
-  // );
+      );
+    },
+    [activeIndex, route?.params?.name],
+  );
 
   const renderItemm = ({index, item}: any) => (
     <View>
@@ -180,7 +199,11 @@ const MyGroups = ({navigation, route}: any) => {
 
   return (
     <LinearGradient
-      colors={[Colors.backgroundNew, Colors.backgroundNew, Colors.backgroundNew]}
+      colors={[
+        Colors.backgroundNew,
+        Colors.backgroundNew,
+        Colors.backgroundNew,
+      ]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>

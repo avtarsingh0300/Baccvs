@@ -8,6 +8,7 @@ import {
   FlatList,
   TextInput,
   ImageBackground,
+  SectionList,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import commonStyles from '../../Utilities/Styles/commonStyles';
@@ -55,6 +56,7 @@ const CreateGroup = ({navigation}: any) => {
   const [members, setMembers] = useState([]);
   const [eventname, setEventname] = useState('');
   const [bio, setBio] = useState('');
+  const [modalVisibleLang, SetModalVisibleLang] = useState(false);
 
   const onCreate = () => {
     if (!eventname) {
@@ -148,23 +150,23 @@ const CreateGroup = ({navigation}: any) => {
       });
   };
 
-  const selectModalHandler = (item: any) => {
-    if (modalVisible) {
-      const filterData = selectMembers?.filter(
-        (i: any) => i?.username == item?.username,
-      );
-      if (filterData?.length > 0) {
-        const filterData2 = selectMembers?.filter(
-          (i: any) => i?.username != item?.username,
-        );
-        setSelectMembers(filterData2);
-      } else if (selectMembers?.length == 3) {
-        setSelectMembers(selectMembers);
-      } else {
-        setSelectMembers([...selectMembers, item]);
-      }
-    }
-  };
+  // const selectModalHandler = (item: any) => {
+  //   if (modalVisible) {
+  //     const filterData = selectMembers?.filter(
+  //       (i: any) => i?.username == item?.username,
+  //     );
+  //     if (filterData?.length > 0) {
+  //       const filterData2 = selectMembers?.filter(
+  //         (i: any) => i?.username != item?.username,
+  //       );
+  //       setSelectMembers(filterData2);
+  //     } else if (selectMembers?.length == 3) {
+  //       setSelectMembers(selectMembers);
+  //     } else {
+  //       setSelectMembers([...selectMembers, item]);
+  //     }
+  //   }
+  // };
 
   const selectMusicType = (item: any) => {
     setSelectedMusic((prevSelectedItems): any => {
@@ -238,9 +240,59 @@ const CreateGroup = ({navigation}: any) => {
     );
   };
 
+  const selectModalTitleHandler = (title: string) => {
+    if (modalVisibleLang) {
+      const filterData = languages
+        .filter(i => i.title === title) // Get only the category with the given title
+        .flatMap(i => i.data.map(item => item.name)); // Extract and flatten the names
+
+      // console.log(filterData, 'filterData');
+
+      // Update selectedLang by toggling the filtered data
+      setSelectedLanguage((prevSelectedLang: any) => {
+        // Check if all `filterData` items are already selected
+        const allSelected = filterData.every(item =>
+          prevSelectedLang.includes(item),
+        );
+
+        if (allSelected) {
+          // If all are selected, remove them from the selectedLang array
+          return prevSelectedLang.filter(
+            (item: any) => !filterData.includes(item),
+          );
+        } else {
+          // If not all are selected, add the remaining items to the array
+          const newItems = filterData.filter(
+            item => !prevSelectedLang.includes(item),
+          );
+          return [...prevSelectedLang, ...newItems];
+        }
+      });
+    }
+  };
+
+  const selectModalHandler = (item: any) => {
+    if (modalVisibleLang) {
+      const filterData = selectedLanguage?.filter((i: any) => i == item?.name);
+      if (filterData?.length > 0) {
+        const filterData2 = selectedLanguage?.filter(
+          (i: any) => i != item?.name,
+        );
+        setSelectedLanguage(filterData2);
+      } else {
+        setSelectedLanguage([...selectedLanguage, item?.name]);
+      }
+    } else {
+    }
+  };
+
   return (
     <LinearGradient
-      colors={[Colors.backgroundNew, Colors.backgroundNew, Colors.backgroundNew]}
+      colors={[
+        Colors.backgroundNew,
+        Colors.backgroundNew,
+        Colors.backgroundNew,
+      ]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
@@ -260,12 +312,13 @@ const CreateGroup = ({navigation}: any) => {
               <Image source={ImagePath.Arrow_Left_2} />
             </TouchableOpacity>
             <Text style={{...commonStyles.Heading20font}}>New Team</Text>
-            <VectorIcon
+            {/* <VectorIcon
               groupName="Entypo"
               name="menu"
               size={32}
               color={Colors.white}
-            />
+            /> */}
+            <View style={{width: '5%'}} />
           </View>
           <SizeBox size={10} />
           <ImageBackground
@@ -706,42 +759,35 @@ const CreateGroup = ({navigation}: any) => {
               keyExtractor={(item, index) => index.toString()}
             />
             <SizeBox size={10} />
-            <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <TouchableOpacity
+              style={{
+                borderWidth: 1,
+                borderColor: Colors.Pink,
+                borderRadius: 5,
+                paddingVertical: 10,
+              }}
+              activeOpacity={0.5}
+              onPress={() => SetModalVisibleLang(true)}>
               <Text
                 style={{
                   ...commonStyles.font16Regular,
-                  color: Colors.lightPink,
+                  color: Colors.white,
+                  paddingLeft: 10,
                 }}>
-                Languages
-              </Text>
-              <View
-                style={{
-                  width: moderateScale(230),
-                  height: moderateScaleVertical(33),
-                  backgroundColor: Colors.white,
-                  borderRadius: 15,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  paddingHorizontal: 10,
-                }}>
-                <TextInput
-                  placeholder="Search"
-                  placeholderTextColor={Colors.black}
-                  value={searchLang}
-                  onChangeText={text => setSearchLang(text)}
+                Languages{` `}
+                <Text
                   style={{
-                    ...commonStyles.font10Regular,
-                    color: Colors.black,
-                    width: '90%',
-                  }}
-                />
-                <Image source={ImagePath.SearchNewGroup} />
-              </View>
-            </View>
+                    ...commonStyles.font16Regular,
+                    fontSize: 13,
+                    color: Colors.white,
+                    paddingLeft: 10,
+                  }}>
+                  (select languages)
+                </Text>
+              </Text>
+            </TouchableOpacity>
             <SizeBox size={5} />
-            <FlatList
+            {/* <FlatList
               data={
                 searchLang?.length > 0
                   ? handleSearchLang()
@@ -778,7 +824,7 @@ const CreateGroup = ({navigation}: any) => {
               }}
               numColumns={3}
               keyExtractor={(item, index) => index.toString()}
-            />
+            /> */}
             <SizeBox size={10} />
             <TouchableOpacity
               activeOpacity={0.8}
@@ -853,6 +899,139 @@ const CreateGroup = ({navigation}: any) => {
                         }
                         size={18}
                       />
+                    </TouchableOpacity>
+                  );
+                }}
+              />
+            </View>
+          </View>
+        </Modal>
+        <Modal
+          isVisible={modalVisibleLang}
+          style={{
+            justifyContent: 'flex-end',
+            margin: 0,
+          }}
+          onBackdropPress={() => {
+            SetModalVisibleLang(false);
+          }}
+          backdropOpacity={0.5}
+          animationIn="slideInUp"
+          animationOut="flipOutY"
+          animationInTiming={600}
+          animationOutTiming={600}
+          backdropTransitionInTiming={600}
+          backdropTransitionOutTiming={600}>
+          <View
+            style={{
+              minHeight: height / 5,
+              maxHeight: height / 1.5,
+              width: '95%',
+              alignSelf: 'center',
+            }}>
+            <View style={styles.modalContainer}>
+              <SectionList
+                sections={languages}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({item, index}) => {
+                  const lengthFlag = languages?.length;
+
+                  const filterData = selectedLanguage?.filter(
+                    (i: any) => i == item?.name,
+                  );
+
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={() => {
+                        selectModalHandler(item);
+                      }}
+                      style={[
+                        {
+                          width: '85%',
+                          alignSelf: 'center',
+                          // borderBottomWidth: lengthFlag - 1 == index ? 0 : 1,
+                        },
+                        styles.mondaInvw,
+                      ]}>
+                      <Text
+                        style={{
+                          ...commonStyles.font10Regular,
+                          color: Colors.white,
+                          padding: 5,
+                          fontWeight: '600',
+                          fontFamily: fontFamily.time_regular,
+                        }}>
+                        {item?.name}
+                      </Text>
+                      <View
+                        style={{
+                          width: 14,
+                          height: 14,
+                          backgroundColor: Colors.white,
+                          borderRadius: 2,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        {filterData[0] == item?.name && (
+                          <VectorIcon
+                            groupName="FontAwesome"
+                            name={'check'}
+                            size={10}
+                            color={Colors.black}
+                          />
+                        )}
+                      </View>
+                    </TouchableOpacity>
+                  );
+                }}
+                renderSectionHeader={({section: {title}}) => {
+                  const filterData = languages
+                    .filter(i => i.title === title) // Get only the category with the given title
+                    .flatMap(i => i.data.map(item => item.name)); // Extract and flatten the names
+                  // console.log(title, 'title');
+                  var allSelected = filterData.every(item =>
+                    selectedLanguage.includes(item),
+                  );
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={() => {
+                        selectModalTitleHandler(title);
+                      }}
+                      style={[
+                        {
+                          // borderBottomWidth: lengthFlag - 1 == index ? 0 : 1,
+                        },
+                        styles.mondaInvw,
+                      ]}>
+                      <Text
+                        style={{
+                          ...commonStyles.font16White,
+                          padding: 5,
+                          fontWeight: '600',
+                          fontFamily: fontFamily.time_regular,
+                        }}>
+                        {title}
+                      </Text>
+                      <View
+                        style={{
+                          width: 16,
+                          height: 16,
+                          backgroundColor: Colors.white,
+                          borderRadius: 2,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        {allSelected && (
+                          <VectorIcon
+                            groupName="FontAwesome"
+                            name={'check'}
+                            size={12}
+                            color={Colors.black}
+                          />
+                        )}
+                      </View>
                     </TouchableOpacity>
                   );
                 }}

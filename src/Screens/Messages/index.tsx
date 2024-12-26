@@ -95,7 +95,8 @@ const Messages = ({navigation, route}: any) => {
 
     socket.on('message', newMessage => {
       userLastSeenHandler();
-      setMessages((preMessage: any) => [...(preMessage || []), newMessage]); // Use an empty array as a fallback if preMessage is undefined
+      // Use an empty array as a fallback if preMessage is undefined
+      setMessages((preMessage: any) => [...(preMessage || []), newMessage]);
     });
 
     socket.on('typing', ({userId}) => {
@@ -139,23 +140,6 @@ const Messages = ({navigation, route}: any) => {
       });
   };
 
-  // useEffect(() => {
-  //   // console.log('nwhhj');
-  //   socket.on('user-status', status => {
-  //     console.log(status, 'status');
-  //     if (status.userId === user?.user?.id) {
-  //       console.log(status.isOnline, 'status.isOnline');
-  //       if (!status.isOnline) {
-  //         console.log(status.lastSeen, 'status.lastSeen');
-  //       }
-  //     }
-  //   });
-
-  //   return () => {
-  //     socket.off('user-status'); // Cleanup listener
-  //   };
-  // }, [roomid]);
-
   const handleTyping = (text: string) => {
     setNewMessage(text);
 
@@ -167,8 +151,6 @@ const Messages = ({navigation, route}: any) => {
       socket.emit('stopTyping', {roomId: roomid, userId: myId});
     }
   };
-
-  // console.log(moment(new Date()).format(), 'moment(new Date()).format()');
 
   const handleSend = () => {
     if (newMessage.trim().length > 0) {
@@ -447,7 +429,7 @@ const Messages = ({navigation, route}: any) => {
           setLoader(true);
           generateSignedUrlToUploadOn(roomid, images)
             .then(async res => {
-              console.log(res, 'res in generateSignedUrlToUploadOn');
+              // console.log(res, 'res in generateSignedUrlToUploadOn');
               const filePath = Platform.OS === 'ios' ? images.url : images.path;
               await uploadToS3(res, filePath, {
                 url2: `attachment/${roomid}/video_${images?.modificationDate}.mp4`,
@@ -519,7 +501,11 @@ const Messages = ({navigation, route}: any) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Loadingcomponent isVisible={loader} />
       <LinearGradient
-        colors={[Colors.backgroundNew, Colors.backgroundNew, Colors.backgroundNew]}
+        colors={[
+          Colors.backgroundNew,
+          Colors.backgroundNew,
+          Colors.backgroundNew,
+        ]}
         start={{x: 0, y: 0}}
         end={{x: 1.3, y: 0.9}}
         style={styles.conatiner}>

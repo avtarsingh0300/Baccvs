@@ -28,7 +28,7 @@ import styles from './style';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import MapView, {Marker} from 'react-native-maps';
 import {getEventTypes} from '../../Utilities/Constants/auth';
-import {languages} from '../../Utilities/Constants';
+import {languages, languages2} from '../../Utilities/Constants';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import Modal from 'react-native-modal';
 import Geolocation from '@react-native-community/geolocation';
@@ -46,7 +46,7 @@ const AddScreen = ({navigation}: any) => {
   const [eventType, setEventType] = useState([]);
   const [venueType, setVenueType] = useState([]);
   const [modalVisibleLang, SetModalVisibleLang] = useState(false);
-  const [selectedLang, setSelectedLang] = useState([]);
+  const [selectedLang, setSelectedLang] = useState<any>([]);
   const [selectedMusic, setSelectedMusic] = useState([]);
   const [selectedEventType, setselectedEventType] = useState([]);
   const [selectedVenue, setSelectedVenue] = useState([]);
@@ -54,7 +54,7 @@ const AddScreen = ({navigation}: any) => {
   const [showEndPicker, setShowEndPicker] = useState(false);
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
-  const [userLocation, setUserLocation] = useState(null);
+  const [userLocation, setUserLocation] = useState<any>(null);
   const [address, setAddress] = useState('');
   const [pin, setPin] = useState({
     latitude: 37.78825,
@@ -65,6 +65,9 @@ const AddScreen = ({navigation}: any) => {
   const [numpeople, setNumPeople] = useState('');
   const [bio, setBio] = useState('');
   const [charges, setCharges] = useState('');
+  const [chargesRegular, setChargesRegular] = useState('');
+  const [chargesLate, setChargesLate] = useState('');
+  const [chargesFree, setChargesFree] = useState(false);
 
   const weeks = useMemo(() => {
     const start = moment().add(week, 'weeks').startOf('week');
@@ -123,6 +126,9 @@ const AddScreen = ({navigation}: any) => {
       numpeople,
       bio,
       charges,
+      chargesFree,
+      chargesLate,
+      chargesRegular,
       address,
       pin,
       startTime,
@@ -144,7 +150,7 @@ const AddScreen = ({navigation}: any) => {
 
   const getEventsTypes = () => {
     getEventTypes()
-      .then(res => {
+      .then((res: any) => {
         setMusicStyle(res?.musictype);
         setEventType(res?.eventtype);
         setVenueType(res?.venuetype);
@@ -224,7 +230,7 @@ const AddScreen = ({navigation}: any) => {
 
   const getLocation = () => {
     Geolocation.getCurrentPosition(
-      position => {
+      (position: any) => {
         setUserLocation(position?.coords);
         // console.log(position, 'hghg');
       },
@@ -254,7 +260,11 @@ const AddScreen = ({navigation}: any) => {
 
   return (
     <LinearGradient
-      colors={[Colors.backgroundNew, Colors.backgroundNew, Colors.backgroundNew]}
+      colors={[
+        Colors.backgroundNew,
+        Colors.backgroundNew,
+        Colors.backgroundNew,
+      ]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
@@ -438,6 +448,7 @@ const AddScreen = ({navigation}: any) => {
                 value={phone}
                 onChangeText={text => setPhone(text)}
                 placeholder="+33 (___) ___ _____"
+                placeholderTextColor={Colors.white}
               />
             </View>
             <SizeBox size={10} />
@@ -459,6 +470,33 @@ const AddScreen = ({navigation}: any) => {
                 value={numpeople}
                 onChangeText={text => setNumPeople(text)}
                 placeholder="People Capacity"
+                placeholderTextColor={Colors.white}
+              />
+            </View>
+            <SizeBox size={10} />
+            <View
+              style={[
+                styles.cardBtn,
+                {
+                  padding: 10,
+                  borderTopWidth: 0,
+                  borderLeftWidth: 0,
+                  borderRightWidth: 0,
+                },
+              ]}>
+              <Text
+                style={{
+                  ...commonStyles.font12Regualar2,
+                  color: Colors.white,
+                  marginRight: 10,
+                }}>
+                Free tickets
+              </Text>
+              <VectorIcon
+                groupName="FontAwesome6"
+                name={chargesFree ? 'toggle-on' : 'toggle-off'}
+                size={24}
+                onPress={() => setChargesFree(!chargesFree)}
               />
             </View>
             <SizeBox size={10} />
@@ -482,7 +520,58 @@ const AddScreen = ({navigation}: any) => {
                 }}
                 value={charges}
                 onChangeText={text => setCharges(text)}
-                placeholder="Free / Chargeable"
+                placeholder="Early tickets"
+                placeholderTextColor={Colors.white}
+              />
+            </View>
+            <SizeBox size={10} />
+            <View style={[styles.cardBtn, {padding: 0, paddingHorizontal: 10}]}>
+              <Image
+                resizeMode="contain"
+                source={ImagePath.priceTag}
+                style={{
+                  tintColor: Colors.lightPink,
+                  width: moderateScale(22),
+                  height: moderateScaleVertical(22),
+                }}
+              />
+              <TextInput
+                keyboardType="number-pad"
+                maxLength={5}
+                style={{
+                  ...commonStyles.font12Regualar2,
+                  color: Colors.white,
+                  paddingHorizontal: 10,
+                }}
+                value={chargesRegular}
+                onChangeText={text => setChargesRegular(text)}
+                placeholder="Regular tickets"
+                placeholderTextColor={Colors.white}
+              />
+            </View>
+            <SizeBox size={10} />
+            <View style={[styles.cardBtn, {padding: 0, paddingHorizontal: 10}]}>
+              <Image
+                resizeMode="contain"
+                source={ImagePath.priceTag}
+                style={{
+                  tintColor: Colors.lightPink,
+                  width: moderateScale(22),
+                  height: moderateScaleVertical(22),
+                }}
+              />
+              <TextInput
+                keyboardType="number-pad"
+                maxLength={5}
+                style={{
+                  ...commonStyles.font12Regualar2,
+                  color: Colors.white,
+                  paddingHorizontal: 10,
+                }}
+                value={chargesLate}
+                onChangeText={text => setChargesLate(text)}
+                placeholder="Late tickets"
+                placeholderTextColor={Colors.white}
               />
             </View>
             <SizeBox size={10} />
@@ -587,7 +676,7 @@ const AddScreen = ({navigation}: any) => {
             <SizeBox size={5} />
             <FlatList
               data={eventType}
-              renderItem={({item}) => {
+              renderItem={({item}: any) => {
                 if (!item || !item._id) {
                   return null;
                 }
@@ -619,7 +708,7 @@ const AddScreen = ({navigation}: any) => {
                 );
               }}
               numColumns={3}
-              keyExtractor={item => item._id.toString()}
+              keyExtractor={(item, index) => index.toString()}
             />
             <SizeBox size={10} />
             <Text
@@ -639,7 +728,7 @@ const AddScreen = ({navigation}: any) => {
             <SizeBox size={5} />
             <FlatList
               data={venueType}
-              renderItem={({item}) => {
+              renderItem={({item}: any) => {
                 if (!item || !item._id) {
                   return null;
                 }
@@ -661,7 +750,7 @@ const AddScreen = ({navigation}: any) => {
                     <Text
                       style={{
                         ...commonStyles.font12Regular,
-                        color: selectedVenue.includes(item._id)
+                        color: selectedVenue.includes(item?._id)
                           ? Colors.black
                           : Colors.white,
                       }}>
@@ -671,7 +760,7 @@ const AddScreen = ({navigation}: any) => {
                 );
               }}
               numColumns={3}
-              keyExtractor={item => item._id.toString()}
+              keyExtractor={(item, index) => index.toString()}
             />
 
             <SizeBox size={10} />
@@ -730,10 +819,10 @@ const AddScreen = ({navigation}: any) => {
             }}>
             <View style={styles.modalContainer}>
               <FlatList
-                data={languages}
+                data={languages2}
                 keyExtractor={(item, index) => index?.toString()}
                 renderItem={({item, index}) => {
-                  const lengthFlag = languages?.length;
+                  const lengthFlag = languages2?.length;
 
                   const filterData = selectedLang?.filter(
                     (i: any) => i == item?.name,

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   Animated,
   Image,
@@ -35,7 +35,6 @@ interface TeamsCardCardProps {
 
 const TeamsCard: React.FC<TeamsCardCardProps> = ({
   index,
-  // setImageIndex,
   swipe,
   item,
   isFirst,
@@ -49,6 +48,11 @@ const TeamsCard: React.FC<TeamsCardCardProps> = ({
   });
 
   const navigation = useNavigation();
+
+  // console.log(item, 'item');
+  if (item?.status == 0) {
+    return null;
+  }
 
   return (
     <Animated.View
@@ -183,7 +187,11 @@ const TeamsCard: React.FC<TeamsCardCardProps> = ({
             });
           }}
           style={[styles.bottomBtn, {backgroundColor: Colors.tranparent}]}>
-          <Image source={ImagePath.openSheet} style={{height: 40, width: 40}} />
+          <Image
+            source={ImagePath.openSheet}
+            style={{height: 40, width: 40}}
+            resizeMode="contain"
+          />
         </TouchableOpacity>
       </View>
     </Animated.View>
@@ -195,12 +203,9 @@ export default TeamsCard;
 const styles = StyleSheet.create({
   container: {
     width: width,
-    // height: height < 800 ? height / 1.1 : height / 1.06,
     height: height / 1.4,
     alignSelf: 'center',
     position: 'absolute',
-    // justifyContent: 'center',
-    // alignItems: 'center',
     borderRadius: 10,
     backgroundColor: Colors.backgroundNew,
   },
@@ -222,8 +227,8 @@ const styles = StyleSheet.create({
     marginVertical: moderateScaleVertical(10),
   },
   bottomBtn: {
-    height: moderateScaleVertical(40),
-    width: moderateScale(40),
+    height: 40,
+    width: 40,
     borderRadius: 40,
     backgroundColor: '#252131',
     justifyContent: 'center',

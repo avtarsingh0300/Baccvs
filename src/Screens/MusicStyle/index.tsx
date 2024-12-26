@@ -18,7 +18,6 @@ import moment from 'moment';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import ImagePath from '../../Utilities/Constants/ImagePath';
-import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import {
   height,
   moderateScale,
