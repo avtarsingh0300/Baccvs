@@ -4,9 +4,9 @@ import {
   TouchableOpacity,
   Animated,
   PanResponder,
+  SafeAreaView,
 } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {SafeAreaView} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
 import styles from './style';
@@ -35,12 +35,12 @@ import MeetFilterModal from '../../Utilities/Component/MeetFilterModal';
 import TeamsCard from '../../Utilities/Component/TeamsCard';
 
 const MeetPeople = ({navigation}: any) => {
+  const user = useSelector((data: any) => data?.auth?.userData);
   const [button, setButton] = useState('online');
   const [currentImage, setCurrentImage] = useState<any>({});
   const [loader, setLoader] = useState(false);
   const [userData, setUserData] = useState([]);
   const [groupData, setGroupData] = useState([]);
-  const user = useSelector((data: any) => data?.auth?.userData);
   const [showModal, setShowModal] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [activeIndexModal, setActiveIndexModal] = useState(0);
@@ -97,7 +97,6 @@ const MeetPeople = ({navigation}: any) => {
       likedUserId: item?._id,
       type: type,
     };
-    // console.log(type, 'type');
     likeUser(data)
       .then((res: any) => {
         handelSelectionUser('');
@@ -139,9 +138,7 @@ const MeetPeople = ({navigation}: any) => {
     const data = {
       userId: user?.user?.id,
       likedUserId: item?._id,
-      // type: type,
     };
-    // console.log(type, 'type');
     disLikeUser(data)
       .then((res: any) => {
         console.log(res, 'res in disLikeUser');
@@ -158,9 +155,7 @@ const MeetPeople = ({navigation}: any) => {
     const data = {
       userId: user?.user?.id,
       groupId: item?._id,
-      // type: type,
     };
-    // console.log(type, 'type');
     disLikeTeam(data)
       .then(res => {
         console.log(res, 'res in disLikeUser');
@@ -177,12 +172,9 @@ const MeetPeople = ({navigation}: any) => {
     onMoveShouldSetPanResponder: () => true,
     onPanResponderMove: (_, {dx, dy}) => {
       if (dx < -20) {
-        //  setTextFlag(false);
       }
       if (dx > 20) {
-        //  setTextFlag(false);
       }
-      // console.log('dx:' + dx + ' dy:' + dy);
       if (dx > 45) {
         swipe.setValue({x: dx, y: dy});
       } else if (dx < -90) {
@@ -195,13 +187,10 @@ const MeetPeople = ({navigation}: any) => {
     },
 
     onPanResponderRelease: (_, {dx, dy}) => {
-      // console.log('dx:' + dx + ' dy:' + dy);
       let direction = Math.sign(dx);
       let isActionActive = Math.abs(dx) > 200;
       if (direction == 1) {
-        //  setTextFlag(true);
         if (dx < 200 && dy < -450) {
-          //  getPropertiesDetailsHnadler();
           console.log('swipe up');
         } else {
           if (dx > 200) {
@@ -209,9 +198,7 @@ const MeetPeople = ({navigation}: any) => {
           }
         }
       } else {
-        //  setTextFlag(true);
         if (dx < 200 && dy < -450) {
-          //  getPropertiesDetailsHnadler();
         } else {
           if (dx < -200) {
             console.log('left swipe');
@@ -220,8 +207,6 @@ const MeetPeople = ({navigation}: any) => {
       }
 
       if (isActionActive) {
-        //  setTextFlag(false);
-        // if (dx > 0 && dy > 0) {
         Animated.timing(swipe, {
           toValue: {x: 500 * dx, y: dy},
           useNativeDriver: true,
@@ -229,17 +214,12 @@ const MeetPeople = ({navigation}: any) => {
         }).start(() => {
           removeCard();
         });
-        // handleNext();
-        // }
       } else {
-        // setTextFlag(true);
-        // if (dx < -200 && dy < -150 && dx > 200 && dy < -200) {
         Animated.spring(swipe, {
           toValue: {x: 0, y: 0},
           useNativeDriver: true,
           friction: 5,
         }).start();
-        // }
       }
     },
   });
@@ -248,12 +228,9 @@ const MeetPeople = ({navigation}: any) => {
     onMoveShouldSetPanResponder: () => true,
     onPanResponderMove: (_, {dx, dy}) => {
       if (dx < -20) {
-        //  setTextFlag(false);
       }
       if (dx > 20) {
-        //  setTextFlag(false);
       }
-      // console.log('dx:' + dx + ' dy:' + dy);
       if (dx > 45) {
         swipeTeam.setValue({x: dx, y: dy});
       } else if (dx < -90) {
@@ -373,7 +350,7 @@ const MeetPeople = ({navigation}: any) => {
         start={{x: 0, y: 0}}
         end={{x: 1.3, y: 0.9}}
         style={styles.LinearConatiner}>
-        <SafeAreaView>
+        <SafeAreaView style={{flex: 1}}>
           <SizeBox size={10} />
           <View style={styles.heading}>
             <View style={styles.invw}>
@@ -402,8 +379,6 @@ const MeetPeople = ({navigation}: any) => {
                 color={Colors.white}
                 onPress={() => {
                   setShowFilterModal(true);
-                  // setActiveIndexModal(1);
-                  // navigation.navigate(NavigationStrings.MeetPeopleFilter);
                 }}
               />
               <VectorIcon
@@ -478,19 +453,14 @@ const MeetPeople = ({navigation}: any) => {
                       const dragHandlers = isFirst
                         ? panResponser?.panHandlers
                         : {};
-                      // console.log(index, 'index');
                       return (
                         <MeetPeopleCard
                           isFirst={isFirst}
                           item={item}
                           key={index}
                           index={index}
-                          // setImageIndex={setImageIndex}
-                          // setLoader={setLoader}
-                          // handleNext={handleNext}
                           likeUserProfileHanlder={likeUserProfileHanlder}
                           disLikeUserProfileHanlder={disLikeUserProfileHanlder}
-                          // rotate={rotate}
                           swipe={swipe}
                           {...dragHandlers}
                         />
@@ -578,21 +548,6 @@ const MeetPeople = ({navigation}: any) => {
                       color={Colors.Pink}
                     />
                   </TouchableOpacity>
-                  {/* <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate(NavigationStrings.EditSocialProfile);
-                      setShowModal(false);
-                    }}
-                    activeOpacity={0.8}
-                    style={[styles.option, {borderBottomWidth: 0}]}>
-                    <Text style={styles.optionText}>Edit social part</Text>
-                    <VectorIcon
-                      groupName="FontAwesome"
-                      name="question-circle-o"
-                      size={18}
-                      color={Colors.Pink}
-                    />
-                  </TouchableOpacity> */}
                 </>
               )}
             </LinearGradient>

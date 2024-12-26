@@ -61,6 +61,7 @@ export const FOLLOW_USER = getApiUrl('follow-user');
 export const UN_FOLLOW_USER = getApiUrl('unfollow-user');
 export const PROFILE_STATUS = getApiUrl('profile-status');
 export const UPDATE_ACCOUNT_DETAILS = getApiUrl('update-account-Details');
+export const SELECT_TEAM = getApiUrl('update-meet-group-status');
 export const BLOCK_USER = getApiUrl('block-user');
 export const REPORT_USER = getApiUrl('report-user');
 export const CREATE_COMMENT = getApiUrl('create-comment');

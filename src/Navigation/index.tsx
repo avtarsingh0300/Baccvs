@@ -75,3 +75,4 @@ export {default as DjBooking} from '../Screens/DjBooking';
 export {default as ImagePreview} from '../Screens/ImagePreview';
 export {default as TransferTicket} from '../Screens/TransferTicket';
 export {default as BuyTickets} from '../Screens/BuyTickets';
+export {default as MusicStyle} from '../Screens/MusicStyle';

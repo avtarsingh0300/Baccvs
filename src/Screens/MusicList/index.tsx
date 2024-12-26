@@ -19,6 +19,7 @@ import {getSearchData} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import styles from './style';
 import ImagePath from '../../Utilities/Constants/ImagePath';
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 
 const MusicList = ({navigation}: any) => {
   const [searchText, setSearchText] = useState('');
@@ -51,7 +52,7 @@ const MusicList = ({navigation}: any) => {
   };
 
   const renderItem = ({item}: any) => (
-    <TouchableOpacity activeOpacity={0.8}>
+    <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate(NavigationStrings.MusicStyle)}>
       <ImageBackground
         source={{uri: IMAGE_URL + item?.image}}
         style={styles.imgbck}

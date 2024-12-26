@@ -36,10 +36,13 @@ import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import Geolocation from '@react-native-community/geolocation';
 import {useSelector} from 'react-redux';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
+import haversine from 'haversine-distance';
+import moment from 'moment';
 
 const DatingUserProfile = ({navigation, route}: any) => {
   const [musicStyle, setMusicStyle] = useState([]);
   const [interestType, setInterestType] = useState([]);
+  const [pastEventData, setPastEventData] = useState([]);
   const [loader, setLoader] = useState(false);
   const [userData, setUserData] = useState({});
   const [activeIndex, setActiveIndex] = useState(0);
@@ -76,7 +79,7 @@ const DatingUserProfile = ({navigation, route}: any) => {
 
   const getEventsTypes = () => {
     getEventTypes()
-      .then(res => {
+      .then((res: any) => {
         setMusicStyle(res?.musictype);
         setInterestType(res?.interesttype);
         setLoader(false);
@@ -92,14 +95,15 @@ const DatingUserProfile = ({navigation, route}: any) => {
     const data = {
       id: route?.params?.id,
     };
-    console.log(route?.params?.id);
+    // console.log(route?.params?.id);
     getMemberDetails(data)
-      .then(res => {
+      .then((res: any) => {
         setUserData(res?.user);
         if (res?.user?.latitude && res?.user?.longitude) {
           handleCalculate(res?.user?.latitude, res?.user?.longitude);
         }
-        // console.log(res?.user, 'res in getMemberDetails');
+        console.log(res, 'res in getMemberDetails');
+        setPastEventData(res?.past_events);
         setLoader(false);
       })
       .catch(err => {
@@ -136,59 +140,87 @@ const DatingUserProfile = ({navigation, route}: any) => {
 
     calculateDistance(start, end);
   };
+  const onEventDetails = (item: any) => {
+    navigation.navigate(NavigationStrings.EventDetails, {eventId: item?._id});
+  };
 
   const renderItem = ({item}: any) => (
-    <TouchableOpacity
-      activeOpacity={0.8}
-      style={{alignSelf: 'center'}}
-      onPress={() => {}}>
-      <ImageBackground
-        source={ImagePath.ProfileImg}
-        borderRadius={4}
-        style={styles.bottomListImg}>
-        <VectorIcon
-          groupName="Feather"
-          name="play-circle"
-          size={80}
-          color={Colors.white}
-        />
-        <Image
-          source={ImagePath.ProfileImg}
-          style={styles.bottomListMediumImg}
-        />
-        <Image
-          source={ImagePath.ProfileImg}
-          style={styles.bottomListSmallImg}
-        />
-        <Text style={styles.countText}>+8</Text>
-      </ImageBackground>
-      <SizeBox size={7} />
-      <View
-        style={{
-          width: '75%',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
+    console.log(JSON.stringify(item), 'item'),
+    (
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={{alignSelf: 'center', marginTop: 20}}
+        onPress={() => {
+          onEventDetails(item);
         }}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <ImageBackground
+          source={
+            item?.pictures?.length > 0
+              ? {uri: IMAGE_URL + item?.pictures[0]}
+              : ImagePath.ProfileImg
+          }
+          borderRadius={4}
+          style={styles.bottomListImg}>
           <VectorIcon
-            groupName="Entypo"
-            name="calendar"
+            groupName="Feather"
+            name="play-circle"
+            size={80}
             color={Colors.white}
-            size={14}
           />
-          <Text style={styles.dateText}>28/11/1995</Text>
-        </View>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <VectorIcon
-            groupName="EvilIcons"
-            name="location"
-            color={Colors.white}
-            size={18}
+          <Image
+            source={
+              item?.members?.length > 0
+                ? {uri: IMAGE_URL + item?.members[0]?.picture[0]?.url}
+                : ImagePath.ProfileImg
+            }
+            style={styles.bottomListMediumImg}
           />
-          <Text style={styles.dateText}>Paris, 75016</Text>
+          <Image
+            source={
+              item?.members?.length > 0
+                ? {uri: IMAGE_URL + item?.members[1]?.picture[0]?.url}
+                : ImagePath.ProfileImg
+            }
+            style={styles.bottomListSmallImg}
+          />
+          <Text style={styles.countText}>
+            {item?.members?.length - 2 > 0
+              ? '+' + item?.members?.length - 2
+              : ''}
+          </Text>
+        </ImageBackground>
+        <SizeBox size={2} />
+        <View
+          style={{
+            width: '75%',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <VectorIcon
+              groupName="Entypo"
+              name="calendar"
+              color={Colors.white}
+              size={14}
+            />
+            <Text style={styles.dateText}>
+              {moment(item?.date).subtract(10, 'days').calendar()}
+            </Text>
+          </View>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <VectorIcon
+              groupName="EvilIcons"
+              name="location"
+              color={Colors.white}
+              size={18}
+            />
+            <Text style={styles.dateText}>
+              {item?.state} {item?.zipcode}
+            </Text>
+          </View>
         </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    )
   );
 
   const likeUserProfileHanlder = (type: string) => {
@@ -234,6 +266,7 @@ const DatingUserProfile = ({navigation, route}: any) => {
         backgroundColor: Colors.backgroundNew,
         // paddingHorizontal: moderateScale(22),
       }}>
+      <Loadingcomponent isVisible={loader} />
       <SafeAreaView>
         <ScrollView showsVerticalScrollIndicator={false}>
           <Loadingcomponent isVisible={false} />
@@ -273,7 +306,7 @@ const DatingUserProfile = ({navigation, route}: any) => {
               {userData?.pictures?.map((i, ind) => (
                 <ImageBackground
                   borderRadius={10}
-                  source={{uri: IMAGE_URL + i}}
+                  source={{uri: IMAGE_URL + i?.url}}
                   // source={ImagePath.ProfileImg}
                   style={{
                     width: '100%',
@@ -454,7 +487,7 @@ const DatingUserProfile = ({navigation, route}: any) => {
           </View>
           <SizeBox size={10} />
           <FlatList
-            data={[{id: 0}]}
+            data={pastEventData}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderItem}
           />

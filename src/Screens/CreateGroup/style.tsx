@@ -201,6 +201,17 @@ const styles = StyleSheet.create({
     ...commonStyles.font16WhiteBold,
     color: Colors.Pink,
   },
+  flatcon: {
+    borderWidth: 1,
+    backgroundColor: Colors.lightPink,
+    width: '45%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: moderateScaleVertical(28),
+    borderRadius: 2,
+    marginHorizontal: 5,
+    marginVertical: 5,
+  },
 });
 
 export default styles;

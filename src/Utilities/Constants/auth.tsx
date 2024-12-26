@@ -62,6 +62,7 @@ import {
   REFUSE_INVITES,
   REGISTER_USER,
   REPORT_USER,
+  SELECT_TEAM,
   SELL_TICKET,
   SEND_FEEDBACK,
   SEND_USER_STATUS,
@@ -302,6 +303,10 @@ export function getUserProfileStatus() {
 
 export function updateUserAccountDetails(data: object) {
   return apiPost(UPDATE_ACCOUNT_DETAILS, data);
+}
+
+export function selectTeam(data: object) {
+  return apiPost(SELECT_TEAM, data);
 }
 
 export function registerUser(data: object) {

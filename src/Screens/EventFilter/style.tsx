@@ -160,15 +160,13 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     padding: 15,
-    width: '100%',
     borderWidth: 1,
     borderColor: Colors.inputborder,
     borderRadius: 8,
-    backgroundColor: Colors.LinearBlack,
+    backgroundColor: Colors.backgroundNew,
   },
   mondaInvw: {
     padding: 5,
-    borderColor: Colors.Pink,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

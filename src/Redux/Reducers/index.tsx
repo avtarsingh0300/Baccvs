@@ -1,9 +1,11 @@
 import {combineReducers} from 'redux';
 import types from '../types';
 import auth from './auth';
+import DatingFilter from './DatingFilter';
 
 const appReducer = combineReducers({
   auth,
+  DatingFilter,
 });
 
 const rootReducer = (state: any, action: any) => {

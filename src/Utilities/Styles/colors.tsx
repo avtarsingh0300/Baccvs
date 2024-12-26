@@ -34,4 +34,5 @@ export const Colors = {
   brown: '#b04341',
   lightbrown: '#763033',
   btnback: '#1C1C24',
+  transparent: 'transparent',
 };

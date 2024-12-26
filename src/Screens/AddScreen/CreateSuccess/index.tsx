@@ -34,6 +34,7 @@ import fontFamily from '../../../Utilities/Styles/fontFamily';
 import moment from 'moment';
 import NavigationStrings from '../../../Utilities/Constants/NavigationStrings';
 import {CommonActions} from '@react-navigation/native';
+import {IMAGE_URL} from '../../../Utilities/Constants/Urls';
 Geocoder.init('AIzaSyA-WTLYCwUjh4ffr-NkzBJnVHv6NEaHYSc');
 const CreateSuccess = ({navigation, route}: any) => {
   const routeData = route?.params?.data;
@@ -71,12 +72,24 @@ const CreateSuccess = ({navigation, route}: any) => {
     formData.append('allowed_people', routeData.numpeople);
     formData.append('music_style_id', routeData.selectedMusic);
     formData.append('phone_number', routeData.phone);
-    formData.append('price_type', routeData.charges ? routeData.charges : '0');
+    // formData.append('price_type', routeData.charges ? routeData.charges : '0');
     formData.append('language', routeData.selectedLang);
     formData.append('mode', 'In-person');
     formData.append('event_type_id', routeData.selectedEventType);
     formData.append('venue_type_id', routeData.selectedVenue);
-    formData.append('early_price', routeData.charges ? routeData.charges : '0');
+    formData.append(
+      'early_price',
+      routeData.chargesRegular ? routeData.chargesRegular : '0',
+    );
+    formData.append(
+      'regular_price',
+      routeData.chargesRegular ? routeData.chargesRegular : '0',
+    );
+    formData.append(
+      'late_price',
+      routeData.chargesLate ? routeData.chargesLate : '0',
+    );
+    formData.append('isfree', routeData.chargesFree);
 
     selectedVideos.forEach((video, index) => {
       formData.append('videos', {
@@ -110,7 +123,7 @@ const CreateSuccess = ({navigation, route}: any) => {
       })
       .catch(err => {
         setLoader(false);
-        showError(err?.message), console.log(err);
+        showError(err?.message);
         console.log(err);
       });
   };
@@ -391,7 +404,7 @@ const CreateSuccess = ({navigation, route}: any) => {
                     {height: height / 7, width: '25%', borderWidth: 0},
                   ]}>
                   <Image
-                    source={{uri: item?.image}}
+                    source={{uri: IMAGE_URL + item?.image}}
                     style={{width: '100%', height: '100%', borderRadius: 5}}
                   />
 

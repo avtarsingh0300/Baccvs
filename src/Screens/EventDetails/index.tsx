@@ -43,7 +43,6 @@ import {
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import {useSelector} from 'react-redux';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import Video from 'react-native-video';
 
@@ -58,6 +57,10 @@ const EventDetails = ({navigation, route}: any) => {
   const [eventData, setEventData] = useState<any>({});
   const [commentvalue, setCommentValue] = useState('');
   const [commentid, setCommentId] = useState('');
+  const [freeTicket, setFreeTicket] = useState(0);
+  const [earlyTicket, setEarlyTicket] = useState(0);
+  const [regularTicket, setRegularTicket] = useState(0);
+  const [lateTicket, setLateTicket] = useState(0);
 
   const user = useSelector((data: any) => data?.auth?.userData);
 
@@ -95,9 +98,9 @@ const EventDetails = ({navigation, route}: any) => {
     getEventDetail(route.params.eventId)
       .then(res => {
         setLoading(false);
-        console.log(res, 'sdcds');
+        // console.log(res, 'sdcds');
         setEventData(res);
-        console.log(res);
+        // console.log(res);
       })
       .catch(err => {
         setLoading(false), showError(err.message), console.log(err);
@@ -193,15 +196,46 @@ const EventDetails = ({navigation, route}: any) => {
     setCommentValue(item?.description);
   };
 
-  const calculateDuration = (startTime: string, endTime: string) => {
-    if (startTime !== '' || (undefined && endTime !== '') || undefined) {
-      const startDate: any = new Date(`1970-01-01T${startTime}Z`);
-      const endDate: any = new Date(`1970-01-01T${endTime}Z`);
-      const diffMs = endDate - startDate;
-      const diffHrs = Math.floor(diffMs / 3600000);
-      const diffMins = Math.round((diffMs % 3600000) / 60000);
+  const calculateDuration = (
+    startTime: string,
+    endTime: string,
+  ): string | undefined => {
+    if (startTime && endTime) {
+      // Parse time strings into Date objects using a helper function
+      const parseTime = (time: string): Date | null => {
+        const [_, hours, minutes, seconds, period] =
+          time.match(/(\d{1,2}):(\d{2}):(\d{2})\s?(AM|PM)/i) || [];
+        if (!hours || !minutes || !seconds || !period) return null;
+
+        // Convert to 24-hour format
+        let hrs = parseInt(hours);
+        const mins = parseInt(minutes);
+        const secs = parseInt(seconds);
+        if (period.toUpperCase() === 'PM' && hrs !== 12) hrs += 12;
+        if (period.toUpperCase() === 'AM' && hrs === 12) hrs = 0;
+
+        // Create a Date object
+        return new Date(1970, 0, 1, hrs, mins, secs);
+      };
+
+      const startDate = parseTime(startTime);
+      const endDate = parseTime(endTime);
+
+      if (!startDate || !endDate) return undefined;
+
+      // Calculate the difference in milliseconds
+      const diffMs = endDate.getTime() - startDate.getTime();
+
+      // Adjust for crossing midnight
+      const adjustedDiffMs = diffMs < 0 ? diffMs + 24 * 3600000 : diffMs;
+
+      // Convert milliseconds to hours and minutes
+      const diffHrs = Math.floor(adjustedDiffMs / 3600000);
+      const diffMins = Math.round((adjustedDiffMs % 3600000) / 60000);
+
       return `${diffHrs}h ${diffMins}m`;
     }
+    return undefined;
   };
 
   const initialRegion = {
@@ -333,14 +367,19 @@ const EventDetails = ({navigation, route}: any) => {
     </View>
   );
   const thumbnailUrl = eventData.thumbnail_urls?.[0];
-  const renderHost = ({item, index}: any) => (
-    <View style={{paddingHorizontal: 15, alignItems: 'center'}}>
+
+  const renderHost = () => (
+    <View style={{paddingHorizontal: 15}}>
       <Image
-        source={ImagePath.ProfileImg}
+        source={
+          eventData?.createdby?.image
+            ? {uri: IMAGE_URL + eventData?.createdby?.image}
+            : ImagePath.ProfileImg
+        }
         style={{width: 44, height: 50, borderRadius: 5}}
       />
       <Text style={{...commonStyles.font12Regular, paddingTop: 5}}>
-        Bensatii
+        {eventData?.createdby?.name}
       </Text>
     </View>
   );
@@ -348,11 +387,15 @@ const EventDetails = ({navigation, route}: any) => {
   const renderLineUp = ({item, index}: any) => (
     <View style={{paddingHorizontal: 15, alignItems: 'center'}}>
       <Image
-        source={ImagePath.ProfileImg}
+        source={
+          eventData?.createdby?.image
+            ? {uri: eventData?.createdby?.image}
+            : ImagePath.ProfileImg
+        }
         style={{width: 44, height: 50, borderRadius: 5}}
       />
       <Text style={{...commonStyles.font12Regular, paddingTop: 5}}>
-        Bensatii
+        {eventData?.createdby?.name}
       </Text>
     </View>
   );
@@ -360,16 +403,16 @@ const EventDetails = ({navigation, route}: any) => {
   const renderParticipants = ({item, index}: any) => (
     <View style={{paddingHorizontal: 15, alignItems: 'center'}}>
       <Image
-        source={ImagePath.ProfileImg}
+        source={
+          item?.image ? {uri: IMAGE_URL + item?.image} : ImagePath.ProfileImg
+        }
         style={{width: 44, height: 50, borderRadius: 5}}
       />
       <Text style={{...commonStyles.font12Regular, paddingTop: 5}}>
-        Bensatii
+        {item?.name}
       </Text>
     </View>
   );
-
-  console.log(eventData, 'eventData');
 
   return (
     <LinearGradient
@@ -902,7 +945,9 @@ const EventDetails = ({navigation, route}: any) => {
                     horizontal
                     data={eventData?.music_type}
                     renderItem={({item}) => (
-                      <TouchableOpacity style={styles.allBtn}>
+                      <TouchableOpacity
+                        activeOpacity={0.8}
+                        style={styles.allBtn}>
                         <Text style={styles.timeText}>{item}</Text>
                       </TouchableOpacity>
                     )}
@@ -943,23 +988,7 @@ const EventDetails = ({navigation, route}: any) => {
                 Hosted by
               </Text>
               <SizeBox size={10} />
-              <FlatList
-                data={[{id: 1}, {id: 1}]}
-                showsHorizontalScrollIndicator={false}
-                horizontal
-                renderItem={renderHost}
-              />
-              <SizeBox size={10} />
-              <Text style={{...commonStyles.font16Regular, marginLeft: 18}}>
-                Line Up
-              </Text>
-              <SizeBox size={10} />
-              <FlatList
-                data={[{id: 1}, {id: 1}]}
-                showsHorizontalScrollIndicator={false}
-                horizontal
-                renderItem={renderLineUp}
-              />
+              {renderHost()}
               <SizeBox size={10} />
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text style={{...commonStyles.font16Regular, marginLeft: 18}}>
@@ -971,20 +1000,14 @@ const EventDetails = ({navigation, route}: any) => {
                   size={20}
                   color={Colors.white}
                 />
-                <Text style={{...commonStyles.font16Regular}}> 18</Text>
+                <Text style={{...commonStyles.font16Regular}}>
+                  {' '}
+                  {eventData?.members_names?.length}
+                </Text>
               </View>
               <SizeBox size={10} />
               <FlatList
-                data={[
-                  {id: 1},
-                  {id: 1},
-                  {id: 1},
-                  {id: 1},
-                  {id: 1},
-                  {id: 1},
-                  {id: 1},
-                  {id: 1},
-                ]}
+                data={eventData?.members_names}
                 showsHorizontalScrollIndicator={false}
                 horizontal
                 renderItem={renderParticipants}
@@ -1156,39 +1179,61 @@ const EventDetails = ({navigation, route}: any) => {
               }}>
               Select a ticket
             </Text>
-            <SizeBox size={10} />
-            <View style={styles.row}>
-              <View style={{width: '30%'}}>
-                <Text style={styles.ticketText}>Free ticket</Text>
-              </View>
-              <View style={{flexDirection: 'row'}}>
-                <VectorIcon
-                  groupName="AntDesign"
-                  name="minuscircleo"
-                  color={Colors.white}
-                  size={24}
-                />
-                <View style={{width: 10}} />
-                <Text
-                  style={{
-                    ...commonStyles.font14Bold,
-                    color: Colors.white,
-                  }}>
-                  0
-                </Text>
-                <View style={{width: 10}} />
-                <VectorIcon
-                  groupName="AntDesign"
-                  name="pluscircleo"
-                  color={Colors.white}
-                  size={24}
-                />
-              </View>
-              <View style={styles.soldBox}>
-                <Text style={styles.ticketText}>Sold out</Text>
-              </View>
-              <Text style={styles.ticketText}>€</Text>
-            </View>
+            {eventData?.isfree && (
+              <>
+                <SizeBox size={10} />
+                <View style={styles.row}>
+                  <View style={{width: '30%'}}>
+                    <Text style={styles.ticketText}>Free ticket</Text>
+                  </View>
+                  <View style={{flexDirection: 'row'}}>
+                    <VectorIcon
+                      groupName="AntDesign"
+                      name="minuscircleo"
+                      color={Colors.white}
+                      size={24}
+                      onPress={() => {
+                        if (freeTicket > 0) {
+                          setFreeTicket(freeTicket - 1);
+                        }
+                      }}
+                    />
+                    <View style={{width: 10}} />
+                    <Text
+                      style={{
+                        ...commonStyles.font14Bold,
+                        color: Colors.white,
+                      }}>
+                      {freeTicket}
+                    </Text>
+                    <View style={{width: 10}} />
+                    <VectorIcon
+                      groupName="AntDesign"
+                      name="pluscircleo"
+                      color={Colors.white}
+                      size={24}
+                      onPress={() => {
+                        if (
+                          eventData?.memberscount >
+                          lateTicket + regularTicket + freeTicket + earlyTicket
+                        ) {
+                          setFreeTicket(freeTicket + 1);
+                        }
+                      }}
+                    />
+                  </View>
+                  <View style={styles.soldBox}>
+                    {freeTicket + regularTicket + earlyTicket + lateTicket ==
+                    eventData?.memberscount ? (
+                      <Text style={styles.ticketText}>Sold out</Text>
+                    ) : (
+                      <Text style={styles.ticketText}>0</Text>
+                    )}
+                  </View>
+                  <Text style={styles.ticketText}>€</Text>
+                </View>
+              </>
+            )}
             <SizeBox size={10} />
             <View style={styles.row}>
               <View style={{width: '30%'}}>
@@ -1207,6 +1252,11 @@ const EventDetails = ({navigation, route}: any) => {
                   name="minuscircleo"
                   color={Colors.white}
                   size={24}
+                  onPress={() => {
+                    if (earlyTicket > 0) {
+                      setEarlyTicket(earlyTicket - 1);
+                    }
+                  }}
                 />
                 <View style={{width: 10}} />
                 <Text
@@ -1214,7 +1264,7 @@ const EventDetails = ({navigation, route}: any) => {
                     ...commonStyles.font14Bold,
                     color: Colors.white,
                   }}>
-                  0
+                  {earlyTicket}
                 </Text>
                 <View style={{width: 10}} />
                 <VectorIcon
@@ -1222,10 +1272,25 @@ const EventDetails = ({navigation, route}: any) => {
                   name="pluscircleo"
                   color={Colors.white}
                   size={24}
+                  onPress={() => {
+                    if (
+                      lateTicket + regularTicket + freeTicket + earlyTicket <
+                      eventData?.memberscount
+                    ) {
+                      setEarlyTicket(earlyTicket + 1);
+                    }
+                  }}
                 />
               </View>
               <View style={styles.soldBox}>
-                <Text style={styles.ticketText}>Sold out</Text>
+                {freeTicket + regularTicket + earlyTicket + lateTicket ==
+                eventData?.memberscount ? (
+                  <Text style={styles.ticketText}>Sold out</Text>
+                ) : (
+                  <Text style={styles.ticketText}>
+                    {eventData?.early_price}
+                  </Text>
+                )}
               </View>
               <Text style={styles.ticketText}>€</Text>
             </View>
@@ -1240,6 +1305,11 @@ const EventDetails = ({navigation, route}: any) => {
                   name="minuscircleo"
                   color={Colors.white}
                   size={24}
+                  onPress={() => {
+                    if (regularTicket > 0) {
+                      setRegularTicket(regularTicket - 1);
+                    }
+                  }}
                 />
                 <View style={{width: 10}} />
                 <Text
@@ -1247,7 +1317,7 @@ const EventDetails = ({navigation, route}: any) => {
                     ...commonStyles.font14Bold,
                     color: Colors.white,
                   }}>
-                  0
+                  {regularTicket}
                 </Text>
                 <View style={{width: 10}} />
                 <VectorIcon
@@ -1255,10 +1325,25 @@ const EventDetails = ({navigation, route}: any) => {
                   name="pluscircleo"
                   color={Colors.white}
                   size={24}
+                  onPress={() => {
+                    if (
+                      lateTicket + regularTicket + freeTicket + earlyTicket <
+                      eventData?.memberscount
+                    ) {
+                      setRegularTicket(regularTicket + 1);
+                    }
+                  }}
                 />
               </View>
               <View style={styles.soldBox}>
-                <Text style={styles.ticketText}>15,99</Text>
+                {freeTicket + regularTicket + earlyTicket + lateTicket ==
+                eventData?.memberscount ? (
+                  <Text style={styles.ticketText}>Sold out</Text>
+                ) : (
+                  <Text style={styles.ticketText}>
+                    {eventData?.regular_price}
+                  </Text>
+                )}
               </View>
               <Text style={styles.ticketText}>€</Text>
             </View>
@@ -1273,6 +1358,11 @@ const EventDetails = ({navigation, route}: any) => {
                   name="minuscircleo"
                   color={Colors.white}
                   size={24}
+                  onPress={() => {
+                    if (lateTicket > 0) {
+                      setLateTicket(lateTicket - 1);
+                    }
+                  }}
                 />
                 <View style={{width: 10}} />
                 <Text
@@ -1280,7 +1370,7 @@ const EventDetails = ({navigation, route}: any) => {
                     ...commonStyles.font14Bold,
                     color: Colors.white,
                   }}>
-                  0
+                  {lateTicket}
                 </Text>
                 <View style={{width: 10}} />
                 <VectorIcon
@@ -1288,10 +1378,23 @@ const EventDetails = ({navigation, route}: any) => {
                   name="pluscircleo"
                   color={Colors.white}
                   size={24}
+                  onPress={() => {
+                    if (
+                      lateTicket + regularTicket + freeTicket + earlyTicket <
+                      eventData?.memberscount
+                    ) {
+                      setLateTicket(lateTicket + 1);
+                    }
+                  }}
                 />
               </View>
               <View style={styles.soldBox}>
-                <Text style={styles.ticketText}>19,99</Text>
+                {freeTicket + regularTicket + earlyTicket + lateTicket ==
+                eventData?.memberscount ? (
+                  <Text style={styles.ticketText}>Sold out</Text>
+                ) : (
+                  <Text style={styles.ticketText}>{eventData?.late_price}</Text>
+                )}
               </View>
               <Text style={styles.ticketText}>€</Text>
             </View>
@@ -1301,7 +1404,11 @@ const EventDetails = ({navigation, route}: any) => {
                 ...commonStyles.font16WhiteBold,
                 alignSelf: 'center',
               }}>
-              Total : €{eventData?.early_price}
+              Total : €
+              {freeTicket * 0 +
+                regularTicket * eventData?.regular_price +
+                earlyTicket * eventData?.early_price +
+                lateTicket * eventData?.late_price}
             </Text>
             <SizeBox size={10} />
             <TouchableOpacity

@@ -303,6 +303,11 @@ export default function MainStack(Stack: any, user: any) {
         component={screens.BuyTickets}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name={NavigationStrings.MusicStyle}
+        component={screens.MusicStyle}
+        options={{headerShown: false}}
+      />
     </>
   );
 }

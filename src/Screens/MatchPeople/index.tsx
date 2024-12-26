@@ -14,12 +14,13 @@ import fontFamily from '../../Utilities/Styles/fontFamily';
 import {getMemberDetails, getUserProfile} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const index = ({navigation, route}: any) => {
   const [otherUserData, setOtherUserData] = useState<any>({});
   const [userData, setUserData] = useState<any>({});
   const [loader, setLoader] = useState(false);
-  //   console.log(route?.params, 'route');
+  // console.log(route?.params, 'route');
 
   useEffect(() => {
     setLoader(true);
@@ -32,7 +33,7 @@ const index = ({navigation, route}: any) => {
     };
     getMemberDetails(formData)
       .then((res: any) => {
-        // console.log(res, 'res in getMemberDetails');
+        console.log(res, 'res in getMemberDetails');
         setOtherUserData(res?.user);
         getUserData();
       })
@@ -44,7 +45,7 @@ const index = ({navigation, route}: any) => {
 
   const getUserData = async () => {
     getUserProfile()
-      .then(res => {
+      .then((res: any) => {
         setLoader(false);
         // console.log(res, 'res in getUserProfile');
         setUserData(res?.user);
@@ -55,7 +56,7 @@ const index = ({navigation, route}: any) => {
       });
   };
 
-  console.log(otherUserData, 'otherUserData');
+  // console.log(otherUserData, 'otherUserData');
 
   return (
     <LinearGradient
@@ -63,69 +64,71 @@ const index = ({navigation, route}: any) => {
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={{flex: 1, paddingHorizontal: 20}}>
-      <Loadingcomponent isVisible={loader} />
-      <SizeBox size={20} />
-      <Text style={styles.congratulationsText}>Congratulations !</Text>
-      <SizeBox size={10} />
-      <Text style={styles.congratulationsText}>You matched !</Text>
-      <SizeBox size={30} />
-      <Text style={styles.likeText}>
-        You and {otherUserData?.username} have liked each other.
-      </Text>
-      <SizeBox size={30} />
-      <View
-        style={{
-          flexDirection: 'row',
-          width: '100%',
-          alignItems: 'center',
-          justifyContent: 'space-evenly',
-        }}>
-        <Image
-          source={
-            userData?.pictures?.length > 0
-              ? {uri: IMAGE_URL + userData?.pictures[0]}
-              : ImagePath.ProfileImg
-          }
-          style={styles.img}
-        />
-        <Image
-          source={ImagePath.fire}
-          tintColor={Colors.Pink}
-          style={{width: 40, height: 40}}
-        />
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={[styles.img, {borderWidth: 0}]}
-          onPress={() => {
-            navigation.navigate(NavigationStrings.DatingUserProfile, {
-              id: otherUserData?.id,
-            });
+      <SafeAreaView style={{flex: 1}}>
+        <Loadingcomponent isVisible={loader} />
+        <SizeBox size={20} />
+        <Text style={styles.congratulationsText}>Congratulations !</Text>
+        <SizeBox size={10} />
+        <Text style={styles.congratulationsText}>You matched !</Text>
+        <SizeBox size={30} />
+        <Text style={styles.likeText}>
+          You and {otherUserData?.username} have liked each other.
+        </Text>
+        <SizeBox size={30} />
+        <View
+          style={{
+            flexDirection: 'row',
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'space-evenly',
           }}>
           <Image
             source={
-              otherUserData?.pictures?.length > 0
-                ? {uri: IMAGE_URL + otherUserData?.pictures[0]}
+              userData?.pictures?.length > 0
+                ? {uri: IMAGE_URL + userData?.pictures[0]?.url}
                 : ImagePath.ProfileImg
             }
             style={styles.img}
           />
+          <Image
+            source={ImagePath.fire}
+            tintColor={Colors.Pink}
+            style={{width: 40, height: 40}}
+          />
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={[styles.img, {borderWidth: 0}]}
+            onPress={() => {
+              navigation.navigate(NavigationStrings.DatingUserProfile, {
+                id: otherUserData?.id,
+              });
+            }}>
+            <Image
+              source={
+                otherUserData?.pictures?.length > 0
+                  ? {uri: IMAGE_URL + otherUserData?.pictures[0]?.url}
+                  : ImagePath.ProfileImg
+              }
+              style={styles.img}
+            />
+          </TouchableOpacity>
+        </View>
+        <SizeBox size={50} />
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={[styles.btn, {borderColor: Colors.Pink}]}>
+          <Text style={[styles.btnText, {color: Colors.Pink}]}>Chat now</Text>
         </TouchableOpacity>
-      </View>
-      <SizeBox size={50} />
-      <TouchableOpacity
-        activeOpacity={0.8}
-        style={[styles.btn, {borderColor: Colors.Pink}]}>
-        <Text style={[styles.btnText, {color: Colors.Pink}]}>Chat now</Text>
-      </TouchableOpacity>
-      <SizeBox size={20} />
-      <TouchableOpacity
-        activeOpacity={0.8}
-        style={[styles.btn]}
-        onPress={() => {
-          navigation.goBack();
-        }}>
-        <Text style={[styles.btnText]}>Keep swiping</Text>
-      </TouchableOpacity>
+        <SizeBox size={20} />
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={[styles.btn]}
+          onPress={() => {
+            navigation.goBack();
+          }}>
+          <Text style={[styles.btnText]}>Keep swiping</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
     </LinearGradient>
   );
 };
