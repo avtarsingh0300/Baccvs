@@ -118,7 +118,7 @@ const UserProfile = ({navigation}: any) => {
           </Text>
           {userData?.pictures?.length > 0 ? (
             <Image
-              source={{uri: IMAGE_URL + userData?.pictures[0]}}
+              source={{uri: IMAGE_URL + userData?.pictures[0].url}}
               style={styles.profileImage}
             />
           ) : (
