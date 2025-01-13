@@ -61,6 +61,7 @@
 		B205003EEE076534FF1981C4 /* Pods_baccvs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_baccvs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3EBD0A459C84D06A2018BB9 /* Roboto-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Black.ttf"; path = "../src/Assets/fonts/Roboto-Black.ttf"; sourceTree = "<group>"; };
 		D453EC072D314DA100405E26 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D4B42E2E2D34DFD300A40904 /* baccvs.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = baccvs.entitlements; path = baccvs/baccvs.entitlements; sourceTree = "<group>"; };
 		DBDA96AE8E5D41D19915538D /* Times New Roman Cyr.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Times New Roman Cyr.ttf"; path = "../src/Assets/fonts/Times New Roman Cyr.ttf"; sourceTree = "<group>"; };
 		E9EB594201A27A721CD46F5F /* Pods-baccvs.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-baccvs.release.xcconfig"; path = "Target Support Files/Pods-baccvs/Pods-baccvs.release.xcconfig"; sourceTree = "<group>"; };
 		EA24FE8A03FA4499A7A94FBA /* Roboto-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Medium.ttf"; path = "../src/Assets/fonts/Roboto-Medium.ttf"; sourceTree = "<group>"; };
@@ -108,6 +109,7 @@
 		13B07FAE1A68108700A75B9A /* baccvs */ = {
 			isa = PBXGroup;
 			children = (
+				D4B42E2E2D34DFD300A40904 /* baccvs.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -531,6 +533,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = baccvs/baccvs.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -562,6 +565,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = baccvs/baccvs.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -669,10 +673,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -755,10 +756,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

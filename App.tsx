@@ -11,11 +11,12 @@ import {Provider} from 'react-redux';
 import Routes from './src/Navigation/Routes';
 import store from './src/Redux/store';
 import {getUserData, sendUserStatus} from './src/Utilities/Constants/auth';
-import {displayNotification} from './src/Utilities/Helpers';
+import {displayNotification, getFCMToken} from './src/Utilities/Helpers';
 import fontFamily from './src/Utilities/Styles/fontFamily';
 import {moderateScale, textScale} from './src/Utilities/Styles/responsiveSize';
 
 LogBox.ignoreAllLogs();
+
 const App = () => {
   const requestLocationPermission = async () => {
     try {
@@ -96,23 +97,24 @@ const App = () => {
       subscription.remove();
     };
   }, []);
+getFCMToken();
 
-  useEffect(() => {
-    SplashScreen.hide();
+useEffect(() => {
+  SplashScreen.hide();
 
-    // Request notification permissions
-    requestNotificationPermission();
+  // Request notification permissions
+  requestNotificationPermission();
 
-    // Handle foreground notifications
-    const unsubscribeForeground = messaging().onMessage(async remoteMessage => {
-      console.log('Foreground notification received:', remoteMessage);
-      await displayNotification(remoteMessage); // Show notification
-    });
+  // Handle foreground notifications
+  const unsubscribeForeground = messaging().onMessage(async remoteMessage => {
+    console.log('Foreground notification received:', remoteMessage);
+    await displayNotification(remoteMessage); // Show notification
+  });
 
-    return () => {
-      unsubscribeForeground();
-    };
-  }, []);
+  return () => {
+    unsubscribeForeground();
+  };
+}, []);
 
   return (
     <GestureHandlerRootView
