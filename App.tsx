@@ -13,6 +13,7 @@ import fontFamily from './src/Utilities/Styles/fontFamily';
 import {getUserData} from './src/Utilities/Constants/auth';
 import Geolocation from '@react-native-community/geolocation';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+
 LogBox.ignoreAllLogs();
 const App = () => {
   useEffect(() => {
