@@ -1,7 +1,7 @@
-import { StyleSheet } from 'react-native';
-import { textScale } from './responsiveSize';
+import {StyleSheet} from 'react-native';
+import {textScale} from './responsiveSize';
 import fontFamily from './fontFamily';
-import { Colors } from './colors';
+import {Colors} from './colors';
 
 export const hitSlopProp = {
   top: 25,
@@ -12,12 +12,13 @@ export const hitSlopProp = {
 export default StyleSheet.create({
   font16Regular: {
     fontSize: textScale(16),
-    fontWeight: '400',
+    fontWeight: '700',
     fontFamily: fontFamily.time_regular,
+    color: Colors.white,
   },
   font16White: {
     fontSize: textScale(16),
-    fontWeight: '400',
+    fontWeight: '600',
     color: Colors.white,
     fontFamily: fontFamily.regular,
   },
@@ -33,7 +34,13 @@ export default StyleSheet.create({
     color: Colors.white,
   },
   font20W400: {
-    fontSize: textScale(18),
+    fontSize: textScale(20),
+    fontWeight: '400',
+    color: Colors.LinearBlack,
+    fontFamily: fontFamily.regular,
+  },
+  font24W400: {
+    fontSize: textScale(24),
     fontWeight: '400',
     color: Colors.white,
     fontFamily: fontFamily.regular,
@@ -45,14 +52,31 @@ export default StyleSheet.create({
     fontFamily: fontFamily.time_bold,
     alignSelf: 'center',
   },
-  font14Center: {
-    fontSize: textScale(14),
+  font18White: {
+    fontSize: textScale(18),
     fontWeight: '400',
+    color: Colors.white,
+    fontFamily: fontFamily.regular,
+  },
+  font14Center: {
+    fontSize: textScale(11),
+    fontWeight: '700',
     color: Colors.white,
     fontFamily: fontFamily.time_regular,
     alignSelf: 'center',
   },
   font14: {
+    fontSize: textScale(16),
+    fontWeight: '700',
+    color: Colors.white,
+  },
+  font14Bold: {
+    fontSize: textScale(14),
+    fontFamily: fontFamily.bold,
+    fontWeight: '700',
+    color: Colors.white,
+  },
+  font14Regular: {
     fontSize: textScale(14),
     fontWeight: '400',
     color: Colors.white,
@@ -69,8 +93,9 @@ export default StyleSheet.create({
   },
   font12Regular: {
     fontSize: textScale(12),
-    fontWeight: '500',
+    fontWeight: '700',
     fontFamily: fontFamily.time_regular,
+    color: Colors.white,
   },
   font12Bold: {
     fontSize: textScale(12),

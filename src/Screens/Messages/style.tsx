@@ -39,13 +39,13 @@ const styles = StyleSheet.create({
   },
   messagesContainer: {
     paddingHorizontal: 10,
+    flexGrow: 1,
   },
   inputContainer: {
     flexDirection: 'row',
     padding: 10,
-
     backgroundColor: Colors.white,
-    width: '70%',
+    width: '85%',
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
@@ -80,14 +80,40 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingVertical: moderateScaleVertical(8),
     paddingHorizontal: moderateScale(10),
-
     alignItems: 'center',
     flexDirection: 'row',
+  },
+  option2: {
+    width: '100%',
+    paddingVertical: moderateScaleVertical(15),
+    paddingHorizontal: moderateScale(10),
+    alignItems: 'center',
+    flexDirection: 'row',
+    backgroundColor: Colors.white,
+    justifyContent: 'center',
+    borderRadius: 30,
   },
   optionText: {
     ...commonStyles.font10Regular,
     fontWeight: '600',
     color: Colors.white,
+  },
+  optionText2: {
+    ...commonStyles.font14,
+    fontWeight: '600',
+    color: Colors.lightPink,
+  },
+  dateSeparator: {
+    alignItems: 'center',
+    marginVertical: 16,
+  },
+  dateSeparatorText: {
+    color: Colors.white,
+    fontSize: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
   },
 });
 

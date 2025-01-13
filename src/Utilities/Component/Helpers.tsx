@@ -120,12 +120,12 @@ export function SizeBox({size}: SizeBoxProps) {
 export function CommonBtn({onPress, title}: CommonBtnProps) {
   return (
     <LinearGradient
-      colors={[Colors.btnLinear1, Colors.btnLinear2]}
+      colors={[Colors.white, Colors.white]}
       start={{x: 1, y: 0}}
       end={{x: 1, y: 1}}
       style={{
         padding: 1,
-        borderRadius: 8,
+        borderRadius: 30,
       }}>
       <TouchableOpacity
         activeOpacity={0.8}
@@ -210,6 +210,7 @@ export function CommonInput({
   value,
   onChangeText,
   secureTextEntry,
+  styless,
 }: CommonInputProps) {
   return (
     <View
@@ -220,6 +221,7 @@ export function CommonInput({
             ? moderateScaleVertical(120)
             : moderateScaleVertical(50),
         },
+        styless,
       ]}>
       <TextInput
         multiline={multiline}
@@ -244,7 +246,12 @@ export function CommonInputBtn({title, onPress}: CommonBtnProps) {
     </TouchableOpacity>
   );
 }
-export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
+export function Drawer({
+  onClose,
+  isVisible,
+  onBackdropPress,
+  username,
+}: DrawerProps) {
   const navigation = useNavigation();
 
   return (
@@ -259,7 +266,7 @@ export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
       isVisible={isVisible}
       backdropOpacity={0.8}>
       <LinearGradient
-        colors={[Colors.Linear, Colors.LinearBlack]}
+        colors={[Colors.backgroundNew, Colors.backgroundNew]}
         start={{x: 0, y: 0}}
         end={{x: 1.3, y: 0.9}}
         style={styles.drawerCon}>
@@ -280,7 +287,7 @@ export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
             ...commonStyles.font14Center,
             color: Colors.white,
           }}>
-          Kathrin Down
+          {username}
         </Text>
 
         <FlatList
@@ -293,10 +300,10 @@ export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
               img: ImagePath.userprofile,
             },
             {id: 2, name: 'Invites', group: 'Feather', vector: 'mail'},
-            {id: 3, name: 'People likes', img: ImagePath.likes},
+            {id: 3, name: 'Likes', img: ImagePath.likes},
             {
               id: 4,
-              name: 'Events',
+              name: 'My Events',
               group: 'MaterialIcons',
               vector: 'event',
             },
@@ -319,6 +326,12 @@ export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
               onPress={() => {
                 if (item?.name == 'Profile') {
                   navigation.navigate(NavigationStrings.UserProfile);
+                } else if (item?.name == 'My Events') {
+                  navigation.navigate(NavigationStrings.MyEvents);
+                } else if (item?.name == 'Likes') {
+                  navigation.navigate(NavigationStrings.PeopleLikes);
+                } else if (item?.name == 'Feedback') {
+                  navigation.navigate(NavigationStrings.FeedBack);
                 } else {
                   navigation.navigate(item?.name);
                 }

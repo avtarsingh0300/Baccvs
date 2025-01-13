@@ -16,12 +16,15 @@ const WelcomeScreen = (props: any) => {
   const onMemberPress = () => {
     props.navigation.navigate(NavigationStrings.LoginScreen);
   };
-  const onApplyMem = () => {
-    props.navigation.navigate(NavigationStrings.ReferalCode);
+  const onRoleClick = () => {
+    props.navigation.navigate(NavigationStrings.ChooseRoles);
+  };
+  const onForget = () => {
+    props.navigation.navigate(NavigationStrings.forgot);
   };
   return (
     <LinearGradient
-      colors={[Colors.LinearBlack, Colors.Linear]}
+      colors={[Colors.backgroundNew, Colors.backgroundNew]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
@@ -36,41 +39,29 @@ const WelcomeScreen = (props: any) => {
           resizeMode={'contain'}
         />
         <View style={{marginTop: moderateScaleVertical(25)}}>
-          <TouchableOpacity onPress={onApplyMem}>
-            <LinearGradient
-              colors={[Colors.LinearDark, Colors.Linear]}
-              start={{x: 0, y: -1}}
-              end={{x: 0.1, y: 0.7}}
-              style={styles.buttons}>
+          <TouchableOpacity onPress={onRoleClick} style={styles.buttons}>
               <Text
                 style={[
                   styles.btnText,
                   {
-                    color: Colors.Pink,
+                    color: Colors.black,
                   },
                 ]}>
                 Apply for membership
               </Text>
-            </LinearGradient>
           </TouchableOpacity>
-          <TouchableOpacity onPress={onMemberPress}>
-            <LinearGradient
-              colors={[Colors.LinearDark, Colors.Linear]}
-              start={{x: 1.1, y: 2}}
-              end={{x: 0.9, y: 0.3}}
-              style={styles.buttons}>
+          <TouchableOpacity onPress={onMemberPress} style={styles.button}>
               <Text
                 style={[
                   {
-                    color: Colors.green,
+                    color: Colors.white,
                   },
                   styles.btnText,
                 ]}>
                 Member access
               </Text>
-            </LinearGradient>
           </TouchableOpacity>
-          <Text style={styles.forgetTxt}>Forgot password?</Text>
+          <Text style={styles.forgetTxt} onPress={onForget}>Forgot password?</Text>
           <Text style={styles.signTxt}>
             By signing up you accept our Terms of use and Privacy Policy
           </Text>
