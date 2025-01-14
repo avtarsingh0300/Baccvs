@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 import {Colors} from '../Styles/colors';
 import fontFamily from '../Styles/fontFamily';
-type Item = {
+
+export type Item = {
   _id: string;
   label: string;
   name: string;
@@ -25,6 +26,7 @@ type VenueTypeDropdownProps = {
   setActiveDropdown: (key: string | null) => void; // Function to set the active dropdown
   dropdownKey: string; // Unique key for this dropdown
   placeholderText?: string;
+  selectedItems?: string[];
 };
 
 const DropComponentNew: React.FC<VenueTypeDropdownProps> = ({
@@ -35,8 +37,11 @@ const DropComponentNew: React.FC<VenueTypeDropdownProps> = ({
   setActiveDropdown,
   dropdownKey,
   placeholderText = 'Select an option',
+  selectedItems = [],
 }) => {
-  const [selectedValues, setSelectedValues] = useState<string[]>([]);
+  const [selectedValues, setSelectedValues] = useState<string[]>(
+    selectedItems || [],
+  );
   const [searchTerm, setSearchTerm] = useState('');
   const [layout, setLayout] = useState({x: 0, y: 0, width: 0, height: 0});
 
@@ -56,6 +61,12 @@ const DropComponentNew: React.FC<VenueTypeDropdownProps> = ({
     const {x, y, width, height} = event.nativeEvent.layout;
     setLayout({x, y, width, height});
   };
+
+  useEffect(() => {
+    if (JSON.stringify(selectedValues) !== JSON.stringify(selectedItems)) {
+      setSelectedValues(selectedItems);
+    }
+  }, [selectedItems]);
 
   return (
     <View style={[styles.container, newStyle]}>

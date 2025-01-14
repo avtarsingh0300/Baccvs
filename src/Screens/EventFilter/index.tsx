@@ -11,76 +11,42 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Modal from 'react-native-modal';
-import DropComponentNew from '../../Utilities/Component/DropComponentNew';
+import DropComponentNew, {
+  Item,
+} from '../../Utilities/Component/DropComponentNew';
 import {SizeBox, showError} from '../../Utilities/Component/Helpers';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import {horoscopeSigns, languages} from '../../Utilities/Constants';
-import {getEventTypes} from '../../Utilities/Constants/auth';
+import {getEventTypes, getMusicTypeList} from '../../Utilities/Constants/auth';
 import {Colors} from '../../Utilities/Styles/colors';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 import {height, width} from '../../Utilities/Styles/responsiveSize';
 import styles from './style';
+import {MusicType} from '../MeetPeopleFilter/MeetPeopleFilter';
 
 const EventFilter = ({navigation}: any) => {
-  const [musicStyle, setMusicStyle] = useState([]);
-  const [eventType, setEventType] = useState([]);
-  const [venueType, setVenueType] = useState([]);
+  const [musicStyle, setMusicStyle] = useState<Item[]>([]);
+  const [selectedMusicTypes, setSelectedMusicTypes] = useState<Item[]>([]);
+
+  const [eventType, setEventType] = useState<Item[]>([]);
+  const [selectedEventType, setSelectedEventType] = useState<Item[]>([]);
+
+  const [venueType, setVenueType] = useState<Item[]>([]);
+  const [selectedVenueType, setSelectedVenueType] = useState<Item[]>([]);
+
   const [modalVisibleLang, SetModalVisibleLang] = useState(false);
   const [selectedLang, setSelectedLang] = useState<any>([]);
   const [selectedValue, setSelected] = useState([0, 0]);
   const [selectedValues2, setSelectedValues2] = useState([0, 0]);
   const [selectedValue3, setSelected3] = useState([0, 0]);
   const [selectedValues4, setSelectedValues4] = useState([0, 0]);
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const [selectedItems2, setSelectedItems2] = useState<string[]>([]);
-  const [selectedItems3, setSelectedItems3] = useState<string[]>([]);
   const [selectedInterest, setSelectedInterest] = useState<string>();
   const [selectedItemsSign, setSelectedItemsSign] = useState<string[]>([]);
   const [smoking, setSmoking] = useState('');
   const [colors, setColors] = useState(0);
 
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-
-  const getEventsTypes = () => {
-    getEventTypes()
-      .then((res: any) => {
-        let musicStyleData: any = [];
-        res?.MusicStyle?.map((i: any, index: number) => {
-          musicStyleData.push({
-            label: i?.name,
-            value: i?.name,
-            _id: i?._id,
-            name: i?.name,
-          });
-        });
-        setMusicStyle(musicStyleData);
-        let eventTypeData: any = [];
-        res?.eventtype?.map((i: any, index: number) => {
-          eventTypeData.push({
-            label: i?.name,
-            value: i?.name,
-            _id: i?._id,
-            name: i?.name,
-          });
-        });
-        let venuetypeData: any = [];
-        res?.venuetype?.map((i: any, index: number) => {
-          venuetypeData.push({
-            label: i?.name,
-            value: i?.name,
-            _id: i?._id,
-            name: i?.name,
-          });
-        });
-        setEventType(eventTypeData);
-        setVenueType(venuetypeData);
-        // console.log(res, 'ressss');
-      })
-      .catch(err => {
-        showError(err?.message), console.log(err);
-      });
-  };
 
   const selectModalHandler = (item: any) => {
     if (modalVisibleLang) {
@@ -139,33 +105,6 @@ const EventFilter = ({navigation}: any) => {
     setSelectedValues4(values);
   };
 
-  const toggleSelection = (item: any) => {
-    if (selectedItems.includes(item._id)) {
-      const updatedItems = selectedItems.filter(id => id !== item._id);
-      setSelectedItems(updatedItems);
-    } else {
-      setSelectedItems([...selectedItems, item._id]);
-    }
-  };
-
-  const toggleSelection2 = (item: any) => {
-    if (selectedItems2.includes(item._id)) {
-      const updatedItems = selectedItems2.filter(id => id !== item._id);
-      setSelectedItems2(updatedItems);
-    } else {
-      setSelectedItems2([...selectedItems2, item._id]);
-    }
-  };
-
-  const toggleSelection3 = (item: any) => {
-    if (selectedItems3.includes(item._id)) {
-      const updatedItems = selectedItems3.filter(id => id !== item._id);
-      setSelectedItems3(updatedItems);
-    } else {
-      setSelectedItems3([...selectedItems3, item._id]);
-    }
-  };
-
   const toggleLanguages = (item: string) => {
     if (selectedLang.includes(item)) {
       const updatedItems = selectedLang.filter((name: string) => name !== item);
@@ -192,26 +131,71 @@ const EventFilter = ({navigation}: any) => {
     }
   };
 
+  // Event Type
+  const handleEventTypeSelection = (selectedValues: string[]) => {
+    const matchingEvents = eventType.filter(music =>
+      selectedValues.includes(music._id),
+    );
+    setSelectedEventType(matchingEvents);
+  };
+  const toggleEventType = (item: any) => {
+    if (selectedEventType.some(event => event._id === item._id)) {
+      const updatedItems = selectedEventType.filter(
+        music => music._id !== item._id,
+      );
+
+      setSelectedEventType(updatedItems);
+    } else {
+      setSelectedEventType([...selectedEventType, item]);
+    }
+  };
+
+  // Venue Type
+  const handleVenueTypeSelection = (selectedValues: string[]) => {
+    const matchingVenue = venueType.filter(venue =>
+      selectedValues.includes(venue._id),
+    );
+    setSelectedVenueType(matchingVenue);
+  };
+  const toggleVenueType = (item: any) => {
+    if (selectedVenueType.some(event => event._id === item._id)) {
+      const updatedItems = selectedVenueType.filter(
+        venue => venue._id !== item._id,
+      );
+
+      setSelectedVenueType(updatedItems);
+    } else {
+      setSelectedVenueType([...selectedVenueType, item]);
+    }
+  };
+
+  // Music Type
+  const handleMusicTypeSelection = (selectedValues: string[]) => {
+    const matchingMusicTypes = musicStyle.filter(music =>
+      selectedValues.includes(music._id),
+    );
+    setSelectedMusicTypes(matchingMusicTypes);
+  };
+  const toggleMusicType = (item: any) => {
+    if (selectedMusicTypes.some(lang => lang._id === item._id)) {
+      const updatedItems = selectedMusicTypes.filter(
+        music => music._id !== item._id,
+      );
+
+      setSelectedMusicTypes(updatedItems);
+    } else {
+      setSelectedMusicTypes([...selectedMusicTypes, item]);
+    }
+  };
+
   const onbackPress = () => {
     navigation.goBack();
   };
 
-  const handleSelection = (selectedValues: string[]) => {
-    setSelectedItems(selectedValues);
-  };
-
-  const handleSelection2 = (selectedValues: string[]) => {
-    setSelectedItems2(selectedValues);
-  };
-
-  const handleSelection3 = (selectedValues: string[]) => {
-    setSelectedItems3(selectedValues);
-  };
-
   const resetButton = () => {
-    setSelectedItems([]);
-    setSelectedItems2([]);
-    setSelectedItems3([]);
+    setSelectedEventType([]);
+    setSelectedMusicTypes([]);
+    setSelectedVenueType([]);
     setSelectedInterest('');
     setSmoking('');
     setSelectedLang([]);
@@ -222,10 +206,51 @@ const EventFilter = ({navigation}: any) => {
   };
 
   useEffect(() => {
-    getEventsTypes();
-  }, []);
+    getEventTypes()
+      .then((res: any) => {
+        let eventTypeData: any = [];
+        res?.eventtype?.map((i: any, index: number) => {
+          eventTypeData.push({
+            label: i?.name,
+            value: i?.name,
+            _id: i?._id,
+            name: i?.name,
+          });
+        });
+        let venuetypeData: any = [];
+        res?.venuetype?.map((i: any, index: number) => {
+          venuetypeData.push({
+            label: i?.name,
+            value: i?.name,
+            _id: i?._id,
+            name: i?.name,
+          });
+        });
+        setEventType(eventTypeData);
+        setVenueType(venuetypeData);
+      })
+      .catch(err => {
+        showError(err?.message), console.log(err);
+      });
 
-  console.log(selectedItemsSign);
+    getMusicTypeList()
+      .then((res: any) => {
+        if (res) {
+          setMusicStyle(
+            res.map((item: MusicType) => ({
+              _id: item._id,
+              label: item.name,
+              name: item.name,
+              value: item.name,
+            })),
+          );
+        }
+      })
+      .catch(err => {
+        showError(err?.message);
+        console.log(err);
+      });
+  }, []);
 
   return (
     <LinearGradient
@@ -339,11 +364,12 @@ const EventFilter = ({navigation}: any) => {
                     }}>
                     <DropComponentNew
                       items={eventType}
-                      onValueChange={handleSelection}
+                      onValueChange={handleEventTypeSelection}
                       isActive={activeDropdown === 'dropdown1'}
                       setActiveDropdown={setActiveDropdown}
                       dropdownKey="dropdown1"
                       placeholderText="Select Event Type"
+                      selectedItems={selectedEventType.map(item => item._id)}
                     />
                   </View>
                 </View>
@@ -356,20 +382,20 @@ const EventFilter = ({navigation}: any) => {
                         style={[
                           styles.flatcon,
                           {
-                            backgroundColor:
-                              selectedItems.length > 0 &&
-                              selectedItems?.includes(item?._id)
-                                ? Colors.lightPink
-                                : Colors.tranparent,
+                            backgroundColor: selectedEventType?.some(
+                              selected => selected._id === item?._id,
+                            )
+                              ? Colors.lightPink
+                              : Colors.tranparent,
                             borderWidth: 1,
-                            borderColor:
-                              selectedItems.length > 0 &&
-                              selectedItems?.includes(item?._id)
-                                ? Colors.tranparent
-                                : Colors.darkPink,
+                            borderColor: selectedEventType?.some(
+                              selected => selected._id === item?._id,
+                            )
+                              ? Colors.tranparent
+                              : Colors.darkPink,
                           },
                         ]}
-                        onPress={() => toggleSelection(item)}>
+                        onPress={() => toggleEventType(item)}>
                         <Text
                           style={{
                             ...commonStyles.font12Regular,
@@ -447,12 +473,12 @@ const EventFilter = ({navigation}: any) => {
                     }}>
                     <DropComponentNew
                       items={venueType}
-                      onValueChange={handleSelection2}
-                      newStyle={{zIndex: 700}}
+                      onValueChange={handleVenueTypeSelection}
                       isActive={activeDropdown === 'dropdown2'}
                       setActiveDropdown={setActiveDropdown}
                       dropdownKey="dropdown2"
                       placeholderText="Select Venue Type"
+                      selectedItems={selectedVenueType.map(item => item._id)}
                     />
                   </View>
                 </View>
@@ -466,20 +492,20 @@ const EventFilter = ({navigation}: any) => {
                         style={[
                           styles.flatcon,
                           {
-                            backgroundColor:
-                              selectedItems2.length > 0 &&
-                              selectedItems2?.includes(item?._id)
-                                ? Colors.lightPink
-                                : Colors.tranparent,
+                            backgroundColor: selectedVenueType?.some(
+                              selected => selected._id === item?._id,
+                            )
+                              ? Colors.lightPink
+                              : Colors.tranparent,
                             borderWidth: 1,
-                            borderColor:
-                              selectedItems2.length > 0 &&
-                              selectedItems2?.includes(item?._id)
-                                ? Colors.tranparent
-                                : Colors.darkPink,
+                            borderColor: selectedVenueType?.some(
+                              selected => selected._id === item?._id,
+                            )
+                              ? Colors.tranparent
+                              : Colors.darkPink,
                           },
                         ]}
-                        onPress={() => toggleSelection2(item)}>
+                        onPress={() => toggleVenueType(item)}>
                         <Text
                           style={{
                             ...commonStyles.font12Regular,
@@ -494,13 +520,14 @@ const EventFilter = ({navigation}: any) => {
               </View>
 
               <SizeBox size={10} />
-              <View style={{paddingHorizontal: 10}}>
+              <View style={{paddingHorizontal: 10, zIndex: -100}}>
                 <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     gap: 20,
+                    zIndex: 10000,
                   }}>
                   <Text
                     style={{
@@ -511,17 +538,18 @@ const EventFilter = ({navigation}: any) => {
                   </Text>
                   <View
                     style={{
-                      zIndex: 100, // High zIndex to ensure it appears on top
+                      zIndex: 10000, // High zIndex to ensure it appears on top
                       position: 'relative', // Ensure it doesn't get clipped
                       flex: 1,
                     }}>
                     <DropComponentNew
                       items={musicStyle}
-                      onValueChange={handleSelection3}
-                      isActive={activeDropdown === 'dropdown3'}
+                      onValueChange={handleMusicTypeSelection}
+                      isActive={activeDropdown === 'dropdown1'}
                       setActiveDropdown={setActiveDropdown}
-                      dropdownKey="dropdown3"
+                      dropdownKey="dropdown1"
                       placeholderText="Select Music Type"
+                      selectedItems={selectedMusicTypes.map(item => item._id)}
                     />
                   </View>
                 </View>
@@ -529,21 +557,26 @@ const EventFilter = ({navigation}: any) => {
                 <FlatList
                   data={musicStyle}
                   numColumns={2}
-                  renderItem={({item}: any) => (
+                  renderItem={({item}: {item: Item}) => (
                     <TouchableOpacity
                       style={[
                         styles.flatcon,
                         {
-                          // backgroundColor: selectedItems3?.includes(item?._id)
-                          //   ? Colors.darkPink
-                          //   : Colors.tranparent,
-                          // borderWidth: 1,
-                          // borderColor: selectedItems3?.includes(item?._id)
-                          //   ? Colors.tranparent
-                          //   : Colors.darkPink,
+                          zIndex: -100,
+                          backgroundColor: selectedMusicTypes?.some(
+                            selected => selected._id === item?._id,
+                          )
+                            ? Colors.lightPink
+                            : Colors.tranparent,
+                          borderWidth: 1,
+                          borderColor: selectedMusicTypes?.some(
+                            selected => selected._id === item?._id,
+                          )
+                            ? Colors.tranparent
+                            : Colors.darkPink,
                         },
                       ]}
-                      onPress={() => toggleSelection3(item)}>
+                      onPress={() => toggleMusicType(item)}>
                       <Text
                         style={{
                           ...commonStyles.font12Regular,
@@ -817,6 +850,7 @@ const EventFilter = ({navigation}: any) => {
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     gap: 20,
+                    zIndex: 1000,
                   }}>
                   <Text
                     style={{
@@ -833,11 +867,12 @@ const EventFilter = ({navigation}: any) => {
                     }}>
                     <DropComponentNew
                       items={musicStyle}
-                      onValueChange={handleSelection3}
+                      onValueChange={handleMusicTypeSelection}
                       isActive={activeDropdown === 'dropdown3'}
                       setActiveDropdown={setActiveDropdown}
                       dropdownKey="dropdown3"
                       placeholderText="Select Music Type"
+                      selectedItems={selectedMusicTypes.map(item => item._id)}
                     />
                   </View>
                 </View>
@@ -850,20 +885,21 @@ const EventFilter = ({navigation}: any) => {
                       style={[
                         styles.flatcon,
                         {
-                          backgroundColor:
-                            selectedItems3.length > 0 &&
-                            selectedItems3?.includes(item?._id)
-                              ? Colors.lightPink
-                              : Colors.tranparent,
+                          zIndex: -100,
+                          backgroundColor: selectedMusicTypes?.some(
+                            selected => selected._id === item?._id,
+                          )
+                            ? Colors.lightPink
+                            : Colors.tranparent,
                           borderWidth: 1,
-                          borderColor:
-                            selectedItems3.length > 0 &&
-                            selectedItems3?.includes(item?._id)
-                              ? Colors.tranparent
-                              : Colors.darkPink,
+                          borderColor: selectedMusicTypes?.some(
+                            selected => selected._id === item?._id,
+                          )
+                            ? Colors.tranparent
+                            : Colors.darkPink,
                         },
                       ]}
-                      onPress={() => toggleSelection3(item)}>
+                      onPress={() => toggleMusicType(item)}>
                       <Text
                         style={{
                           ...commonStyles.font12Regular,
