@@ -56,6 +56,13 @@ const CreateSuccess = ({navigation, route}: any) => {
     const images = selectedImages.map(n => n.uri);
     const members = selectMembers.map(n => n.id);
 
+    const formattedStartTime = moment(routeData.startTime, 'hh:mm:ss A').format(
+      'HH:mm:ss',
+    );
+    const formattedEndTime = moment(routeData.endTime, 'hh:mm:ss A').format(
+      'HH:mm:ss',
+    );
+
     const formData = new FormData();
     formData.append('event_name', routeData.eventname);
     formData.append('longitude', routeData.pin.longitude);
@@ -65,8 +72,8 @@ const CreateSuccess = ({navigation, route}: any) => {
     formData.append('city', 'San Francisco');
     formData.append('country', 'USA');
     formData.append('zipcode', '12345');
-    formData.append('start_time', routeData.startTime);
-    formData.append('end_time', routeData.endTime);
+    formData.append('start_time', formattedStartTime);
+    formData.append('end_time', formattedEndTime);
     formData.append('date', moment(routeData.value).format('YYYY-MM-DD'));
     formData.append('allowed_people', routeData.numpeople);
     formData.append('music_style_id', routeData.selectedMusic);
@@ -76,6 +83,7 @@ const CreateSuccess = ({navigation, route}: any) => {
     formData.append('mode', 'In-person');
     formData.append('event_type_id', routeData.selectedEventType);
     formData.append('venue_type_id', routeData.selectedVenue);
+    formData.append('early_price', routeData.charges ? routeData.charges : '0');
 
     selectedVideos.forEach((video, index) => {
       formData.append('videos', {
@@ -96,7 +104,6 @@ const CreateSuccess = ({navigation, route}: any) => {
     formData.append('description', routeData.bio);
     formData.append('distance', '250m');
     formData.append('capacity', '2500');
-    console.log(JSON.stringify(formData), 'formData');
     apiCall(formData);
   };
   const apiCall = (formData: Object) => {
@@ -105,23 +112,7 @@ const CreateSuccess = ({navigation, route}: any) => {
       .then(res => {
         setLoader(false);
         showSuccess('Event create successfully');
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [
-              {
-                name: NavigationStrings.TabRoutes,
-                state: {
-                  routes: [
-                    {
-                      name: NavigationStrings.HomeScreen,
-                    },
-                  ],
-                },
-              },
-            ],
-          }),
-        );
+        navigation.navigate(NavigationStrings.TabRoutes);
       })
       .catch(err => {
         setLoader(false);

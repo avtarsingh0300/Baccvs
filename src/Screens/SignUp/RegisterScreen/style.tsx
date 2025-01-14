@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   biotxt: {
     fontSize: textScale(20),
     fontFamily: fontFamily.time_bold,
-    textAlign: 'center',
+    paddingLeft:20,
     color: Colors.white,
   },
   langContainer: {

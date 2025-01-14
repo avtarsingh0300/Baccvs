@@ -11,14 +11,12 @@ const styles = StyleSheet.create({
   conatiner: {flex: 1, paddingHorizontal: moderateScale(15)},
   buttongroup: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '70%',
-    alignSelf: 'center',
+    // justifyContent: 'space-between',
   },
   acbtn: {
     width: moderateScale(81),
     height: moderateScaleVertical(26),
-    borderRadius: 10,
+    borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -28,14 +26,13 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(10),
   },
   seebtn: {
-    borderWidth: 1,
-    borderColor: Colors.white,
     width: moderateScale(72),
     height: moderateScaleVertical(25),
-    borderRadius: 10,
+    borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
+    backgroundColor: Colors.btnLinear2,
   },
   userimg: {
     width: moderateScale(55),
@@ -56,6 +53,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginVertical: moderateScaleVertical(13),
+  },
+  liketxt: {
+    fontSize: 20,
+    fontWeight: '700',
+    alignItems: 'center',
+    textAlign: 'center',
+    color: Colors.white,
+    fontFamily: fontFamily.regular,
+    paddingLeft: 15,
   },
 });
 

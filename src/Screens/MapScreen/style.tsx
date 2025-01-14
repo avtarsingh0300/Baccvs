@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import {
   moderateScale,
   moderateScaleVertical,
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     zIndex: 300,
-    marginTop: moderateScaleVertical(20),
+    marginTop: moderateScaleVertical(Platform.OS == 'android' ? 20 : 40),
   },
   btnContainer: {
     width: '45%',

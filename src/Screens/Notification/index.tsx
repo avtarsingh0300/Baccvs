@@ -94,14 +94,13 @@ const Notification = () => {
 
   return (
     <LinearGradient
-      colors={[Colors.LinearBlack, Colors.Linear]}
+      colors={[Colors.backgroundNew, Colors.backgroundNew]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
       <SafeAreaView>
         <Loadingcomponent isVisible={loading} />
         <SizeBox size={5} />
-
         <Text style={{...commonStyles.Heading20font}}>Notifications</Text>
         <SizeBox size={10} />
         <View style={{flexDirection: 'row'}}>
@@ -116,7 +115,6 @@ const Notification = () => {
               style={styles.userImg}
             />
           )}
-
           <View>
             <Text
               style={{
@@ -134,7 +132,12 @@ const Notification = () => {
         </View>
         <SizeBox size={10} />
         <View style={styles.border} />
-        <FlatList data={dataNoti} renderItem={renderItem} />
+        <FlatList
+          data={dataNoti}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index?.toString()}
+          showsVerticalScrollIndicator={false}
+        />
       </SafeAreaView>
     </LinearGradient>
   );

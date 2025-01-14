@@ -20,7 +20,7 @@ const ReferalCode = (props: any) => {
   };
   return (
     <LinearGradient
-      colors={[Colors.LinearBlack, Colors.Linear]}
+      colors={[Colors.backgroundNew, Colors.backgroundNew]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
@@ -31,14 +31,14 @@ const ReferalCode = (props: any) => {
           What’s your referral code?
         </Text>
         <SizeBox size={10} />
-        <Text style={{...commonStyles.font14Center, color: Colors.greyTxt}}>
+        <Text style={{...commonStyles.font14Center, color: Colors.greyTxt,textAlign:"center"}}>
           Please write your referral code.
         </Text>
         <SizeBox size={20} />
         <View style={styles.inputHolder}>
           <TextInput
             placeholder="Enter referral code"
-            placeholderTextColor={Colors.Pink}
+            placeholderTextColor={Colors.white}
             style={styles.input}
           />
         </View>

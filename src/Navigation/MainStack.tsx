@@ -3,9 +3,16 @@ import React from 'react';
 import NavigationStrings from '../Utilities/Constants/NavigationStrings';
 import TabRoutes from './TabRoutes';
 import * as screens from './index';
-export default function MainStack(Stack: any) {
+export default function MainStack(Stack: any, user: any) {
   return (
     <>
+      {user?.role != 'user' && (
+        <Stack.Screen
+          name={NavigationStrings.HomeNight}
+          component={screens.HomeNight}
+          options={{headerShown: false}}
+        />
+      )}
       <Stack.Screen
         name={NavigationStrings?.TabRoutes}
         component={TabRoutes}
@@ -46,7 +53,6 @@ export default function MainStack(Stack: any) {
         component={screens.Messages}
         options={{headerShown: false}}
       />
-
       <Stack.Screen
         name={NavigationStrings.MyEvents}
         component={screens.MyEvents}
@@ -97,7 +103,6 @@ export default function MainStack(Stack: any) {
         component={screens.UserProfile}
         options={{headerShown: false}}
       />
-
       <Stack.Screen
         name={NavigationStrings.EditProfile}
         component={screens.EditProfile}
@@ -121,6 +126,186 @@ export default function MainStack(Stack: any) {
       <Stack.Screen
         name={NavigationStrings.Scanner}
         component={screens.Scanner}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.Tickets}
+        component={screens.Tickets}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.SelectTicket}
+        component={screens.SelectTicket}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.UploadTicket}
+        component={screens.UploadTicket}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.PeopleLikes}
+        component={screens.PeopleLikes}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.ReferralCode}
+        component={screens.ReferralCode}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.OtherProfiles}
+        component={screens.OtherProfiles}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.QrCode}
+        component={screens.QrCode}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.FollowingScreen}
+        component={screens.FollowingScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.MeetPeopleFilter}
+        component={screens.MeetPeopleFilter}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.EditSocialProfile}
+        component={screens.EditSocialProfile}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.GrroupDeatils}
+        component={screens.GrroupDeatils}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.DatingUserProfile}
+        component={screens.DatingUserProfile}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.MarketingTools}
+        component={screens.MarketingTools}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.FeedbackScreen}
+        component={screens.FeedbackScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.PromoteScreen}
+        component={screens.PromoteScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.NightEvents}
+        component={screens.NightEvents}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.SeeMore}
+        component={screens.SeeMore}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.MusicList}
+        component={screens.MusicList}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.AnalyticsScreen}
+        component={screens.AnalyticsScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.AgoraSales}
+        component={screens.AgoraSales}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.AgoraAttendance}
+        component={screens.AgoraAttendance}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.Profile}
+        component={screens.Profile}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.NightclubEdit}
+        component={screens.NightclubEdit}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.DjPromoters}
+        component={screens.DjPromoters}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.EditDjProfile}
+        component={screens.EditDjProfile}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.SetPriceScreen}
+        component={screens.SetPriceScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.DjBooking}
+        component={screens.DjBooking}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.DjInvoices}
+        component={screens.DjInvoices}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.MatchPeople}
+        component={screens.MatchPeople}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.FeedBack}
+        component={screens.FeedBack}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.BankingInfo}
+        component={screens.BankingInfo}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.forgotMain}
+        component={screens.forgotMain}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.ImagePreview}
+        component={screens.ImagePreview}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.TransferTicket}
+        component={screens.TransferTicket}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.BuyTickets}
+        component={screens.BuyTickets}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={NavigationStrings.MusicStyle}
+        component={screens.MusicStyle}
         options={{headerShown: false}}
       />
     </>

@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   imgTxt: {
     fontSize: textScale(12),
     fontFamily: fontFamily.time_regular,
-    color: Colors.lightPink,
+    color: Colors.white,
     textAlign: 'center',
   },
   imageContainer: {

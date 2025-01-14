@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "730951517022",
+    "project_id": "baccvs-pro",
+    "storage_bucket": "baccvs-pro.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:730951517022:android:716fea11e5979c067705cf",
+        "android_client_info": {
+          "package_name": "com.baccvs"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCd98kiiXQkJX5l5lwzly7hH9Gqo7S8xCk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

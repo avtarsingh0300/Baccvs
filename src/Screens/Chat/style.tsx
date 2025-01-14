@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     height: moderateScaleVertical(40),
   },
   input: {
-    color: Colors.black,
+    color: Colors.white,
     fontFamily: fontFamily.regular,
     width: '90%',
   },
@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginVertical: moderateScaleVertical(13),
+    width: '100%',
   },
   reddot: {
     backgroundColor: Colors.red,
@@ -77,6 +78,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 3,
+    // alignSelf: 'center',
   },
   dottxt: {
     fontFamily: fontFamily.regular,

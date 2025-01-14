@@ -1,4 +1,4 @@
-import {Text} from 'react-native';
+import {Text, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {SafeAreaView} from 'react-native';
@@ -14,6 +14,7 @@ import {
 } from '../../Utilities/Component/Helpers';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import {changePass} from '../../Utilities/Constants/auth';
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 
 const ChangePass = ({navigation}: any) => {
   const [currentpass, setCurrentPass] = useState('');
@@ -49,9 +50,13 @@ const ChangePass = ({navigation}: any) => {
       });
   };
 
+  const onForgotPassword = () =>{
+  navigation.navigate (NavigationStrings.forgotMain)
+  }
+
   return (
     <LinearGradient
-      colors={[Colors.LinearBlack, Colors.Linear]}
+      colors={[Colors.backgroundNew, Colors.backgroundNew]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
@@ -67,25 +72,33 @@ const ChangePass = ({navigation}: any) => {
           value={currentpass}
           onChangeText={(text: any) => setCurrentPass(text)}
           placeholder="Current password"
+          styless={styles.input}
         />
         <SizeBox size={10} />
         <CommonInput
           onChangeText={(text: any) => setNewpass(text)}
           value={newpass}
           placeholder="New Password"
+          styless={styles.input}
         />
         <SizeBox size={10} />
         <CommonInput
           onChangeText={(text: any) => seReTypepass(text)}
           value={retypepass}
           placeholder="Re-type new password"
+          styless={styles.input}
         />
         <SizeBox size={10} />
-        <Text style={{...commonStyles.font16Regular, color: Colors.Pink}}>
+        <Text style={{...commonStyles.font12Bold, color: Colors.lightPink}} onPress={onForgotPassword}>
           forgot password?
         </Text>
         <SizeBox size={20} />
-        <CommonBtn title="Change password" onPress={onChangePas} />
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={styles.btn}
+          onPress={onChangePas}>
+          <Text style={styles.btnText}>Valid new password</Text>
+        </TouchableOpacity>
       </SafeAreaView>
     </LinearGradient>
   );

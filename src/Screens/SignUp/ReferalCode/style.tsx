@@ -16,9 +16,7 @@ const styles = StyleSheet.create({
   },
   inputHolder: {
     padding: 12,
-    borderTopWidth: 1,
-    borderRightWidth: 1,
-    borderLeftWidth: 1,
+    borderWidth:1,
     borderColor: Colors.white,
     borderRadius: 8,
     alignItems: 'center',

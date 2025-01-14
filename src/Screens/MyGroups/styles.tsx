@@ -30,8 +30,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   border: {
-    borderWidth: 1,
-    borderColor: Colors.Pink,
+    height: 1,
+    backgroundColor: Colors.white,
   },
   img: {
     width: moderateScale(80),

@@ -10,23 +10,30 @@ import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {clearUserData} from '../../Utilities/Constants/auth';
 import store from '../../Redux/store';
 import types from '../../Redux/types';
+import {Image} from 'react-native';
+import ImagePath from '../../Utilities/Constants/ImagePath';
 
 const Settings = ({navigation}: any) => {
   const onGoback = () => {
     navigation.goBack();
   };
+
   const onAccount = () => {
     navigation.navigate(NavigationStrings.AccountInfo);
   };
+
   const onChange = () => {
     navigation.navigate(NavigationStrings.ChangePass);
   };
+
   const onDeactive = () => {
     navigation.navigate(NavigationStrings.DeactiveScreen);
   };
+
   const onBlocked = () => {
     navigation.navigate(NavigationStrings.BlockedAccount);
   };
+
   const onLogout = () => {
     navigation.navigate(NavigationStrings.WelcomScreen);
     setTimeout(async () => {
@@ -41,7 +48,7 @@ const Settings = ({navigation}: any) => {
 
   return (
     <LinearGradient
-      colors={[Colors.LinearBlack, Colors.Linear]}
+      colors={[Colors.backgroundNew, Colors.backgroundNew]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
@@ -72,11 +79,30 @@ const Settings = ({navigation}: any) => {
           </Text>
         </TouchableOpacity>
         <SizeBox size={20} />
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate(NavigationStrings.BankingInfo);
+          }}>
+          <View style={styles.flex}>
+            <Image source={ImagePath.cash02} />
+            <Text style={{...commonStyles.font16White}}>Banking infos</Text>
+            <VectorIcon
+              groupName="SimpleLineIcons"
+              name="arrow-right"
+              size={15}
+            />
+          </View>
+          <SizeBox size={5} />
+          <Text style={styles.innertxt}>
+            Add or remove your payments methods
+          </Text>
+        </TouchableOpacity>
+        <SizeBox size={20} />
         <TouchableOpacity onPress={onChange}>
           <View style={styles.flex}>
             <VectorIcon groupName="SimpleLineIcons" name="lock" size={28} />
             <Text style={{...commonStyles.font16White}}>
-              Change your password
+              Password and security
             </Text>
             <VectorIcon
               groupName="SimpleLineIcons"

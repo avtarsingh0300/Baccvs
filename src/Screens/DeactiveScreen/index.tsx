@@ -1,21 +1,20 @@
-import {Alert, Text} from 'react-native';
+import {Alert, Text, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {SafeAreaView} from 'react-native';
 import {Colors} from '../../Utilities/Styles/colors';
 import styles from './style';
 import {
-  CommonBtn,
   Header,
   Loadingcomponent,
   SizeBox,
   showError,
 } from '../../Utilities/Component/Helpers';
-
 import {clearUserData, userDelete} from '../../Utilities/Constants/auth';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import types from '../../Redux/types';
 import store from '../../Redux/store';
+import commonStyles from '../../Utilities/Styles/commonStyles';
 
 const DeactivateScreen = ({navigation}: any) => {
   const [loader, setLoader] = useState(false);
@@ -29,7 +28,6 @@ const DeactivateScreen = ({navigation}: any) => {
     userDelete()
       .then(res => {
         setLoader(false);
-
         navigation.navigate(NavigationStrings.WelcomScreen);
         setTimeout(async () => {
           await clearUserData();
@@ -67,7 +65,7 @@ const DeactivateScreen = ({navigation}: any) => {
 
   return (
     <LinearGradient
-      colors={[Colors.LinearBlack, Colors.Linear]}
+      colors={[Colors.backgroundNew, Colors.backgroundNew]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
@@ -81,7 +79,19 @@ const DeactivateScreen = ({navigation}: any) => {
           code.
         </Text>
         <SizeBox size={20} />
-        <CommonBtn title="Deactivate account" onPress={showAlert} />
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={{padding: 10, alignSelf: 'center'}}
+          onPress={showAlert}>
+          <Text
+            style={{
+              ...commonStyles.font16Regular,
+              color: Colors.red,
+              alignSelf: 'center',
+            }}>
+            Deactivate account
+          </Text>
+        </TouchableOpacity>
       </SafeAreaView>
     </LinearGradient>
   );

@@ -9,39 +9,35 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-
 import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../Utilities/Styles/colors';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import {
   moderateScale,
   moderateScaleVertical,
-  width,
 } from '../../Utilities/Styles/responsiveSize';
 import {styles} from './style';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import FastImage from 'react-native-fast-image';
-import {
-  ImageComponent,
-  Loadingcomponent,
-  dummydata,
-} from '../../Utilities/Component/Helpers';
-import Modal from 'react-native-modal';
+import {Loadingcomponent, SizeBox} from '../../Utilities/Component/Helpers';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {getUserProfile} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
+import ProfileImagePreview from '../../Utilities/Component/ProfileImagePreview';
 
 const UserProfile = ({navigation}: any) => {
-  const [showModal, setShowModal] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
   const [userData, setUserData] = useState({});
-
-  const onSocialpart = () => {
-    setShowModal(false);
-    navigation.navigate(NavigationStrings.SocialPart);
+  const [eventCount, setEventCount] = useState([]);
+  const onEdit = () => {
+    navigation.navigate(NavigationStrings.EditProfile);
   };
-
+  const onContinue = () => {
+    navigation.navigate(NavigationStrings.FollowingScreen);
+  };
   useEffect(() => {
     const _unsubscribe = navigation.addListener('focus', () => {
       getUserData();
@@ -56,8 +52,9 @@ const UserProfile = ({navigation}: any) => {
     getUserProfile()
       .then(res => {
         setLoader(false);
-        console.log(res, 'res in getUserProfile');
+        // console.log(res, 'res in getUserProfile');
         setUserData(res?.user);
+        setEventCount(res);
       })
       .catch(err => {
         setLoader(false);
@@ -65,64 +62,22 @@ const UserProfile = ({navigation}: any) => {
       });
   };
 
-  const renderItem = ({item, index}) => (
+  const renderItem = ({item, index}: any) => (
     <View>
       <View style={styles.listContainer}>
         <ImageBackground
-          source={{uri: IMAGE_URL + item}}
+          source={{uri: IMAGE_URL + item?.pictures[0]}}
           borderRadius={5}
           style={styles.backimg}>
-          <View style={styles.flexinner}>
-            <ImageComponent
-              source={ImagePath.ProfileImg}
-              style={styles.shortimg}
-            />
-            <ImageComponent
-              source={ImagePath.ProfileImg}
-              style={[
-                styles.extraimg,
-                {
-                  marginLeft: 5,
-                },
-              ]}
-            />
-            <ImageComponent
-              source={ImagePath.ProfileImg}
-              style={[
-                styles.extraimg,
-                {
-                  right: 10,
-                },
-              ]}
-            />
-            <Text
-              style={{
-                ...commonStyles.font16Regular,
-                alignSelf: 'flex-end',
-                color: Colors.white,
-              }}>
-              +8
-            </Text>
-          </View>
+          <View style={styles.flexinner}></View>
         </ImageBackground>
-        <View style={[styles.row, {justifyContent: 'center'}]}>
-          <View style={styles.music}>
-            <Text style={styles.musictxt}>Progressive</Text>
-          </View>
-          <View style={styles.music}>
-            <Text style={styles.musictxt}>Progressive</Text>
-          </View>
-          <View style={styles.music}>
-            <Text style={styles.musictxt}>Progressive</Text>
-          </View>
-        </View>
       </View>
     </View>
   );
 
   return (
     <LinearGradient
-      colors={[Colors.LinearBlack, Colors.Linear]}
+      colors={[Colors.backgroundNew, Colors.backgroundNew]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={{flex: 1}}>
@@ -131,175 +86,249 @@ const UserProfile = ({navigation}: any) => {
         <ScrollView
           contentContainerStyle={styles.container}
           showsVerticalScrollIndicator={false}>
+          <SizeBox size={5} />
           <View style={styles.header}>
-            <View style={{width: '10%'}} />
-            <Text style={{...commonStyles.Heading20font, color: Colors.Pink}}>
-              {userData?.full_name?.charAt(0).toUpperCase() +
-                userData?.full_name?.slice(1)}
-            </Text>
+            <View style={{flexDirection: 'row'}}>
+              <VectorIcon
+                groupName={'Ionicons'}
+                name={'chevron-back'}
+                size={25}
+                onPress={() => navigation.goBack()}
+              />
+              <Text style={styles.liketxt}>Profile</Text>
+            </View>
             <VectorIcon
               groupName="Entypo"
               name="dots-three-horizontal"
               size={30}
               color={Colors.white}
-              onPress={() => setShowModal(true)}
-            />
-          </View>
-          <Image source={ImagePath.ProfileImg} style={styles.profileImage} />
-          <View style={styles.followInfoContainer}>
-            <View style={styles.followInner}>
-              <Text style={styles.followText}>Events</Text>
-              <Text style={[styles.followText, {color: Colors.white}]}>
-                {userData?.event_count}
-              </Text>
-            </View>
-            <View style={styles.followInner}>
-              <Text style={styles.followText}>Followers</Text>
-              <Text style={[styles.followText, {color: Colors.white}]}>
-                {userData?.followers?.length}
-              </Text>
-            </View>
-            <View style={styles.followInner}>
-              <Text style={styles.followText}>Following</Text>
-              <Text style={[styles.followText, {color: Colors.white}]}>
-                {userData?.following?.length ? userData?.following?.lengt : 0}
-              </Text>
-            </View>
-          </View>
-          <View style={styles.statusContainer}>
-            <Text style={styles.statusText}>{userData?.bio}</Text>
-          </View>
-          <View style={styles.row}>
-            <VectorIcon
-              groupName="MaterialCommunityIcons"
-              name="cupcake"
-              size={20}
-              color={Colors.Pink}
-            />
-            <Text style={styles.rowText}>{userData?.age}</Text>
-            <View
-              style={{
-                height: moderateScaleVertical(25),
-                paddingHorizontal: 0.5,
-                backgroundColor: '#7D67EE',
-              }}
-            />
-            <Image source={ImagePath.line_height} />
-            <Text style={styles.rowText}>{userData?.height}</Text>
-            <View
-              style={{
-                height: moderateScaleVertical(25),
-                paddingHorizontal: 0.5,
-                backgroundColor: '#7D67EE',
-              }}
-            />
-            <VectorIcon
-              groupName="SimpleLineIcons"
-              name="location-pin"
-              size={20}
-              color={Colors.Pink}
-            />
-            <Text style={styles.rowText}>
-              {userData?.location ? userData?.location : 'Eiffel Tower'}
-            </Text>
-            <View
-              style={{
-                height: moderateScaleVertical(25),
-                paddingHorizontal: 0.5,
-                backgroundColor: '#7D67EE',
-              }}
-            />
-            <VectorIcon
-              groupName="MaterialCommunityIcons"
-              name="zodiac-leo"
-              size={20}
-              color={Colors.Pink}
-            />
-            <Text style={styles.rowText}>{userData?.zodiac_sign}</Text>
-            <View
-              style={{
-                height: moderateScaleVertical(25),
-                paddingHorizontal: 0.5,
-                backgroundColor: '#7D67EE',
-              }}
-            />
-            <VectorIcon
-              groupName="MaterialCommunityIcons"
-              name="glass-cocktail"
-              size={20}
-              color={Colors.Pink}
-            />
-          </View>
-          <View style={styles.postContainer}>
-            {userData?.thumbnail_urls?.map((i, index) => (
-              <FastImage
-                source={{uri: IMAGE_URL + i}}
-                key={index}
-                style={styles.postImage}
-              />
-            ))}
-          </View>
-          <View style={styles.row}>
-            <View style={{width: '10%'}} />
-            <Text style={{...commonStyles.font16White}}>See more</Text>
-            <VectorIcon
-              groupName="Feather"
-              name="edit"
-              color={Colors.white}
-              size={22}
+              onPress={onEdit}
             />
           </View>
           <Text
             style={{
-              ...commonStyles.font13,
-              fontWeight: '700',
-              marginLeft: moderateScale(31),
+              ...commonStyles.font16Regular,
+              color: Colors.white,
+              textAlign: 'left',
+              paddingLeft: 30,
+              textTransform: 'capitalize',
             }}>
-            Past events (1/11)
+            {userData?.full_name}
           </Text>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            style={{
-              width: width,
-              alignSelf: 'center',
-            }}
-            data={userData?.video_urls}
-            renderItem={renderItem}
-          />
-        </ScrollView>
-        <Modal
-          useNativeDriver={true}
-          hideModalContentWhileAnimating={true}
-          animationIn="fadeIn"
-          animationOut="fadeOut"
-          onBackdropPress={() => setShowModal(false)}
-          avoidKeyboard={true}
-          style={{flex: 1, margin: 0, justifyContent: 'flex-start'}}
-          isVisible={showModal}
-          backdropOpacity={0.2}>
-          <View style={styles.optionContainer}>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={styles.option}
-              onPress={() => {
-                navigation.navigate(NavigationStrings.EditProfile);
-                setShowModal(false);
-              }}>
-              <Text style={styles.optionText}>Edit profile</Text>
+          {userData?.pictures?.length > 0 ? (
+            <Image
+              source={{uri: IMAGE_URL + userData?.pictures[0].url}}
+              style={styles.profileImage}
+            />
+          ) : (
+            <Image source={ImagePath.ProfileImg} style={styles.profileImage} />
+          )}
+          <View style={styles.followInfoContainer}>
+            <View style={styles.followInner}>
+              <Text style={styles.followText}>Events</Text>
+              <Text style={[styles.followText, {color: Colors.white}]}>
+                {eventCount?.event_count}
+              </Text>
+            </View>
+            <TouchableOpacity onPress={onContinue} style={styles.followInner}>
+              <Text style={styles.followText}>Followers</Text>
+              <Text style={[styles.followText, {color: Colors.white}]}>
+                {userData?.followers_count}
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={onSocialpart}
-              activeOpacity={0.8}
-              style={styles.option}>
-              <Text style={styles.optionText}>Edit Social part</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={[styles.option, {borderBottomWidth: 0}]}>
-              <Text style={styles.optionText}>Turn profile to public</Text>
-            </TouchableOpacity>
+            <View style={styles.followInner}>
+              <Text style={styles.followText}>Following</Text>
+              <Text style={[styles.followText, {color: Colors.white}]}>
+                {userData?.following_count}
+              </Text>
+            </View>
           </View>
-        </Modal>
+          {/* <ScrollView horizontal> */}
+          <FlatList
+            data={[{id: 0}]}
+            keyExtractor={(item, index) => index?.toString()}
+            contentContainerStyle={{paddingRight: moderateScale(120)}}
+            renderItem={() => (
+              <View style={styles.row}>
+                <View style={{width: '2%'}} />
+                {userData?.age && (
+                  <>
+                    <VectorIcon
+                      groupName="MaterialCommunityIcons"
+                      name="cupcake"
+                      size={20}
+                      color={Colors.lightGrey}
+                    />
+                    <View style={{width: '2%'}} />
+                    <Text style={styles.rowText}>{userData?.age}</Text>
+                  </>
+                )}
+                <View style={{width: '2%'}} />
+                <View
+                  style={{
+                    height: moderateScaleVertical(25),
+                    paddingHorizontal: 0.5,
+                    backgroundColor: Colors.lightGrey,
+                  }}
+                />
+                <View style={{width: '2%'}} />
+                {userData?.height && (
+                  <>
+                    <Image
+                      source={ImagePath.line_height}
+                      tintColor={Colors.lightGrey}
+                    />
+                    <View style={{width: '2%'}} />
+                    <Text style={styles.rowText}>{userData?.height}</Text>
+                    <View
+                      style={{
+                        height: moderateScaleVertical(25),
+                        paddingHorizontal: 0.5,
+                        backgroundColor: Colors.lightGrey,
+                      }}
+                    />
+                  </>
+                )}
+                <VectorIcon
+                  groupName="SimpleLineIcons"
+                  name="location-pin"
+                  size={20}
+                  color={Colors.lightGrey}
+                />
+                <View style={{width: '2%'}} />
+                <Text style={styles.rowText}>
+                  {userData?.location ? userData?.location : 'Eiffel Tower'}
+                </Text>
+                <View style={{width: '2%'}} />
+                {userData?.zodiac_sign && (
+                  <>
+                    <View
+                      style={{
+                        height: moderateScaleVertical(25),
+                        paddingHorizontal: 0.5,
+                        backgroundColor: Colors.lightGrey,
+                      }}
+                    />
+                    <View style={{width: '2%'}} />
+                    <VectorIcon
+                      groupName="MaterialCommunityIcons"
+                      name="zodiac-leo"
+                      size={20}
+                      color={Colors.lightGrey}
+                    />
+                    <View style={{width: '2%'}} />
+                    <Text style={styles.rowText}>{userData?.zodiac_sign}</Text>
+                  </>
+                )}
+                <View style={{width: '2%'}} />
+                <View
+                  style={{
+                    height: moderateScaleVertical(25),
+                    paddingHorizontal: 0.5,
+                    backgroundColor: Colors.lightGrey,
+                  }}
+                />
+                <View style={{width: '2%'}} />
+                <VectorIcon
+                  groupName="MaterialCommunityIcons"
+                  name="glass-cocktail"
+                  size={20}
+                  color={Colors.lightGrey}
+                />
+                <View style={{width: '2%'}} />
+                <Text style={styles.rowText}>{userData?.drinking}</Text>
+              </View>
+            )}
+            horizontal
+          />
+          {/* </ScrollView> */}
+          <View style={styles.postContainer}>
+            {userData?.pictures?.map((i, index) => (
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={[styles.postImage, {borderWidth: 0}]}
+                onPress={() => {
+                  setShowPreview(true);
+                  setSelectedImage(i);
+                }}>
+                <FastImage
+                  source={{uri: IMAGE_URL + i.url}}
+                  key={index}
+                  style={styles.postImage}
+                />
+              </TouchableOpacity>
+            ))}
+          </View>
+          {userData?.bio ? (
+            <>
+              <SizeBox size={10} />
+              <Text style={[styles.title, {textTransform: 'capitalize'}]}>
+                {userData?.full_name}'s Bio
+              </Text>
+              <Text style={styles.bioText}>{userData?.bio}</Text>
+              <SizeBox size={8} />
+            </>
+          ) : null}
+          <SizeBox size={5} />
+          {userData?.music_type?.length > 0 ? (
+            <>
+              <Text style={styles.title}>Music Type</Text>
+              <View style={styles.typeContainer}>
+                {userData?.music_type?.map((i, index) => (
+                  <View style={styles.type}>
+                    <Text style={styles.typeText}>{i}</Text>
+                  </View>
+                ))}
+              </View>
+            </>
+          ) : null}
+          {userData?.event_type?.length > 0 ? (
+            <>
+              <Text style={styles.title}>Event Type</Text>
+              <View style={styles.typeContainer}>
+                {userData?.event_type?.map((i, index) => (
+                  <View style={styles.type}>
+                    <Text style={styles.typeText}>{i}</Text>
+                  </View>
+                ))}
+              </View>
+            </>
+          ) : null}
+          {userData?.language?.length > 0 ? (
+            <>
+              <Text style={styles.title}>Languages</Text>
+              <View style={styles.typeContainer}>
+                {userData?.language?.map((i, index) => (
+                  <View style={styles.type}>
+                    <Text style={styles.typeText}>{i}</Text>
+                  </View>
+                ))}
+              </View>
+            </>
+          ) : null}
+          <SizeBox size={10} />
+          {eventCount?.past_events ? (
+            <>
+              <Text style={styles.title}>Past events</Text>
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                style={{
+                  width: '100%',
+                  alignSelf: 'center',
+                }}
+                data={eventCount?.past_events}
+                renderItem={renderItem}
+              />
+            </>
+          ) : null}
+        </ScrollView>
+        <ProfileImagePreview
+          setShowModal={setShowPreview}
+          // showModal={true}
+          data={userData}
+          image={selectedImage}
+          showModal={showPreview}
+        />
       </SafeAreaView>
     </LinearGradient>
   );

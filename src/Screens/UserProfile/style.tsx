@@ -1,12 +1,11 @@
-import { Platform, StyleSheet } from 'react-native';
-
+import {Platform, StyleSheet} from 'react-native';
 import {
   height,
   moderateScale,
   moderateScaleVertical,
   textScale,
 } from '../../Utilities/Styles/responsiveSize';
-import { Colors } from '../../Utilities/Styles/colors';
+import {Colors} from '../../Utilities/Styles/colors';
 import commonStyles from '../../Utilities/Styles/commonStyles';
 import fontFamily from '../../Utilities/Styles/fontFamily';
 
@@ -19,19 +18,19 @@ export const styles = StyleSheet.create({
     paddingVertical: moderateScaleVertical(10),
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: moderateScale(30),
+    paddingHorizontal: moderateScale(10),
   },
   profileImage: {
-    width: moderateScale(86),
-    height: moderateScaleVertical(91),
+    width: '90%',
+    height: height / 4,
     alignSelf: 'center',
     marginVertical: moderateScaleVertical(10),
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: Colors.Pink,
+    borderColor: Colors.lightPink,
   },
   followInfoContainer: {
-    width: '70%',
+    width: '80%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignSelf: 'center',
@@ -41,7 +40,7 @@ export const styles = StyleSheet.create({
   followText: {
     ...commonStyles.font14,
     fontWeight: '400',
-    color: Colors.Pink,
+    color: Colors.white,
     marginBottom: 5,
   },
   followInner: {
@@ -59,11 +58,12 @@ export const styles = StyleSheet.create({
     marginVertical: moderateScaleVertical(20),
   },
   row: {
-    width: '90%',
-    paddingVertical: moderateScaleVertical(10),
+    // width: '90%',
+    // paddingVertical: moderateScaleVertical(10),
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignSelf: 'center',
+    // justifyContent: 'space-between',
+    // alignSelf: 'center',
+    alignItems: 'center',
   },
   rowText: {
     ...commonStyles.font14,
@@ -86,12 +86,7 @@ export const styles = StyleSheet.create({
     marginBottom: moderateScaleVertical(20),
     marginHorizontal: moderateScale(5),
   },
-  listContainer: {
-    width: '90%',
-    alignSelf: 'center',
-    justifyContent: 'center',
-    marginTop: moderateScaleVertical(10),
-  },
+
   backContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -111,10 +106,8 @@ export const styles = StyleSheet.create({
   },
   backimg: {
     width: '100%',
-    height: height / 4,
-    justifyContent: 'flex-end',
-    borderWidth: 1,
-    borderColor: Colors.Pink,
+    height: moderateScaleVertical(200),
+    marginHorizontal: 7,
   },
   flexinner: {
     paddingHorizontal: 15,
@@ -182,5 +175,131 @@ export const styles = StyleSheet.create({
   optionText: {
     ...commonStyles.font14,
     fontWeight: '600',
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: moderateScaleVertical(15),
+    marginHorizontal: 20,
+  },
+  headerTxt: {
+    ...commonStyles.font20White,
+    textAlign: 'center',
+    fontFamily: fontFamily.regular,
+  },
+  threedots: {
+    marginTop: 10,
+  },
+  msgbtn: {
+    width: moderateScale(96),
+    height: moderateScaleVertical(28),
+    borderWidth: 0.25,
+    borderColor: Colors.greyTxt,
+    borderRadius: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  msgtxt: {
+    fontSize: 12,
+    fontWeight: '300',
+    fontFamily: fontFamily.regular,
+    color: Colors.white,
+  },
+  bensbio: {
+    fontSize: 16,
+    fontWeight: '600',
+    fontFamily: fontFamily.regular,
+    color: Colors.white,
+    paddingLeft: 20,
+  },
+  musicbtn: {
+    width: moderateScale(120),
+    height: moderateScaleVertical(28),
+    borderWidth: 0.25,
+    borderRadius: 2,
+    backgroundColor: Colors.lightPink,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  eventbtn: {
+    width: moderateScale(100),
+    height: moderateScaleVertical(28),
+    borderWidth: 0.25,
+    borderRadius: 2,
+    backgroundColor: Colors.lightPink,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  pastevents: {
+    fontSize: 16,
+    fontWeight: '700',
+    fontFamily: fontFamily.bold,
+    color: Colors.white,
+  },
+  seeallbtn: {
+    borderBottomWidth: 1,
+    borderColor: Colors.white,
+    width: moderateScale(55),
+    alignItems: 'center',
+  },
+  seetxt: {
+    color: Colors.white,
+    fontSize: 16,
+    fontFamily: fontFamily.regular,
+    fontWeight: '400',
+  },
+  discotext: {
+    fontSize: 12,
+    fontWeight: '400',
+    fontFamily: fontFamily.regular,
+    color: Colors.white,
+  },
+  liketxt: {
+    fontSize: 20,
+    fontWeight: '700',
+    alignItems: 'center',
+    textAlign: 'center',
+    color: Colors.white,
+    fontFamily: fontFamily.regular,
+    paddingLeft: 15,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: Colors.white,
+    marginTop: moderateScaleVertical(10),
+    marginBottom: moderateScaleVertical(10),
+    marginLeft: moderateScale(15),
+  },
+  typeText: {
+    ...commonStyles.font12,
+    color: Colors.white,
+    fontFamily: fontFamily.regular,
+  },
+  typeContainer: {
+    marginHorizontal: moderateScale(24),
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  type: {
+    paddingHorizontal: moderateScale(10),
+    paddingVertical: 6,
+    marginBottom: moderateScaleVertical(10),
+    marginRight: moderateScale(10),
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: Colors.lightPink,
+  },
+  listContainer: {
+    width: '90%',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginTop: moderateScaleVertical(10),
+  },
+  bioText: {
+    ...commonStyles.font12Regular,
+    color: Colors.white,
+    marginHorizontal: moderateScale(25),
   },
 });
