@@ -48,9 +48,7 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
     outputRange: ['-8deg', '0deg', '8deg'],
   });
 
-  const navigation = useNavigation();
-
-  console.log(item, 'item');
+  const navigation = useNavigation<any>();
 
   return (
     <Animated.View
@@ -85,8 +83,7 @@ const MeetPeopleCard: React.FC<MeetPeopleCardProps> = ({
           >
             <ImageBackground
               borderRadius={10}
-              source={{uri: IMAGE_URL + i}}
-              // source={ImagePath.ProfileImg}
+              source={{uri: IMAGE_URL + item?.pictureUrls[0].url}}
               style={{
                 width: '100%',
                 height: height / 1.4,

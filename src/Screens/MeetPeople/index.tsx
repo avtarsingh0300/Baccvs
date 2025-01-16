@@ -35,6 +35,10 @@ import MeetFilterModal from '../../Utilities/Component/MeetFilterModal';
 import TeamsCard from '../../Utilities/Component/TeamsCard';
 
 const MeetPeople = ({navigation}: any) => {
+  const isSoloFiltered = useSelector(
+    (data: any) => data?.meetScreen?.isFlterApplied,
+  );
+
   const [button, setButton] = useState('online');
   const [currentImage, setCurrentImage] = useState<any>({});
   const [loader, setLoader] = useState(false);
@@ -48,21 +52,12 @@ const MeetPeople = ({navigation}: any) => {
   const swipe = useRef(new Animated.ValueXY()).current;
   const swipeTeam = useRef(new Animated.ValueXY()).current;
 
-  useEffect(() => {
-    if (button == 'online') {
-      setLoader(true);
-      getAllUserHandler();
-    } else {
-      setLoader(true);
-      getAllMeetGroupsHandler();
-    }
-  }, [button]);
-
   const getAllUserHandler = () => {
     getAllUsers()
       .then((res: any) => {
         setUserData([]);
         setUserData(res?.data);
+
         if (userData?.length == 0) {
           setCurrentImage(res?.data[0]);
         } else {
@@ -365,6 +360,18 @@ const MeetPeople = ({navigation}: any) => {
     },
     [removeTeamCard],
   );
+
+  useEffect(() => {
+    if (button == 'online' && isSoloFiltered !== 1) {
+      setLoader(true);
+      getAllUserHandler();
+    } else {
+      if (isSoloFiltered !== 2) {
+        setLoader(true);
+        getAllMeetGroupsHandler();
+      }
+    }
+  }, [button, isSoloFiltered]);
 
   return (
     <>

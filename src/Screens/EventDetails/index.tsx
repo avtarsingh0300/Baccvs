@@ -117,6 +117,7 @@ const EventDetails = ({navigation, route}: any) => {
         setLoading(false), showError(err.message), console.log(err);
       });
   };
+
   const getEvent2 = () => {
     setLoading(false);
     getEventDetail(route.params.eventId)
@@ -128,6 +129,7 @@ const EventDetails = ({navigation, route}: any) => {
         setLoading(false), showError(err.message), console.log(err);
       });
   };
+
   const onSendComments = () => {
     if (!commentvalue) {
       showError('Type comments');
@@ -192,6 +194,7 @@ const EventDetails = ({navigation, route}: any) => {
         console.log(err);
       });
   };
+
   const onDeletePress = (id: string) => {
     deleteComment(id)
       .then(res => {
@@ -202,6 +205,7 @@ const EventDetails = ({navigation, route}: any) => {
         console.log(err);
       });
   };
+
   const onEditPress = (item: any) => {
     setCommentId(item?.id);
     setCommentValue(item?.description);
@@ -214,31 +218,37 @@ const EventDetails = ({navigation, route}: any) => {
     longitudeDelta: 0.0421,
   };
 
-  const renderItem = ({item, index}: any) => (
-    <View style={styles.itemContainer}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        {item?.user?.image ? (
-          <Image
-            source={{uri: IMAGE_URL + item?.user?.image}}
-            style={{
-              borderWidth: 1,
-              borderRadius: 8,
-              borderColor: Colors.Pink,
-              width: 40,
-              height: 47,
-            }}
-          />
-        ) : (
-          <Image
-            source={ImagePath.followProfile}
-            style={{borderWidth: 1, borderRadius: 8, borderColor: Colors.Pink}}
-          />
-        )}
-        <Text style={[styles.distanceText, {marginLeft: 10}]}>
-          {item?.user?.name}
-        </Text>
-      </View>
-      {/* <TouchableOpacity activeOpacity={0.8}>
+  // Rendeer Users Who liked
+  const renderItem = ({item, index}: any) => {
+    return (
+      <View style={styles.itemContainer}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          {item?.user?.image ? (
+            <Image
+              source={{uri: IMAGE_URL + item?.user?.image}}
+              style={{
+                borderWidth: 1,
+                borderRadius: 8,
+                borderColor: Colors.Pink,
+                width: 40,
+                height: 47,
+              }}
+            />
+          ) : (
+            <Image
+              source={ImagePath.followProfile}
+              style={{
+                borderWidth: 1,
+                borderRadius: 8,
+                borderColor: Colors.Pink,
+              }}
+            />
+          )}
+          <Text style={[styles.distanceText, {marginLeft: 10}]}>
+            {item?.user?.name}
+          </Text>
+        </View>
+        {/* <TouchableOpacity activeOpacity={0.8}>
         <LinearGradient
           colors={[Colors.LinearBlack, Colors.Pink]}
           style={{
@@ -249,9 +259,11 @@ const EventDetails = ({navigation, route}: any) => {
           <Text style={styles.timeText}>Follow</Text>
         </LinearGradient>
       </TouchableOpacity> */}
-    </View>
-  );
+      </View>
+    );
+  };
 
+  // Render UsersWho commented
   const comItem = ({item, index}: any) => (
     <View style={styles.itemContainer}>
       <View
@@ -329,9 +341,7 @@ const EventDetails = ({navigation, route}: any) => {
             style={{borderWidth: 1, borderRadius: 8, borderColor: Colors.Pink}}
           />
         )}
-        <Text style={[styles.distanceText, {marginLeft: 10}]}>
-          {item?.name}
-        </Text>
+        <Text style={[styles.distanceText, {marginLeft: 10}]}></Text>
       </View>
     </View>
   );
@@ -350,7 +360,15 @@ const EventDetails = ({navigation, route}: any) => {
   );
 
   const renderParticipants = ({item, index}: any) => (
-    <View style={{paddingHorizontal: 15, alignItems: 'center'}}>
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={() => {
+        refInfoRBSheet.current.close();
+        navigation.navigate(NavigationStrings.OtherProfiles, {
+          id: item?.id,
+        });
+      }}
+      style={{paddingHorizontal: 15, alignItems: 'center'}}>
       <Image
         source={{uri: IMAGE_URL + item.image}}
         style={{width: 44, height: 50, borderRadius: 5}}
@@ -358,7 +376,7 @@ const EventDetails = ({navigation, route}: any) => {
       <Text style={{...commonStyles.font12Regular, paddingTop: 5}}>
         {item.name}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 
   // Video Sliding With Progress Bar

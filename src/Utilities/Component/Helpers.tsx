@@ -1,35 +1,35 @@
+import MultiSlider from '@ptomasroos/react-native-multi-slider';
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {
+  ActivityIndicator,
+  FlatList,
+  ImageStyle,
+  StyleProp,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  StyleProp,
-  ImageStyle,
-  ActivityIndicator,
 } from 'react-native';
+import CountryPicker, {
+  Country,
+  CountryCode,
+} from 'react-native-country-picker-modal';
 import FastImage, {FastImageProps} from 'react-native-fast-image';
-import VectorIcon from './vectorIcons';
+import {showMessage} from 'react-native-flash-message';
+import LinearGradient from 'react-native-linear-gradient';
 import Modal from 'react-native-modal';
-import styles from './style';
+import ImagePath from '../Constants/ImagePath';
+import NavigationStrings from '../Constants/NavigationStrings';
+import {Colors} from '../Styles/colors';
+import commonStyles from '../Styles/commonStyles';
 import {
   moderateScale,
   moderateScaleVertical,
   width,
 } from '../Styles/responsiveSize';
-import LinearGradient from 'react-native-linear-gradient';
-import {Colors} from '../Styles/colors';
-import commonStyles from '../Styles/commonStyles';
-import MultiSlider from '@ptomasroos/react-native-multi-slider';
-import CountryPicker, {
-  CountryCode,
-  Country,
-} from 'react-native-country-picker-modal';
-import {FlatList} from 'react-native';
-import ImagePath from '../Constants/ImagePath';
-import NavigationStrings from '../Constants/NavigationStrings';
-import {useNavigation} from '@react-navigation/native';
-import {showMessage} from 'react-native-flash-message';
+import styles from './style';
+import VectorIcon from './vectorIcons';
 
 export const dummydata = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
 
@@ -79,7 +79,7 @@ const showNotification = (message: any) => {
     },
   });
 };
-export {showError, showSuccess, showNotification};
+export {showError, showNotification, showSuccess};
 
 export function ImageComponent({
   style,
@@ -252,7 +252,7 @@ export function Drawer({
   onBackdropPress,
   username,
 }: DrawerProps) {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   return (
     <Modal

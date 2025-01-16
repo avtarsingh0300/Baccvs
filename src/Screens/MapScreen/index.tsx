@@ -8,13 +8,13 @@ import {getMapData} from '../../Utilities/Constants/auth';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
+import {groupUsersByProximity} from '../../Utilities/Helpers';
 import {Colors} from '../../Utilities/Styles/colors';
 import {
   height,
   moderateScaleVertical,
 } from '../../Utilities/Styles/responsiveSize';
 import styles from './style';
-import {groupUsersByProximity} from '../../Utilities/Helpers';
 
 const UserJson = [
   {
@@ -46,21 +46,21 @@ const UserJson = [
     name: 'Harish Sharma',
   },
   {
-    id: '668f979b44866a3ac43c09de',
+    id: '6690b855a519251381cf922f',
     image_url: 'storage/userdata/1732168588124-Rectangle 160.png',
     latitude: 28.70706,
     longitude: 77.102593,
     name: 'Jane Doe',
   },
   {
-    id: '66a3a6b451ef46d148693c5d',
+    id: '668f979b44866a3ac43c09de',
     image_url: 'storage/userdata/1732168588124-Rectangle 160.png',
     latitude: 28.70306,
     longitude: 77.102393,
     name: 'Sudheerqer',
   },
   {
-    id: '668bc3785bd3a00506a1de62',
+    id: '6690b855a519251381cf922f',
     image_url: 'storage/userdata/1732173480221-Rectangle 10.png',
     latitude: 28.70406,
     longitude: 77.102493,
@@ -68,49 +68,49 @@ const UserJson = [
   },
   // Additional places within 100 km
   {
-    id: '66d1234567890abcd1234567',
+    id: '668f979b44866a3ac43c09de',
     image_url: 'storage/userdata/1732168588124-Rectangle 160.png',
     latitude: 30.754549,
     longitude: 76.792401,
     name: 'Rohit Verma',
   },
   {
-    id: '66e234567890abcd12345678',
+    id: '668f979b44866a3ac43c09de',
     image_url: 'storage/userdata/1732173480221-Rectangle 10.png',
     latitude: 30.715789,
     longitude: 76.801203,
     name: 'Pooja Singh',
   },
   {
-    id: '66f34567890abcd123456789',
+    id: '668f979b44866a3ac43c09de',
     image_url: 'storage/userdata/1732168588124-Rectangle 160.png',
     latitude: 30.747832,
     longitude: 76.795104,
     name: 'Vikram Sharma',
   },
   {
-    id: '6604567890abcd123456789a',
+    id: '66a3a6b451ef46d148693c5d',
     image_url: 'storage/userdata/1732168588124-Rectangle 160.png',
     latitude: 28.670345,
     longitude: 77.094567,
     name: 'Anjali Kapoor',
   },
   {
-    id: '661567890abcd123456789b',
-    image_url: 'sstorage/userdata/1732173480221-Rectangle 10.png',
+    id: '66a3a6b451ef46d148693c5d',
+    image_url: 'storage/userdata/1732173480221-Rectangle 10.png',
     latitude: 28.714567,
     longitude: 77.145678,
     name: 'Ramesh Kumar',
   },
   {
-    id: '66267890abcd123456789c',
+    id: '66a3a6b451ef46d148693c5d',
     image_url: 'storage/userdata/1732173480221-Rectangle 10.png',
     latitude: 28.691234,
     longitude: 77.102893,
     name: 'Neha Gupta',
   },
   {
-    id: '6637890abcd123456789d',
+    id: '668bc3785bd3a00506a1de62',
     image_url: 'storage/userdata/1732168588124-Rectangle 160.png',
     latitude: 28.675123,
     longitude: 77.135678,
@@ -135,15 +135,27 @@ const MapScreen = ({navigation}: any) => {
   const [userGroups, setUserGroups] = useState<any[]>([]); // New state for grouped users
   const [eventGroups, setEventGroups] = useState<any[]>([]); // New state for grouped users
 
+  const [visibleUsers, setVisibleUsers] = useState<UserData[]>([]);
+
   const proximityThreshold = 2; // km proximity threshold
 
   const onPressBack = () => {
     navigation.goBack();
   };
 
-  useEffect(() => {
-    getLocation();
-  }, []);
+  const initialRegion = userLocation
+    ? {
+        latitude: 30.704649,
+        longitude: 76.717873,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      }
+    : {
+        latitude: 37.78825,
+        longitude: -122.4324,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      };
 
   const getLocation = () => {
     Geolocation.getCurrentPosition(
@@ -165,33 +177,28 @@ const MapScreen = ({navigation}: any) => {
     );
   };
 
-  const initialRegion = userLocation
-    ? {
-        latitude: 30.704649,
-        longitude: 76.717873,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      }
-    : {
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      };
-
   const getLocationData = () => {
     getMapData()
       .then((res: any) => {
-        setEventData(res.events);
-        setUserData(res.users);
+        const updatedEventData = res?.events.map((event: any) => ({
+          id: event.id,
+          image_url: event.image_url,
+          latitude: event.latitude,
+          longitude: event.longitude,
+          name: event.event_name,
+        }));
+
+        setEventData(updatedEventData);
+        setUserData(UserJson);
 
         // Group users by proximity
         const groupedUsers = groupUsersByProximity(
           UserJson,
           proximityThreshold,
         );
+
         const groupedEvents = groupUsersByProximity(
-          UserJson,
+          updatedEventData,
           proximityThreshold,
         );
         setUserGroups(groupedUsers);
@@ -205,6 +212,53 @@ const MapScreen = ({navigation}: any) => {
   const onFilter = () => {
     navigation.navigate(NavigationStrings.EventFilter);
   };
+
+  const handleProfilePress = (index: number) => {
+    console.log(index);
+  };
+
+  // Filter users by proximity based on map region
+  const filterUsersByMapRegion = (
+    users: any[],
+    mapRegion: {
+      latitude: any;
+      longitude: any;
+      latitudeDelta: any;
+      longitudeDelta: any;
+    },
+  ) => {
+    const {latitude, longitude, latitudeDelta, longitudeDelta} = mapRegion;
+
+    // Calculate the bounds of the visible region
+    const northBound = latitude + latitudeDelta / 2;
+    const southBound = latitude - latitudeDelta / 2;
+    const eastBound = longitude + longitudeDelta / 2;
+    const westBound = longitude - longitudeDelta / 2;
+
+    // Filter users within the bounds
+    return users.filter((user: any) => {
+      return (
+        user.latitude >= southBound &&
+        user.latitude <= northBound &&
+        user.longitude >= westBound &&
+        user.longitude <= eastBound
+      );
+    });
+  };
+
+  // Function for Get changed map Region
+  const onRegionChangeComplete = (region: any) => {
+    // Filter users based on the current map region
+    const filteredUsers = filterUsersByMapRegion(
+      activeBtn === 0 ? eventData : UserJson,
+      region,
+    );
+    setVisibleUsers(filteredUsers);
+  };
+
+  useEffect(() => {
+    getLocation();
+  }, []);
 
   return (
     <View style={styles.conatiner}>
@@ -252,8 +306,10 @@ const MapScreen = ({navigation}: any) => {
           <View style={{width: '18%'}} />
         </View>
         <MapView
+          onMarkerPress={props => console.log(props, 'aaaa')}
           style={styles.map}
-          region={userLocation ? initialRegion : undefined}>
+          region={userLocation ? initialRegion : undefined}
+          onRegionChangeComplete={onRegionChangeComplete}>
           {activeBtn === 0
             ? eventGroups.map((group, index) => {
                 // Calculate the center of the group
@@ -289,47 +345,35 @@ const MapScreen = ({navigation}: any) => {
                     <View
                       style={{
                         maxWidth: 100,
-                        height: 50,
-                        backgroundColor: Colors.white,
+                        width: '100%',
+                        height: '100%',
                         justifyContent: 'center',
-                        alignItems: 'center',
-                        elevation: 10,
-                        borderColor: Colors.darkPink,
-                        borderWidth: 1.4,
-                        borderRadius: 5,
+                        alignItems: 'flex-start',
                         shadowColor: 'rgba(0, 0, 0, 1)',
-                        shadowOpacity: 1,
-                        shadowRadius: 20,
+                        shadowOpacity: 0.6,
+                        shadowRadius: 10,
                         shadowOffset: {
-                          height: 5,
-                          width: 5,
+                          height: 2,
+                          width: 2,
                         },
+                        elevation: 10,
                       }}>
-                      {/* Render user images inside marker */}
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          flexWrap: 'wrap',
-                          overflow: 'hidden',
-                        }}>
-                        <FlatList
-                          horizontal
-                          data={images}
-                          renderItem={({item, index}) => {
-                            return (
-                              <Image
-                                key={index}
-                                source={{uri: IMAGE_URL + item}}
-                                style={{
-                                  width: 33.3,
-                                  height: 50,
-                                  margin: 1,
-                                }}
-                              />
-                            );
+                      {images.map((item: string, index: number) => (
+                        <Image
+                          key={index}
+                          source={{uri: IMAGE_URL + item}}
+                          style={{
+                            width: 33.3,
+                            height: 50,
+                            marginLeft: index * 50, // Add spacing to stack towards the right
+                            position: 'absolute', // Stack images
+                            borderColor: Colors.midDarkPink,
+                            borderWidth: 2,
+                            borderRadius: 5,
+                            zIndex: 10000,
                           }}
                         />
-                      </View>
+                      ))}
                     </View>
                   </Marker>
                 );
@@ -362,53 +406,40 @@ const MapScreen = ({navigation}: any) => {
                       latitude: avgLatitude,
                       longitude: avgLongitude,
                     }}
-                    title={`Group of ${group.length}`}
                     description={names.join(', ')} // Show names in the marker's description
                   >
                     <View
                       style={{
                         maxWidth: 100,
-                        height: 50,
-                        backgroundColor: Colors.white,
+                        width: '100%',
+                        height: '100%',
                         justifyContent: 'center',
-                        alignItems: 'center',
-                        elevation: 10,
-                        borderColor: Colors.darkPink,
-                        borderWidth: 1.4,
-                        borderRadius: 5,
+                        alignItems: 'flex-start',
                         shadowColor: 'rgba(0, 0, 0, 1)',
-                        shadowOpacity: 1,
-                        shadowRadius: 20,
+                        shadowOpacity: 0.6,
+                        shadowRadius: 10,
                         shadowOffset: {
-                          height: 5,
-                          width: 5,
+                          height: 2,
+                          width: 2,
                         },
+                        elevation: 10,
                       }}>
-                      {/* Render user images inside marker */}
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          flexWrap: 'wrap',
-                          overflow: 'hidden',
-                        }}>
-                        <FlatList
-                          horizontal
-                          data={images}
-                          renderItem={({item, index}) => {
-                            return (
-                              <Image
-                                key={index}
-                                source={{uri: IMAGE_URL + item}}
-                                style={{
-                                  width: 33.3,
-                                  height: 50,
-                                  margin: 1,
-                                }}
-                              />
-                            );
+                      {images.map((item: string, index: number) => (
+                        <Image
+                          key={index}
+                          source={{uri: IMAGE_URL + item}}
+                          style={{
+                            width: 40,
+                            height: 50,
+                            marginLeft: index * 25, // Add spacing to stack towards the right
+                            position: 'absolute', // Stack images
+                            borderColor: Colors.midDarkPink,
+                            borderWidth: 2,
+                            borderRadius: 5,
+                            zIndex: 10000,
                           }}
                         />
-                      </View>
+                      ))}
                     </View>
                   </Marker>
                 );
@@ -421,8 +452,7 @@ const MapScreen = ({navigation}: any) => {
             />
           )}
         </MapView>
-
-        {activeBtn == 0 ? (
+        {activeBtn === 0 && visibleUsers.length > 0 && (
           <View
             style={[
               styles.bottomContainer,
@@ -482,7 +512,8 @@ const MapScreen = ({navigation}: any) => {
               contentContainerStyle={{flexGrow: 1, zIndex: 300}}
             />
           </View>
-        ) : (
+        )}
+        {activeBtn === 1 && visibleUsers.length > 0 && (
           <View
             style={[
               styles.bottomContainer,
@@ -513,31 +544,33 @@ const MapScreen = ({navigation}: any) => {
             </View>
             <SizeBox size={5} />
             <FlatList
-              data={userData}
+              data={visibleUsers}
               keyExtractor={(item, index) => index?.toString()}
-              renderItem={({item, index}) => (
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() => {
-                    navigation.navigate(NavigationStrings.OtherProfiles, {
-                      id: item?.id,
-                    });
-                  }}>
-                  {item?.image_url ? (
-                    <ImageComponent
-                      source={{
-                        uri: IMAGE_URL + item?.image_url,
-                      }}
-                      style={styles.img}
-                    />
-                  ) : (
-                    <ImageComponent
-                      source={ImagePath.ProfileImg}
-                      style={styles.img}
-                    />
-                  )}
-                </TouchableOpacity>
-              )}
+              renderItem={({item, index}) => {
+                return (
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      navigation.navigate(NavigationStrings.OtherProfiles, {
+                        id: '66a8d782925228f4396361f9',
+                      });
+                    }}>
+                    {item?.image_url ? (
+                      <ImageComponent
+                        source={{
+                          uri: IMAGE_URL + item?.image_url,
+                        }}
+                        style={styles.img}
+                      />
+                    ) : (
+                      <ImageComponent
+                        source={ImagePath.ProfileImg}
+                        style={styles.img}
+                      />
+                    )}
+                  </TouchableOpacity>
+                );
+              }}
               horizontal={true}
               contentContainerStyle={{flexGrow: 1, zIndex: 300}}
             />

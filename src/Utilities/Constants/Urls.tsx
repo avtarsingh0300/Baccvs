@@ -11,6 +11,7 @@ export const OTP_MATCH = getApiUrl('verify-otp');
 export const USER_DATA = getApiUrl('user-details');
 export const REGISTER_USER = getApiUrl('create-user');
 export const GET_HOME_DATA = getApiUrl('home-data');
+export const GET_HOME_FILTER_DATA = getApiUrl('home-data-filter');
 export const GET_MY_EVENT = getApiUrl('my-events');
 export const UPDATE_USER_PROFILE = getApiUrl('update-User-Details');
 export const GET_FOLLOWER_LIST = getApiUrl('follower-list');

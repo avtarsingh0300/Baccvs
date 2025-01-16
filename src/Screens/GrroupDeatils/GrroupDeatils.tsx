@@ -1,3 +1,4 @@
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   Image,
@@ -8,36 +9,35 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {Colors} from '../../Utilities/Styles/colors';
-import {
-  height,
-  moderateScale,
-  moderateScaleVertical,
-  width,
-} from '../../Utilities/Styles/responsiveSize';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useSelector} from 'react-redux';
 import {
   Loadingcomponent,
   showError,
   SizeBox,
 } from '../../Utilities/Component/Helpers';
-import ImagePath from '../../Utilities/Constants/ImagePath';
-import commonStyles from '../../Utilities/Styles/commonStyles';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import {
   disLikeTeam,
   likeTeam,
   teamsDetails,
 } from '../../Utilities/Constants/auth';
+import ImagePath from '../../Utilities/Constants/ImagePath';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
-import {useSelector} from 'react-redux';
+import {Colors} from '../../Utilities/Styles/colors';
+import commonStyles from '../../Utilities/Styles/commonStyles';
+import {
+  height,
+  moderateScale,
+  moderateScaleVertical,
+  width,
+} from '../../Utilities/Styles/responsiveSize';
 
 const GrroupDeatils = ({navigation, route}: any) => {
   const [musicStyle, setMusicStyle] = useState([]);
-  const [teamData, setTeamData] = useState([]);
+  const [teamData, setTeamData] = useState<any>([]);
   const [loader, setLoader] = useState(false);
-  const user = useSelector((data: object) => data?.auth?.userData);
+  const user = useSelector((data: any) => data?.auth?.userData);
 
   useEffect(() => {
     setLoader(true);
@@ -46,12 +46,12 @@ const GrroupDeatils = ({navigation, route}: any) => {
 
   const getDetails = () => {
     const data = {
-      groupId: route.params?.data?._id,
+      groupId: route.params?.data,
     };
     // console.log(data, 'data');
     teamsDetails(data)
-      .then(res => {
-        console.log(JSON.stringify(res), 'res in teamsDetails');
+      .then((res: any) => {
+        console.log(JSON.stringify(res.data), 'res in teamsDetails');
         setTeamData(res?.data);
         setLoader(false);
       })
@@ -69,7 +69,6 @@ const GrroupDeatils = ({navigation, route}: any) => {
       groupId: teamData?._id,
       // type: type,
     };
-    // console.log(type, 'type');
     disLikeTeam(data)
       .then(res => {
         getDetails();
@@ -104,7 +103,6 @@ const GrroupDeatils = ({navigation, route}: any) => {
       style={{
         flex: 1,
         backgroundColor: Colors.backgroundNew,
-        // paddingHorizontal: moderateScale(22),
       }}>
       <SafeAreaView>
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -145,7 +143,12 @@ const GrroupDeatils = ({navigation, route}: any) => {
           <SizeBox size={10} />
           <Text style={[styles.label, {}]}>Pictures & Videos</Text>
           <SizeBox size={10} />
-          <Image source={ImagePath.ProfileImg} style={styles.midImage} />
+          {teamData?.image?.length > 0 && (
+            <Image
+              source={{uri: IMAGE_URL + teamData?.image[0]}}
+              style={styles.midImage}
+            />
+          )}
           <SizeBox size={15} />
           <Text style={styles.label}>Who are we?</Text>
           <SizeBox size={6} />
@@ -210,7 +213,7 @@ const GrroupDeatils = ({navigation, route}: any) => {
               width: '100%',
               paddingHorizontal: moderateScale(20),
             }}
-            renderItem={({item}) => {
+            renderItem={({item}: any) => {
               if (!item) {
                 return null;
               }

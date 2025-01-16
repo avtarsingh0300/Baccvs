@@ -17,6 +17,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Modal from 'react-native-modal';
 import Swiper from 'react-native-swiper';
 import {useSelector} from 'react-redux';
+import {saveHomeScreenData} from '../../Redux/Action/homScreenActions';
 import {
   Drawer,
   ImageComponent,
@@ -50,12 +51,17 @@ const HomeScreen = ({navigation}: any) => {
   const [week, setWeek] = useState(0);
   const [modalVisible, SetModalVisible] = useState(false);
   const [loading, SetLoading] = useState(false);
-  const [eventData, SetEventData] = useState([]);
   const [memberData, SetMemberData] = useState([]);
   const [selectedOption, setSelectedOption] = useState('all');
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
+
   const user = useSelector((data: any) => data?.auth?.userData?.user);
+  const data = useSelector((data: any) => data?.homeScreen?.eventData); // Home Screen Data from Redux
+  const isEventsFiltered = useSelector(
+    (data: any) => data?.homeScreen?.isFlterApplied,
+  );
+
   // console.log(user, 'user');
   // const userId = user?.id;
   // const socket = io('http://13.48.250.217:3003/', {
@@ -100,11 +106,12 @@ const HomeScreen = ({navigation}: any) => {
       });
     });
   }, [week]);
+
   const showDrawer = () => {
     SetModalVisible(!modalVisible);
   };
   const onFilter = () => {
-    navigation.navigate(NavigationStrings.EventFilter);
+    navigation.navigate(NavigationStrings.EventFilter, {lat, lon});
   };
   const onNoti = () => {
     navigation.navigate(NavigationStrings.Notification);
@@ -115,12 +122,12 @@ const HomeScreen = ({navigation}: any) => {
   const onMapPress = () => {
     navigation.navigate(NavigationStrings.MapScreen);
   };
+
   const onLikePress = (id: string) => {
     const data = {
       user_id: user?.id,
       event_id: id,
     };
-    console.log(data);
     likeEvents(data)
       .then(res => {
         getdata2(lat, lon);
@@ -132,41 +139,6 @@ const HomeScreen = ({navigation}: any) => {
       });
   };
 
-  useEffect(() => {
-    const requestLocationPermission = async () => {
-      if (Platform.OS === 'android') {
-        try {
-          const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-            {
-              title: 'Location Permission',
-              message: 'This app needs access to your location',
-              buttonNeutral: 'Ask Me Later',
-              buttonNegative: 'Cancel',
-              buttonPositive: 'OK',
-            },
-          );
-          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            getLocation();
-          } else {
-            console.log('Location permission denied');
-          }
-        } catch (err) {
-          console.warn(err);
-        }
-      } else if (Platform.OS === 'ios') {
-        // Geolocation.requestAuthorization();
-        getLocation();
-      }
-    };
-    const _unsubscribe = navigation.addListener('focus', () => {
-      requestLocationPermission();
-    });
-    return () => {
-      _unsubscribe();
-    };
-  }, []);
-
   const getLocation = () => {
     Geolocation.getCurrentPosition(
       (position: any) => {
@@ -174,13 +146,7 @@ const HomeScreen = ({navigation}: any) => {
         setLocation(position);
         setLat(position.coords.latitude);
         setLon(position.coords.longitude);
-        setTimeout(() => {
-          getdata(
-            position.coords.latitude,
-            position.coords.longitude,
-            'selectedOption',
-          );
-        }, 500);
+        SetLoading(false);
       },
       error => {
         SetLoading(false);
@@ -191,13 +157,13 @@ const HomeScreen = ({navigation}: any) => {
       },
     );
   };
+
   const getdata = (lat: any, long: any, status: any) => {
     SetLoading(true);
     getHomedata(lat, long, status ? status : selectedOption)
       .then((res: any) => {
         SetLoading(false);
-        SetEventData(res.events);
-
+        saveHomeScreenData(res.events);
         SetMemberData(res.events.members);
       })
       .catch(err => {
@@ -211,7 +177,7 @@ const HomeScreen = ({navigation}: any) => {
     getHomedata(lat, long, selectedOption)
       .then((res: any) => {
         SetLoading(false);
-        SetEventData(res.events);
+        saveHomeScreenData(res.events);
         SetMemberData(res.events.members);
       })
       .catch(err => {
@@ -468,6 +434,47 @@ const HomeScreen = ({navigation}: any) => {
     );
   };
 
+  useEffect(() => {
+    const requestLocationPermission = async () => {
+      if (Platform.OS === 'android') {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            {
+              title: 'Location Permission',
+              message: 'This app needs access to your location',
+              buttonNeutral: 'Ask Me Later',
+              buttonNegative: 'Cancel',
+              buttonPositive: 'OK',
+            },
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            getLocation();
+          } else {
+            console.log('Location permission denied');
+          }
+        } catch (err) {
+          console.warn(err);
+        }
+      } else if (Platform.OS === 'ios') {
+        // Geolocation.requestAuthorization();
+        getLocation();
+      }
+    };
+    const _unsubscribe = navigation.addListener('focus', () => {
+      requestLocationPermission();
+    });
+    return () => {
+      _unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isEventsFiltered && lat && lon && selectedOption) {
+      getdata(lat, lon, selectedOption);
+    }
+  }, [lat, lon, isEventsFiltered, selectedOption]);
+
   return (
     <View style={styles.LinearConatiner}>
       <SafeAreaView>
@@ -569,7 +576,7 @@ const HomeScreen = ({navigation}: any) => {
         </View>
         <View style={styles.datevw}>
           <Text style={styles.date}>
-            {moment(value).format('DD MMMM YYYY')} ({eventData?.length})
+            {moment(value).format('DD MMMM YYYY')} ({data?.length})
           </Text>
           <TouchableOpacity
             style={[
@@ -587,7 +594,7 @@ const HomeScreen = ({navigation}: any) => {
             </Text>
           </TouchableOpacity>
         </View>
-        {eventData?.length > 0 ? (
+        {data?.length > 0 ? (
           <FlatList
             showsVerticalScrollIndicator={false}
             style={{
@@ -596,7 +603,7 @@ const HomeScreen = ({navigation}: any) => {
               marginBottom:
                 Platform.OS === 'android' ? height / 3.5 : height / 3.6,
             }}
-            data={eventData}
+            data={data}
             renderItem={renderItem}
             ListFooterComponent={() => <SizeBox size={10} />}
           />

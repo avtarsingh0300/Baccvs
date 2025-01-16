@@ -3,7 +3,7 @@ interface CommonInputProps {
   multiline?: boolean;
   secureTextEntry?: boolean;
   value?: string;
-  onChangeText?: Function;
+  onChangeText?: (text: string) => {};
   styless: object;
   keyboardType?:
     | 'default'

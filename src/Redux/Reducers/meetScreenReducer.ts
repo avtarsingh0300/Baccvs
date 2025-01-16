@@ -1,17 +1,18 @@
 import types from '../types';
 
 const initial_state = {
-  userData: {},
+  teamsDate: {},
+  users: {},
+  isFlterApplied: 0,
   internetConnection: false,
 };
 
 export default function (state = initial_state, action: any) {
   switch (action.type) {
-    case types.LOGIN: {
+    case types.SET_MEET_FILTERED: {
       const data = action.payload;
-      return {userData: data};
+      return {isFlterApplied: data};
     }
-
     case types.NO_INTERNET: {
       const internetConnection = action.payload.internetConnection;
       return {...state, internetConnection};

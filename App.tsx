@@ -130,6 +130,9 @@ useEffect(() => {
               fontFamily: fontFamily.time_regular,
               fontSize: textScale(12),
             }}
+            style={{
+              paddingTop: 40,
+            }}
             position="top"
           />
         </SafeAreaProvider>

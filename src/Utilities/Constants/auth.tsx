@@ -32,6 +32,7 @@ import {
   GET_FOLLOWER_LIST,
   GET_GROUP_PEOPLE,
   GET_HOME_DATA,
+  GET_HOME_FILTER_DATA,
   GET_INVITES,
   GET_LIKES_FOR_USER,
   GET_MEDIA_DETAILS,
@@ -372,6 +373,10 @@ export function getHomedata(
   return apiGet(
     `${GET_HOME_DATA}?filter=${selectedOption}&userLatitude=${latitude}&userLongitude=${longitude}&page=1&limit=50`,
   );
+}
+
+export function getHomedataWithFilters(filterData: any) {
+  return apiPost(`${GET_HOME_FILTER_DATA}?page=1&limit=50`, filterData);
 }
 
 export const setDataHandler = async (data: any) => {

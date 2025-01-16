@@ -15,6 +15,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Modal from 'react-native-modal';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {isMeetPeopleFilterApplied} from '../../Redux/Action/meetPeopleActions';
 import {
   getMusicTypeList,
   soloFilterData,
@@ -207,7 +208,19 @@ const MeetFilterModal = ({
   };
 
   const soloFilterHandler = () => {
-    if (activeIndex == 0) {
+    if (activeIndex === 0) {
+      if (!lat || !lon) {
+        showError('Location coordinates are required.');
+        return;
+      }
+      if (selectedDistance[1] === 0) {
+        showError('Please select a valid distance.');
+        return;
+      }
+      if (selectedAge[1] === 0) {
+        showError('Please specify a valid age range.');
+        return;
+      }
       const data = {
         userLatitude: lat.toString(),
         userLongitude: lon.toString(),
@@ -215,16 +228,21 @@ const MeetFilterModal = ({
         gender: interestedIn,
         min_age: selectedAge[0],
         max_age: selectedAge[1],
-        smoking: smoking,
-        drinking: drinking,
-        zodiac_sign: '',
-        music_type: musicStyle[0]?._id,
-        language: selectedLanguage,
+        smoking: smoking.toLowerCase(),
+        drinking: drinking.toLowerCase(),
+        zodiac_sign: selectedAstroSigns
+          .map(sign => sign.name.toLowerCase())
+          .join(','),
+        music_type: selectedMusicTypes.map(music => music._id).join(','),
+        language: selectedLanguage
+          .map(lang => lang.name.toLowerCase())
+          .join(','),
       };
-      // console.log(data, 'data');
+
       soloFilterData(data)
         .then((res: any) => {
           console.log(res, 'res in soloFilterData');
+          isMeetPeopleFilterApplied(1);
           setUserData(res?.data);
           setShowModal(false);
         })
@@ -234,13 +252,16 @@ const MeetFilterModal = ({
         });
     } else {
       const data = {
-        music_type: musicStyle[0]?._id,
-        language: selectedLanguage,
-        capacity: '2',
+        music_type: selectedMusicTypes.map(music => music._id).join(','),
+        language: selectedLanguage
+          .map(lang => lang.name.toLowerCase())
+          .join(','),
+        capacity: selectCap,
       };
       teamFilterData(data)
         .then((res: any) => {
           console.log(JSON.stringify(res), 'res in teamFilterData');
+          isMeetPeopleFilterApplied(2);
           setGroupData(res?.groups);
           setShowModal(false);
         })
@@ -258,6 +279,8 @@ const MeetFilterModal = ({
     setDrinking('Sometimes');
     setInterestedIn('Everyone');
     setSelectedLanguage([languageData[0]]);
+    isMeetPeopleFilterApplied(0);
+    setShowModal(false);
   };
 
   const getLocation = () => {
@@ -933,7 +956,7 @@ const MeetFilterModal = ({
               <TouchableOpacity
                 activeOpacity={0.8}
                 style={styles.btn}
-                onPress={() => soloFilterHandler()}>
+                onPress={soloFilterHandler}>
                 <Text
                   style={{...commonStyles.font16Regular, color: Colors.Pink}}>
                   Apply
