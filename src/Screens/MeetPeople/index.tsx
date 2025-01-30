@@ -61,7 +61,7 @@ const MeetPeople = ({navigation}: any) => {
         );
 
         if (userData?.length == 0) {
-          setCurrentImage(res?.data.reverse()[0]);
+          setCurrentImage(res?.data[0]);
         } else {
           const filterData = res?.data?.filter(
             (x: any) => currentImage?._id == x?._id,
@@ -503,8 +503,7 @@ const MeetPeople = ({navigation}: any) => {
                           {...dragHandlers}
                         />
                       );
-                    })
-                    .reverse()}
+                    })}
                 </View>
               ) : (
                 <View
