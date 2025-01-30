@@ -1,20 +1,60 @@
 import {
+  PaymentComplete,
+  PaymentMethodNameEnum,
+  PaymentRequest,
+  SupportedNetworkEnum,
+} from '@rnw-community/react-native-payments';
+import moment from 'moment';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {
+  ActivityIndicator,
   Alert,
+  Animated,
   FlatList,
+  GestureResponderEvent,
   Image,
   ImageBackground,
+  PermissionsAndroid,
+  Platform,
+  Pressable,
   SafeAreaView,
+  ScrollView,
   Share,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
-import {styles} from './styles';
-import {Colors} from '../../Utilities/Styles/colors';
+import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import LinearGradient from 'react-native-linear-gradient';
+import MapView, {Marker} from 'react-native-maps';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import Sound from 'react-native-sound';
+import Video from 'react-native-video';
+import {useSelector} from 'react-redux';
+import {
+  Loadingcomponent,
+  SizeBox,
+  showError,
+  showSuccess,
+} from '../../Utilities/Component/Helpers';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
+import {
+  buyEventTicket,
+  createCommets,
+  deleteComment,
+  editComment,
+  getEventDetail,
+  getEventTicketDetails,
+  likeEvents,
+} from '../../Utilities/Constants/auth';
 import ImagePath from '../../Utilities/Constants/ImagePath';
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
+import {IMAGE_URL} from '../../Utilities/Constants/Urls';
+import {formatTimeRange} from '../../Utilities/Helpers';
+import {Colors} from '../../Utilities/Styles/colors';
+import commonStyles from '../../Utilities/Styles/commonStyles';
+import fontFamily from '../../Utilities/Styles/fontFamily';
 import {
   height,
   moderateScale,
@@ -22,26 +62,142 @@ import {
   textScale,
   width,
 } from '../../Utilities/Styles/responsiveSize';
-import RBSheet from 'react-native-raw-bottom-sheet';
-import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
-import {TextInput} from 'react-native';
-import {
-  Loadingcomponent,
-  SizeBox,
-  showError,
-} from '../../Utilities/Component/Helpers';
-import MapView, {Marker} from 'react-native-maps';
-import {getEventDetail} from '../../Utilities/Constants/auth';
-import {IMAGE_URL} from '../../Utilities/Constants/Urls';
-// import {EventEmitter} from 'react-native';
+import {styles} from './styles';
+// const videoUrls = [
+//   'storage/userdata/1732170121213-video_0.mp4',
+//   'storage/userdata/1734587471660-video_0.mp4',
+//   'storage/userdata/1732170121213-video_0.mp4',
+// ];
+
 const EventDetails = ({navigation, route}: any) => {
   const refRBSheet: any = useRef();
   const refComRBSheet: any = useRef();
   const refInfoRBSheet: any = useRef();
   const refPeopleRBSheet: any = useRef();
   const refMapRBSheet: any = useRef();
+  const refTicketsRBSheet: any = useRef();
+  const now = moment();
+
+  const user = useSelector((data: any) => data?.auth?.userData);
+
   const [loading, setLoading] = useState(false);
-  const [eventData, setEventData] = useState({});
+
+  const [eventData, setEventData] = useState<any>({});
+  const [isEventUpcoming, setIsEventUpcoming] = useState(false);
+
+  const [ticketData, setTicketData] = useState<any>([]);
+  const [commentvalue, setCommentValue] = useState('');
+  const [commentid, setCommentId] = useState('');
+
+  //Tickets
+  const [freeTickets, setFreeTickets] = useState(0);
+  const [earlyTickets, setEarlyTickets] = useState(0);
+  const [regularTickets, setRegularTickets] = useState(1);
+  const [lateTickets, setLateTickets] = useState(0);
+  const [totalTicketPrice, setTotalTicketPrice] = useState(0);
+
+  const [availableTicket, setAvailableTicket] = useState({
+    free: {quantity: null, price: null, id: null},
+    early: {quantity: null, price: null, id: null},
+    regular: {quantity: null, price: null, id: null},
+    late: {quantity: null, price: null, id: null},
+  });
+
+  const changeInFreeTickets = (type: 'inc' | 'dec') => {
+    if (type === 'inc') {
+      if (
+        availableTicket.free.quantity &&
+        freeTickets < availableTicket.free.quantity
+      ) {
+        setFreeTickets(pre => pre + 1);
+      }
+    } else {
+      if (freeTickets > 0) {
+        setFreeTickets(pre => pre - 1);
+      }
+    }
+  };
+
+  const changeInEarlyTickets = (type: 'inc' | 'dec') => {
+    if (type === 'inc') {
+      if (
+        availableTicket.early.quantity &&
+        earlyTickets < availableTicket.early.quantity
+      ) {
+        setEarlyTickets(pre => pre + 1);
+      }
+    } else {
+      if (earlyTickets > 0) {
+        setEarlyTickets(pre => pre - 1);
+      }
+    }
+  };
+
+  const changeInRegularTickets = (type: 'inc' | 'dec') => {
+    if (type === 'inc') {
+      if (
+        availableTicket.regular.quantity &&
+        regularTickets < availableTicket.regular.quantity
+      ) {
+        setRegularTickets(pre => pre + 1);
+      }
+    } else {
+      if (regularTickets > 0) {
+        setRegularTickets(pre => pre - 1);
+      }
+    }
+  };
+
+  const changeInLateTickets = (type: 'inc' | 'dec') => {
+    if (type === 'inc') {
+      if (
+        availableTicket.late.quantity &&
+        lateTickets < availableTicket.late.quantity
+      ) {
+        setLateTickets(pre => pre + 1);
+      }
+    } else {
+      if (lateTickets > 0) {
+        setLateTickets(pre => pre - 1);
+      }
+    }
+  };
+
+  const getTotalTicketsPrice = () => {
+    const earlyTicketPrices =
+      earlyTickets *
+      (availableTicket?.early?.price! ? availableTicket?.early?.price : 0);
+    const regularTicketPrices =
+      regularTickets *
+      (availableTicket?.regular?.price! ? availableTicket?.regular?.price : 0);
+    const lateTicketPrices =
+      lateTickets *
+      (availableTicket?.late?.price! ? availableTicket?.late?.price : 0);
+
+    return earlyTicketPrices + regularTicketPrices + lateTicketPrices;
+  };
+
+  // Video Stories
+  const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
+  const progressAnim = useRef(new Animated.Value(0)).current;
+  const currentStory = eventData?.video_urls?.[currentStoryIndex];
+  const pausedProgress = useRef(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [currentDuration, setCurrentDuration] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Audio Recording
+  const [recordTime, setRecordTime] = useState('00:00:00');
+  const [recordPath, setRecordPath] = useState('');
+  const [isRecording, setIsRecording] = useState(false);
+  const audioRecorderPlayer = useRef(new AudioRecorderPlayer()).current;
+
+  const [currentlyPlaying, setCurrentlyPlaying] = useState(null); // Stores the currently playing audio's URL
+  const [soundInstance, setSoundInstance] = useState(null); // Tracks the Sound instance
+  const [currentTime, setCurrentTime] = useState(0); // Tracks the current playback time
+  const [duration, setDuration] = useState(0); // Tracks the duration of the current audio
+  const [audioDurations, setAudioDurations] = useState<any>({});
+  const intervalRef = useRef(null);
 
   const onPressBack = () => {
     navigation.goBack();
@@ -67,92 +223,229 @@ const EventDetails = ({navigation, route}: any) => {
   const onReport = () => {
     navigation.navigate(NavigationStrings.Report);
   };
-  const likeData = [
-    {
-      id: 0,
-      name: 'Julie C.',
-    },
-    {
-      id: 1,
-      name: 'Anonymous',
-    },
-    {
-      id: 2,
-      name: 'Julius O.',
-    },
-    {
-      id: 3,
-      name: 'Esteban I.',
-    },
-    {
-      id: 4,
-      name: 'Lucia E.',
-    },
-  ];
-
-  useEffect(() => {
-    getEvent();
-  }, []);
 
   const getEvent = () => {
     setLoading(true);
     getEventDetail(route.params.eventId)
-      .then(res => {
+      .then((res: any) => {
         setLoading(false);
-        setEventData(res);
+        const eventStartDateTime = moment(
+          `${res.date} ${res.start_time}`,
+          'YYYY-MM-DD HH:mm:ss',
+        );
 
-        console.log(res, 'sss');
+        setIsEventUpcoming(eventStartDateTime.isAfter(now));
+        setEventData(res);
       })
       .catch(err => {
         setLoading(false), showError(err.message), console.log(err);
       });
   };
-  const formatTime = (timeString: string) => {
-    const date = new Date(`1970-01-01T${timeString}Z`);
-    return date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+
+  const getEventTicketData = () => {
+    setLoading(true);
+    getEventTicketDetails(route.params.eventId)
+      .then((res: any) => {
+        // Process ticket data
+        const ticketCounts = res.ticket.reduce(
+          (acc: any, ticket: any) => {
+            if (ticket.status === 'available_for_sell') {
+              const {ticketType, quantity, price, _id} = ticket;
+
+              if (!acc[ticketType]) {
+                // Initialize if not already present
+                acc[ticketType] = {
+                  quantity: null,
+                  price: null,
+                  id: null,
+                };
+              }
+
+              // Update values for the ticket type
+              acc[ticketType].quantity += quantity;
+              acc[ticketType].price = price; // Assuming one price per type
+              acc[ticketType].id = _id; // Add ticket ID
+            }
+
+            return acc;
+          },
+          {
+            free: {quantity: null, price: null, id: null},
+            early: {quantity: null, price: null, id: null},
+            regular: {quantity: null, price: null, id: null},
+            late: {quantity: null, price: null, id: null},
+          },
+        );
+
+        // Update state with ticket data
+        setAvailableTicket(ticketCounts);
+        setTicketData(res.ticket);
+      })
+      .catch(err => {
+        setLoading(false), showError(err.message), console.log(err);
+      });
   };
 
-  const calculateDuration = (startTime: string, endTime: string) => {
-    if (startTime !== '' || (undefined && endTime !== '') || undefined) {
-      const startDate: any = new Date(`1970-01-01T${startTime}Z`);
-      const endDate: any = new Date(`1970-01-01T${endTime}Z`);
-      const diffMs = endDate - startDate;
-      const diffHrs = Math.floor(diffMs / 3600000);
-      const diffMins = Math.round((diffMs % 3600000) / 60000);
-      return `${diffHrs}h ${diffMins}m`;
+  const getEvent2 = () => {
+    setLoading(false);
+    getEventDetail(route.params.eventId)
+      .then(res => {
+        setLoading(false);
+        setEventData(res);
+      })
+      .catch(err => {
+        setLoading(false), showError(err.message), console.log(err);
+      });
+  };
+
+  const onSendComments = (recordedAudio?: any, description?: string) => {
+    if (
+      description?.trim().length === 0 ||
+      recordedAudio?.trim().length === 0
+    ) {
+      showError('Please type a comment or record a voice message');
+      return;
+    }
+    const formData = new FormData();
+    let data;
+    if (commentid) {
+      data = {
+        id: commentid,
+        user_id: user?.user?.id,
+        event_id: route?.params?.eventId,
+        description: commentvalue,
+      };
+    } else {
+      // formData.append('id', commentid);
+      formData.append('user_id', user?.user?.id);
+      formData.append('event_id', route?.params?.eventId);
+
+      if (recordedAudio && recordedAudio?.length > 0) {
+        let audioUri = recordedAudio;
+
+        // Remove 'file://' prefix for iOS
+        if (Platform.OS === 'ios' && audioUri.startsWith('file://')) {
+          audioUri = audioUri.substring(7);
+        }
+
+        formData.append('audio', {
+          uri: Platform.OS === 'ios' ? audioUri : recordedAudio,
+          name: 'audio.m4a',
+          type: 'audio/m4a',
+        });
+      } else {
+        if (description) {
+          formData.append('description', description);
+        }
+      }
+    }
+    if (commentid?.length > 0) {
+      editComment(data)
+        .then((_res: any) => {
+          showSuccess(_res?.message);
+          setCommentValue('');
+          setCommentId('');
+          getEvent2();
+        })
+        .catch(err => {
+          setCommentValue('');
+          setCommentId('');
+          showError(err?.msg);
+        })
+        .finally(() => setRecordPath(''));
+    } else {
+      createCommets(formData)
+        .then((res: any) => {
+          showSuccess(res?.message);
+          setCommentValue('');
+          setCommentId('');
+          getEvent2();
+        })
+        .catch(err => {
+          setCommentValue('');
+          setCommentId('');
+          showError(err?.msg);
+          console.log(err);
+        })
+        .finally(() => setRecordPath(''));
     }
   };
+
+  const onLikePress = () => {
+    const data = {
+      user_id: user?.user?.id,
+      event_id: route?.params?.eventId,
+    };
+    console.log(data);
+    likeEvents(data)
+      .then(res => {
+        getEvent2();
+        console.log(res);
+      })
+      .catch(err => {
+        showError(err?.msg);
+        console.log(err);
+      });
+  };
+
+  const onDeletePress = (id: string) => {
+    deleteComment(id)
+      .then((_res: any) => {
+        console.log(_res, 'SSS');
+        if (_res.status === 200) {
+          showSuccess(_res.message);
+        }
+        getEvent2();
+      })
+      .catch(err => {
+        showError(err?.msg);
+        console.log(err);
+      });
+  };
+
+  const onEditPress = (item: any) => {
+    setCommentId(item?.id);
+    setCommentValue(item?.description);
+  };
+
   const initialRegion = {
     latitude: eventData.latitude ? eventData.latitude : 37.78825,
     longitude: eventData.longitude ? eventData.longitude : -122.4324,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   };
-  const renderItem = ({item, index}: any) => (
-    <View style={styles.itemContainer}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        {item?.user?.image ? (
-          <Image
-            source={{uri: IMAGE_URL + item?.user?.image}}
-            style={{
-              borderWidth: 1,
-              borderRadius: 8,
-              borderColor: Colors.Pink,
-              width: 40,
-              height: 47,
-            }}
-          />
-        ) : (
-          <Image
-            source={ImagePath.followProfile}
-            style={{borderWidth: 1, borderRadius: 8, borderColor: Colors.Pink}}
-          />
-        )}
-        <Text style={[styles.distanceText, {marginLeft: 10}]}>
-          {item?.user?.name}
-        </Text>
-      </View>
-      {/* <TouchableOpacity activeOpacity={0.8}>
+
+  // Rendeer Users Who liked
+  const renderItem = ({item, index}: any) => {
+    return (
+      <View style={styles.itemContainer}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          {item?.user?.image ? (
+            <Image
+              source={{uri: IMAGE_URL + item?.user?.image}}
+              style={{
+                borderWidth: 1,
+                borderRadius: 8,
+                borderColor: Colors.Pink,
+                width: 40,
+                height: 47,
+              }}
+            />
+          ) : (
+            <Image
+              source={ImagePath.followProfile}
+              style={{
+                borderWidth: 1,
+                borderRadius: 8,
+                borderColor: Colors.Pink,
+              }}
+            />
+          )}
+          <Text style={[styles.distanceText, {marginLeft: 10}]}>
+            {item?.user?.name}
+          </Text>
+        </View>
+        {/* <TouchableOpacity activeOpacity={0.8}>
         <LinearGradient
           colors={[Colors.LinearBlack, Colors.Pink]}
           style={{
@@ -163,39 +456,169 @@ const EventDetails = ({navigation, route}: any) => {
           <Text style={styles.timeText}>Follow</Text>
         </LinearGradient>
       </TouchableOpacity> */}
-    </View>
-  );
-  const comItem = ({item, index}: any) => (
-    <View style={styles.itemContainer}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        {item?.user?.image ? (
-          <Image
-            source={{uri: IMAGE_URL + item?.user?.image}}
-            style={{
-              borderWidth: 1,
-              borderRadius: 8,
-              borderColor: Colors.Pink,
-              width: 40,
-              height: 47,
-            }}
-          />
-        ) : (
-          <Image
-            source={ImagePath.followProfile}
-            style={{borderWidth: 1, borderRadius: 8, borderColor: Colors.Pink}}
-          />
-        )}
-        <View>
-          <Text style={[styles.distanceText, {marginLeft: 10}]}>
-            {item?.user?.name}
-          </Text>
-          <Text style={[styles.cmttxt, {marginLeft: 10}]}>
-            {item?.description}
-          </Text>
-        </View>
       </View>
-    </View>
-  );
+    );
+  };
+
+  // Play/Pause handler for each audio
+  const handlePlayPause = (audioPath: string) => {
+    if (currentlyPlaying === audioPath) {
+      // If the same audio is clicked, pause it
+      soundInstance?.pause();
+      setCurrentlyPlaying(null);
+      clearInterval(intervalRef.current); // Stop updating time
+    } else {
+      // If a different audio is clicked, stop the previous one
+      if (soundInstance) {
+        soundInstance.stop(() => {
+          soundInstance.release();
+        });
+        clearInterval(intervalRef.current); // Stop updating time
+      }
+
+      // Load and play the new audio
+      const sound = new Sound(audioPath, null, error => {
+        if (error) {
+          console.error('Failed to load sound:', error);
+          return;
+        }
+
+        // Play the audio
+        setCurrentlyPlaying(audioPath);
+        setSoundInstance(sound);
+        setDuration(sound.getDuration()); // Set the duration of the audio
+        setCurrentTime(0); // Reset the playback time
+
+        sound.play(success => {
+          if (success) {
+            console.log('Playback finished successfully');
+          } else {
+            console.error('Playback failed');
+          }
+
+          // Cleanup after playback ends
+          setCurrentlyPlaying(null);
+          setCurrentTime(0);
+          clearInterval(intervalRef.current);
+          sound.release();
+        });
+      });
+
+      // Start updating the playback time
+      intervalRef.current = setInterval(() => {
+        sound.getCurrentTime(seconds => {
+          setCurrentTime(seconds);
+        });
+      }, 500);
+    }
+  };
+
+  // Format time to mm:ss
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes.toString().padStart(2, '0')}:${secs
+      .toString()
+      .padStart(2, '0')}`;
+  };
+
+  // Render UsersWho commented
+  const comItem = ({item, index}: any) => {
+    const audioPath = IMAGE_URL + item.audio;
+
+    return (
+      <View style={styles.itemContainer}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          {item?.user?.image ? (
+            <Image
+              source={{uri: IMAGE_URL + item?.user?.image}}
+              style={{
+                borderWidth: 1,
+                borderRadius: 8,
+                borderColor: Colors.Pink,
+                width: 40,
+                height: 47,
+              }}
+            />
+          ) : (
+            <Image
+              source={ImagePath.followProfile}
+              style={{
+                borderWidth: 1,
+                borderRadius: 8,
+                borderColor: Colors.Pink,
+              }}
+            />
+          )}
+          <View style={{gap: 3}}>
+            <Text style={[styles.distanceText, {marginLeft: 10, fontSize: 12}]}>
+              {item?.user?.name}
+            </Text>
+
+            {item.audio ? (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  gap: 5,
+                  alignItems: 'center',
+                  paddingHorizontal: 10,
+                }}>
+                {item.audio && (
+                  <TouchableOpacity onPress={() => handlePlayPause(audioPath)}>
+                    <VectorIcon
+                      groupName="Ionicons"
+                      name={
+                        currentlyPlaying === audioPath
+                          ? 'pause-circle-sharp'
+                          : 'caret-forward'
+                      }
+                      size={20}
+                      color={Colors.white}
+                    />
+                  </TouchableOpacity>
+                )}
+                <Text style={{color: 'white'}}>
+                  {audioDurations[audioPath]
+                    ? formatTime(audioDurations[audioPath])
+                    : ''}
+                </Text>
+              </View>
+            ) : (
+              <Text
+                numberOfLines={2}
+                style={[styles.cmttxt, {marginLeft: 10, width: width / 1.9}]}>
+                {item?.description}
+              </Text>
+            )}
+          </View>
+        </View>
+        {item?.userId === user?.user?.id ? (
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <VectorIcon
+              groupName="Octicons"
+              name="pencil"
+              size={15}
+              color={Colors.white}
+              style={{marginHorizontal: 15}}
+              onPress={() => onEditPress(item)}
+            />
+
+            <VectorIcon
+              groupName="MaterialCommunityIcons"
+              name="delete"
+              size={20}
+              onPress={() => onDeletePress(item?.id)}
+            />
+          </View>
+        ) : null}
+      </View>
+    );
+  };
+
   const renderMembers = ({item, index}: any) => (
     <View style={styles.itemContainer}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -216,323 +639,975 @@ const EventDetails = ({navigation, route}: any) => {
             style={{borderWidth: 1, borderRadius: 8, borderColor: Colors.Pink}}
           />
         )}
-        <Text style={[styles.distanceText, {marginLeft: 10}]}>
-          {item?.name}
-        </Text>
+        <Text style={[styles.distanceText, {marginLeft: 10}]}></Text>
       </View>
-      {/* <TouchableOpacity activeOpacity={0.8}>
-        <LinearGradient
-          colors={[Colors.LinearBlack, Colors.Pink]}
-          style={{
-            padding: 10,
-            paddingHorizontal: 20,
-            borderRadius: 10,
-          }}>
-          <Text style={styles.timeText}>Follow</Text>
-        </LinearGradient>
-      </TouchableOpacity> */}
     </View>
   );
-  const thumbnailUrl = eventData.thumbnail_urls?.[0];
+  const thumbnailUrl = eventData?.thumbnail_urls?.[0];
+
+  const renderHost = () => (
+    <View style={{paddingHorizontal: 15}}>
+      <Image
+        source={{uri: IMAGE_URL + eventData?.createdby?.image}}
+        style={{width: 44, height: 50, borderRadius: 5}}
+      />
+      <Text style={{...commonStyles.font12Regular, paddingTop: 5}}>
+        {eventData?.createdby?.name}
+      </Text>
+    </View>
+  );
+
+  const renderParticipants = ({item, index}: any) => (
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={() => {
+        refInfoRBSheet.current.close();
+        navigation.navigate(NavigationStrings.OtherProfiles, {
+          id: item?.id,
+        });
+      }}
+      style={{paddingHorizontal: 15, alignItems: 'center'}}>
+      <Image
+        source={{uri: IMAGE_URL + item.image}}
+        style={{width: 44, height: 50, borderRadius: 5}}
+      />
+      <Text style={{...commonStyles.font12Regular, paddingTop: 5}}>
+        {item.name}
+      </Text>
+    </TouchableOpacity>
+  );
+
+  // Video Sliding With Progress Bar
+  const renderVideoContent = (story: any) => {
+    return (
+      <Video
+        source={{uri: IMAGE_URL + story}}
+        resizeMode="cover"
+        style={{
+          height: height,
+          width: width,
+          zIndex: -100,
+          position: 'absolute',
+        }}
+        onBuffer={({isBuffering}) => setIsLoading(isBuffering)}
+        onLoad={meta => {
+          const newDuration = meta.duration * 1000;
+          if (newDuration !== currentDuration) {
+            setCurrentDuration(newDuration);
+          }
+        }}
+        paused={isLoading}
+      />
+    );
+  };
+
+  const getProgressBarWidth = (storyIndex: number, currentIndex: number) => {
+    if (currentIndex > storyIndex) {
+      return '100%';
+    } // this is when the Story has been viewed
+    if (currentIndex === storyIndex) {
+      return progressAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['0%', '100%'], // this is when the story is being viewed
+      });
+    }
+    return '0%'; // this is when the Story has not been viewed yet
+  };
+
+  const goToNextStory = useCallback(() => {
+    if (currentStoryIndex < eventData?.video_urls?.length - 1) {
+      setCurrentStoryIndex(prev => prev + 1);
+      progressAnim.setValue(0);
+      pausedProgress.current = 0;
+    } else {
+      restartStories();
+    }
+  }, [currentStoryIndex, progressAnim]);
+
+  const goToPreviousStory = useCallback(() => {
+    if (currentStoryIndex > 0) {
+      setCurrentStoryIndex(prev => prev - 1);
+      progressAnim.setValue(0);
+      pausedProgress.current = 0;
+    }
+  }, [currentStoryIndex, progressAnim]);
+
+  // Run progress animation
+  const runProgressAnimation = useCallback(() => {
+    if (currentDuration > 0 && !isLoading) {
+      progressAnim.setValue(pausedProgress.current); // Resume progress if paused
+      Animated.timing(progressAnim, {
+        toValue: 1,
+        duration: (1 - pausedProgress.current) * currentDuration,
+        useNativeDriver: false,
+      }).start(({finished}) => {
+        if (finished) {
+          goToNextStory();
+        }
+      });
+    }
+  }, [currentDuration, isLoading]);
+
+  const handleScreenTouch = (evt: GestureResponderEvent) => {
+    //this function takes the width and decided where the click was pressed if left or right
+    const touchX = evt.nativeEvent.pageX;
+
+    if (touchX < width / 2) {
+      goToPreviousStory();
+    } else {
+      goToNextStory();
+    }
+  };
+
+  // Restart stories from the beginning
+  const restartStories = useCallback(() => {
+    setIsPaused(true);
+    // setCurrentStoryIndex(0);
+    progressAnim.setValue(0);
+    pausedProgress.current = 0;
+    // setCurrentDuration(0);
+  }, [progressAnim]);
+
+  // Request Permissions For Microphone
+  const requestPermissions = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.requestMultiple([
+          PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        ]);
+        return (
+          granted['android.permission.RECORD_AUDIO'] ===
+            PermissionsAndroid.RESULTS.GRANTED &&
+          granted['android.permission.WRITE_EXTERNAL_STORAGE'] ===
+            PermissionsAndroid.RESULTS.GRANTED
+        );
+      } catch (err) {
+        console.warn(err);
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const onStartRecord = async () => {
+    const hasPermission = await requestPermissions();
+    if (!hasPermission) return;
+
+    const uri = await audioRecorderPlayer.startRecorder();
+    setIsRecording(true);
+    console.log(`Recording started: ${uri}`);
+
+    audioRecorderPlayer.addRecordBackListener(e => {
+      setRecordTime(audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)));
+    });
+  };
+
+  const onStopRecord = async () => {
+    const result = await audioRecorderPlayer.stopRecorder();
+    audioRecorderPlayer.removeRecordBackListener();
+    setIsRecording(false);
+    console.log(`Recording stopped: ${result}`);
+    setRecordPath(result);
+
+    if (result) {
+      onSendComments(result);
+    }
+  };
+
+  const handlePaymentSuccess = async () => {
+    let tickets = [];
+    if (freeTickets > 0) {
+      tickets.push({
+        ticketId: availableTicket.free.id,
+        quantity: freeTickets,
+      });
+    }
+
+    if (earlyTickets > 0) {
+      tickets.push({
+        ticketId: availableTicket.early.id,
+        quantity: earlyTickets,
+      });
+    }
+
+    if (regularTickets > 0) {
+      tickets.push({
+        ticketId: availableTicket.regular.id,
+        quantity: regularTickets,
+      });
+    }
+
+    if (lateTickets > 0) {
+      tickets.push({
+        ticketId: availableTicket.late.id,
+        quantity: lateTickets,
+      });
+    }
+
+    const ticketData = {
+      eventId: eventData.id,
+      tickets,
+    };
+
+    buyEventTicket(ticketData)
+      .then((res: any) => {
+        showSuccess('Payment Successfull');
+        setFreeTickets(0);
+        setEarlyTickets(0);
+        setRegularTickets(0);
+        setLateTickets(0);
+        getEventTicketData();
+      })
+      .catch((err: any) => {
+        console.log(err);
+        showError('Something went wrong');
+      });
+  };
+
+  const handlePaymentFailure = (err: any) => {
+    console.log(err);
+    showError('Something went wrong');
+  };
+
+  const initiatePayment = async () => {
+    const paymentDetails = {
+      id: 'order-123',
+      displayItems: [
+        {
+          label: 'Tickets',
+          amount: {currency: 'USD', value: getTotalTicketsPrice().toFixed(2)},
+        },
+      ],
+      total: {
+        label: 'Total',
+        amount: {currency: 'USD', value: getTotalTicketsPrice().toFixed(2)},
+      },
+    };
+
+    const paymentRequest = new PaymentRequest(
+      [
+        {
+          data: {
+            merchantIdentifier: 'merchant.com.said.baccvs.Baccvs-iOS',
+            supportedNetworks: [
+              SupportedNetworkEnum.Visa,
+              SupportedNetworkEnum.Mastercard,
+            ],
+            countryCode: 'US',
+            currencyCode: 'USD',
+            requestBillingAddress: true,
+            requestPayerEmail: true,
+            requestShipping: true,
+          },
+          supportedMethods: PaymentMethodNameEnum.ApplePay,
+        },
+      ],
+      paymentDetails,
+    );
+
+    // Check if payment is possible
+    const isPaymentPossible = await paymentRequest.canMakePayment();
+    if (!isPaymentPossible) {
+      console.warn('Payment is not supported on this device.');
+      return;
+    }
+
+    try {
+      // Show payment sheet
+      const paymentResponse = await paymentRequest.show();
+
+      // Complete the payment process
+      try {
+        await paymentResponse.complete(PaymentComplete.SUCCESS);
+        console.log('Payment completed successfully:', paymentResponse);
+
+        // Handle successful payment
+        handlePaymentSuccess();
+      } catch (completeError) {
+        console.error('Error completing payment:', completeError);
+
+        // Optionally handle completion error
+        handlePaymentFailure(completeError);
+      }
+    } catch (showError: any) {
+      console.error('Error displaying payment sheet:', showError);
+
+      // Handle payment sheet errors (e.g., user canceled)
+      if (showError.name === 'AbortError') {
+        console.warn('Payment was canceled by the user.');
+      } else {
+        handlePaymentFailure(showError);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (!isPaused && !isLoading) {
+      runProgressAnimation();
+    } else {
+      progressAnim.stopAnimation(value => {
+        pausedProgress.current = value;
+      });
+    }
+  }, [currentStoryIndex, isPaused, runProgressAnimation, isLoading]);
+
+  useEffect(() => {
+    getEvent();
+    getEventTicketData();
+  }, []);
+
+  // Cleanup when the component unmounts
+  useEffect(() => {
+    return () => {
+      if (soundInstance) {
+        soundInstance.stop(() => {
+          soundInstance.release();
+        });
+      }
+      clearInterval(intervalRef.current); // Clear interval on unmount
+    };
+  }, [soundInstance]);
+
+  // Preload durations for all audios in comments
+  useEffect(() => {
+    const preloadDurations = () => {
+      const durations: any = {};
+
+      eventData?.comments?.forEach((comment: any) => {
+        if (comment.audio) {
+          const audioPath = IMAGE_URL + comment.audio;
+
+          const sound = new Sound(audioPath, null, error => {
+            if (error) {
+              console.error(`Failed to load sound for ${audioPath}:`, error);
+              return;
+            }
+            durations[audioPath] = sound.getDuration(); // Get duration
+            sound.release(); // Release resources after loading duration
+            setAudioDurations((prev: any) => ({...prev, ...durations})); // Update state
+          });
+        }
+      });
+    };
+
+    preloadDurations();
+  }, [eventData]);
+
   return (
     <LinearGradient
-      colors={[Colors.LinearBlack, Colors.Linear]}
+      colors={[Colors.backgroundNew, Colors.backgroundNew]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
       <SafeAreaView>
         <Loadingcomponent isVisible={loading} />
-        <ImageBackground
-          source={
-            thumbnailUrl ? {uri: IMAGE_URL + thumbnailUrl} : ImagePath.eventback
-          }
-          style={{height: height, width: width}}>
-          <View style={styles.headerRow}>
-            <VectorIcon
-              groupName={'Ionicons'}
-              name={'chevron-back'}
-              size={25}
-              onPress={onPressBack}
-            />
-            <Text style={styles.headerTxt}>{eventData?.event_name}</Text>
-            <View style={{flexDirection: 'row'}}>
+        {eventData?.video_urls?.length > 0 ? (
+          <Pressable
+            onPress={handleScreenTouch}
+            style={{
+              opacity: 1, //when clicked shows the user screen a little dimmed for feedback
+              backgroundColor: '#000',
+              width: width,
+              height: height,
+              position: 'relative',
+            }}>
+            {isLoading && (
+              <View
+                style={{
+                  position: 'absolute',
+                  top: height / 2 - 20,
+                  left: width / 2 - 20,
+                  zIndex: 10,
+                }}>
+                <ActivityIndicator size="large" color={Colors.midDarkPink} />
+              </View>
+            )}
+            {currentStory && renderVideoContent(currentStory)}
+            <View
+              style={{
+                flexDirection: 'row',
+                paddingHorizontal: 10,
+                paddingTop: 10,
+                justifyContent: 'center',
+                height: 3,
+                backgroundColor: 'transparent',
+                zIndex: 1000,
+              }}>
+              {eventData?.video_urls?.map((_story: any, index: number) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.progressBarBackground,
+                    {width: width / eventData?.video_urls?.length},
+                  ]}>
+                  <Animated.View
+                    style={[
+                      {
+                        width: getProgressBarWidth(index, currentStoryIndex),
+                        height: 3,
+                        backgroundColor: Colors.yellow,
+                      },
+                    ]}
+                  />
+                </View>
+              ))}
+            </View>
+
+            <View style={styles.headerRow}>
               <VectorIcon
-                groupName={'MaterialCommunityIcons'}
-                name={'share-outline'}
+                groupName={'Ionicons'}
+                name={'chevron-back'}
                 size={25}
-                color={Colors.white}
-                onPress={onShare}
+                onPress={onPressBack}
               />
-              <TouchableOpacity
-                style={{marginLeft: 10, justifyContent: 'center'}}
-                activeOpacity={0.8}
-                onPress={onReport}>
-                <Image
-                  style={{
-                    width: moderateScale(16),
-                    height: moderateScaleVertical(18),
-                    alignSelf: 'center',
+              <Text style={styles.headerTxt}>{eventData?.event_name}</Text>
+              <View style={{flexDirection: 'row'}}>
+                <TouchableOpacity
+                  style={{marginLeft: 10, justifyContent: 'center'}}
+                  activeOpacity={0.8}
+                  onPress={onReport}>
+                  <Image
+                    style={{
+                      width: moderateScale(16),
+                      height: moderateScaleVertical(18),
+                      alignSelf: 'center',
+                      tintColor: Colors.white,
+                    }}
+                    source={ImagePath.Security_Rules}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={styles.abview}>
+              <View style={styles.bottomBar}>
+                <SizeBox size={5} />
+                <VectorIcon
+                  groupName={'MaterialCommunityIcons'}
+                  name={'share-outline'}
+                  size={25}
+                  color={Colors.white}
+                  onPress={onShare}
+                />
+                <SizeBox size={5} />
+                <TouchableOpacity
+                  style={{flexDirection: 'row'}}
+                  onPress={() => {
+                    refMapRBSheet.current.open();
+                  }}>
+                  <Image source={ImagePath.Pin_alt} />
+                </TouchableOpacity>
+                <SizeBox size={5} />
+                <TouchableOpacity
+                  style={styles.likebtn}
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    refComRBSheet.current.open();
+                  }}>
+                  <VectorIcon
+                    groupName="Ionicons"
+                    name="chatbubble-ellipses-outline"
+                    size={24}
+                    color={Colors.white}
+                  />
+                  <Text style={styles.bottomBarText}>
+                    {eventData?.comments?.length}
+                  </Text>
+                </TouchableOpacity>
+                <SizeBox size={5} />
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={[styles.likebtn]}
+                  onPress={() => {
+                    refRBSheet.current.open();
+                  }}>
+                  <Image
+                    source={ImagePath.likes}
+                    resizeMode="contain"
+                    style={{width: 24, height: 24}}
+                  />
+                  <Text style={styles.bottomBarText}>
+                    {eventData?.likes?.length}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (eventData?.user_id === user?.user?.id) {
+                      navigation.navigate(NavigationStrings.UserProfile);
+                    } else {
+                      navigation.navigate(NavigationStrings.OtherProfiles, {
+                        id: eventData?.user_id,
+                      });
+                    }
                   }}
-                  source={ImagePath.Security_Rules}
+                  style={[
+                    styles.likebtn,
+                    {
+                      bottom: moderateScaleVertical(-10),
+                    },
+                  ]}>
+                  <Image
+                    source={
+                      thumbnailUrl
+                        ? {uri: IMAGE_URL + eventData?.createdby?.image}
+                        : ImagePath.ProfileImg
+                    }
+                    style={styles.profileimg}
+                  />
+                  <Text
+                    style={[styles.bottomBarText, {fontSize: textScale(14)}]}>
+                    {eventData?.createdby?.name}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              {isEventUpcoming && (
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    refTicketsRBSheet.current.open();
+                  }}
+                  style={styles.ticketContainer}>
+                  <Image
+                    source={ImagePath.Ticket}
+                    style={{tintColor: Colors.white}}
+                  />
+                  <Text style={styles.ticketPrice}>
+                    {' '}
+                    €
+                    {
+                      ticketData?.filter(
+                        (ticket: any) =>
+                          ticket.ticketType === 'early' ||
+                          ticket.ticketType === 'regular',
+                      )[0]?.price
+                    }
+                  </Text>
+                </TouchableOpacity>
+              )}
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => {
+                  refInfoRBSheet.current.open();
+                }}>
+                <Image
+                  source={ImagePath.openSheet}
+                  style={{
+                    resizeMode: 'contain',
+                    width: moderateScale(40),
+                    height: moderateScaleVertical(40),
+                  }}
                 />
               </TouchableOpacity>
             </View>
-          </View>
+          </Pressable>
+        ) : (
+          <ImageBackground
+            source={
+              thumbnailUrl
+                ? {uri: IMAGE_URL + thumbnailUrl}
+                : ImagePath.eventback
+            }
+            style={{height: height, width: width}}>
+            <View style={styles.headerRow}>
+              <VectorIcon
+                groupName={'Ionicons'}
+                name={'chevron-back'}
+                size={25}
+                onPress={onPressBack}
+              />
+              <Text style={styles.headerTxt}>{eventData?.event_name}</Text>
+              <View style={{flexDirection: 'row'}}>
+                <TouchableOpacity
+                  style={{marginLeft: 10, justifyContent: 'center'}}
+                  activeOpacity={0.8}
+                  onPress={onReport}>
+                  <Image
+                    style={{
+                      width: moderateScale(16),
+                      height: moderateScaleVertical(18),
+                      alignSelf: 'center',
+                      tintColor: Colors.white,
+                    }}
+                    source={ImagePath.Security_Rules}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={styles.abview}>
+              <View style={styles.bottomBar}>
+                <SizeBox size={5} />
+                <VectorIcon
+                  groupName={'MaterialCommunityIcons'}
+                  name={'share-outline'}
+                  size={25}
+                  color={Colors.white}
+                  onPress={onShare}
+                />
+                <SizeBox size={5} />
+                <TouchableOpacity
+                  style={{flexDirection: 'row'}}
+                  onPress={() => {
+                    refMapRBSheet.current.open();
+                  }}>
+                  <Image source={ImagePath.Pin_alt} />
+                </TouchableOpacity>
+                <SizeBox size={5} />
+                <TouchableOpacity
+                  style={styles.likebtn}
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    refComRBSheet.current.open();
+                  }}>
+                  <VectorIcon
+                    groupName="Ionicons"
+                    name="chatbubble-ellipses-outline"
+                    size={24}
+                    color={Colors.white}
+                  />
+                  <Text style={styles.bottomBarText}>
+                    {eventData?.comments?.length}
+                  </Text>
+                </TouchableOpacity>
+                <SizeBox size={5} />
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={[styles.likebtn]}
+                  onPress={() => {
+                    refRBSheet.current.open();
+                  }}>
+                  <Image
+                    source={ImagePath.likes}
+                    resizeMode="contain"
+                    style={{width: 24, height: 24}}
+                  />
+                  <Text style={styles.bottomBarText}>
+                    {eventData?.likes?.length}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (eventData?.user_id === user?.user?.id) {
+                      navigation.navigate(NavigationStrings.UserProfile);
+                    } else {
+                      navigation.navigate(NavigationStrings.OtherProfiles, {
+                        id: eventData?.user_id,
+                      });
+                    }
+                  }}
+                  style={[
+                    styles.likebtn,
+                    {
+                      bottom: moderateScaleVertical(-10),
+                    },
+                  ]}>
+                  <Image
+                    source={{uri: IMAGE_URL + eventData?.createdby?.image}}
+                    style={styles.profileimg}
+                  />
+                  <Text
+                    style={[styles.bottomBarText, {fontSize: textScale(14)}]}>
+                    {eventData?.createdby?.name}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => {
+                  refTicketsRBSheet.current.open();
+                }}
+                style={styles.ticketContainer}>
+                <Image
+                  source={ImagePath.Ticket}
+                  style={{tintColor: Colors.white}}
+                />
+                <Text style={styles.ticketPrice}>
+                  {' '}
+                  €{eventData?.regular_price}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => {
+                  refInfoRBSheet.current.open();
+                }}>
+                <Image
+                  source={ImagePath.openSheet}
+                  style={{
+                    resizeMode: 'contain',
+                    width: moderateScale(40),
+                    height: moderateScaleVertical(40),
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+          </ImageBackground>
+        )}
+
+        <RBSheet
+          ref={refComRBSheet}
+          closeOnPressMask={true}
+          height={height / 1.7}
+          customStyles={{
+            wrapper: {
+              backgroundColor: 'transparent',
+              width: '90%',
+              bottom: height / 30,
+              alignSelf: 'center',
+            },
+            container: {
+              borderRadius: 10,
+            },
+          }}>
           <LinearGradient
-            colors={[Colors.headerlinear, Colors.Linear]}
+            colors={[Colors.backgroundNew, Colors.backgroundNew]}
             start={{x: 0, y: 0}}
             end={{x: 1.3, y: 0.9}}
-            style={styles.secondHeader}>
-            <Text style={styles.timeText}>
-              {formatTime(eventData?.start_time)} -
-              {formatTime(eventData?.end_time)}
-            </Text>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={styles.ticketContainer}>
-              <Image source={ImagePath.Ticket} />
-              <Text style={styles.ticketPrice}> €{eventData?.price_type}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{flexDirection: 'row'}}
-              onPress={() => {
-                refMapRBSheet.current.open();
+            style={styles.sheetContent}>
+            <View
+              style={{
+                position: 'relative',
+                marginVertical: moderateScaleVertical(10),
+                zIndex: 1000,
               }}>
-              <Text style={styles.distanceText}>{eventData?.distance}</Text>
-              <Image source={ImagePath.Pin_alt} />
-            </TouchableOpacity>
-          </LinearGradient>
+              <TouchableOpacity
+                activeOpacity={1}
+                style={{
+                  position: 'absolute',
+                  width: '100%',
+                  paddingVertical: 2,
+                  zIndex: 100,
+                }}
+                onPress={() => refComRBSheet.current.close()}>
+                <VectorIcon
+                  groupName="Fontisto"
+                  name="close-a"
+                  size={15}
+                  color={Colors.white}
+                  style={{alignSelf: 'flex-end', right: 10}}
+                />
+              </TouchableOpacity>
+              <Text
+                style={[
+                  styles.timeText,
+                  {
+                    fontSize: textScale(16),
+                    textAlign: 'center',
+                  },
+                ]}>
+                Comments
+              </Text>
+            </View>
+            <FlatList
+              data={eventData?.comments}
+              keyExtractor={item => item?.id?.toString()}
+              renderItem={comItem}
+            />
+            <SizeBox size={10} />
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 10,
+                paddingHorizontal: 10,
+              }}>
+              <View
+                style={{
+                  backgroundColor: Colors.white,
+                  minHeight: 40,
+                  alignSelf: 'center',
+                  borderRadius: 5,
+                  justifyContent: 'space-between',
+                  flexDirection: 'row',
+                  paddingHorizontal: 10,
+                  alignItems: 'center',
+                  flex: 1,
+                }}>
+                <TextInput
+                  placeholder="Type here"
+                  multiline
+                  value={commentvalue}
+                  onChangeText={(text: string) => {
+                    setCommentValue(text);
+                    text.length == 0 && setCommentId('');
+                  }}
+                  style={{
+                    paddingVertical: 5,
+                    color: Colors.black,
+                    fontFamily: fontFamily.regular,
+                  }}
+                />
+                <VectorIcon
+                  groupName="Ionicons"
+                  name="send-outline"
+                  onPress={() => onSendComments(null, commentvalue)}
+                  size={20}
+                  color={Colors.lightPink}
+                />
+              </View>
 
-          <View style={styles.bottomBar}>
+              {!isRecording ? (
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: Colors.white,
+                    minHeight: 40,
+                    borderRadius: 100,
+                    minWidth: 40,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  onPress={onStartRecord}>
+                  <Image
+                    source={ImagePath.microphone}
+                    resizeMode="contain"
+                    style={{height: 20, width: 20}}
+                  />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: Colors.white,
+                    minHeight: 40,
+                    borderRadius: 100,
+                    minWidth: 40,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  onPress={onStopRecord}>
+                  <VectorIcon
+                    groupName="Ionicons"
+                    name="pause-circle-sharp"
+                    size={25}
+                    color={Colors.lightPink}
+                  />
+                </TouchableOpacity>
+              )}
+              {recordTime && isRecording ? (
+                <Text style={{color: 'white'}}>{recordTime.slice(0, 5)}</Text>
+              ) : null}
+            </View>
+
+            <SizeBox size={5} />
+          </LinearGradient>
+        </RBSheet>
+        <RBSheet
+          ref={refRBSheet}
+          closeOnPressMask={true}
+          height={height / 1.7}
+          customStyles={{
+            wrapper: {
+              backgroundColor: 'transparent',
+              width: '90%',
+              bottom: height / 30,
+              alignSelf: 'center',
+            },
+            container: {
+              borderRadius: 10,
+            },
+          }}>
+          <LinearGradient
+            colors={[Colors.backgroundNew, Colors.backgroundNew]}
+            start={{x: 0, y: 0}}
+            end={{x: 1.3, y: 0.9}}
+            style={styles.sheetContent}>
+            <VectorIcon
+              groupName="Fontisto"
+              name="close-a"
+              size={15}
+              color={Colors.white}
+              style={{alignSelf: 'flex-end', top: 10, right: 10}}
+              onPress={() => refRBSheet.current.close()}
+            />
+            <Text
+              style={[
+                styles.timeText,
+                {
+                  fontSize: textScale(16),
+                  textAlign: 'center',
+                  marginTop: 10,
+                },
+              ]}>
+              Likes
+            </Text>
+            <FlatList
+              data={eventData?.likes}
+              keyExtractor={item => item?.id?.toString()}
+              renderItem={renderItem}
+            />
             <TouchableOpacity
+              onPress={onLikePress}
               activeOpacity={0.8}
-              style={[styles.likebtn]}
-              onPress={() => {
-                refRBSheet.current.open();
+              style={{
+                alignSelf: 'center',
+                position: 'absolute',
+                bottom: moderateScale(20),
               }}>
               <Image
                 source={ImagePath.likes}
                 resizeMode="contain"
                 style={{width: 24, height: 24}}
               />
-              <Text style={styles.bottomBarText}>Likes</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.likebtn}
-              activeOpacity={0.8}
-              onPress={() => {
-                refComRBSheet.current.open();
-              }}>
-              <VectorIcon
-                groupName="Ionicons"
-                name="chatbubble-ellipses-outline"
-                size={24}
-                color={Colors.white}
-              />
-              <Text style={styles.bottomBarText}>Comments</Text>
-            </TouchableOpacity>
-            <View
-              style={[
-                styles.likebtn,
-                {
-                  bottom: moderateScaleVertical(10),
-                },
-              ]}>
-              <Image
-                source={
-                  thumbnailUrl
-                    ? {uri: IMAGE_URL + thumbnailUrl}
-                    : ImagePath.ProfileImg
-                }
-                style={styles.profileimg}
-              />
-              <Text style={[styles.bottomBarText, {fontSize: textScale(14)}]}>
-                Kingson
-              </Text>
-            </View>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={styles.likebtn}
-              onPress={() => {
-                refPeopleRBSheet.current.open();
-              }}>
-              <Image
-                source={ImagePath.userprofile}
-                resizeMode="contain"
-                style={{width: 24, height: 24}}
-              />
-              <Text style={styles.bottomBarText}>people</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={styles.likebtn}
-              onPress={() => {
-                refInfoRBSheet.current.open();
-              }}>
-              <Image
-                source={ImagePath.infoIcon}
-                resizeMode="contain"
-                style={{width: 24, height: 24}}
-              />
-              <Text style={styles.bottomBarText}>info</Text>
-            </TouchableOpacity>
-          </View>
-
-          <RBSheet
-            ref={refRBSheet}
-            closeOnPressMask={true}
-            height={height / 1.7}
-            customStyles={{
-              wrapper: {
-                backgroundColor: 'transparent',
-                width: '90%',
-                bottom: height / 30,
-                alignSelf: 'center',
-              },
-              container: {
-                borderRadius: 10,
-              },
-            }}>
-            <LinearGradient
-              colors={[Colors.LinearBlack, Colors.Linear]}
-              start={{x: 0, y: 0}}
-              end={{x: 1.3, y: 0.9}}
-              style={styles.sheetContent}>
-              <VectorIcon
-                groupName="Fontisto"
-                name="close-a"
-                size={15}
-                color={Colors.white}
-                style={{alignSelf: 'flex-end', top: 10, right: 10}}
-                onPress={() => refRBSheet.current.close()}
-              />
-              <Text
-                style={[
-                  styles.timeText,
-                  {
-                    fontSize: textScale(16),
-                    textAlign: 'center',
-                    marginTop: 10,
-                  },
-                ]}>
-                Likes
-              </Text>
-              <FlatList
-                data={eventData?.likes}
-                keyExtractor={item => item?.id?.toString()}
-                renderItem={renderItem}
-              />
-            </LinearGradient>
-          </RBSheet>
-          <RBSheet
-            ref={refComRBSheet}
-            closeOnPressMask={true}
-            height={height / 1.7}
-            customStyles={{
-              wrapper: {
-                backgroundColor: 'transparent',
-                width: '90%',
-                bottom: height / 30,
-                alignSelf: 'center',
-              },
-              container: {
-                borderRadius: 10,
-              },
-            }}>
-            <LinearGradient
-              colors={[Colors.LinearBlack, Colors.Linear]}
-              start={{x: 0, y: 0}}
-              end={{x: 1.3, y: 0.9}}
-              style={styles.sheetContent}>
-              <VectorIcon
-                groupName="Fontisto"
-                name="close-a"
-                size={15}
-                color={Colors.white}
-                style={{alignSelf: 'flex-end', top: 10, right: 10}}
-                onPress={() => refComRBSheet.current.close()}
-              />
-              <Text
-                style={[
-                  styles.timeText,
-                  {
-                    fontSize: textScale(16),
-                    textAlign: 'center',
-                    marginTop: 10,
-                  },
-                ]}>
-                Comments
-              </Text>
-              <FlatList
-                data={eventData?.comments}
-                keyExtractor={item => item?.id?.toString()}
-                renderItem={comItem}
-              />
-
-              {/* <TextInput
-                placeholder="Add a comment... "
-                multiline
-                placeholderTextColor={Colors.white}
-                style={styles.cmtinpt}
-              /> */}
-              <SizeBox size={10} />
-            </LinearGradient>
-          </RBSheet>
-          <RBSheet
-            ref={refInfoRBSheet}
-            closeOnPressMask={true}
-            height={height / 1.5}
-            customStyles={{
-              wrapper: {
-                backgroundColor: 'transparent',
-                width: '90%',
-                bottom: height / 30,
-                alignSelf: 'center',
-              },
-              container: {
-                borderRadius: 10,
-              },
-            }}>
-            <LinearGradient
-              colors={[Colors.LinearBlack, Colors.Linear]}
-              start={{x: 0, y: 0}}
-              end={{x: 1.3, y: 0.9}}
-              style={styles.sheetContent}>
+          </LinearGradient>
+        </RBSheet>
+        <RBSheet
+          ref={refInfoRBSheet}
+          closeOnPressMask={true}
+          height={height / 1.2}
+          customStyles={{
+            wrapper: {
+              backgroundColor: 'transparent',
+              width: '90%',
+              bottom: height / 30,
+              alignSelf: 'center',
+            },
+            container: {
+              borderRadius: 10,
+            },
+          }}>
+          <LinearGradient
+            colors={[Colors.backgroundNew, Colors.backgroundNew]}
+            start={{x: 0, y: 0}}
+            end={{x: 1.3, y: 0.9}}
+            style={styles.sheetContent}>
+            <ScrollView showsVerticalScrollIndicator={false}>
               <View style={{paddingHorizontal: 15}}>
-                <VectorIcon
-                  groupName="Fontisto"
-                  name="close-a"
-                  size={15}
-                  color={Colors.white}
-                  style={{alignSelf: 'flex-end', top: 10}}
-                  onPress={() => refInfoRBSheet.current.close()}
-                />
-                <Text style={[styles.timeText, styles.onelife]}>
-                  {eventData?.event_name}
-                </Text>
                 <SizeBox size={10} />
-                <Text style={[styles.cmttxt, {fontSize: textScale(10)}]}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    paddingHorizontal: 8,
+                  }}>
+                  <Text style={{...commonStyles.font16Regular}}>
+                    Event details
+                  </Text>
+                  <Image
+                    style={{
+                      width: moderateScale(16),
+                      height: moderateScaleVertical(18),
+                      alignSelf: 'center',
+                      tintColor: Colors.white,
+                    }}
+                    source={ImagePath.Security_Rules}
+                  />
+                </View>
+                <SizeBox size={10} />
+                <Text
+                  style={{
+                    ...commonStyles.font12Regular,
+                    paddingHorizontal: 5,
+                  }}>
                   {eventData?.description}
                 </Text>
-                <Text style={[styles.cmttxt, {fontSize: textScale(10)}]}>
-                  Free entry, be respectful of others.
+                <SizeBox size={10} />
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    paddingHorizontal: 5,
+                  }}>
+                  Details
                 </Text>
-                <SizeBox size={90} />
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <VectorIcon
-                    groupName="Fontisto"
-                    name="stopwatch"
-                    size={25}
-                    color={Colors.white}
-                  />
-                  <Text style={[styles.timeText, {color: Colors.green}]}>
-                    {`  `}
-                    {calculateDuration(
-                      eventData?.start_time,
-                      eventData?.end_time,
-                    )}
-                  </Text>
-                </View>
                 <SizeBox size={10} />
                 <View style={{flexDirection: 'row'}}>
                   <VectorIcon
@@ -553,156 +1628,450 @@ const EventDetails = ({navigation, route}: any) => {
                   />
                 </View>
                 <SizeBox size={10} />
-                <View style={{flexDirection: 'row'}}>
+                <View style={{flexDirection: 'row', gap: 10}}>
                   <Image source={ImagePath.Pin_alt} />
-                  <Text style={styles.distanceText}>
-                    {`  `}
-                    {eventData?.distance}
-                  </Text>
+                  <Text style={styles.distanceText}>{eventData?.distance}</Text>
                 </View>
               </View>
-              <SizeBox size={30} />
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={[
-                  styles.ticketContainer,
-                  {width: '30%', alignSelf: 'center'},
-                ]}>
-                <Image source={ImagePath.Ticket} />
-                <Text style={styles.ticketPrice}>
-                  {' '}
-                  €{eventData?.price_type}
-                </Text>
-              </TouchableOpacity>
-            </LinearGradient>
-          </RBSheet>
-          <RBSheet
-            ref={refPeopleRBSheet}
-            // closeOnDragDown={true}
-            closeOnPressMask={true}
-            height={height / 1.7}
-            customStyles={{
-              wrapper: {
-                backgroundColor: 'transparent',
-                width: '90%',
-                bottom: height / 30,
-                alignSelf: 'center',
-              },
-              container: {
-                borderRadius: 10,
-              },
-            }}>
-            <LinearGradient
-              colors={[Colors.LinearBlack, Colors.Linear]}
-              start={{x: 0, y: 0}}
-              end={{x: 1.3, y: 0.9}}
-              style={styles.sheetContent}>
-              <VectorIcon
-                groupName="Fontisto"
-                name="close-a"
-                size={15}
-                color={Colors.white}
-                style={{alignSelf: 'flex-end', top: 10, right: 10}}
-                onPress={() => refPeopleRBSheet.current.close()}
-              />
-              <Text
-                style={[
-                  styles.timeText,
-                  {
-                    fontSize: textScale(16),
-                    textAlign: 'center',
-                    marginTop: 10,
-                  },
-                ]}>
-                Event members
-              </Text>
-
-              {eventData?.members_names ? (
-                <FlatList
-                  data={eventData?.members_names}
-                  keyExtractor={item => item?.id?.toString()}
-                  renderItem={renderMembers}
-                />
-              ) : (
-                <Text
-                  style={[
-                    styles.cmttxt,
-                    {
-                      fontSize: textScale(10),
-                      alignSelf: 'center',
-                      marginTop: 20,
-                    },
-                  ]}>
-                  No data found ..
-                </Text>
-              )}
-            </LinearGradient>
-          </RBSheet>
-          <RBSheet
-            ref={refMapRBSheet}
-            // closeOnDragDown={true}
-            closeOnPressMask={true}
-            height={height / 1.3}
-            customStyles={{
-              wrapper: {
-                backgroundColor: 'transparent',
-                width: '90%',
-                bottom: height / 30,
-                alignSelf: 'center',
-              },
-              container: {
-                borderRadius: 10,
-              },
-            }}>
-            <LinearGradient
-              colors={[Colors.LinearBlack, Colors.Linear]}
-              start={{x: 0, y: 0}}
-              end={{x: 1.3, y: 0.9}}
-              style={styles.sheetContent}>
-              <VectorIcon
-                groupName="Fontisto"
-                name="close-a"
-                size={15}
-                color={Colors.white}
-                style={{alignSelf: 'flex-end', top: 10, right: 10}}
-                onPress={() => refMapRBSheet.current.close()}
-              />
-              <Text
-                style={[
-                  styles.timeText,
-                  {
-                    fontSize: textScale(16),
-                    textAlign: 'center',
-                    marginTop: 10,
-                  },
-                ]}>
-                Maps
-              </Text>
               <SizeBox size={10} />
               <View
                 style={{
-                  height: height,
-                  borderWidth: 1,
-                  borderColor: Colors.Pink,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingHorizontal: 17,
+                  gap: 10,
                 }}>
-                <MapView style={styles.map} initialRegion={initialRegion}>
-                  <Marker
-                    coordinate={{
-                      latitude: eventData?.latitude
-                        ? eventData?.latitude
-                        : 37.78825,
-                      longitude: eventData?.longitude
-                        ? eventData?.longitude
-                        : -122.4324,
-                    }}
-                    title={'My Marker'}
-                    description={'Some description'}
-                  />
-                </MapView>
+                <VectorIcon
+                  groupName="Fontisto"
+                  name="stopwatch"
+                  size={25}
+                  color={Colors.white}
+                />
+                {eventData.start_time && eventData.end_time && (
+                  <Text style={[styles.timeText, {color: Colors.white}]}>
+                    {formatTimeRange(
+                      moment(eventData?.start_time, 'HH:mm:ss').format(
+                        'hh:mm:ss A',
+                      ),
+                      moment(eventData?.end_time, 'HH:mm:ss').format(
+                        'hh:mm:ss A',
+                      ),
+                    )}
+                  </Text>
+                )}
               </View>
-            </LinearGradient>
-          </RBSheet>
-        </ImageBackground>
+              <SizeBox size={10} />
+              <Text style={{...commonStyles.font16Regular, marginLeft: 18}}>
+                Hosted by
+              </Text>
+              <SizeBox size={10} />
+              {renderHost()}
+              <SizeBox size={10} />
+              {/* <Text style={{...commonStyles.font16Regular, marginLeft: 18}}>
+                Line Up
+              </Text>
+              <SizeBox size={10} /> */}
+              {/* <FlatList
+                data={[{id: 1}, {id: 1}]}
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                renderItem={renderLineUp}
+              /> */}
+              <SizeBox size={10} />
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text style={{...commonStyles.font16Regular, marginLeft: 18}}>
+                  Participants{' '}
+                </Text>
+                <VectorIcon
+                  groupName="Octicons"
+                  name="dot-fill"
+                  size={20}
+                  color={Colors.white}
+                />
+                <Text style={{...commonStyles.font16Regular}}>
+                  {eventData?.members_names?.length}
+                </Text>
+              </View>
+              <SizeBox size={10} />
+              <FlatList
+                data={eventData?.members_names}
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                renderItem={renderParticipants}
+              />
+              <SizeBox size={10} />
+            </ScrollView>
+          </LinearGradient>
+        </RBSheet>
+        <RBSheet
+          ref={refPeopleRBSheet}
+          closeOnPressMask={true}
+          height={height / 1.7}
+          customStyles={{
+            wrapper: {
+              backgroundColor: 'transparent',
+              width: '90%',
+              bottom: height / 30,
+              alignSelf: 'center',
+            },
+            container: {
+              borderRadius: 10,
+            },
+          }}>
+          <LinearGradient
+            colors={[Colors.backgroundNew, Colors.backgroundNew]}
+            start={{x: 0, y: 0}}
+            end={{x: 1.3, y: 0.9}}
+            style={styles.sheetContent}>
+            <VectorIcon
+              groupName="Fontisto"
+              name="close-a"
+              size={15}
+              color={Colors.white}
+              style={{alignSelf: 'flex-end', top: 10, right: 10}}
+              onPress={() => refPeopleRBSheet.current.close()}
+            />
+            <Text
+              style={[
+                styles.timeText,
+                {
+                  fontSize: textScale(16),
+                  textAlign: 'center',
+                  marginTop: 10,
+                },
+              ]}>
+              Event members
+            </Text>
+            {eventData?.members_names ? (
+              <FlatList
+                data={eventData?.members_names}
+                keyExtractor={item => item?.id?.toString()}
+                renderItem={renderMembers}
+              />
+            ) : (
+              <Text
+                style={[
+                  styles.cmttxt,
+                  {
+                    fontSize: textScale(10),
+                    alignSelf: 'center',
+                    marginTop: 20,
+                  },
+                ]}>
+                No data found ..
+              </Text>
+            )}
+          </LinearGradient>
+        </RBSheet>
+        <RBSheet
+          ref={refMapRBSheet}
+          closeOnPressMask={true}
+          height={height / 1.3}
+          customStyles={{
+            wrapper: {
+              backgroundColor: 'transparent',
+              width: '90%',
+              bottom: height / 30,
+              alignSelf: 'center',
+            },
+            container: {
+              borderRadius: 10,
+            },
+          }}>
+          <LinearGradient
+            colors={[Colors.backgroundNew, Colors.backgroundNew]}
+            start={{x: 0, y: 0}}
+            end={{x: 1.3, y: 0.9}}
+            style={styles.sheetContent}>
+            <VectorIcon
+              groupName="Fontisto"
+              name="close-a"
+              size={15}
+              color={Colors.white}
+              style={{alignSelf: 'flex-end', top: 10, right: 10}}
+              onPress={() => refMapRBSheet.current.close()}
+            />
+            <Text
+              style={[
+                styles.timeText,
+                {
+                  fontSize: textScale(16),
+                  textAlign: 'center',
+                  marginTop: 10,
+                },
+              ]}>
+              Maps
+            </Text>
+            <SizeBox size={10} />
+            <View
+              style={{
+                height: height,
+                borderWidth: 1,
+                borderColor: Colors.Pink,
+              }}>
+              <MapView style={styles.map} initialRegion={initialRegion}>
+                <Marker
+                  coordinate={{
+                    latitude: eventData?.latitude
+                      ? eventData?.latitude
+                      : 37.78825,
+                    longitude: eventData?.longitude
+                      ? eventData?.longitude
+                      : -122.4324,
+                  }}
+                  title={'My Marker'}
+                  description={'Some description'}
+                />
+              </MapView>
+            </View>
+          </LinearGradient>
+        </RBSheet>
+        <RBSheet
+          ref={refTicketsRBSheet}
+          closeOnPressMask={true}
+          customStyles={{
+            wrapper: {
+              backgroundColor: 'transparent',
+              width: '90%',
+              bottom: height / 30,
+              alignSelf: 'center',
+            },
+            container: {
+              height: height / 1.8,
+              borderRadius: 10,
+            },
+          }}>
+          <LinearGradient
+            colors={[Colors.backgroundNew, Colors.backgroundNew]}
+            start={{x: 0, y: 0}}
+            end={{x: 1.3, y: 0.9}}
+            style={styles.sheetContent}>
+            <SizeBox size={10} />
+            <Text
+              style={{
+                ...commonStyles.font16WhiteBold,
+                fontSize: textScale(20),
+                alignSelf: 'center',
+              }}>
+              Tickets
+            </Text>
+            <SizeBox size={2} />
+            <Text
+              style={{
+                ...styles.ticketText,
+                alignSelf: 'center',
+                color: Colors.greyTxt,
+              }}>
+              Select a ticket
+            </Text>
+            <SizeBox size={10} />
+
+            <View style={{flex: 1}}>
+              {availableTicket?.free.quantity !== null && (
+                <>
+                  <View style={styles.row}>
+                    <View style={{width: '30%'}}>
+                      <Text style={styles.ticketText}>Free ticket</Text>
+                    </View>
+                    <View style={{flexDirection: 'row'}}>
+                      <VectorIcon
+                        onPress={() => changeInFreeTickets('dec')}
+                        groupName="AntDesign"
+                        name="minuscircleo"
+                        color={Colors.white}
+                        size={24}
+                      />
+                      <View style={{width: 10}} />
+                      <Text
+                        style={{
+                          ...commonStyles.font14Bold,
+                          color: Colors.white,
+                        }}>
+                        {freeTickets}
+                      </Text>
+                      <View style={{width: 10}} />
+                      <VectorIcon
+                        onPress={() => changeInFreeTickets('inc')}
+                        groupName="AntDesign"
+                        name="pluscircleo"
+                        color={Colors.white}
+                        size={24}
+                      />
+                    </View>
+                    <View style={styles.soldBox}>
+                      <Text style={styles.ticketText}>
+                        {availableTicket?.free?.quantity > 0
+                          ? 'Free'
+                          : 'Sold Out'}
+                      </Text>
+                    </View>
+                    <Text style={styles.ticketText}>€</Text>
+                  </View>
+                  <SizeBox size={10} />
+                </>
+              )}
+              {availableTicket?.early?.quantity !== null && (
+                <>
+                  <View style={styles.row}>
+                    <View style={{width: '30%'}}>
+                      <Text style={styles.ticketText}>Early tickets</Text>
+                      <Text
+                        style={{
+                          ...commonStyles.font12Bold,
+                          color: Colors.greyTxt,
+                        }}>
+                        Before{' '}
+                        {moment(eventData.end_time, 'hh:mm:ss A').format('HH') +
+                          'hh' +
+                          moment(eventData.end_time, 'hh:mm:ss A').format('mm')}
+                      </Text>
+                    </View>
+                    <View style={{flexDirection: 'row'}}>
+                      <VectorIcon
+                        onPress={() => changeInEarlyTickets('dec')}
+                        groupName="AntDesign"
+                        name="minuscircleo"
+                        color={Colors.white}
+                        size={24}
+                      />
+                      <View style={{width: 10}} />
+                      <Text
+                        style={{
+                          ...commonStyles.font14Bold,
+                          color: Colors.white,
+                        }}>
+                        {earlyTickets}
+                      </Text>
+                      <View style={{width: 10}} />
+                      <VectorIcon
+                        onPress={() => changeInEarlyTickets('inc')}
+                        groupName="AntDesign"
+                        name="pluscircleo"
+                        color={Colors.white}
+                        size={24}
+                      />
+                    </View>
+                    <View style={styles.soldBox}>
+                      <Text style={styles.ticketText}>
+                        {availableTicket?.early?.quantity > 0
+                          ? availableTicket.early.price
+                          : 'Sold Out'}
+                      </Text>
+                    </View>
+                    <Text style={styles.ticketText}>€</Text>
+                  </View>
+                  <SizeBox size={10} />
+                </>
+              )}
+              {availableTicket.regular.quantity !== null && (
+                <>
+                  <View style={styles.row}>
+                    <View style={{width: '30%'}}>
+                      <Text style={styles.ticketText}>Regular tickets</Text>
+                    </View>
+                    <View style={{flexDirection: 'row'}}>
+                      <VectorIcon
+                        onPress={() => changeInRegularTickets('dec')}
+                        groupName="AntDesign"
+                        name="minuscircleo"
+                        color={Colors.white}
+                        size={24}
+                      />
+                      <View style={{width: 10}} />
+                      <Text
+                        style={{
+                          ...commonStyles.font14Bold,
+                          color: Colors.white,
+                        }}>
+                        {regularTickets}
+                      </Text>
+                      <View style={{width: 10}} />
+                      <VectorIcon
+                        onPress={() => changeInRegularTickets('inc')}
+                        groupName="AntDesign"
+                        name="pluscircleo"
+                        color={Colors.white}
+                        size={24}
+                      />
+                    </View>
+                    <View style={styles.soldBox}>
+                      <Text style={styles.ticketText}>
+                        {availableTicket.regular.quantity > 0
+                          ? availableTicket.regular.price
+                          : 'Sold Out'}
+                      </Text>
+                    </View>
+                    <Text style={styles.ticketText}>€</Text>
+                  </View>
+                  <SizeBox size={10} />
+                </>
+              )}
+              {availableTicket.late.quantity !== null && (
+                <>
+                  <View style={styles.row}>
+                    <View style={{width: '30%'}}>
+                      <Text style={styles.ticketText}>Late tickets</Text>
+                    </View>
+                    <View style={{flexDirection: 'row'}}>
+                      <VectorIcon
+                        onPress={() => changeInLateTickets('dec')}
+                        groupName="AntDesign"
+                        name="minuscircleo"
+                        color={Colors.white}
+                        size={24}
+                      />
+                      <View style={{width: 10}} />
+                      <Text
+                        style={{
+                          ...commonStyles.font14Bold,
+                          color: Colors.white,
+                        }}>
+                        {lateTickets}
+                      </Text>
+                      <View style={{width: 10}} />
+                      <VectorIcon
+                        onPress={() => changeInLateTickets('inc')}
+                        groupName="AntDesign"
+                        name="pluscircleo"
+                        color={Colors.white}
+                        size={24}
+                      />
+                    </View>
+                    <View style={styles.soldBox}>
+                      <Text style={styles.ticketText}>
+                        {availableTicket.late.quantity > 0
+                          ? availableTicket.late.price
+                          : 'Sold Out'}
+                      </Text>
+                    </View>
+                    <Text style={styles.ticketText}>€</Text>
+                  </View>
+                  <SizeBox size={10} />
+                </>
+              )}
+            </View>
+
+            <Text
+              style={{
+                ...commonStyles.font16WhiteBold,
+                alignSelf: 'center',
+              }}>
+              Total : €{getTotalTicketsPrice()}
+            </Text>
+            <SizeBox size={10} />
+            <TouchableOpacity
+              onPress={initiatePayment}
+              activeOpacity={0.8}
+              style={{
+                ...styles.soldBox,
+                width: '50%',
+                alignSelf: 'center',
+                marginBottom: 20,
+              }}>
+              <Text style={styles.ticketText}>Confirm Purchase</Text>
+            </TouchableOpacity>
+          </LinearGradient>
+        </RBSheet>
       </SafeAreaView>
     </LinearGradient>
   );

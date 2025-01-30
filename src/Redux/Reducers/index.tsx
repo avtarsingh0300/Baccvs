@@ -1,9 +1,13 @@
 import {combineReducers} from 'redux';
 import types from '../types';
 import auth from './auth';
+import homeScreenReducer from './homeScreenReducer';
+import meetScreenReducer from './meetScreenReducer';
 
 const appReducer = combineReducers({
   auth,
+  homeScreen: homeScreenReducer,
+  meetScreen: meetScreenReducer,
 });
 
 const rootReducer = (state: any, action: any) => {

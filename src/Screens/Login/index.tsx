@@ -12,38 +12,49 @@ import {
   showError,
   showSuccess,
 } from '../../Utilities/Component/Helpers';
-import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {login, setDataHandler} from '../../Utilities/Constants/auth';
 import {Keyboard} from 'react-native';
 import {saveUserData} from '../../Redux/Action/auth';
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
+import {getFCMToken} from '../../Utilities/Helpers';
 const Login = ({navigation}: any) => {
+  // const [username, setUsername] = useState('Moosa@yopmail.com');
+  // const [password, setPassword] = useState('Avtar@123');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loader, setLoader] = useState(false);
+
   const onBack = () => {
     navigation.goBack();
   };
-  const onLogin = () => {
+
+  const onLogin = async () => {
+    const fcmToken = await getFCMToken();
+
     if (!username) {
       return showError('Please enter username');
     }
     if (!password) {
       return showError('Please enter password');
     }
-    setLoader(true);
     const formData = {
       identifier: username,
       password: password,
+      deviceToken: fcmToken,
     };
-    console.log(formData);
+    setLoader(true);
     login(formData)
-      .then(res => {
+      .then((res: any) => {
         setLoader(false);
-        console.log(res, 'res');
-        navigation.navigate(NavigationStrings.TabRoutes);
+        console.log(res?.role, 'res');
         setTimeout(() => {
           setDataHandler(res);
           saveUserData(res);
+          // if (res?.role != 'user') {
+          //   navigation.navigate(NavigationStrings.HomeNight);
+          // } else {
+          //   navigation.navigate(NavigationStrings.TabRoutes);
+          // }
         }, 1000);
         Keyboard.dismiss();
         showSuccess(res?.message);
@@ -54,15 +65,21 @@ const Login = ({navigation}: any) => {
         console.log(err, 'erro');
       });
   };
+
   const handleChangeUser = (value: any) => {
     setUsername(value);
   };
+
   const handleChangePass = (value: any) => {
     setPassword(value);
   };
+  const onForget = () => {
+    navigation.navigate(NavigationStrings.forgot);
+  };
+
   return (
     <LinearGradient
-      colors={[Colors.LinearBlack, Colors.Linear]}
+      colors={[Colors.backgroundNew, Colors.backgroundNew]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
@@ -77,6 +94,7 @@ const Login = ({navigation}: any) => {
               placeholderTextColor={Colors.Pink}
               style={styles.input}
               value={username}
+              autoCapitalize="none"
               onChangeText={text => handleChangeUser(text)}
             />
           </View>
@@ -87,6 +105,7 @@ const Login = ({navigation}: any) => {
               placeholderTextColor={Colors.Pink}
               style={styles.input}
               value={password}
+              autoCapitalize="none"
               onChangeText={text => handleChangePass(text)}
             />
           </View>
@@ -96,7 +115,8 @@ const Login = ({navigation}: any) => {
           style={{
             alignSelf: 'flex-end',
             ...commonStyles.font16White,
-          }}>
+          }}
+          onPress={onForget}>
           Forgot password?
         </Text>
         <SizeBox size={10} />
@@ -105,4 +125,5 @@ const Login = ({navigation}: any) => {
     </LinearGradient>
   );
 };
+
 export default Login;

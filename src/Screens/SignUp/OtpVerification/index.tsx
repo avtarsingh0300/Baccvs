@@ -44,8 +44,8 @@ const OtpVerification = (props: any) => {
       .then(res => {
         // console.log(res, "res in match otp");
         showSuccess(res?.message);
-        props.navigation.navigate(NavigationStrings.RegisterScreen, {
-          phone: props.route.params.phonenum,
+        props.navigation.navigate(NavigationStrings.Commitments, {
+          phone: props?.route?.params?.phonenum,
         });
       })
       .catch(err => {
@@ -55,7 +55,7 @@ const OtpVerification = (props: any) => {
   };
   return (
     <LinearGradient
-      colors={[Colors.LinearBlack, Colors.Linear]}
+      colors={[Colors.backgroundNew, Colors.backgroundNew]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>

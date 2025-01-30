@@ -1,14 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class AsyncStorageUtil {
-
-  
   static async clear() {
     AsyncStorage.clear();
   }
 
-  static async storelogindata(Data:any) {
-    const log :any = ['Token', Data.token];
+  static async storelogindata(Data: any) {
+    const log: any = ['Token', Data.token];
     const userId = ['userid', Data.user_id.toString()];
     const name = ['name', Data.name];
     const profile = ['profilepic', Data.profile_pic];
@@ -18,8 +16,6 @@ class AsyncStorageUtil {
       // saving error
     }
   }
-  
-  
 }
 
 export default AsyncStorageUtil;

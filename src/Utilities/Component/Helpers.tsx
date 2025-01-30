@@ -1,35 +1,35 @@
+import MultiSlider from '@ptomasroos/react-native-multi-slider';
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {
+  ActivityIndicator,
+  FlatList,
+  ImageStyle,
+  StyleProp,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  StyleProp,
-  ImageStyle,
-  ActivityIndicator,
 } from 'react-native';
+import CountryPicker, {
+  Country,
+  CountryCode,
+} from 'react-native-country-picker-modal';
 import FastImage, {FastImageProps} from 'react-native-fast-image';
-import VectorIcon from './vectorIcons';
+import {showMessage} from 'react-native-flash-message';
+import LinearGradient from 'react-native-linear-gradient';
 import Modal from 'react-native-modal';
-import styles from './style';
+import ImagePath from '../Constants/ImagePath';
+import NavigationStrings from '../Constants/NavigationStrings';
+import {Colors} from '../Styles/colors';
+import commonStyles from '../Styles/commonStyles';
 import {
   moderateScale,
   moderateScaleVertical,
   width,
 } from '../Styles/responsiveSize';
-import LinearGradient from 'react-native-linear-gradient';
-import {Colors} from '../Styles/colors';
-import commonStyles from '../Styles/commonStyles';
-import MultiSlider from '@ptomasroos/react-native-multi-slider';
-import CountryPicker, {
-  CountryCode,
-  Country,
-} from 'react-native-country-picker-modal';
-import {FlatList} from 'react-native';
-import ImagePath from '../Constants/ImagePath';
-import NavigationStrings from '../Constants/NavigationStrings';
-import {useNavigation} from '@react-navigation/native';
-import {showMessage} from 'react-native-flash-message';
+import styles from './style';
+import VectorIcon from './vectorIcons';
 
 export const dummydata = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
 
@@ -79,7 +79,7 @@ const showNotification = (message: any) => {
     },
   });
 };
-export {showError, showSuccess, showNotification};
+export {showError, showNotification, showSuccess};
 
 export function ImageComponent({
   style,
@@ -120,12 +120,12 @@ export function SizeBox({size}: SizeBoxProps) {
 export function CommonBtn({onPress, title}: CommonBtnProps) {
   return (
     <LinearGradient
-      colors={[Colors.btnLinear1, Colors.btnLinear2]}
+      colors={[Colors.white, Colors.white]}
       start={{x: 1, y: 0}}
       end={{x: 1, y: 1}}
       style={{
         padding: 1,
-        borderRadius: 8,
+        borderRadius: 30,
       }}>
       <TouchableOpacity
         activeOpacity={0.8}
@@ -210,6 +210,7 @@ export function CommonInput({
   value,
   onChangeText,
   secureTextEntry,
+  styless,
 }: CommonInputProps) {
   return (
     <View
@@ -220,6 +221,7 @@ export function CommonInput({
             ? moderateScaleVertical(120)
             : moderateScaleVertical(50),
         },
+        styless,
       ]}>
       <TextInput
         multiline={multiline}
@@ -244,8 +246,14 @@ export function CommonInputBtn({title, onPress}: CommonBtnProps) {
     </TouchableOpacity>
   );
 }
-export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
-  const navigation = useNavigation();
+export function Drawer({
+  onClose,
+  isVisible,
+  onBackdropPress,
+  username,
+  profilePic,
+}: DrawerProps) {
+  const navigation = useNavigation<any>();
 
   return (
     <Modal
@@ -259,7 +267,7 @@ export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
       isVisible={isVisible}
       backdropOpacity={0.8}>
       <LinearGradient
-        colors={[Colors.Linear, Colors.LinearBlack]}
+        colors={[Colors.backgroundNew, Colors.backgroundNew]}
         start={{x: 0, y: 0}}
         end={{x: 1.3, y: 0.9}}
         style={styles.drawerCon}>
@@ -270,17 +278,25 @@ export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
           onPress={onClose}
           color={Colors.white}
         />
-        <ImageComponent
-          source={ImagePath.ProfileImg}
-          style={[styles.profileimg, {alignSelf: 'center'}]}
-        />
+
+        {profilePic ? (
+          <ImageComponent
+            source={{uri: profilePic}}
+            style={[styles.profileimg, {alignSelf: 'center'}]}
+          />
+        ) : (
+          <ImageComponent
+            source={ImagePath.ProfileImg}
+            style={[styles.profileimg, {alignSelf: 'center'}]}
+          />
+        )}
         <SizeBox size={5} />
         <Text
           style={{
             ...commonStyles.font14Center,
             color: Colors.white,
           }}>
-          Kathrin Down
+          {username}
         </Text>
 
         <FlatList
@@ -293,10 +309,10 @@ export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
               img: ImagePath.userprofile,
             },
             {id: 2, name: 'Invites', group: 'Feather', vector: 'mail'},
-            {id: 3, name: 'People likes', img: ImagePath.likes},
+            {id: 3, name: 'Likes', img: ImagePath.likes},
             {
               id: 4,
-              name: 'Events',
+              name: 'My Events',
               group: 'MaterialIcons',
               vector: 'event',
             },
@@ -319,6 +335,12 @@ export function Drawer({onClose, isVisible, onBackdropPress}: DrawerProps) {
               onPress={() => {
                 if (item?.name == 'Profile') {
                   navigation.navigate(NavigationStrings.UserProfile);
+                } else if (item?.name == 'My Events') {
+                  navigation.navigate(NavigationStrings.MyEvents);
+                } else if (item?.name == 'Likes') {
+                  navigation.navigate(NavigationStrings.PeopleLikes);
+                } else if (item?.name == 'Feedback') {
+                  navigation.navigate(NavigationStrings.FeedBack);
                 } else {
                   navigation.navigate(item?.name);
                 }

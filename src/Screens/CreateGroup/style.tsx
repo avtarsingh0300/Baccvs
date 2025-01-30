@@ -9,6 +9,7 @@ import {
 } from '../../Utilities/Styles/responsiveSize';
 
 import fontFamily from '../../Utilities/Styles/fontFamily';
+import commonStyles from '../../Utilities/Styles/commonStyles';
 
 const styles = StyleSheet.create({
   LinearConatiner: {flex: 1},
@@ -55,13 +56,14 @@ const styles = StyleSheet.create({
   },
 
   btn: {
-    marginLeft: 5,
-    width: moderateScale(52),
-    height: moderateScale(55),
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: '90%',
+    paddingVertical: moderateScaleVertical(14),
+    borderWidth: 1,
     borderRadius: 10,
-    marginTop: moderateScaleVertical(20),
+    borderColor: Colors.Pink,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    alignItems: 'center',
   },
   startbtn: {
     borderTopWidth: 1,
@@ -162,14 +164,11 @@ const styles = StyleSheet.create({
   },
   imageContainer2: {
     backgroundColor: Colors.dashBordervw,
-    // borderWidth: 4,
     height: height / 6,
-    width: '30%',
+    width: moderateScale(80),
     marginLeft: 10,
     alignSelf: 'center',
-    // borderStyle: 'dashed',
     borderRadius: 15,
-    // borderColor: Colors.dashBorder,
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: moderateScaleVertical(10),
@@ -188,13 +187,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   flatbox: {
-    // paddingHorizontal: 10,
     borderColor: Colors.lightGrey,
     borderRadius: 8,
     width: '95%',
-    // marginLeft: 10,
     alignSelf: 'center',
     paddingVertical: moderateScaleVertical(10),
+  },
+  multiInput: {
+    borderWidth: 1.5,
+    borderRadius: 10,
+  },
+  btnText: {
+    ...commonStyles.font16WhiteBold,
+    color: Colors.Pink,
   },
 });
 

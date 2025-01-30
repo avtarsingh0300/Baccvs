@@ -8,7 +8,7 @@ import {
 import commonStyles from '../../Utilities/Styles/commonStyles';
 
 const styles = StyleSheet.create({
-  LinearConatiner: {flex: 1, paddingHorizontal: 20},
+  LinearConatiner: {flex: 1, paddingHorizontal: 0},
   userImg: {
     width: moderateScale(28),
     height: moderateScaleVertical(35),
@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 15,
+    paddingHorizontal: 20,
   },
 });
 

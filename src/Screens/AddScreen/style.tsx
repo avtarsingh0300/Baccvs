@@ -73,14 +73,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardBtn: {
-    borderTopWidth: 1,
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
+    borderWidth: 1,
     borderColor: Colors.white,
     borderRadius: 8,
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
   timecon: {
     flexDirection: 'row',

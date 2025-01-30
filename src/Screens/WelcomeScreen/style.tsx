@@ -16,6 +16,16 @@ const styles = StyleSheet.create({
     marginVertical: moderateScaleVertical(10),
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor:Colors.lightPink
+  },
+  button: {
+    height: 65,
+    borderRadius: 5,
+    width: '100%',
+    marginVertical: moderateScaleVertical(10),
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor:Colors.memberaccess
   },
   btnText: {
     ...commonStyles.font16Regular,

@@ -88,9 +88,15 @@ export function apiReq(
   });
 }
 
-export async function apiGet(endPoint: string, data: object, headers = {}) {
+export async function apiGet(
+  endPoint: string,
+  data?: object,
+  headers?: object,
+) {
   console.log(endPoint, ':endPoint');
+  console.log(data, ':DATA');
   var result = await apiReq(endPoint, data, 'get', headers);
+
   if (result === true) {
     return await apiReq(endPoint, data, 'get', headers);
   } else {
@@ -98,7 +104,11 @@ export async function apiGet(endPoint: string, data: object, headers = {}) {
   }
 }
 
-export async function apiPost(endPoint: string, data: object, headers: object) {
+export async function apiPost(
+  endPoint: string,
+  data?: object,
+  headers?: object,
+) {
   console.log(endPoint, ':endPoint');
   var result = await apiReq(endPoint, data, 'post', headers);
   if (result === true) {
