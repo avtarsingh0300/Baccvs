@@ -1,30 +1,24 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {Colors} from '../../Utilities/Styles/colors';
 import {Loadingcomponent, SizeBox} from '../../Utilities/Component/Helpers';
+import {getMemberDetails, getUserProfile} from '../../Utilities/Constants/auth';
+import ImagePath from '../../Utilities/Constants/ImagePath';
+import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
+import {IMAGE_URL} from '../../Utilities/Constants/Urls';
+import {Colors} from '../../Utilities/Styles/colors';
 import commonStyles from '../../Utilities/Styles/commonStyles';
+import fontFamily from '../../Utilities/Styles/fontFamily';
 import {
   moderateScale,
   moderateScaleVertical,
   textScale,
 } from '../../Utilities/Styles/responsiveSize';
-import ImagePath from '../../Utilities/Constants/ImagePath';
-import fontFamily from '../../Utilities/Styles/fontFamily';
-import {getMemberDetails, getUserProfile} from '../../Utilities/Constants/auth';
-import {IMAGE_URL} from '../../Utilities/Constants/Urls';
-import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 
 const index = ({navigation, route}: any) => {
   const [otherUserData, setOtherUserData] = useState<any>({});
   const [userData, setUserData] = useState<any>({});
   const [loader, setLoader] = useState(false);
-  //   console.log(route?.params, 'route');
-
-  useEffect(() => {
-    setLoader(true);
-    getUserDataHandler();
-  }, []);
 
   const getUserDataHandler = () => {
     const formData = {
@@ -44,7 +38,7 @@ const index = ({navigation, route}: any) => {
 
   const getUserData = async () => {
     getUserProfile()
-      .then(res => {
+      .then((res: any) => {
         setLoader(false);
         // console.log(res, 'res in getUserProfile');
         setUserData(res?.user);
@@ -55,7 +49,10 @@ const index = ({navigation, route}: any) => {
       });
   };
 
-  console.log(otherUserData, 'otherUserData');
+  useEffect(() => {
+    setLoader(true);
+    getUserDataHandler();
+  }, []);
 
   return (
     <LinearGradient
@@ -70,7 +67,7 @@ const index = ({navigation, route}: any) => {
       <Text style={styles.congratulationsText}>You matched !</Text>
       <SizeBox size={30} />
       <Text style={styles.likeText}>
-        You and {otherUserData?.username} have liked each other.
+        You and {otherUserData?.full_name} have liked each other.
       </Text>
       <SizeBox size={30} />
       <View
@@ -83,10 +80,11 @@ const index = ({navigation, route}: any) => {
         <Image
           source={
             userData?.pictures?.length > 0
-              ? {uri: IMAGE_URL + userData?.pictures[0]}
+              ? {uri: IMAGE_URL + userData?.pictures[0].url}
               : ImagePath.ProfileImg
           }
           style={styles.img}
+          resizeMode="contain"
         />
         <Image
           source={ImagePath.fire}
@@ -98,22 +96,32 @@ const index = ({navigation, route}: any) => {
           style={[styles.img, {borderWidth: 0}]}
           onPress={() => {
             navigation.navigate(NavigationStrings.DatingUserProfile, {
-              id: otherUserData?.id,
+              id: route.params._id,
             });
           }}>
           <Image
             source={
               otherUserData?.pictures?.length > 0
-                ? {uri: IMAGE_URL + otherUserData?.pictures[0]}
+                ? {uri: IMAGE_URL + otherUserData?.pictures[0].url}
                 : ImagePath.ProfileImg
             }
             style={styles.img}
+            resizeMode="contain"
           />
         </TouchableOpacity>
       </View>
       <SizeBox size={50} />
       <TouchableOpacity
         activeOpacity={0.8}
+        onPress={() =>
+          navigation.navigate(NavigationStrings.Messages, {
+            userdata: {
+              _id: otherUserData?.id,
+              username: otherUserData?.username,
+              pictures: otherUserData.pictures,
+            },
+          })
+        }
         style={[styles.btn, {borderColor: Colors.Pink}]}>
         <Text style={[styles.btnText, {color: Colors.Pink}]}>Chat now</Text>
       </TouchableOpacity>

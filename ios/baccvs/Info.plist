@@ -36,6 +36,8 @@
 	<key>NSAppleMusicUsageDescription</key>
 	<string>This app requires access to your music library to provide a personalized music
 			experience.</string>
+	<key>NSMicrophoneUsageDescription</key>
+    <string>App needs microphone access to record audio</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Baccvs app need access to your camera to upload files</string>
 	<key>NSDocumentsUsageDescription</key>

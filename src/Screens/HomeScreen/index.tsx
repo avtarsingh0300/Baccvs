@@ -26,7 +26,11 @@ import {
   showError,
 } from '../../Utilities/Component/Helpers';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
-import {getHomedata, likeEvents} from '../../Utilities/Constants/auth';
+import {
+  getHomedata,
+  getUserProfile,
+  likeEvents,
+} from '../../Utilities/Constants/auth';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
@@ -55,6 +59,8 @@ const HomeScreen = ({navigation}: any) => {
   const [selectedOption, setSelectedOption] = useState('all');
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
+
+  const [userData, setUserData] = useState<any>();
 
   const user = useSelector((data: any) => data?.auth?.userData?.user);
   const data = useSelector((data: any) => data?.homeScreen?.eventData); // Home Screen Data from Redux
@@ -384,7 +390,6 @@ const HomeScreen = ({navigation}: any) => {
                       ...commonStyles.font14,
                       fontFamily: fontFamily.time_bold,
                     }}>
-                    {` `}
                     {item?.early_price} €
                   </Text>
                 </View>
@@ -393,7 +398,10 @@ const HomeScreen = ({navigation}: any) => {
                     style={{
                       color: Colors.white,
                     }}>
-                    {formatTimeRange(item?.start_time, item?.end_time)}
+                    {formatTimeRange(
+                      moment(item?.start_time, 'HH:mm:ss').format('hh:mm:ss A'),
+                      moment(item?.end_time, 'HH:mm:ss').format('hh:mm:ss A'),
+                    )}
                   </Text>
                 </Text>
               </View>
@@ -475,16 +483,29 @@ const HomeScreen = ({navigation}: any) => {
     }
   }, [lat, lon, isEventsFiltered, selectedOption]);
 
+  useEffect(() => {
+    getUserProfile().then((res: any) => {
+      setUserData(res?.user);
+    });
+  }, []);
+
   return (
     <View style={styles.LinearConatiner}>
       <SafeAreaView>
         <Loadingcomponent isVisible={loading} />
         <View style={styles.headerContainer}>
           <TouchableOpacity onPress={showDrawer}>
-            <ImageComponent
-              source={ImagePath.ProfileImg}
-              style={styles.profileimg}
-            />
+            {userData?.pictures?.length > 0 ? (
+              <ImageComponent
+                source={{uri: IMAGE_URL + userData?.pictures[0].url}}
+                style={styles.profileimg}
+              />
+            ) : (
+              <ImageComponent
+                source={ImagePath.ProfileImg}
+                style={styles.profileimg}
+              />
+            )}
           </TouchableOpacity>
           <ImageComponent
             source={ImagePath.AppLogo}
@@ -617,6 +638,7 @@ const HomeScreen = ({navigation}: any) => {
           isVisible={modalVisible}
           onBackdropPress={showDrawer}
           onClose={showDrawer}
+          profilePic={IMAGE_URL + userData?.pictures[0]?.url}
         />
         <Modal
           useNativeDriver={true}

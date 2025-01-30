@@ -16,6 +16,7 @@ import {login, setDataHandler} from '../../Utilities/Constants/auth';
 import {Keyboard} from 'react-native';
 import {saveUserData} from '../../Redux/Action/auth';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
+import {getFCMToken} from '../../Utilities/Helpers';
 const Login = ({navigation}: any) => {
   // const [username, setUsername] = useState('Moosa@yopmail.com');
   // const [password, setPassword] = useState('Avtar@123');
@@ -27,7 +28,9 @@ const Login = ({navigation}: any) => {
     navigation.goBack();
   };
 
-  const onLogin = () => {
+  const onLogin = async () => {
+    const fcmToken = await getFCMToken();
+
     if (!username) {
       return showError('Please enter username');
     }
@@ -37,6 +40,7 @@ const Login = ({navigation}: any) => {
     const formData = {
       identifier: username,
       password: password,
+      deviceToken: fcmToken,
     };
     setLoader(true);
     login(formData)
@@ -70,7 +74,7 @@ const Login = ({navigation}: any) => {
     setPassword(value);
   };
   const onForget = () => {
-  navigation.navigate(NavigationStrings.forgot);
+    navigation.navigate(NavigationStrings.forgot);
   };
 
   return (
@@ -111,7 +115,8 @@ const Login = ({navigation}: any) => {
           style={{
             alignSelf: 'flex-end',
             ...commonStyles.font16White,
-          }} onPress={onForget}>
+          }}
+          onPress={onForget}>
           Forgot password?
         </Text>
         <SizeBox size={10} />

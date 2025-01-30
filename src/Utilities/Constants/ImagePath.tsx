@@ -42,5 +42,6 @@ export default {
   link_backward: require('../../Assets/images/link_backward.png'),
   ChevronUp: require('../../Assets/images/ChevronUp.png'),
   ChevronDown: require('../../Assets/images/ChevronDown.png'),
-  dotline:require('../../Assets/images/dotline.png')
+  dotline: require('../../Assets/images/dotline.png'),
+  microphone: require('../../Assets/images/microphone.png'),
 };

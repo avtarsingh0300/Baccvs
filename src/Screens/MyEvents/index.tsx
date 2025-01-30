@@ -28,12 +28,16 @@ import {deleteEvent, getMyEvent} from '../../Utilities/Constants/auth';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {useSelector} from 'react-redux';
+import moment from 'moment';
+import {formatTimeRange} from '../../Utilities/Helpers';
 
 const MyEvents = ({navigation}: any) => {
+  const currentTime = moment();
+
   const [button, setButton] = useState('missed');
   const [loading, SetLoading] = useState(false);
   const [eventData, SetEventData] = useState([]);
-  const user = useSelector((data: object) => data?.auth?.userData);
+
   // console.log(user);
   const handleButton = (value: any) => {
     if (value === 'missed') {
@@ -48,17 +52,12 @@ const MyEvents = ({navigation}: any) => {
     }
   };
 
-  useEffect(() => {
-    getMyEvents('past');
-  }, []);
-
   const getMyEvents = (status: any) => {
-    console.log(status);
     SetLoading(true);
     getMyEvent(status)
-      .then(res => {
+      .then((res: any) => {
         SetLoading(false);
-        SetEventData(res?.events), console.log(res);
+        SetEventData(res?.events);
       })
       .catch(err => {
         SetLoading(false), showError(err?.message);
@@ -66,17 +65,19 @@ const MyEvents = ({navigation}: any) => {
       });
   };
 
-  const deletePress = id => {
+  const deletePress = (id: any) => {
     deleteEvent(id)
-      .then(res => {
+      .then((res: any) => {
         getMyEvents('ongoing');
         showSuccess(res?.message);
       })
       .catch(err => {
+        console.log(err);
+
         showError(err?.message);
-        console.log(message);
       });
   };
+
   const onbackPress = () => {
     navigation.goBack();
   };
@@ -85,158 +86,206 @@ const MyEvents = ({navigation}: any) => {
     navigation.navigate(NavigationStrings.EventDetails, {eventId: item?.id});
   };
 
-  const renderItem = ({item}: any) => (
-    <View>
-      <View style={styles.backContainer}>
-        <View />
-        <Text
-          style={{
-            ...commonStyles.font16Regular,
-            color: Colors.white,
-          }}>
-          {item?.event_name}
-        </Text>
-        <View style={styles.flex}>
+  const renderItem = ({item}: any) => {
+    // Clean the start and end times to remove non-breaking spaces
+    const cleanedStartTime = item.start_time.replace(/\u202f/g, ' ').trim();
+    const cleanedEndTime = item.end_time.replace(/\u202f/g, ' ').trim();
+
+    // Combine date and time for eventStartTime and eventEndTime
+    const eventStartTime = moment(
+      `${item.event_date} ${cleanedStartTime}`,
+      'YYYY-MM-DD hh:mm:ss A',
+    );
+    const eventEndTime = moment(
+      `${item.event_date} ${cleanedEndTime}`,
+      'YYYY-MM-DD hh:mm:ss A',
+    );
+
+    // Determine event status
+    const isOngoing = currentTime.isBetween(eventStartTime, eventEndTime); // Event is currently happening
+    const isPastEvent = currentTime.isAfter(eventEndTime); // Event has ended
+    const isUpcoming = currentTime.isBefore(eventStartTime); // Event hasn't started yet
+
+    const remainingDays = eventStartTime.diff(currentTime, 'days');
+    const remainingHours = eventStartTime.diff(currentTime, 'hours');
+    const remainingMinutes = eventStartTime.diff(currentTime, 'minutes');
+
+    const renderStatus = () => {
+      if (isOngoing) {
+        return {color: '#6DFF3ADD', time: 'Ongoing'};
+      } else if (isPastEvent) {
+        return {color: '#FFC542', time: 'Past event'};
+      } else {
+        if (remainingDays > 0) {
+          return {color: '#6DFF3ADD', time: `In ${remainingDays} days`};
+        } else if (remainingHours > 0) {
+          return {color: '#6DFF3ADD', time: `In ${remainingHours} hours`};
+        } else {
+          return {color: '#6DFF3ADD', time: `In ${remainingMinutes} minutes`};
+        }
+      }
+    };
+
+    return (
+      <View>
+        <View style={styles.backContainer}>
+          <View />
           <Text
             style={{
-              ...commonStyles.font12Regular,
+              ...commonStyles.font16Regular,
               color: Colors.white,
             }}>
-            {item?.distance}
+            {item?.event_name}
           </Text>
-          <TouchableOpacity
-            onPress={() => {
-              deletePress(item?.id);
-            }}>
-            <VectorIcon
-              groupName="MaterialCommunityIcons"
-              name="delete"
-              size={30}
-              style={{marginRight: 15}}
-              onPress={() => {
-                deletePress(item?.id);
-              }}
-            />
-          </TouchableOpacity>
-          {/* <VectorIcon groupName="Feather" name="map-pin" size={15} /> */}
-        </View>
-      </View>
-
-      <TouchableOpacity
-        activeOpacity={0.8}
-        onPress={() => onEventDetails(item)}
-        style={styles.listContainer}>
-        <ImageBackground
-          source={{uri: IMAGE_URL + item?.thumbnail_urls[0]}}
-          style={styles.backimg}>
-          <View style={styles.flexinner}>
-            <ImageComponent
-              source={{uri: IMAGE_URL + item?.members[0]?.imageUrl}}
-              style={styles.shortimg}
-            />
-            {item?.members[1]?.imageUrl ? (
-              <ImageComponent
-                source={{uri: IMAGE_URL + item?.members[1]?.imageUrl}}
-                style={[
-                  styles.extraimg,
-                  {
-                    marginLeft: 5,
-                  },
-                ]}
-              />
-            ) : null}
-
-            {item?.members[2]?.imageUrl ? (
-              <ImageComponent
-                source={{uri: IMAGE_URL + item?.members[2]?.imageUrl}}
-                style={[
-                  styles.extraimg,
-                  {
-                    right: 10,
-                  },
-                ]}
-              />
-            ) : null}
-
-            {item?.members?.length > 3 ? (
-              <Text
-                style={{
-                  ...commonStyles.font16Regular,
-                  alignSelf: 'flex-end',
-                  color: Colors.white,
-                }}>
-                +{item?.members?.length - 3}
-              </Text>
-            ) : null}
-          </View>
-          <TouchableOpacity style={styles.liktxtcon}>
-            <Text style={styles.likestxt}>{item.like_count} Likes </Text>
-            <Image source={ImagePath.likes} style={styles.likeimg} />
-          </TouchableOpacity>
-        </ImageBackground>
-      </TouchableOpacity>
-      <SizeBox size={14} />
-      <View style={{paddingHorizontal: 15}}>
-        <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <ImageComponent
-              source={ImagePath.priceTag}
-              resizeMode="contain"
-              style={styles.tag}
-            />
-            <Text
-              style={{
-                ...commonStyles.font14,
-                fontFamily: fontFamily.time_bold,
-              }}>
-              {` `}
-              {item?.regular_price} €
-            </Text>
-          </View>
-          <Text style={styles.ontxt}>
-            Ongoing{` `}
-            <Text
-              style={{
-                color: Colors.white,
-              }}>
-              - {item?.duration}
-            </Text>
-          </Text>
-        </View>
-        <View style={styles.backContainer}>
           <View style={styles.flex}>
-            <VectorIcon groupName="Feather" name="users" size={15} />
             <Text
               style={{
                 ...commonStyles.font12Regular,
-                color: Colors.lightorange,
+                color: Colors.white,
               }}>
-              {` `}
-              {item?.spot} spots
+              {item?.distance}
             </Text>
+            <TouchableOpacity
+              onPress={() => {
+                deletePress(item?.id);
+              }}>
+              <VectorIcon
+                groupName="MaterialCommunityIcons"
+                name="delete"
+                size={30}
+                style={{marginRight: 15}}
+                onPress={() => {
+                  deletePress(item?.id);
+                }}
+              />
+            </TouchableOpacity>
           </View>
-          <Text
-            style={{
-              ...commonStyles.font14Center,
-              color: Colors.white,
-            }}>
-            Party - Afterparty
-          </Text>
         </View>
-      </View>
-      <FlatList
-        data={item.music_type}
-        horizontal
-        style={{paddingHorizontal: 15}}
-        renderItem={({item}) => (
-          <View style={styles.music}>
-            <Text style={styles.musictxt}>{item}</Text>
+
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => onEventDetails(item)}
+          style={styles.listContainer}>
+          <ImageBackground
+            source={{uri: IMAGE_URL + item?.thumbnail_urls[0]}}
+            style={styles.backimg}>
+            <View style={styles.flexinner}>
+              <ImageComponent
+                source={{uri: IMAGE_URL + item?.members[0]?.imageUrl}}
+                style={styles.shortimg}
+              />
+              {item?.members[1]?.imageUrl ? (
+                <ImageComponent
+                  source={{uri: IMAGE_URL + item?.members[1]?.imageUrl}}
+                  style={[
+                    styles.extraimg,
+                    {
+                      marginLeft: 5,
+                    },
+                  ]}
+                />
+              ) : null}
+
+              {item?.members[2]?.imageUrl ? (
+                <ImageComponent
+                  source={{uri: IMAGE_URL + item?.members[2]?.imageUrl}}
+                  style={[
+                    styles.extraimg,
+                    {
+                      right: 10,
+                    },
+                  ]}
+                />
+              ) : null}
+
+              {item?.members?.length > 3 ? (
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    alignSelf: 'flex-end',
+                    color: Colors.white,
+                  }}>
+                  +{item?.members?.length - 3}
+                </Text>
+              ) : null}
+            </View>
+            <TouchableOpacity style={styles.liktxtcon}>
+              <Text style={styles.likestxt}>{item.like_count} Likes </Text>
+              <Image source={ImagePath.likes} style={styles.likeimg} />
+            </TouchableOpacity>
+          </ImageBackground>
+        </TouchableOpacity>
+        <SizeBox size={10} />
+        <View style={{paddingHorizontal: 15}}>
+          <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
+              <Text
+                style={{
+                  ...commonStyles.font14,
+                  fontFamily: fontFamily.time_bold,
+                  color: renderStatus().color,
+                }}>
+                {renderStatus().time}
+              </Text>
+
+              {renderStatus().time === 'Past event' && (
+                <Text
+                  style={{
+                    fontFamily: fontFamily.time_bold,
+                    color: 'white',
+                    fontSize: 10,
+                  }}>
+                  {moment(item?.event_date, 'YYYY-MM-DD').format('DD/MM/YYYY')}
+                </Text>
+              )}
+            </View>
+            {renderStatus().time !== 'Past event' && (
+              <Text style={styles.ontxt}>
+                {formatTimeRange(
+                  moment(item?.start_time, 'HH:mm:ss').format('hh:mm:ss A'),
+                  moment(item?.end_time, 'HH:mm:ss').format('hh:mm:ss A'),
+                )}
+              </Text>
+            )}
           </View>
-        )}
-      />
-      {/* </TouchableOpacity> */}
-    </View>
-  );
+          {renderStatus().time !== 'Past event' && (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginVertical: 10,
+              }}>
+              <Text
+                style={{
+                  ...commonStyles.font14Center,
+                  color: Colors.greyTxt,
+                }}>
+                Party - Afterparty{' '}
+                {moment(item?.event_date, 'YYYY-MM-DD').format('DD/MM/YYYY')}
+              </Text>
+            </View>
+          )}
+        </View>
+        <FlatList
+          data={item.music_type}
+          horizontal
+          contentContainerStyle={{marginVertical: 10}}
+          style={{paddingHorizontal: 15}}
+          renderItem={({item}) => (
+            <View style={styles.music}>
+              <Text style={styles.musictxt}>{item}</Text>
+            </View>
+          )}
+        />
+        {/* </TouchableOpacity> */}
+      </View>
+    );
+  };
+
+  useEffect(() => {
+    getMyEvents('past');
+  }, []);
 
   return (
     <LinearGradient

@@ -14,6 +14,7 @@ import {getUserData, sendUserStatus} from './src/Utilities/Constants/auth';
 import {displayNotification, getFCMToken} from './src/Utilities/Helpers';
 import fontFamily from './src/Utilities/Styles/fontFamily';
 import {moderateScale, textScale} from './src/Utilities/Styles/responsiveSize';
+// import {StripeProvider} from '@stripe/stripe-react-native';
 
 LogBox.ignoreAllLogs();
 
@@ -46,6 +47,11 @@ const App = () => {
 
   const requestNotificationPermission = async () => {
     const authStatus = await messaging().requestPermission();
+    const fcmTokn = await getFCMToken();
+
+    console.log(fcmTokn);
+    
+
     const enabled =
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
@@ -97,24 +103,24 @@ const App = () => {
       subscription.remove();
     };
   }, []);
-getFCMToken();
+  getFCMToken();
 
-useEffect(() => {
-  SplashScreen.hide();
+  useEffect(() => {
+    SplashScreen.hide();
 
-  // Request notification permissions
-  requestNotificationPermission();
+    // Request notification permissions
+    requestNotificationPermission();
 
-  // Handle foreground notifications
-  const unsubscribeForeground = messaging().onMessage(async remoteMessage => {
-    console.log('Foreground notification received:', remoteMessage);
-    await displayNotification(remoteMessage); // Show notification
-  });
+    // Handle foreground notifications
+    const unsubscribeForeground = messaging().onMessage(async remoteMessage => {
+      console.log('Foreground notification received:', remoteMessage);
+      await displayNotification(remoteMessage); // Show notification
+    });
 
-  return () => {
-    unsubscribeForeground();
-  };
-}, []);
+    return () => {
+      unsubscribeForeground();
+    };
+  }, []);
 
   return (
     <GestureHandlerRootView

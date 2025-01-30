@@ -182,4 +182,18 @@ export const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 2,
   },
+  waveform: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 20,
+    width: 150,
+    height: 50,
+  },
+  waveBar: {
+    width: 10,
+    height: 30,
+    backgroundColor: 'white',
+    borderRadius: 5,
+  },
 });

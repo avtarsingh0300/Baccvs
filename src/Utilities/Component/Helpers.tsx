@@ -251,6 +251,7 @@ export function Drawer({
   isVisible,
   onBackdropPress,
   username,
+  profilePic,
 }: DrawerProps) {
   const navigation = useNavigation<any>();
 
@@ -277,10 +278,18 @@ export function Drawer({
           onPress={onClose}
           color={Colors.white}
         />
-        <ImageComponent
-          source={ImagePath.ProfileImg}
-          style={[styles.profileimg, {alignSelf: 'center'}]}
-        />
+
+        {profilePic ? (
+          <ImageComponent
+            source={{uri: profilePic}}
+            style={[styles.profileimg, {alignSelf: 'center'}]}
+          />
+        ) : (
+          <ImageComponent
+            source={ImagePath.ProfileImg}
+            style={[styles.profileimg, {alignSelf: 'center'}]}
+          />
+        )}
         <SizeBox size={5} />
         <Text
           style={{

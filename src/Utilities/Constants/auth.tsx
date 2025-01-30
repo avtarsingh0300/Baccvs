@@ -6,11 +6,13 @@ import {
   ADD_PAYMENT_METHODS,
   BLOCKED_LIST,
   BLOCK_USER,
+  BUY_EVENT_TICKET,
   BUY_TICKET,
   CANCEL_INVITES,
   CANCEL_SELL_TICKET,
   CHANGE_FORGOT_PASSWORD,
   CHANGE_PASS,
+  COMMENT_ON_MEDIA,
   CREATE_COMMENT,
   CREATE_EVENT,
   CREATE_MEET_GROUP,
@@ -21,6 +23,7 @@ import {
   EDIT_COMMENT,
   EVENT_DETAIL,
   EVENT_SEARCH,
+  EVENT_TICKET_DETAIL,
   FOLLOW_USER,
   FORGOT_PASSWORD,
   GET_ALL_MEET_GROUPS,
@@ -221,6 +224,10 @@ export function getEventDetail(id: any) {
   return apiGet(`${EVENT_DETAIL}/${id}`);
 }
 
+export function getEventTicketDetails(id: any) {
+  return apiGet(`${EVENT_TICKET_DETAIL}/${id}`);
+}
+
 export function getBlockedUser(id: string) {
   return apiGet(`${BLOCKED_LIST}?id=${id}`);
 }
@@ -288,6 +295,9 @@ export function cancelSellTicket(data: object) {
 export function buyTicket(data: object) {
   return apiPost(BUY_TICKET, data);
 }
+export function buyEventTicket(data: any) {
+  return apiPost(BUY_EVENT_TICKET, data);
+}
 
 export function followUser(data: object) {
   return apiPost(FOLLOW_USER, data);
@@ -310,7 +320,7 @@ export function registerUser(data: object) {
 }
 
 export function createCommets(data: object) {
-  return apiPost(CREATE_COMMENT, data);
+  return apiPost(CREATE_COMMENT, data, {'Content-Type': 'multipart/form-data'});
 }
 
 export function likeEvents(data: object) {
@@ -321,7 +331,7 @@ export function deleteComment(iD: String) {
   return apiPost(`${DELETE_COMMENT}?id=${iD}`);
 }
 
-export function editComment(data: object) {
+export function editComment(data: any) {
   return apiPost(EDIT_COMMENT, data);
 }
 
@@ -358,11 +368,15 @@ export function getUserLastSeen(id: String) {
 }
 
 export function getUserMediaDetails(data: object) {
-  return apiGet(GET_MEDIA_DETAILS, data);
+  return apiPost(GET_MEDIA_DETAILS, data);
 }
 
 export function readMessageHandler(id: String) {
   return apiPost(`${UPDATE_READ_STATUS}${id}`);
+}
+
+export function commentOnMedia(data: {mediaId: string; text: string}) {
+  return apiPost(COMMENT_ON_MEDIA, data);
 }
 
 export function getHomedata(

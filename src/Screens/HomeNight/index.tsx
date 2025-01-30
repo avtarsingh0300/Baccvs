@@ -26,6 +26,9 @@ const HomeNight = ({navigation}: any) => {
     setShowOptionModal(true);
   };
 
+  console.log(user);
+  
+
   const nightclubNames: any = [
     {id: 1, name: 'Nightclub Analytics'},
     {id: 2, name: 'Events'},

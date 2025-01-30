@@ -62,15 +62,14 @@ const styles = StyleSheet.create({
     height: moderateScaleVertical(17),
   },
   ontxt: {
-    fontSize: 12,
-    color: Colors.lightgreen,
+    fontSize: 16,
+    color: Colors.white,
     fontFamily: fontFamily.time_regular,
     fontWeight: '700',
   },
   backimg: {
     width: '100%',
     height: height / 3.5,
-    // justifyContent: 'flex-end',
   },
   flexinner: {
     paddingHorizontal: 15,

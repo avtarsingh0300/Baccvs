@@ -1,24 +1,25 @@
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
-  View,
-  Text,
-  TouchableOpacity,
   Animated,
   PanResponder,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {SafeAreaView} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {Colors} from '../../Utilities/Styles/colors';
-import styles from './style';
-import commonStyles from '../../Utilities/Styles/commonStyles';
-import VectorIcon from '../../Utilities/Component/vectorIcons';
+import Modal from 'react-native-modal';
+import {useSelector} from 'react-redux';
 import {
   Loadingcomponent,
   SizeBox,
   showError,
   showSuccess,
 } from '../../Utilities/Component/Helpers';
-import {height, moderateScale} from '../../Utilities/Styles/responsiveSize';
+import MeetFilterModal from '../../Utilities/Component/MeetFilterModal';
+import MeetPeopleCard from '../../Utilities/Component/MeetPeopleCard';
+import TeamsCard from '../../Utilities/Component/TeamsCard';
+import VectorIcon from '../../Utilities/Component/vectorIcons';
 import {
   disLikeTeam,
   disLikeUser,
@@ -27,12 +28,11 @@ import {
   likeTeam,
   likeUser,
 } from '../../Utilities/Constants/auth';
-import {useSelector} from 'react-redux';
-import Modal from 'react-native-modal';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
-import MeetPeopleCard from '../../Utilities/Component/MeetPeopleCard';
-import MeetFilterModal from '../../Utilities/Component/MeetFilterModal';
-import TeamsCard from '../../Utilities/Component/TeamsCard';
+import {Colors} from '../../Utilities/Styles/colors';
+import commonStyles from '../../Utilities/Styles/commonStyles';
+import {height, moderateScale} from '../../Utilities/Styles/responsiveSize';
+import styles from './style';
 
 const MeetPeople = ({navigation}: any) => {
   const isSoloFiltered = useSelector(
@@ -56,10 +56,12 @@ const MeetPeople = ({navigation}: any) => {
     getAllUsers()
       .then((res: any) => {
         setUserData([]);
-        setUserData(res?.data);
+        setUserData(
+          res.data.filter((userItem: any) => userItem?._id !== user.user.id),
+        );
 
         if (userData?.length == 0) {
-          setCurrentImage(res?.data[0]);
+          setCurrentImage(res?.data.reverse()[0]);
         } else {
           const filterData = res?.data?.filter(
             (x: any) => currentImage?._id == x?._id,
@@ -92,13 +94,14 @@ const MeetPeople = ({navigation}: any) => {
       likedUserId: item?._id,
       type: type,
     };
-    // console.log(type, 'type');
+
     likeUser(data)
       .then((res: any) => {
         handelSelectionUser('');
+
         if (res?.match) {
           navigation.navigate(NavigationStrings.MatchPeople, {
-            data: res?.data?.likedUserId,
+            data: item,
           });
         } else {
           showSuccess(res?.message);
@@ -117,7 +120,6 @@ const MeetPeople = ({navigation}: any) => {
       groupId: item?._id,
       type: type,
     };
-    console.log(type, 'type');
     likeTeam(data)
       .then((res: any) => {
         console.log(res, 'res in likeTeameHanlder');
@@ -140,6 +142,7 @@ const MeetPeople = ({navigation}: any) => {
     disLikeUser(data)
       .then((res: any) => {
         console.log(res, 'res in disLikeUser');
+        showSuccess('User Disliked Successfully');
         handelSelectionUser('left');
       })
       .catch(err => {
@@ -153,7 +156,6 @@ const MeetPeople = ({navigation}: any) => {
     const data = {
       userId: user?.user?.id,
       groupId: item?._id,
-      // type: type,
     };
     // console.log(type, 'type');
     disLikeTeam(data)
@@ -485,7 +487,6 @@ const MeetPeople = ({navigation}: any) => {
                       const dragHandlers = isFirst
                         ? panResponser?.panHandlers
                         : {};
-                      // console.log(index, 'index');
                       return (
                         <MeetPeopleCard
                           isFirst={isFirst}

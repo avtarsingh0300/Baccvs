@@ -5,6 +5,7 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  TextInput,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Colors} from '../../Utilities/Styles/colors';
@@ -30,46 +31,37 @@ import {
 
 import ImagePicker from 'react-native-image-crop-picker';
 import {IMAGE_URL} from '../../Utilities/Constants/Urls';
+import {languages} from '../../Utilities/Constants';
 
 const EditProfile = ({navigation}: any) => {
   const [userBio, setUserBio] = useState('');
   const [userLocation, setUserLocation] = useState('');
   const [job, setJob] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [userData, setUserData] = useState<object>({});
+  const [userData, setUserData] = useState<any>({});
   const [zodiacsign, setZodiacsign] = useState('');
 
-  const [musicStyle, setMusicStyle] = useState([]);
-  const [selMusic, setSelMusic] = useState([]);
+  const [musicStyle, setMusicStyle] = useState<any>([]);
+  const [selectedMusicTypes, setSelectedMusicTypes] = useState<any>([]);
+  const [searchedMusictTypes, setSearchedMusictTypes] = useState('');
+  const [filteredMusicStyle, setFilteredMusicStyle] = useState([]);
 
   const [eventType, setEventType] = useState([]);
-  const [selEventType, setsSelEventType] = useState([]);
+  const [selEventType, setsSelEventType] = useState<any>([]);
+  const [searchedEventTypes, setSearchedEventTypes] = useState('');
+  const [filteredEventType, setFilteredEventType] = useState([]);
+
+  const [languagesel, setLanguagesel] = useState<any>([]);
+  const [searchedLanguage, setSearchedLanguage] = useState('');
+  const [filteredLanguage, setFilteredLanguage] = useState<any>(
+    languages.flatMap(category => category.data.map(lang => lang.name)),
+  );
 
   const [profileimg, setProfileImg] = useState('');
   const [drinkingsel, setDrinkingsel] = useState('');
   const [smokingsel, setSmokingsel] = useState('');
-  const [languagesel, setLanguagesel] = useState('');
-  const [pictures, setPictures] = useState([]);
-  const onBack = () => {
-    navigation.goBack();
-  };
+  const [pictures, setPictures] = useState<any>([]);
 
-  useEffect(() => {
-    setLoading(true);
-    getUserData();
-    getEventsTypes();
-  }, []);
-
-  const getEventsTypes = () => {
-    getEventTypes()
-      .then(res => {
-        setMusicStyle(res?.musictype);
-        setEventType(res?.eventtype);
-      })
-      .catch(err => {
-        showError(err?.message), console.log(err);
-      });
-  };
   const addImg = () => {
     ImagePicker.openPicker({
       width: 300,
@@ -95,20 +87,181 @@ const EditProfile = ({navigation}: any) => {
       setPictures(newPictures);
     });
   };
+
+  const updateProfileHandler = () => {
+    const formData = new FormData();
+
+    const selectedEventIds = eventType
+      .filter((event: any) => selEventType.includes(event.name))
+      .map((musicItem: any) => musicItem._id);
+
+    const selectedMusicIds = musicStyle
+      .filter((music: any) => selectedMusicTypes.includes(music.name))
+      .map((musicItem: any) => musicItem._id);
+
+    formData.append('full_name', userData?.username);
+    formData.append('gender', userData?.gender);
+    formData.append('height', userData?.height);
+    formData.append('age', userData?.age);
+    formData.append('zodiac_sign', zodiacsign);
+    formData.append('job_title', job);
+    formData.append('location', userLocation);
+    formData.append('language', JSON.stringify(languagesel));
+    formData.append('smoking', smokingsel);
+    formData.append('drinking', drinkingsel);
+    formData.append('bio', userBio);
+    pictures.forEach((image: any, index: any) => {
+      formData.append('pictures', {
+        uri: image,
+        name: `image_${index}.jpg`,
+        type: 'image/jpeg',
+      });
+    });
+
+    formData.append('interests_id', JSON.stringify(userData?.interest_type));
+    formData.append('music_type_id', JSON.stringify(selectedMusicIds));
+    formData.append('event_type_id', JSON.stringify(selectedEventIds));
+
+    setLoading(true);
+    UpdateUserProfile(formData)
+      .then(res => {
+        console.log(res);
+
+        setLoading(true);
+        getUserData();
+        showSuccess('Profile updated!!');
+      })
+      .catch(err => {
+        setLoading(true);
+        showError(err?.message);
+        console.log(err, 'err in UpdateUserProfile');
+      });
+  };
+
+  const handleSearchMusic = (text: string) => {
+    setSearchedMusictTypes(text);
+
+    if (text.length >= 2) {
+      const filtered = musicStyle.filter((item: {name: string}) =>
+        item.name.toLowerCase().startsWith(text.toLowerCase()),
+      );
+      setFilteredMusicStyle(filtered);
+    } else {
+      setFilteredMusicStyle(musicStyle);
+    }
+  };
+
+  const handleSearchEvents = (text: string) => {
+    setSearchedEventTypes(text);
+
+    if (text.length >= 2) {
+      const filtered = eventType.filter((item: {name: string}) =>
+        item.name.toLowerCase().startsWith(text.toLowerCase()),
+      );
+      setFilteredEventType(filtered);
+    } else {
+      setFilteredEventType(eventType);
+    }
+  };
+
+  const handleSearchLanguages = (text: string) => {
+    setSearchedLanguage(text);
+
+    let allLanguages = languages.flatMap(category =>
+      category.data.map(lang => lang.name),
+    );
+
+    if (text.length > 0) {
+      const filtered = allLanguages.filter(item =>
+        item.toLowerCase().startsWith(text.toLowerCase()),
+      );
+      setFilteredLanguage(filtered);
+    } else {
+      // Show selected languages first, then remaining ones
+      const selectedLanguages = allLanguages.filter((lang: any) =>
+        languagesel.includes(lang),
+      );
+      const unselectedLanguages = allLanguages.filter(
+        lang => !languagesel.includes(lang),
+      );
+      setFilteredLanguage([...selectedLanguages, ...unselectedLanguages]);
+    }
+  };
+  const toggleSelection = (item: any) => {
+    setSelectedMusicTypes((prevSelectedItems: any) => {
+      if (prevSelectedItems.includes(item?.name)) {
+        return prevSelectedItems.filter((id: any) => id !== item?.name);
+      } else {
+        return [...prevSelectedItems, item?.name];
+      }
+    });
+  };
+
+  const toggleSelection2 = (item: any) => {
+    setsSelEventType((prevSelectedItems: any) => {
+      if (prevSelectedItems.includes(item?.name)) {
+        return prevSelectedItems.filter((name: any) => name !== item?.name);
+      } else {
+        return [...prevSelectedItems, item?.name];
+      }
+    });
+  };
+
+  const toggleLanguage = (item: any) => {
+    setLanguagesel((prevSelectedItems: any) => {
+      if (prevSelectedItems.includes(item)) {
+        return prevSelectedItems.filter((name: any) => name !== item);
+      } else {
+        return [...prevSelectedItems, item];
+      }
+    });
+  };
+
+  const removeImg = (indexToRemove: any) => {
+    const updatedPictures = pictures.filter(
+      (_: any, index: any) => index !== indexToRemove,
+    );
+    setPictures(updatedPictures);
+  };
+
+  const getImageSource = (item: any) => {
+    if (item.includes('file://') || item.startsWith('/')) {
+      return {uri: item};
+    }
+
+    return {uri: item};
+  };
+
+  const getEventsTypes = () => {
+    getEventTypes()
+      .then((res: any) => {
+        setMusicStyle(res?.musictype);
+        setFilteredMusicStyle(res?.musictype);
+
+        setEventType(res?.eventtype);
+        setFilteredEventType(res?.eventtype);
+      })
+      .catch(err => {
+        showError(err?.message), console.log(err);
+      });
+  };
+
   const getUserData = async () => {
     setLoading(true);
     getUserProfile()
-      .then(res => {
-        console.log(res?.user?.pictures, 'res in getUserProfile');
+      .then((res: any) => {
         setUserData(res?.user);
+        setSelectedMusicTypes(res?.user?.music_type);
+        setsSelEventType(res?.user?.event_type);
+        setLanguagesel(res?.user?.language);
         setZodiacsign(res?.user?.zodiac_sign);
         setJob(res?.user?.job_title);
         setUserBio(res?.user?.bio);
         setDrinkingsel(res?.user?.drinking);
         setSmokingsel(res?.user?.smoking);
         setUserLocation(res?.user?.location);
-        const modifyData = res?.user?.pictures.map(i => {
-          return IMAGE_URL + i;
+        const modifyData = res?.user?.pictures.map((i: any) => {
+          return IMAGE_URL + i.url;
         });
         // console.log(modifyData, 'modifyData');
         setPictures(modifyData);
@@ -121,85 +274,12 @@ const EditProfile = ({navigation}: any) => {
       });
   };
 
-  const updateProfileHandler = () => {
-    const formData = new FormData();
-
-    formData.append('full_name', userData?.username);
-    formData.append('gender', userData?.gender);
-    formData.append('height', userData?.height);
-    formData.append('age', userData?.age);
-    formData.append('zodiac_sign', zodiacsign);
-    formData.append('job_title', job);
-    formData.append('location', userLocation);
-    formData.append('language', languagesel);
-    formData.append('smoking', smokingsel);
-    formData.append('drinking', drinkingsel);
-    formData.append('bio', userBio);
-    pictures.forEach((image, index) => {
-      formData.append('pictures', {
-        uri: image,
-        name: `image_${index}.jpg`,
-        type: 'image/jpeg',
-      });
-    });
-
-    formData.append('interests_id', userData?.interest_type);
-    formData.append(
-      'music_type_id',
-      selMusic.length > 0 ? selMusic : userData?.music_type,
-    );
-    formData.append(
-      'event_type_id',
-      selEventType.length > 0 ? selEventType : userData?.event_type,
-    );
+  useEffect(() => {
     setLoading(true);
-    UpdateUserProfile(formData)
-      .then(res => {
-        setLoading(true);
-        getUserData();
-        showSuccess('Profile updated!!');
-      })
-      .catch(err => {
-        setLoading(true);
-        showError(err?.message);
-        console.log(err, 'err in UpdateUserProfile');
-      });
-  };
+    getUserData();
+    getEventsTypes();
+  }, []);
 
-  const toggleSelection = (item: any) => {
-    setSelMusic((prevSelectedItems: any) => {
-      if (prevSelectedItems.includes(item?._id)) {
-        return prevSelectedItems.filter((id: any) => id !== item?._id);
-      } else {
-        return [...prevSelectedItems, item?._id];
-      }
-    });
-  };
-
-  const toggleSelection2 = (item: any) => {
-    setsSelEventType((prevSelectedItems: any) => {
-      if (prevSelectedItems.includes(item?._id)) {
-        return prevSelectedItems.filter((name: any) => name !== item?._id);
-      } else {
-        return [...prevSelectedItems, item?._id];
-      }
-    });
-  };
-  const removeImg = (indexToRemove: any) => {
-    const updatedPictures = pictures.filter(
-      (_, index) => index !== indexToRemove,
-    );
-    setPictures(updatedPictures);
-  };
-  const getImageSource = (item: any) => {
-    console.log(item);
-
-    if (item.includes('file://') || item.startsWith('/')) {
-      return {uri: item};
-    }
-
-    return {uri: item};
-  };
   return (
     <LinearGradient
       colors={[Colors.backgroundNew, Colors.backgroundNew]}
@@ -225,7 +305,7 @@ const EditProfile = ({navigation}: any) => {
                 source={{
                   uri: profileimg
                     ? profileimg
-                    : IMAGE_URL + userData?.pictures[0],
+                    : IMAGE_URL + userData?.pictures[0].url,
                 }}
                 style={styles.editedimg}
               />
@@ -310,7 +390,7 @@ const EditProfile = ({navigation}: any) => {
                 multiline={true}
                 placeholder="Introduce yourself"
                 value={userBio}
-                onChangeText={(e: string) => setUserBio(e)}
+                onChangeText={text => setUserBio(text)}
                 styless={{undefined}}
               />
             </View>
@@ -321,23 +401,39 @@ const EditProfile = ({navigation}: any) => {
           <Text style={styles.selecttxt}>Select music type</Text>
           <SizeBox size={5} />
 
+          <TextInput
+            value={searchedMusictTypes}
+            onChangeText={handleSearchMusic}
+            placeholder="Search Music Types"
+            style={{
+              backgroundColor: 'white',
+              width: '90%',
+              alignSelf: 'center',
+              paddingVertical: 5,
+              paddingHorizontal: 10,
+              borderRadius: 5,
+              marginVertical: 10,
+              color: Colors.backgroundNew,
+            }}
+          />
+
           <View style={{width: '100%'}}>
             <FlatList
-              data={musicStyle}
-              renderItem={({item}) => (
+              data={filteredMusicStyle}
+              renderItem={({item}: any) => (
                 <View style={styles.langcon}>
                   <TouchableOpacity
                     onPress={() => toggleSelection(item)}
                     style={[
                       styles.itHolder,
                       {
-                        backgroundColor: selMusic.includes(item?._id)
+                        backgroundColor: selectedMusicTypes.includes(item?.name)
                           ? Colors.lightPink
                           : Colors.backgroundNew,
                       },
                     ]}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      {selMusic.includes(item?._id) ? (
+                      {selectedMusicTypes.includes(item?.name) ? (
                         <VectorIcon
                           groupName="AntDesign"
                           name="check"
@@ -365,24 +461,38 @@ const EditProfile = ({navigation}: any) => {
           <SizeBox size={2} />
           <Text style={styles.selecttxt}>Select event type</Text>
           <SizeBox size={5} />
-
+          <TextInput
+            value={searchedEventTypes}
+            onChangeText={handleSearchEvents}
+            placeholder="Search Events Types"
+            style={{
+              backgroundColor: 'white',
+              width: '90%',
+              alignSelf: 'center',
+              paddingVertical: 5,
+              paddingHorizontal: 10,
+              borderRadius: 5,
+              marginVertical: 10,
+              color: Colors.backgroundNew,
+            }}
+          />
           <View style={{width: '100%'}}>
             <FlatList
-              data={eventType}
-              renderItem={({item}) => (
+              data={filteredEventType}
+              renderItem={({item}: any) => (
                 <View style={styles.langcon}>
                   <TouchableOpacity
                     onPress={() => toggleSelection2(item)}
                     style={[
                       styles.itHolder,
                       {
-                        backgroundColor: selEventType.includes(item?._id)
+                        backgroundColor: selEventType.includes(item?.name)
                           ? Colors.lightPink
                           : Colors.backgroundNew,
                       },
                     ]}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      {selEventType.includes(item?._id) ? (
+                      {selEventType.includes(item?.name) ? (
                         <VectorIcon
                           groupName="AntDesign"
                           name="check"
@@ -405,50 +515,66 @@ const EditProfile = ({navigation}: any) => {
           </View>
           <SizeBox size={10} />
           <Text style={styles.label}>Languages</Text>
-          <SizeBox size={5} />
-          <View>
-            <View style={styles.langcon}>
-              <TouchableOpacity
-                style={[
-                  styles.iptHolder,
-                  {
-                    backgroundColor:
-                      languagesel == 'English'
-                        ? Colors.lightPink
-                        : Colors.backgroundNew,
-                  },
-                ]}
-                onPress={() => setLanguagesel('English')}>
-                <Text style={styles.inpt}>English</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setLanguagesel('Spanish')}
-                style={[
-                  styles.iptHolder,
-                  {
-                    backgroundColor:
-                      languagesel == 'Spanish'
-                        ? Colors.lightPink
-                        : Colors.backgroundNew,
-                  },
-                ]}>
-                <Text style={styles.inpt}>Spanish</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setLanguagesel('French')}
-                style={[
-                  styles.iptHolder,
-                  {
-                    backgroundColor:
-                      languagesel == 'French'
-                        ? Colors.lightPink
-                        : Colors.backgroundNew,
-                  },
-                ]}>
-                <Text style={styles.inpt}>French</Text>
-              </TouchableOpacity>
-            </View>
+
+          <TextInput
+            value={searchedLanguage}
+            onChangeText={handleSearchLanguages}
+            placeholder="Search Language here"
+            style={{
+              backgroundColor: 'white',
+              width: '90%',
+              alignSelf: 'center',
+              paddingVertical: 5,
+              paddingHorizontal: 10,
+              borderRadius: 5,
+              marginVertical: 10,
+              color: Colors.backgroundNew,
+              fontSize: 14,
+            }}
+          />
+
+          <View style={{width: '100%'}}>
+            <FlatList
+              data={filteredLanguage.slice(0, 9)}
+              renderItem={({item}: any) => {
+                return (
+                  <View style={[styles.langcon, {width: '33%'}]}>
+                    <TouchableOpacity
+                      onPress={() => toggleLanguage(item)}
+                      style={[
+                        styles.itHolder,
+                        {
+                          backgroundColor: languagesel.includes(item)
+                            ? Colors.lightPink
+                            : Colors.backgroundNew,
+                          width: '100%',
+                        },
+                      ]}>
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'center'}}>
+                        {languagesel.includes(item) ? (
+                          <VectorIcon
+                            groupName="AntDesign"
+                            name="check"
+                            color={Colors.white}
+                            size={15}
+                            style={{alignSlef: 'centre'}}
+                          />
+                        ) : null}
+
+                        <Text style={[styles.inpt]}>
+                          {` `}
+                          {item}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                );
+              }}
+              numColumns={3}
+            />
           </View>
+
           <SizeBox size={10} />
           <Text style={styles.label}>Job title</Text>
           <SizeBox size={5} />
@@ -594,12 +720,6 @@ const EditProfile = ({navigation}: any) => {
                 <Text style={styles.text}>Update</Text>
               </TouchableOpacity>
             </LinearGradient>
-
-            <Text
-              onPress={() => navigation.goBack()}
-              style={[styles.text, {color: Colors.white}]}>
-              cancel
-            </Text>
           </View>
         </KeyboardAwareScrollView>
       </SafeAreaView>

@@ -3,7 +3,7 @@ interface CommonInputProps {
   multiline?: boolean;
   secureTextEntry?: boolean;
   value?: string;
-  onChangeText?: (text: string) => {};
+  onChangeText?: (text: string) => void;
   styless: object;
   keyboardType?:
     | 'default'
@@ -42,7 +42,8 @@ interface DrawerProps {
   onBackdropPress: () => void;
   onClose: () => void;
   isVisible?: boolean;
-  username?: String;
+  username?: string;
+  profilePic?: string;
 }
 interface LoaderProps {
   isVisible?: boolean;

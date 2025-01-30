@@ -1,29 +1,29 @@
+import moment from 'moment';
+import React, {useEffect, useState} from 'react';
 import {
+  FlatList,
   Image,
   SafeAreaView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  FlatList,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import {Colors} from '../../Utilities/Styles/colors';
-import commonStyles from '../../Utilities/Styles/commonStyles';
-import styles from './style';
+import {useSelector} from 'react-redux';
 import {Loadingcomponent, SizeBox} from '../../Utilities/Component/Helpers';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
+import {IMAGE_URL} from '../../Utilities/Constants/Urls';
 import {
   getUserLastChats,
   readMessageHandler,
   sendUserStatus,
 } from '../../Utilities/Constants/auth';
-import moment from 'moment';
-import {IMAGE_URL} from '../../Utilities/Constants/Urls';
-import {useSelector} from 'react-redux';
+import {Colors} from '../../Utilities/Styles/colors';
+import commonStyles from '../../Utilities/Styles/commonStyles';
+import styles from './style';
 
 const Chat = ({navigation}: any) => {
   const [button, setButton] = useState('R');
@@ -46,7 +46,7 @@ const Chat = ({navigation}: any) => {
       userdata: {
         _id: item?.otherUser?.id,
         username: item?.otherUser?.name,
-        pictures: [item?.otherUser?.image],
+        pictures: [{url: item?.otherUser?.image}],
       },
     });
   };

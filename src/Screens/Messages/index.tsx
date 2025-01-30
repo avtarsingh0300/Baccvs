@@ -1,6 +1,11 @@
+import axios from 'axios';
+import {Buffer} from 'buffer';
+import moment from 'moment';
+import React, {Fragment, useCallback, useEffect, useRef, useState} from 'react';
 import {
   FlatList,
   Image,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
@@ -9,13 +14,14 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  Keyboard,
 } from 'react-native';
-import React, {Fragment, useCallback, useEffect, useRef, useState} from 'react';
+import FastImage from 'react-native-fast-image';
+import ImagePicker from 'react-native-image-crop-picker';
 import LinearGradient from 'react-native-linear-gradient';
-import {Colors} from '../../Utilities/Styles/colors';
-import commonStyles from '../../Utilities/Styles/commonStyles';
-import styles from './style';
+import Modal from 'react-native-modal';
+import Video, {VideoRef} from 'react-native-video';
+import {useSelector} from 'react-redux';
+import io from 'socket.io-client';
 import {
   Loadingcomponent,
   showError,
@@ -23,16 +29,7 @@ import {
 } from '../../Utilities/Component/Helpers';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import ImagePath from '../../Utilities/Constants/ImagePath';
-import {
-  height,
-  moderateScale,
-  moderateScaleVertical,
-  width,
-} from '../../Utilities/Styles/responsiveSize';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
-import Modal from 'react-native-modal';
-import io from 'socket.io-client';
-import {useSelector} from 'react-redux';
 import {AWS_S3_FILE_URL, IMAGE_URL} from '../../Utilities/Constants/Urls';
 import {
   chatHistory,
@@ -40,12 +37,15 @@ import {
   getUserLastSeen,
   sendUserStatus,
 } from '../../Utilities/Constants/auth';
-import ImagePicker from 'react-native-image-crop-picker';
-import axios from 'axios';
-import {Buffer} from 'buffer';
-import FastImage from 'react-native-fast-image';
-import Video, {VideoRef} from 'react-native-video';
-import moment from 'moment';
+import {Colors} from '../../Utilities/Styles/colors';
+import commonStyles from '../../Utilities/Styles/commonStyles';
+import {
+  height,
+  moderateScale,
+  moderateScaleVertical,
+  width,
+} from '../../Utilities/Styles/responsiveSize';
+import styles from './style';
 
 const Messages = ({navigation, route}: any) => {
   const [messages, setMessages] = useState<any>([]);
@@ -519,7 +519,11 @@ const Messages = ({navigation, route}: any) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Loadingcomponent isVisible={loader} />
       <LinearGradient
-        colors={[Colors.backgroundNew, Colors.backgroundNew, Colors.backgroundNew]}
+        colors={[
+          Colors.backgroundNew,
+          Colors.backgroundNew,
+          Colors.backgroundNew,
+        ]}
         start={{x: 0, y: 0}}
         end={{x: 1.3, y: 0.9}}
         style={styles.conatiner}>
@@ -569,7 +573,7 @@ const Messages = ({navigation, route}: any) => {
               {route?.params?.userdata?.pictures?.length ? (
                 <Image
                   source={{
-                    uri: IMAGE_URL + route?.params?.userdata?.pictures[0],
+                    uri: IMAGE_URL + route?.params?.userdata?.pictures[0].url,
                   }}
                   style={{
                     width: moderateScale(40),

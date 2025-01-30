@@ -65,12 +65,13 @@ export const formatTimeRange = (startTime: string, endTime: string) => {
   if (startTime && endTime) {
     // Helper function to format a time string to HHhMM
     const formatTime = (time: string) => {
-      const match = time?.match(/(\d+):(\d+):\d+\s([APM]+)/i); // Match time components
+      let match = time?.match(/(\d+):(\d+):\d+\s([APM]+)/i); // Match time components
       if (!match) {
-        throw new Error(`Invalid time format: ${time}`); // Handle invalid format
+        match = time.match(/(\d+):(\d+):\d+\s([APM]+)/i);
+        // throw new Error(`Invalid time format: ${time}`); // Handle invalid format
       }
 
-      const [_, hour, minute, meridian] = match;
+      const [_, hour, minute, meridian] = match!;
       const hour24 =
         meridian === 'PM' && hour !== '12'
           ? parseInt(hour, 10) + 12

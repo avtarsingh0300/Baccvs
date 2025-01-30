@@ -1,3 +1,10 @@
+import {
+  PaymentComplete,
+  PaymentMethodNameEnum,
+  PaymentRequest,
+  SupportedNetworkEnum,
+} from '@rnw-community/react-native-payments';
+import moment from 'moment';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
@@ -7,6 +14,8 @@ import {
   GestureResponderEvent,
   Image,
   ImageBackground,
+  PermissionsAndroid,
+  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -16,9 +25,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import LinearGradient from 'react-native-linear-gradient';
 import MapView, {Marker} from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import Sound from 'react-native-sound';
 import Video from 'react-native-video';
 import {useSelector} from 'react-redux';
 import {
@@ -29,10 +40,12 @@ import {
 } from '../../Utilities/Component/Helpers';
 import VectorIcon from '../../Utilities/Component/vectorIcons';
 import {
+  buyEventTicket,
   createCommets,
   deleteComment,
   editComment,
   getEventDetail,
+  getEventTicketDetails,
   likeEvents,
 } from '../../Utilities/Constants/auth';
 import ImagePath from '../../Utilities/Constants/ImagePath';
@@ -50,12 +63,11 @@ import {
   width,
 } from '../../Utilities/Styles/responsiveSize';
 import {styles} from './styles';
-
-const videoUrls = [
-  'storage/userdata/1732170121213-video_0.mp4',
-  'storage/userdata/1734587471660-video_0.mp4',
-  'storage/userdata/1732170121213-video_0.mp4',
-];
+// const videoUrls = [
+//   'storage/userdata/1732170121213-video_0.mp4',
+//   'storage/userdata/1734587471660-video_0.mp4',
+//   'storage/userdata/1732170121213-video_0.mp4',
+// ];
 
 const EventDetails = ({navigation, route}: any) => {
   const refRBSheet: any = useRef();
@@ -64,20 +76,128 @@ const EventDetails = ({navigation, route}: any) => {
   const refPeopleRBSheet: any = useRef();
   const refMapRBSheet: any = useRef();
   const refTicketsRBSheet: any = useRef();
-  const [loading, setLoading] = useState(false);
-  const [eventData, setEventData] = useState<any>({});
-  const [commentvalue, setCommentValue] = useState('');
-  const [commentid, setCommentId] = useState('');
+  const now = moment();
 
   const user = useSelector((data: any) => data?.auth?.userData);
 
+  const [loading, setLoading] = useState(false);
+
+  const [eventData, setEventData] = useState<any>({});
+  const [isEventUpcoming, setIsEventUpcoming] = useState(false);
+
+  const [ticketData, setTicketData] = useState<any>([]);
+  const [commentvalue, setCommentValue] = useState('');
+  const [commentid, setCommentId] = useState('');
+
+  //Tickets
+  const [freeTickets, setFreeTickets] = useState(0);
+  const [earlyTickets, setEarlyTickets] = useState(0);
+  const [regularTickets, setRegularTickets] = useState(1);
+  const [lateTickets, setLateTickets] = useState(0);
+  const [totalTicketPrice, setTotalTicketPrice] = useState(0);
+
+  const [availableTicket, setAvailableTicket] = useState({
+    free: {quantity: null, price: null, id: null},
+    early: {quantity: null, price: null, id: null},
+    regular: {quantity: null, price: null, id: null},
+    late: {quantity: null, price: null, id: null},
+  });
+
+  const changeInFreeTickets = (type: 'inc' | 'dec') => {
+    if (type === 'inc') {
+      if (
+        availableTicket.free.quantity &&
+        freeTickets < availableTicket.free.quantity
+      ) {
+        setFreeTickets(pre => pre + 1);
+      }
+    } else {
+      if (freeTickets > 0) {
+        setFreeTickets(pre => pre - 1);
+      }
+    }
+  };
+
+  const changeInEarlyTickets = (type: 'inc' | 'dec') => {
+    if (type === 'inc') {
+      if (
+        availableTicket.early.quantity &&
+        earlyTickets < availableTicket.early.quantity
+      ) {
+        setEarlyTickets(pre => pre + 1);
+      }
+    } else {
+      if (earlyTickets > 0) {
+        setEarlyTickets(pre => pre - 1);
+      }
+    }
+  };
+
+  const changeInRegularTickets = (type: 'inc' | 'dec') => {
+    if (type === 'inc') {
+      if (
+        availableTicket.regular.quantity &&
+        regularTickets < availableTicket.regular.quantity
+      ) {
+        setRegularTickets(pre => pre + 1);
+      }
+    } else {
+      if (regularTickets > 0) {
+        setRegularTickets(pre => pre - 1);
+      }
+    }
+  };
+
+  const changeInLateTickets = (type: 'inc' | 'dec') => {
+    if (type === 'inc') {
+      if (
+        availableTicket.late.quantity &&
+        lateTickets < availableTicket.late.quantity
+      ) {
+        setLateTickets(pre => pre + 1);
+      }
+    } else {
+      if (lateTickets > 0) {
+        setLateTickets(pre => pre - 1);
+      }
+    }
+  };
+
+  const getTotalTicketsPrice = () => {
+    const earlyTicketPrices =
+      earlyTickets *
+      (availableTicket?.early?.price! ? availableTicket?.early?.price : 0);
+    const regularTicketPrices =
+      regularTickets *
+      (availableTicket?.regular?.price! ? availableTicket?.regular?.price : 0);
+    const lateTicketPrices =
+      lateTickets *
+      (availableTicket?.late?.price! ? availableTicket?.late?.price : 0);
+
+    return earlyTicketPrices + regularTicketPrices + lateTicketPrices;
+  };
+
+  // Video Stories
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
   const progressAnim = useRef(new Animated.Value(0)).current;
-  const currentStory = videoUrls[currentStoryIndex];
+  const currentStory = eventData?.video_urls?.[currentStoryIndex];
   const pausedProgress = useRef(0);
   const [isPaused, setIsPaused] = useState(false);
   const [currentDuration, setCurrentDuration] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Audio Recording
+  const [recordTime, setRecordTime] = useState('00:00:00');
+  const [recordPath, setRecordPath] = useState('');
+  const [isRecording, setIsRecording] = useState(false);
+  const audioRecorderPlayer = useRef(new AudioRecorderPlayer()).current;
+
+  const [currentlyPlaying, setCurrentlyPlaying] = useState(null); // Stores the currently playing audio's URL
+  const [soundInstance, setSoundInstance] = useState(null); // Tracks the Sound instance
+  const [currentTime, setCurrentTime] = useState(0); // Tracks the current playback time
+  const [duration, setDuration] = useState(0); // Tracks the duration of the current audio
+  const [audioDurations, setAudioDurations] = useState<any>({});
+  const intervalRef = useRef(null);
 
   const onPressBack = () => {
     navigation.goBack();
@@ -107,11 +227,59 @@ const EventDetails = ({navigation, route}: any) => {
   const getEvent = () => {
     setLoading(true);
     getEventDetail(route.params.eventId)
-      .then(res => {
+      .then((res: any) => {
         setLoading(false);
-        console.log(res, 'sdcds');
+        const eventStartDateTime = moment(
+          `${res.date} ${res.start_time}`,
+          'YYYY-MM-DD HH:mm:ss',
+        );
+
+        setIsEventUpcoming(eventStartDateTime.isAfter(now));
         setEventData(res);
-        console.log(res);
+      })
+      .catch(err => {
+        setLoading(false), showError(err.message), console.log(err);
+      });
+  };
+
+  const getEventTicketData = () => {
+    setLoading(true);
+    getEventTicketDetails(route.params.eventId)
+      .then((res: any) => {
+        // Process ticket data
+        const ticketCounts = res.ticket.reduce(
+          (acc: any, ticket: any) => {
+            if (ticket.status === 'available_for_sell') {
+              const {ticketType, quantity, price, _id} = ticket;
+
+              if (!acc[ticketType]) {
+                // Initialize if not already present
+                acc[ticketType] = {
+                  quantity: null,
+                  price: null,
+                  id: null,
+                };
+              }
+
+              // Update values for the ticket type
+              acc[ticketType].quantity += quantity;
+              acc[ticketType].price = price; // Assuming one price per type
+              acc[ticketType].id = _id; // Add ticket ID
+            }
+
+            return acc;
+          },
+          {
+            free: {quantity: null, price: null, id: null},
+            early: {quantity: null, price: null, id: null},
+            regular: {quantity: null, price: null, id: null},
+            late: {quantity: null, price: null, id: null},
+          },
+        );
+
+        // Update state with ticket data
+        setAvailableTicket(ticketCounts);
+        setTicketData(res.ticket);
       })
       .catch(err => {
         setLoading(false), showError(err.message), console.log(err);
@@ -130,25 +298,51 @@ const EventDetails = ({navigation, route}: any) => {
       });
   };
 
-  const onSendComments = () => {
-    if (!commentvalue) {
-      showError('Type comments');
+  const onSendComments = (recordedAudio?: any, description?: string) => {
+    if (
+      description?.trim().length === 0 ||
+      recordedAudio?.trim().length === 0
+    ) {
+      showError('Please type a comment or record a voice message');
       return;
     }
-    const formData = {
-      id: commentid,
-      user_id: user?.user?.id,
-      event_id: route?.params?.eventId,
-      description: commentvalue,
-    };
-    const data = {
-      user_id: user?.user?.id,
-      event_id: route?.params?.eventId,
-      description: commentvalue,
-    };
+    const formData = new FormData();
+    let data;
+    if (commentid) {
+      data = {
+        id: commentid,
+        user_id: user?.user?.id,
+        event_id: route?.params?.eventId,
+        description: commentvalue,
+      };
+    } else {
+      // formData.append('id', commentid);
+      formData.append('user_id', user?.user?.id);
+      formData.append('event_id', route?.params?.eventId);
+
+      if (recordedAudio && recordedAudio?.length > 0) {
+        let audioUri = recordedAudio;
+
+        // Remove 'file://' prefix for iOS
+        if (Platform.OS === 'ios' && audioUri.startsWith('file://')) {
+          audioUri = audioUri.substring(7);
+        }
+
+        formData.append('audio', {
+          uri: Platform.OS === 'ios' ? audioUri : recordedAudio,
+          name: 'audio.m4a',
+          type: 'audio/m4a',
+        });
+      } else {
+        if (description) {
+          formData.append('description', description);
+        }
+      }
+    }
     if (commentid?.length > 0) {
-      editComment(formData)
-        .then(res => {
+      editComment(data)
+        .then((_res: any) => {
+          showSuccess(_res?.message);
           setCommentValue('');
           setCommentId('');
           getEvent2();
@@ -157,25 +351,24 @@ const EventDetails = ({navigation, route}: any) => {
           setCommentValue('');
           setCommentId('');
           showError(err?.msg);
-          console.log(err);
-        });
+        })
+        .finally(() => setRecordPath(''));
     } else {
-      createCommets(data)
+      createCommets(formData)
         .then((res: any) => {
           showSuccess(res?.message);
           setCommentValue('');
           setCommentId('');
           getEvent2();
-          console.log(res);
         })
         .catch(err => {
           setCommentValue('');
           setCommentId('');
           showError(err?.msg);
           console.log(err);
-        });
+        })
+        .finally(() => setRecordPath(''));
     }
-    // console.log(formData)
   };
 
   const onLikePress = () => {
@@ -197,7 +390,11 @@ const EventDetails = ({navigation, route}: any) => {
 
   const onDeletePress = (id: string) => {
     deleteComment(id)
-      .then(res => {
+      .then((_res: any) => {
+        console.log(_res, 'SSS');
+        if (_res.status === 200) {
+          showSuccess(_res.message);
+        }
         getEvent2();
       })
       .catch(err => {
@@ -263,63 +460,164 @@ const EventDetails = ({navigation, route}: any) => {
     );
   };
 
-  // Render UsersWho commented
-  const comItem = ({item, index}: any) => (
-    <View style={styles.itemContainer}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}>
-        {item?.user?.image ? (
-          <Image
-            source={{uri: IMAGE_URL + item?.user?.image}}
-            style={{
-              borderWidth: 1,
-              borderRadius: 8,
-              borderColor: Colors.Pink,
-              width: 40,
-              height: 47,
-            }}
-          />
-        ) : (
-          <Image
-            source={ImagePath.followProfile}
-            style={{borderWidth: 1, borderRadius: 8, borderColor: Colors.Pink}}
-          />
-        )}
-        <View>
-          <Text style={[styles.distanceText, {marginLeft: 10, fontSize: 12}]}>
-            {item?.user?.name}
-          </Text>
-          <Text
-            numberOfLines={2}
-            style={[styles.cmttxt, {marginLeft: 10, width: width / 1.9}]}>
-            {item?.description}
-          </Text>
-        </View>
-      </View>
-      {item?.userId === user?.user?.id ? (
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <VectorIcon
-            groupName="Octicons"
-            name="pencil"
-            size={15}
-            color={Colors.white}
-            style={{marginHorizontal: 15}}
-            onPress={() => onEditPress(item)}
-          />
+  // Play/Pause handler for each audio
+  const handlePlayPause = (audioPath: string) => {
+    if (currentlyPlaying === audioPath) {
+      // If the same audio is clicked, pause it
+      soundInstance?.pause();
+      setCurrentlyPlaying(null);
+      clearInterval(intervalRef.current); // Stop updating time
+    } else {
+      // If a different audio is clicked, stop the previous one
+      if (soundInstance) {
+        soundInstance.stop(() => {
+          soundInstance.release();
+        });
+        clearInterval(intervalRef.current); // Stop updating time
+      }
 
-          <VectorIcon
-            groupName="MaterialCommunityIcons"
-            name="delete"
-            size={20}
-            onPress={() => onDeletePress(item?.id)}
-          />
+      // Load and play the new audio
+      const sound = new Sound(audioPath, null, error => {
+        if (error) {
+          console.error('Failed to load sound:', error);
+          return;
+        }
+
+        // Play the audio
+        setCurrentlyPlaying(audioPath);
+        setSoundInstance(sound);
+        setDuration(sound.getDuration()); // Set the duration of the audio
+        setCurrentTime(0); // Reset the playback time
+
+        sound.play(success => {
+          if (success) {
+            console.log('Playback finished successfully');
+          } else {
+            console.error('Playback failed');
+          }
+
+          // Cleanup after playback ends
+          setCurrentlyPlaying(null);
+          setCurrentTime(0);
+          clearInterval(intervalRef.current);
+          sound.release();
+        });
+      });
+
+      // Start updating the playback time
+      intervalRef.current = setInterval(() => {
+        sound.getCurrentTime(seconds => {
+          setCurrentTime(seconds);
+        });
+      }, 500);
+    }
+  };
+
+  // Format time to mm:ss
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes.toString().padStart(2, '0')}:${secs
+      .toString()
+      .padStart(2, '0')}`;
+  };
+
+  // Render UsersWho commented
+  const comItem = ({item, index}: any) => {
+    const audioPath = IMAGE_URL + item.audio;
+
+    return (
+      <View style={styles.itemContainer}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          {item?.user?.image ? (
+            <Image
+              source={{uri: IMAGE_URL + item?.user?.image}}
+              style={{
+                borderWidth: 1,
+                borderRadius: 8,
+                borderColor: Colors.Pink,
+                width: 40,
+                height: 47,
+              }}
+            />
+          ) : (
+            <Image
+              source={ImagePath.followProfile}
+              style={{
+                borderWidth: 1,
+                borderRadius: 8,
+                borderColor: Colors.Pink,
+              }}
+            />
+          )}
+          <View style={{gap: 3}}>
+            <Text style={[styles.distanceText, {marginLeft: 10, fontSize: 12}]}>
+              {item?.user?.name}
+            </Text>
+
+            {item.audio ? (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  gap: 5,
+                  alignItems: 'center',
+                  paddingHorizontal: 10,
+                }}>
+                {item.audio && (
+                  <TouchableOpacity onPress={() => handlePlayPause(audioPath)}>
+                    <VectorIcon
+                      groupName="Ionicons"
+                      name={
+                        currentlyPlaying === audioPath
+                          ? 'pause-circle-sharp'
+                          : 'caret-forward'
+                      }
+                      size={20}
+                      color={Colors.white}
+                    />
+                  </TouchableOpacity>
+                )}
+                <Text style={{color: 'white'}}>
+                  {audioDurations[audioPath]
+                    ? formatTime(audioDurations[audioPath])
+                    : ''}
+                </Text>
+              </View>
+            ) : (
+              <Text
+                numberOfLines={2}
+                style={[styles.cmttxt, {marginLeft: 10, width: width / 1.9}]}>
+                {item?.description}
+              </Text>
+            )}
+          </View>
         </View>
-      ) : null}
-    </View>
-  );
+        {item?.userId === user?.user?.id ? (
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <VectorIcon
+              groupName="Octicons"
+              name="pencil"
+              size={15}
+              color={Colors.white}
+              style={{marginHorizontal: 15}}
+              onPress={() => onEditPress(item)}
+            />
+
+            <VectorIcon
+              groupName="MaterialCommunityIcons"
+              name="delete"
+              size={20}
+              onPress={() => onDeletePress(item?.id)}
+            />
+          </View>
+        ) : null}
+      </View>
+    );
+  };
 
   const renderMembers = ({item, index}: any) => (
     <View style={styles.itemContainer}>
@@ -380,7 +678,6 @@ const EventDetails = ({navigation, route}: any) => {
   );
 
   // Video Sliding With Progress Bar
-
   const renderVideoContent = (story: any) => {
     return (
       <Video
@@ -418,7 +715,7 @@ const EventDetails = ({navigation, route}: any) => {
   };
 
   const goToNextStory = useCallback(() => {
-    if (currentStoryIndex < videoUrls.length - 1) {
+    if (currentStoryIndex < eventData?.video_urls?.length - 1) {
       setCurrentStoryIndex(prev => prev + 1);
       progressAnim.setValue(0);
       pausedProgress.current = 0;
@@ -454,8 +751,6 @@ const EventDetails = ({navigation, route}: any) => {
   const handleScreenTouch = (evt: GestureResponderEvent) => {
     //this function takes the width and decided where the click was pressed if left or right
     const touchX = evt.nativeEvent.pageX;
-    console.log(touchX, 'XXCXCCX');
-    console.log(width, 'width');
 
     if (touchX < width / 2) {
       goToPreviousStory();
@@ -473,6 +768,181 @@ const EventDetails = ({navigation, route}: any) => {
     // setCurrentDuration(0);
   }, [progressAnim]);
 
+  // Request Permissions For Microphone
+  const requestPermissions = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.requestMultiple([
+          PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        ]);
+        return (
+          granted['android.permission.RECORD_AUDIO'] ===
+            PermissionsAndroid.RESULTS.GRANTED &&
+          granted['android.permission.WRITE_EXTERNAL_STORAGE'] ===
+            PermissionsAndroid.RESULTS.GRANTED
+        );
+      } catch (err) {
+        console.warn(err);
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const onStartRecord = async () => {
+    const hasPermission = await requestPermissions();
+    if (!hasPermission) return;
+
+    const uri = await audioRecorderPlayer.startRecorder();
+    setIsRecording(true);
+    console.log(`Recording started: ${uri}`);
+
+    audioRecorderPlayer.addRecordBackListener(e => {
+      setRecordTime(audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)));
+    });
+  };
+
+  const onStopRecord = async () => {
+    const result = await audioRecorderPlayer.stopRecorder();
+    audioRecorderPlayer.removeRecordBackListener();
+    setIsRecording(false);
+    console.log(`Recording stopped: ${result}`);
+    setRecordPath(result);
+
+    if (result) {
+      onSendComments(result);
+    }
+  };
+
+  const handlePaymentSuccess = async () => {
+    let tickets = [];
+    if (freeTickets > 0) {
+      tickets.push({
+        ticketId: availableTicket.free.id,
+        quantity: freeTickets,
+      });
+    }
+
+    if (earlyTickets > 0) {
+      tickets.push({
+        ticketId: availableTicket.early.id,
+        quantity: earlyTickets,
+      });
+    }
+
+    if (regularTickets > 0) {
+      tickets.push({
+        ticketId: availableTicket.regular.id,
+        quantity: regularTickets,
+      });
+    }
+
+    if (lateTickets > 0) {
+      tickets.push({
+        ticketId: availableTicket.late.id,
+        quantity: lateTickets,
+      });
+    }
+
+    const ticketData = {
+      eventId: eventData.id,
+      tickets,
+    };
+
+    buyEventTicket(ticketData)
+      .then((res: any) => {
+        showSuccess('Payment Successfull');
+        setFreeTickets(0);
+        setEarlyTickets(0);
+        setRegularTickets(0);
+        setLateTickets(0);
+        getEventTicketData();
+      })
+      .catch((err: any) => {
+        console.log(err);
+        showError('Something went wrong');
+      });
+  };
+
+  const handlePaymentFailure = (err: any) => {
+    console.log(err);
+    showError('Something went wrong');
+  };
+
+  const initiatePayment = async () => {
+    const paymentDetails = {
+      id: 'order-123',
+      displayItems: [
+        {
+          label: 'Tickets',
+          amount: {currency: 'USD', value: getTotalTicketsPrice().toFixed(2)},
+        },
+      ],
+      total: {
+        label: 'Total',
+        amount: {currency: 'USD', value: getTotalTicketsPrice().toFixed(2)},
+      },
+    };
+
+    const paymentRequest = new PaymentRequest(
+      [
+        {
+          data: {
+            merchantIdentifier: 'merchant.com.said.baccvs.Baccvs-iOS',
+            supportedNetworks: [
+              SupportedNetworkEnum.Visa,
+              SupportedNetworkEnum.Mastercard,
+            ],
+            countryCode: 'US',
+            currencyCode: 'USD',
+            requestBillingAddress: true,
+            requestPayerEmail: true,
+            requestShipping: true,
+          },
+          supportedMethods: PaymentMethodNameEnum.ApplePay,
+        },
+      ],
+      paymentDetails,
+    );
+
+    // Check if payment is possible
+    const isPaymentPossible = await paymentRequest.canMakePayment();
+    if (!isPaymentPossible) {
+      console.warn('Payment is not supported on this device.');
+      return;
+    }
+
+    try {
+      // Show payment sheet
+      const paymentResponse = await paymentRequest.show();
+
+      // Complete the payment process
+      try {
+        await paymentResponse.complete(PaymentComplete.SUCCESS);
+        console.log('Payment completed successfully:', paymentResponse);
+
+        // Handle successful payment
+        handlePaymentSuccess();
+      } catch (completeError) {
+        console.error('Error completing payment:', completeError);
+
+        // Optionally handle completion error
+        handlePaymentFailure(completeError);
+      }
+    } catch (showError: any) {
+      console.error('Error displaying payment sheet:', showError);
+
+      // Handle payment sheet errors (e.g., user canceled)
+      if (showError.name === 'AbortError') {
+        console.warn('Payment was canceled by the user.');
+      } else {
+        handlePaymentFailure(showError);
+      }
+    }
+  };
+
   useEffect(() => {
     if (!isPaused && !isLoading) {
       runProgressAnimation();
@@ -485,7 +955,45 @@ const EventDetails = ({navigation, route}: any) => {
 
   useEffect(() => {
     getEvent();
+    getEventTicketData();
   }, []);
+
+  // Cleanup when the component unmounts
+  useEffect(() => {
+    return () => {
+      if (soundInstance) {
+        soundInstance.stop(() => {
+          soundInstance.release();
+        });
+      }
+      clearInterval(intervalRef.current); // Clear interval on unmount
+    };
+  }, [soundInstance]);
+
+  // Preload durations for all audios in comments
+  useEffect(() => {
+    const preloadDurations = () => {
+      const durations: any = {};
+
+      eventData?.comments?.forEach((comment: any) => {
+        if (comment.audio) {
+          const audioPath = IMAGE_URL + comment.audio;
+
+          const sound = new Sound(audioPath, null, error => {
+            if (error) {
+              console.error(`Failed to load sound for ${audioPath}:`, error);
+              return;
+            }
+            durations[audioPath] = sound.getDuration(); // Get duration
+            sound.release(); // Release resources after loading duration
+            setAudioDurations((prev: any) => ({...prev, ...durations})); // Update state
+          });
+        }
+      });
+    };
+
+    preloadDurations();
+  }, [eventData]);
 
   return (
     <LinearGradient
@@ -527,12 +1035,12 @@ const EventDetails = ({navigation, route}: any) => {
                 backgroundColor: 'transparent',
                 zIndex: 1000,
               }}>
-              {videoUrls.map((story, index) => (
+              {eventData?.video_urls?.map((_story: any, index: number) => (
                 <View
                   key={index}
                   style={[
                     styles.progressBarBackground,
-                    {width: width / videoUrls.length},
+                    {width: width / eventData?.video_urls?.length},
                   ]}>
                   <Animated.View
                     style={[
@@ -653,21 +1161,30 @@ const EventDetails = ({navigation, route}: any) => {
                   </Text>
                 </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => {
-                  refTicketsRBSheet.current.open();
-                }}
-                style={styles.ticketContainer}>
-                <Image
-                  source={ImagePath.Ticket}
-                  style={{tintColor: Colors.white}}
-                />
-                <Text style={styles.ticketPrice}>
-                  {' '}
-                  €{eventData?.early_price}
-                </Text>
-              </TouchableOpacity>
+              {isEventUpcoming && (
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    refTicketsRBSheet.current.open();
+                  }}
+                  style={styles.ticketContainer}>
+                  <Image
+                    source={ImagePath.Ticket}
+                    style={{tintColor: Colors.white}}
+                  />
+                  <Text style={styles.ticketPrice}>
+                    {' '}
+                    €
+                    {
+                      ticketData?.filter(
+                        (ticket: any) =>
+                          ticket.ticketType === 'early' ||
+                          ticket.ticketType === 'regular',
+                      )[0]?.price
+                    }
+                  </Text>
+                </TouchableOpacity>
+              )}
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => {
@@ -701,13 +1218,6 @@ const EventDetails = ({navigation, route}: any) => {
               />
               <Text style={styles.headerTxt}>{eventData?.event_name}</Text>
               <View style={{flexDirection: 'row'}}>
-                {/* <VectorIcon
-                groupName={'MaterialCommunityIcons'}
-                name={'share-outline'}
-                size={25}
-                color={Colors.white}
-                onPress={onShare}
-              /> */}
                 <TouchableOpacity
                   style={{marginLeft: 10, justifyContent: 'center'}}
                   activeOpacity={0.8}
@@ -792,11 +1302,7 @@ const EventDetails = ({navigation, route}: any) => {
                     },
                   ]}>
                   <Image
-                    source={
-                      thumbnailUrl
-                        ? {uri: IMAGE_URL + eventData?.createdby?.image}
-                        : ImagePath.ProfileImg
-                    }
+                    source={{uri: IMAGE_URL + eventData?.createdby?.image}}
                     style={styles.profileimg}
                   />
                   <Text
@@ -817,7 +1323,7 @@ const EventDetails = ({navigation, route}: any) => {
                 />
                 <Text style={styles.ticketPrice}>
                   {' '}
-                  €{eventData?.early_price}
+                  €{eventData?.regular_price}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -837,6 +1343,153 @@ const EventDetails = ({navigation, route}: any) => {
             </View>
           </ImageBackground>
         )}
+
+        <RBSheet
+          ref={refComRBSheet}
+          closeOnPressMask={true}
+          height={height / 1.7}
+          customStyles={{
+            wrapper: {
+              backgroundColor: 'transparent',
+              width: '90%',
+              bottom: height / 30,
+              alignSelf: 'center',
+            },
+            container: {
+              borderRadius: 10,
+            },
+          }}>
+          <LinearGradient
+            colors={[Colors.backgroundNew, Colors.backgroundNew]}
+            start={{x: 0, y: 0}}
+            end={{x: 1.3, y: 0.9}}
+            style={styles.sheetContent}>
+            <View
+              style={{
+                position: 'relative',
+                marginVertical: moderateScaleVertical(10),
+                zIndex: 1000,
+              }}>
+              <TouchableOpacity
+                activeOpacity={1}
+                style={{
+                  position: 'absolute',
+                  width: '100%',
+                  paddingVertical: 2,
+                  zIndex: 100,
+                }}
+                onPress={() => refComRBSheet.current.close()}>
+                <VectorIcon
+                  groupName="Fontisto"
+                  name="close-a"
+                  size={15}
+                  color={Colors.white}
+                  style={{alignSelf: 'flex-end', right: 10}}
+                />
+              </TouchableOpacity>
+              <Text
+                style={[
+                  styles.timeText,
+                  {
+                    fontSize: textScale(16),
+                    textAlign: 'center',
+                  },
+                ]}>
+                Comments
+              </Text>
+            </View>
+            <FlatList
+              data={eventData?.comments}
+              keyExtractor={item => item?.id?.toString()}
+              renderItem={comItem}
+            />
+            <SizeBox size={10} />
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 10,
+                paddingHorizontal: 10,
+              }}>
+              <View
+                style={{
+                  backgroundColor: Colors.white,
+                  minHeight: 40,
+                  alignSelf: 'center',
+                  borderRadius: 5,
+                  justifyContent: 'space-between',
+                  flexDirection: 'row',
+                  paddingHorizontal: 10,
+                  alignItems: 'center',
+                  flex: 1,
+                }}>
+                <TextInput
+                  placeholder="Type here"
+                  multiline
+                  value={commentvalue}
+                  onChangeText={(text: string) => {
+                    setCommentValue(text);
+                    text.length == 0 && setCommentId('');
+                  }}
+                  style={{
+                    paddingVertical: 5,
+                    color: Colors.black,
+                    fontFamily: fontFamily.regular,
+                  }}
+                />
+                <VectorIcon
+                  groupName="Ionicons"
+                  name="send-outline"
+                  onPress={() => onSendComments(null, commentvalue)}
+                  size={20}
+                  color={Colors.lightPink}
+                />
+              </View>
+
+              {!isRecording ? (
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: Colors.white,
+                    minHeight: 40,
+                    borderRadius: 100,
+                    minWidth: 40,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  onPress={onStartRecord}>
+                  <Image
+                    source={ImagePath.microphone}
+                    resizeMode="contain"
+                    style={{height: 20, width: 20}}
+                  />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: Colors.white,
+                    minHeight: 40,
+                    borderRadius: 100,
+                    minWidth: 40,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  onPress={onStopRecord}>
+                  <VectorIcon
+                    groupName="Ionicons"
+                    name="pause-circle-sharp"
+                    size={25}
+                    color={Colors.lightPink}
+                  />
+                </TouchableOpacity>
+              )}
+              {recordTime && isRecording ? (
+                <Text style={{color: 'white'}}>{recordTime.slice(0, 5)}</Text>
+              ) : null}
+            </View>
+
+            <SizeBox size={5} />
+          </LinearGradient>
+        </RBSheet>
         <RBSheet
           ref={refRBSheet}
           closeOnPressMask={true}
@@ -895,89 +1548,6 @@ const EventDetails = ({navigation, route}: any) => {
                 style={{width: 24, height: 24}}
               />
             </TouchableOpacity>
-          </LinearGradient>
-        </RBSheet>
-        <RBSheet
-          ref={refComRBSheet}
-          closeOnPressMask={true}
-          height={height / 1.7}
-          customStyles={{
-            wrapper: {
-              backgroundColor: 'transparent',
-              width: '90%',
-              bottom: height / 30,
-              alignSelf: 'center',
-            },
-            container: {
-              borderRadius: 10,
-            },
-          }}>
-          <LinearGradient
-            colors={[Colors.backgroundNew, Colors.backgroundNew]}
-            start={{x: 0, y: 0}}
-            end={{x: 1.3, y: 0.9}}
-            style={styles.sheetContent}>
-            <VectorIcon
-              groupName="Fontisto"
-              name="close-a"
-              size={15}
-              color={Colors.white}
-              style={{alignSelf: 'flex-end', top: 10, right: 10}}
-              onPress={() => refComRBSheet.current.close()}
-            />
-            <Text
-              style={[
-                styles.timeText,
-                {
-                  fontSize: textScale(16),
-                  textAlign: 'center',
-                  marginTop: 10,
-                },
-              ]}>
-              Comments
-            </Text>
-            <FlatList
-              data={eventData?.comments}
-              keyExtractor={item => item?.id?.toString()}
-              renderItem={comItem}
-            />
-            <SizeBox size={10} />
-            <View
-              style={{
-                backgroundColor: Colors.white,
-                width: '90%',
-                minHeight: 40,
-                alignSelf: 'center',
-                borderRadius: 5,
-                justifyContent: 'space-between',
-                flexDirection: 'row',
-                paddingHorizontal: 10,
-                alignItems: 'center',
-              }}>
-              <TextInput
-                placeholder="Type here"
-                multiline
-                value={commentvalue}
-                onChangeText={(text: string) => {
-                  setCommentValue(text);
-                  text.length == 0 && setCommentId('');
-                }}
-                style={{
-                  width: '90%',
-                  paddingVertical: 5,
-                  color: Colors.black,
-                  fontFamily: fontFamily.regular,
-                }}
-              />
-              <VectorIcon
-                groupName="Ionicons"
-                name="send-outline"
-                onPress={onSendComments}
-                size={20}
-                color={Colors.lightPink}
-              />
-            </View>
-            <SizeBox size={5} />
           </LinearGradient>
         </RBSheet>
         <RBSheet
@@ -1077,9 +1647,18 @@ const EventDetails = ({navigation, route}: any) => {
                   size={25}
                   color={Colors.white}
                 />
-                <Text style={[styles.timeText, {color: Colors.white}]}>
-                  {formatTimeRange(eventData?.start_time, eventData?.end_time)}
-                </Text>
+                {eventData.start_time && eventData.end_time && (
+                  <Text style={[styles.timeText, {color: Colors.white}]}>
+                    {formatTimeRange(
+                      moment(eventData?.start_time, 'HH:mm:ss').format(
+                        'hh:mm:ss A',
+                      ),
+                      moment(eventData?.end_time, 'HH:mm:ss').format(
+                        'hh:mm:ss A',
+                      ),
+                    )}
+                  </Text>
+                )}
               </View>
               <SizeBox size={10} />
               <Text style={{...commonStyles.font16Regular, marginLeft: 18}}>
@@ -1249,9 +1828,7 @@ const EventDetails = ({navigation, route}: any) => {
         </RBSheet>
         <RBSheet
           ref={refTicketsRBSheet}
-          // closeOnDragDown={true}
           closeOnPressMask={true}
-          height={height / 1.8}
           customStyles={{
             wrapper: {
               backgroundColor: 'transparent',
@@ -1288,159 +1865,208 @@ const EventDetails = ({navigation, route}: any) => {
               Select a ticket
             </Text>
             <SizeBox size={10} />
-            <View style={styles.row}>
-              <View style={{width: '30%'}}>
-                <Text style={styles.ticketText}>Free ticket</Text>
-              </View>
-              <View style={{flexDirection: 'row'}}>
-                <VectorIcon
-                  groupName="AntDesign"
-                  name="minuscircleo"
-                  color={Colors.white}
-                  size={24}
-                />
-                <View style={{width: 10}} />
-                <Text
-                  style={{
-                    ...commonStyles.font14Bold,
-                    color: Colors.white,
-                  }}>
-                  0
-                </Text>
-                <View style={{width: 10}} />
-                <VectorIcon
-                  groupName="AntDesign"
-                  name="pluscircleo"
-                  color={Colors.white}
-                  size={24}
-                />
-              </View>
-              <View style={styles.soldBox}>
-                <Text style={styles.ticketText}>Sold out</Text>
-              </View>
-              <Text style={styles.ticketText}>€</Text>
+
+            <View style={{flex: 1}}>
+              {availableTicket?.free.quantity !== null && (
+                <>
+                  <View style={styles.row}>
+                    <View style={{width: '30%'}}>
+                      <Text style={styles.ticketText}>Free ticket</Text>
+                    </View>
+                    <View style={{flexDirection: 'row'}}>
+                      <VectorIcon
+                        onPress={() => changeInFreeTickets('dec')}
+                        groupName="AntDesign"
+                        name="minuscircleo"
+                        color={Colors.white}
+                        size={24}
+                      />
+                      <View style={{width: 10}} />
+                      <Text
+                        style={{
+                          ...commonStyles.font14Bold,
+                          color: Colors.white,
+                        }}>
+                        {freeTickets}
+                      </Text>
+                      <View style={{width: 10}} />
+                      <VectorIcon
+                        onPress={() => changeInFreeTickets('inc')}
+                        groupName="AntDesign"
+                        name="pluscircleo"
+                        color={Colors.white}
+                        size={24}
+                      />
+                    </View>
+                    <View style={styles.soldBox}>
+                      <Text style={styles.ticketText}>
+                        {availableTicket?.free?.quantity > 0
+                          ? 'Free'
+                          : 'Sold Out'}
+                      </Text>
+                    </View>
+                    <Text style={styles.ticketText}>€</Text>
+                  </View>
+                  <SizeBox size={10} />
+                </>
+              )}
+              {availableTicket?.early?.quantity !== null && (
+                <>
+                  <View style={styles.row}>
+                    <View style={{width: '30%'}}>
+                      <Text style={styles.ticketText}>Early tickets</Text>
+                      <Text
+                        style={{
+                          ...commonStyles.font12Bold,
+                          color: Colors.greyTxt,
+                        }}>
+                        Before{' '}
+                        {moment(eventData.end_time, 'hh:mm:ss A').format('HH') +
+                          'hh' +
+                          moment(eventData.end_time, 'hh:mm:ss A').format('mm')}
+                      </Text>
+                    </View>
+                    <View style={{flexDirection: 'row'}}>
+                      <VectorIcon
+                        onPress={() => changeInEarlyTickets('dec')}
+                        groupName="AntDesign"
+                        name="minuscircleo"
+                        color={Colors.white}
+                        size={24}
+                      />
+                      <View style={{width: 10}} />
+                      <Text
+                        style={{
+                          ...commonStyles.font14Bold,
+                          color: Colors.white,
+                        }}>
+                        {earlyTickets}
+                      </Text>
+                      <View style={{width: 10}} />
+                      <VectorIcon
+                        onPress={() => changeInEarlyTickets('inc')}
+                        groupName="AntDesign"
+                        name="pluscircleo"
+                        color={Colors.white}
+                        size={24}
+                      />
+                    </View>
+                    <View style={styles.soldBox}>
+                      <Text style={styles.ticketText}>
+                        {availableTicket?.early?.quantity > 0
+                          ? availableTicket.early.price
+                          : 'Sold Out'}
+                      </Text>
+                    </View>
+                    <Text style={styles.ticketText}>€</Text>
+                  </View>
+                  <SizeBox size={10} />
+                </>
+              )}
+              {availableTicket.regular.quantity !== null && (
+                <>
+                  <View style={styles.row}>
+                    <View style={{width: '30%'}}>
+                      <Text style={styles.ticketText}>Regular tickets</Text>
+                    </View>
+                    <View style={{flexDirection: 'row'}}>
+                      <VectorIcon
+                        onPress={() => changeInRegularTickets('dec')}
+                        groupName="AntDesign"
+                        name="minuscircleo"
+                        color={Colors.white}
+                        size={24}
+                      />
+                      <View style={{width: 10}} />
+                      <Text
+                        style={{
+                          ...commonStyles.font14Bold,
+                          color: Colors.white,
+                        }}>
+                        {regularTickets}
+                      </Text>
+                      <View style={{width: 10}} />
+                      <VectorIcon
+                        onPress={() => changeInRegularTickets('inc')}
+                        groupName="AntDesign"
+                        name="pluscircleo"
+                        color={Colors.white}
+                        size={24}
+                      />
+                    </View>
+                    <View style={styles.soldBox}>
+                      <Text style={styles.ticketText}>
+                        {availableTicket.regular.quantity > 0
+                          ? availableTicket.regular.price
+                          : 'Sold Out'}
+                      </Text>
+                    </View>
+                    <Text style={styles.ticketText}>€</Text>
+                  </View>
+                  <SizeBox size={10} />
+                </>
+              )}
+              {availableTicket.late.quantity !== null && (
+                <>
+                  <View style={styles.row}>
+                    <View style={{width: '30%'}}>
+                      <Text style={styles.ticketText}>Late tickets</Text>
+                    </View>
+                    <View style={{flexDirection: 'row'}}>
+                      <VectorIcon
+                        onPress={() => changeInLateTickets('dec')}
+                        groupName="AntDesign"
+                        name="minuscircleo"
+                        color={Colors.white}
+                        size={24}
+                      />
+                      <View style={{width: 10}} />
+                      <Text
+                        style={{
+                          ...commonStyles.font14Bold,
+                          color: Colors.white,
+                        }}>
+                        {lateTickets}
+                      </Text>
+                      <View style={{width: 10}} />
+                      <VectorIcon
+                        onPress={() => changeInLateTickets('inc')}
+                        groupName="AntDesign"
+                        name="pluscircleo"
+                        color={Colors.white}
+                        size={24}
+                      />
+                    </View>
+                    <View style={styles.soldBox}>
+                      <Text style={styles.ticketText}>
+                        {availableTicket.late.quantity > 0
+                          ? availableTicket.late.price
+                          : 'Sold Out'}
+                      </Text>
+                    </View>
+                    <Text style={styles.ticketText}>€</Text>
+                  </View>
+                  <SizeBox size={10} />
+                </>
+              )}
             </View>
-            <SizeBox size={10} />
-            <View style={styles.row}>
-              <View style={{width: '30%'}}>
-                <Text style={styles.ticketText}>Early tickets</Text>
-                <Text
-                  style={{
-                    ...commonStyles.font12Bold,
-                    color: Colors.greyTxt,
-                  }}>
-                  Before 22h00
-                </Text>
-              </View>
-              <View style={{flexDirection: 'row'}}>
-                <VectorIcon
-                  groupName="AntDesign"
-                  name="minuscircleo"
-                  color={Colors.white}
-                  size={24}
-                />
-                <View style={{width: 10}} />
-                <Text
-                  style={{
-                    ...commonStyles.font14Bold,
-                    color: Colors.white,
-                  }}>
-                  0
-                </Text>
-                <View style={{width: 10}} />
-                <VectorIcon
-                  groupName="AntDesign"
-                  name="pluscircleo"
-                  color={Colors.white}
-                  size={24}
-                />
-              </View>
-              <View style={styles.soldBox}>
-                <Text style={styles.ticketText}>Sold out</Text>
-              </View>
-              <Text style={styles.ticketText}>€</Text>
-            </View>
-            <SizeBox size={10} />
-            <View style={styles.row}>
-              <View style={{width: '30%'}}>
-                <Text style={styles.ticketText}>Regular tickets</Text>
-              </View>
-              <View style={{flexDirection: 'row'}}>
-                <VectorIcon
-                  groupName="AntDesign"
-                  name="minuscircleo"
-                  color={Colors.white}
-                  size={24}
-                />
-                <View style={{width: 10}} />
-                <Text
-                  style={{
-                    ...commonStyles.font14Bold,
-                    color: Colors.white,
-                  }}>
-                  0
-                </Text>
-                <View style={{width: 10}} />
-                <VectorIcon
-                  groupName="AntDesign"
-                  name="pluscircleo"
-                  color={Colors.white}
-                  size={24}
-                />
-              </View>
-              <View style={styles.soldBox}>
-                <Text style={styles.ticketText}>15,99</Text>
-              </View>
-              <Text style={styles.ticketText}>€</Text>
-            </View>
-            <SizeBox size={10} />
-            <View style={styles.row}>
-              <View style={{width: '30%'}}>
-                <Text style={styles.ticketText}>Late tickets</Text>
-              </View>
-              <View style={{flexDirection: 'row'}}>
-                <VectorIcon
-                  groupName="AntDesign"
-                  name="minuscircleo"
-                  color={Colors.white}
-                  size={24}
-                />
-                <View style={{width: 10}} />
-                <Text
-                  style={{
-                    ...commonStyles.font14Bold,
-                    color: Colors.white,
-                  }}>
-                  0
-                </Text>
-                <View style={{width: 10}} />
-                <VectorIcon
-                  groupName="AntDesign"
-                  name="pluscircleo"
-                  color={Colors.white}
-                  size={24}
-                />
-              </View>
-              <View style={styles.soldBox}>
-                <Text style={styles.ticketText}>19,99</Text>
-              </View>
-              <Text style={styles.ticketText}>€</Text>
-            </View>
-            <SizeBox size={10} />
+
             <Text
               style={{
                 ...commonStyles.font16WhiteBold,
                 alignSelf: 'center',
               }}>
-              Total : €{eventData?.early_price}
+              Total : €{getTotalTicketsPrice()}
             </Text>
             <SizeBox size={10} />
             <TouchableOpacity
+              onPress={initiatePayment}
               activeOpacity={0.8}
               style={{
                 ...styles.soldBox,
                 width: '50%',
                 alignSelf: 'center',
+                marginBottom: 20,
               }}>
               <Text style={styles.ticketText}>Confirm Purchase</Text>
             </TouchableOpacity>

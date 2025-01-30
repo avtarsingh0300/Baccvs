@@ -1,18 +1,17 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-  FlatList,
-  Alert,
-} from 'react-native';
 import React, {useEffect, useState} from 'react';
+import {
+  FlatList,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import {Colors} from '../../../Utilities/Styles/colors';
 import commonStyles from '../../../Utilities/Styles/commonStyles';
 import {height, moderateScale} from '../../../Utilities/Styles/responsiveSize';
-import {Colors} from '../../../Utilities/Styles/colors';
-import LinearGradient from 'react-native-linear-gradient';
 
 import {
   CommonBtn,
@@ -23,24 +22,27 @@ import {
   showSuccess,
 } from '../../../Utilities/Component/Helpers';
 
-import styles from './style';
-import VectorIcon from '../../../Utilities/Component/vectorIcons';
 import ImagePicker from 'react-native-image-crop-picker';
+import VectorIcon from '../../../Utilities/Component/vectorIcons';
+import styles from './style';
 
-import Geocoder from 'react-native-geocoding';
-import {createEvent, getFollowerList} from '../../../Utilities/Constants/auth';
-import Modal from 'react-native-modal';
-import fontFamily from '../../../Utilities/Styles/fontFamily';
 import moment from 'moment';
+import Geocoder from 'react-native-geocoding';
+import Modal from 'react-native-modal';
+import {TicketPrice} from '..';
+import {createEvent, getFollowerList} from '../../../Utilities/Constants/auth';
 import NavigationStrings from '../../../Utilities/Constants/NavigationStrings';
-import {CommonActions} from '@react-navigation/native';
+import {IMAGE_URL} from '../../../Utilities/Constants/Urls';
+import fontFamily from '../../../Utilities/Styles/fontFamily';
+
 Geocoder.init('AIzaSyA-WTLYCwUjh4ffr-NkzBJnVHv6NEaHYSc');
+
 const CreateSuccess = ({navigation, route}: any) => {
   const routeData = route?.params?.data;
-  const [selectedImages, setSelectedImages] = useState([]);
-  const [selectedVideos, setSelectedVideos] = useState([]);
+  const [selectedImages, setSelectedImages] = useState<any>([]);
+  const [selectedVideos, setSelectedVideos] = useState<any>([]);
   const [members, setMembers] = useState([]);
-  const [selectMembers, setSelectMembers] = useState([]);
+  const [selectMembers, setSelectMembers] = useState<any>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [loader, setLoader] = useState(false);
 
@@ -52,9 +54,7 @@ const CreateSuccess = ({navigation, route}: any) => {
       return showError('Please select thumbnails');
     }
 
-    const video = selectedVideos.map(n => n.uri);
-    const images = selectedImages.map(n => n.uri);
-    const members = selectMembers.map(n => n.id);
+    const members = selectMembers.map((n: any) => n.id);
 
     const formattedStartTime = moment(routeData.startTime, 'hh:mm:ss A').format(
       'HH:mm:ss',
@@ -76,16 +76,24 @@ const CreateSuccess = ({navigation, route}: any) => {
     formData.append('end_time', formattedEndTime);
     formData.append('date', moment(routeData.value).format('YYYY-MM-DD'));
     formData.append('allowed_people', routeData.numpeople);
-    formData.append('music_style_id', routeData.selectedMusic);
+    formData.append('music_style_id', routeData.selectedMusic.join(','));
     formData.append('phone_number', routeData.phone);
-    formData.append('price_type', routeData.charges ? routeData.charges : '0');
-    formData.append('language', routeData.selectedLang);
+    formData.append('language', routeData.selectedLang.join(','));
     formData.append('mode', 'In-person');
-    formData.append('event_type_id', routeData.selectedEventType);
-    formData.append('venue_type_id', routeData.selectedVenue);
-    formData.append('early_price', routeData.charges ? routeData.charges : '0');
+    formData.append('event_type_id', routeData.selectedEventType.join(','));
+    formData.append('venue_type_id', routeData.selectedVenue.join(','));
 
-    selectedVideos.forEach((video, index) => {
+    // Add tickets dynamically
+    routeData.tickets.forEach((ticket: TicketPrice, index: number) => {
+      formData.append(`tickets[${index}][price]`, ticket.price.toString());
+      formData.append(
+        `tickets[${index}][quantity]`,
+        ticket.quantity.toString(),
+      );
+      formData.append(`tickets[${index}][type]`, ticket.type.toString());
+    });
+
+    selectedVideos.forEach((video: any, index: any) => {
       formData.append('videos', {
         uri: video.uri,
         name: `video_${index}.mp4`,
@@ -93,7 +101,7 @@ const CreateSuccess = ({navigation, route}: any) => {
       });
     });
 
-    selectedImages.forEach((image, index) => {
+    selectedImages.forEach((image: any, index: any) => {
       formData.append('pictures', {
         uri: image.uri,
         name: `image_${index}.jpg`,
@@ -104,8 +112,10 @@ const CreateSuccess = ({navigation, route}: any) => {
     formData.append('description', routeData.bio);
     formData.append('distance', '250m');
     formData.append('capacity', '2500');
+
     apiCall(formData);
   };
+
   const apiCall = (formData: Object) => {
     setLoader(true);
     createEvent(formData)
@@ -120,13 +130,14 @@ const CreateSuccess = ({navigation, route}: any) => {
         console.log(err);
       });
   };
+
   useEffect(() => {
     getFollower();
   }, []);
 
   const getFollower = () => {
     getFollowerList()
-      .then(res => {
+      .then((res: any) => {
         setMembers(res?.followers), console.log(res);
       })
       .catch(err => {
@@ -140,31 +151,31 @@ const CreateSuccess = ({navigation, route}: any) => {
       height: 400,
       cropping: true,
     }).then(image => {
-      setSelectedImages(prevImages => [
+      setSelectedImages((prevImages: string | any[]) => [
         ...prevImages,
         {id: prevImages.length, uri: image.path},
       ]);
     });
   };
-  const removeImg = id => {
-    setSelectedImages(prevImages =>
-      prevImages.filter(image => image.id !== id),
+  const removeImg = (id: any) => {
+    setSelectedImages((prevImages: any[]) =>
+      prevImages.filter((image: {id: any}) => image.id !== id),
     );
   };
   const addVideo = () => {
     ImagePicker.openPicker({
       mediaType: 'video',
     }).then(video => {
-      setSelectedVideos(prevVideos => [
+      setSelectedVideos((prevVideos: any) => [
         ...prevVideos,
         {id: prevVideos.length, uri: video.path},
       ]);
     });
   };
 
-  const removeVideo = id => {
-    setSelectedVideos(prevVideos =>
-      prevVideos.filter(video => video.id !== id),
+  const removeVideo = (id: any) => {
+    setSelectedVideos((prevVideos: any[]) =>
+      prevVideos.filter((video: {id: any}) => video.id !== id),
     );
   };
   const selectModalHandler = (item: any) => {
@@ -390,32 +401,53 @@ const CreateSuccess = ({navigation, route}: any) => {
                   </LinearGradient>
                 </View>
               </TouchableOpacity>
-              {selectMembers?.map(item => (
-                <View
-                  style={[
-                    styles.imageContainer2,
-                    {height: height / 7, width: '25%', borderWidth: 0},
-                  ]}>
-                  <Image
-                    source={{uri: item?.image}}
-                    style={{width: '100%', height: '100%', borderRadius: 5}}
-                  />
+              {selectMembers.length ? (
+                <View style={{flex: 1}}>
+                  <FlatList
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    bounces={false}
+                    showsVerticalScrollIndicator={false}
+                    data={selectMembers}
+                    renderItem={({item}) => (
+                      <View
+                        style={[
+                          styles.imageContainer2,
+                          {
+                            height: height / 7,
+                            width: 100,
+                            borderWidth: 0,
+                            backgroundColor: 'yellow',
+                          },
+                        ]}>
+                        <Image
+                          source={{uri: IMAGE_URL + item?.image}}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            borderRadius: 5,
+                          }}
+                        />
 
-                  <VectorIcon
-                    groupName="Entypo"
-                    name="cross"
-                    color={Colors.red}
-                    size={26}
-                    onPress={() => {
-                      const filterData2 = selectMembers?.filter(
-                        (i: any) => i != item,
-                      );
-                      setSelectMembers(filterData2);
-                    }}
-                    style={{bottom: -15, position: 'absolute'}}
+                        <VectorIcon
+                          groupName="Entypo"
+                          name="cross"
+                          color={Colors.red}
+                          size={26}
+                          onPress={() => {
+                            const filterData2 = selectMembers?.filter(
+                              (i: any) => i != item,
+                            );
+                            setSelectMembers(filterData2);
+                          }}
+                          style={{bottom: -15, position: 'absolute'}}
+                        />
+                      </View>
+                    )}
+                    keyExtractor={item => item.id.toString()}
                   />
                 </View>
-              ))}
+              ) : null}
             </View>
             <SizeBox size={10} />
             <CommonBtn title="Create Event" onPress={onCreate} />
@@ -449,7 +481,7 @@ const CreateSuccess = ({navigation, route}: any) => {
               <FlatList
                 data={members}
                 keyExtractor={(item, index) => index?.toString()}
-                renderItem={({item, index}) => {
+                renderItem={({item, index}: any) => {
                   const lengthFlag = members?.length;
 
                   const filterData = selectMembers?.filter(

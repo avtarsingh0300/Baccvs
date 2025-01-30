@@ -8,6 +8,7 @@ import {
   ScrollView,
   FlatList,
   TextInput,
+  SectionList,
 } from 'react-native';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import commonStyles from '../../Utilities/Styles/commonStyles';
@@ -36,25 +37,36 @@ import Geocoder from 'react-native-geocoding';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import CountryPicker, {CountryCode} from 'react-native-country-picker-modal';
+import {Switch} from 'react-native-paper';
+import {stringList} from 'aws-sdk/clients/datapipeline';
+
 Geocoder.init('AIzaSyA-WTLYCwUjh4ffr-NkzBJnVHv6NEaHYSc');
+
+export type TicketPrice = {
+  title: string;
+  price: number;
+  quantity: number;
+  type: 'free' | 'early' | 'regular' | 'late';
+};
 
 const AddScreen = ({navigation}: any) => {
   const swiper: any = useRef();
   const [value, setValue] = useState(new Date());
   const [week, setWeek] = useState(0);
   const [musicStyle, setMusicStyle] = useState([]);
-  const [eventType, setEventType] = useState([]);
-  const [venueType, setVenueType] = useState([]);
+  const [eventType, setEventType] = useState<any>([]);
+  const [venueType, setVenueType] = useState<any>([]);
   const [modalVisibleLang, SetModalVisibleLang] = useState(false);
-  const [selectedLang, setSelectedLang] = useState([]);
-  const [selectedMusic, setSelectedMusic] = useState([]);
-  const [selectedEventType, setselectedEventType] = useState([]);
-  const [selectedVenue, setSelectedVenue] = useState([]);
+  const [selectedLang, setSelectedLang] = useState<any>([]);
+  const [selectedMusic, setSelectedMusic] = useState<any>([]);
+  const [selectedEventType, setselectedEventType] = useState<any>([]);
+  const [selectedVenue, setSelectedVenue] = useState<any>([]);
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
-  const [userLocation, setUserLocation] = useState(null);
+  const [userLocation, setUserLocation] = useState<any>(null);
   const [address, setAddress] = useState('');
   const [pin, setPin] = useState({
     latitude: 37.78825,
@@ -65,6 +77,53 @@ const AddScreen = ({navigation}: any) => {
   const [numpeople, setNumPeople] = useState('');
   const [bio, setBio] = useState('');
   const [charges, setCharges] = useState('');
+
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [countryCode, setCountryCode] = useState<CountryCode>('US');
+  const [callingCode, setCallingCode] = useState('1');
+  const [isCountryCodeVisible, setIsCountryCodeVisible] = useState(false);
+
+  const [isFree, setIsFree] = useState(false);
+  const onToggleIsFree = () => setIsFree(!isFree);
+
+  const [ticketPricing, setTicketPricing] = useState<TicketPrice[]>([
+    {
+      title: 'Free Tickets',
+      price: 0,
+      quantity: 0,
+      type: 'free',
+    },
+    {
+      title: 'Early Tickets',
+      price: 0,
+      quantity: 0,
+      type: 'early',
+    },
+    {
+      title: 'Regular Tickets',
+      price: 0,
+      quantity: 0,
+      type: 'regular',
+    },
+    {
+      title: 'Late Tickets',
+      price: 0,
+      quantity: 0,
+      type: 'late',
+    },
+  ]);
+
+  const handlePriceChange = (index: number, value: string) => {
+    const updatedTicketPricing = [...ticketPricing];
+    updatedTicketPricing[index].price = parseFloat(value) || 0; // Parse as number
+    setTicketPricing(updatedTicketPricing);
+  };
+
+  const handleQuantityChange = (index: number, value: string) => {
+    const updatedTicketPricing = [...ticketPricing];
+    updatedTicketPricing[index].quantity = parseInt(value, 10) || 0; // Parse as integer
+    setTicketPricing(updatedTicketPricing);
+  };
 
   const weeks = useMemo(() => {
     const start = moment().add(week, 'weeks').startOf('week');
@@ -132,19 +191,14 @@ const AddScreen = ({navigation}: any) => {
       selectedEventType,
       selectedVenue,
       value,
+      tickets: ticketPricing,
     };
-    console.log(data);
     navigation.navigate(NavigationStrings.CreateSuccess, {data: data});
   };
 
-  useEffect(() => {
-    getLocation();
-    getEventsTypes();
-  }, []);
-
   const getEventsTypes = () => {
     getEventTypes()
-      .then(res => {
+      .then((res: any) => {
         setMusicStyle(res?.musictype);
         setEventType(res?.eventtype);
         setVenueType(res?.venuetype);
@@ -169,9 +223,9 @@ const AddScreen = ({navigation}: any) => {
   };
 
   const selectMusicType = (item: any) => {
-    setSelectedMusic((prevSelectedItems): any => {
+    setSelectedMusic((prevSelectedItems: any[]): any => {
       if (prevSelectedItems.includes(item?._id)) {
-        return prevSelectedItems.filter(id => id !== item?._id);
+        return prevSelectedItems.filter((id: any) => id !== item?._id);
       }
 
       return [...prevSelectedItems, item._id];
@@ -179,19 +233,20 @@ const AddScreen = ({navigation}: any) => {
   };
 
   const handleSelectItem = (item: any) => {
-    setselectedEventType((prevSelectedItems): any => {
+    setselectedEventType((prevSelectedItems: any[]): any => {
       if (prevSelectedItems.includes(item?._id)) {
-        return prevSelectedItems.filter(id => id !== item?._id);
+        return prevSelectedItems.filter((id: any) => id !== item?._id);
       } else if (prevSelectedItems.length < 3) {
         return [...prevSelectedItems, item._id];
       }
       return prevSelectedItems;
     });
   };
+
   const handleVenueItem = (item: any) => {
-    setSelectedVenue((prevSelectedItems): any => {
+    setSelectedVenue((prevSelectedItems: any[]): any => {
       if (prevSelectedItems.includes(item?._id)) {
-        return prevSelectedItems.filter(id => id !== item?._id);
+        return prevSelectedItems.filter((id: any) => id !== item?._id);
       } else if (prevSelectedItems.length < 2) {
         return [...prevSelectedItems, item._id];
       }
@@ -216,6 +271,7 @@ const AddScreen = ({navigation}: any) => {
     setStartTime(currentDate.toLocaleTimeString());
     hideDatePicker();
   };
+
   const onEndChange = (date: any) => {
     const currentDate = date || new Date();
     setEndTime(currentDate.toLocaleTimeString());
@@ -238,11 +294,13 @@ const AddScreen = ({navigation}: any) => {
       },
     );
   };
+
   const handleMapPress = (event: any) => {
     const {latitude, longitude} = event.nativeEvent.coordinate;
     setPin({latitude, longitude});
     getAddressFromCoords(latitude, longitude);
   };
+
   const getAddressFromCoords = (latitude: any, longitude: any) => {
     Geocoder.from(latitude, longitude)
       .then(json => {
@@ -252,9 +310,102 @@ const AddScreen = ({navigation}: any) => {
       .catch(error => console.warn(error));
   };
 
+  const onSelectCountryCode = (country: any) => {
+    setCountryCode(country.cca2);
+    setCallingCode(country.callingCode[0]);
+  };
+
+  const renderTicketItem = ({
+    item,
+    index,
+  }: {
+    item: TicketPrice;
+    index: number;
+  }) => {
+    return (
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Text
+          style={{
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            color: Colors.white,
+            borderWidth: 1,
+            borderColor: Colors.white,
+            borderRadius: 10,
+            textAlign: 'center',
+            minWidth: 120,
+          }}>
+          {item.title}
+        </Text>
+        <Text
+          style={{
+            color: Colors.white,
+            marginHorizontal: 15,
+          }}>
+          :
+        </Text>
+        <TextInput
+          style={{
+            color: Colors.white,
+            borderWidth: 1,
+            borderColor: Colors.white,
+            borderRadius: 10,
+            width: 80,
+            paddingVertical: 5,
+            paddingHorizontal: 5,
+          }}
+          placeholderTextColor={Colors.white}
+          placeholder="price"
+          value={item.price === 0 ? '' : item.price.toString()} // If price is 0, show empty
+          onChangeText={text => handlePriceChange(index, text)} // Handle price change
+          keyboardType="numeric" // Numeric input
+        />
+        <Text
+          style={{
+            color: Colors.white,
+            marginHorizontal: 5,
+          }}>
+          x
+        </Text>
+        <TextInput
+          style={{
+            color: Colors.white,
+            borderWidth: 1,
+            borderColor: Colors.white,
+            borderRadius: 10,
+            width: 80,
+            paddingVertical: 5,
+            paddingHorizontal: 5,
+          }}
+          placeholderTextColor={Colors.white}
+          placeholder="quantity"
+          value={item.quantity === 0 ? '' : item.quantity.toString()} // If quantity is 0, show empty
+          onChangeText={text => handleQuantityChange(index, text)} // Handle quantity change
+          keyboardType="numeric" // Numeric input
+        />
+      </View>
+    );
+  };
+
+  const calculateTotalPrice = () => {
+    // Sum up the total price for all tickets
+    return ticketPricing.reduce((total, ticket) => {
+      return total + ticket.price * ticket.quantity; // price * quantity for each ticket
+    }, 0);
+  };
+
+  useEffect(() => {
+    getLocation();
+    getEventsTypes();
+  }, []);
+
   return (
     <LinearGradient
-      colors={[Colors.backgroundNew, Colors.backgroundNew, Colors.backgroundNew]}
+      colors={[
+        Colors.backgroundNew,
+        Colors.backgroundNew,
+        Colors.backgroundNew,
+      ]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
@@ -305,8 +456,8 @@ const AddScreen = ({navigation}: any) => {
               style={styles.map}
               onPress={handleMapPress}
               region={{
-                latitude: userLocation ? userLocation.latitude : 37.78825,
-                longitude: userLocation ? userLocation.longitude : -122.4324,
+                latitude: userLocation ? userLocation?.latitude : 37.78825,
+                longitude: userLocation ? userLocation?.longitude : -122.4324,
                 latitudeDelta: 0.015,
                 longitudeDelta: 0.0121,
               }}>
@@ -421,27 +572,36 @@ const AddScreen = ({navigation}: any) => {
           </View>
           <SizeBox size={20} />
           <View style={{paddingHorizontal: moderateScale(20)}}>
-            <View style={[styles.cardBtn, {padding: 0, paddingHorizontal: 10}]}>
+            <View style={[styles.cardBtn]}>
               <VectorIcon
                 groupName="SimpleLineIcons"
                 name="screen-smartphone"
                 size={20}
                 color={Colors.lightPink}
               />
+              <TouchableOpacity
+                onPress={() => setIsCountryCodeVisible(!isCountryCodeVisible)}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginRight: 10,
+                }}>
+                <Text style={{color: Colors.white}}>+{callingCode}</Text>
+              </TouchableOpacity>
               <TextInput
                 keyboardType="phone-pad"
                 style={{
                   ...commonStyles.font12Regualar2,
                   color: Colors.white,
-                  paddingHorizontal: 10,
                 }}
                 value={phone}
                 onChangeText={text => setPhone(text)}
-                placeholder="+33 (___) ___ _____"
+                placeholder="Mobile number"
+                placeholderTextColor="white"
               />
             </View>
             <SizeBox size={10} />
-            <View style={[styles.cardBtn, {padding: 0, paddingHorizontal: 10}]}>
+            <View style={[styles.cardBtn]}>
               <VectorIcon
                 groupName="Feather"
                 name="users"
@@ -459,10 +619,11 @@ const AddScreen = ({navigation}: any) => {
                 value={numpeople}
                 onChangeText={text => setNumPeople(text)}
                 placeholder="People Capacity"
+                placeholderTextColor="white"
               />
             </View>
             <SizeBox size={10} />
-            <View style={[styles.cardBtn, {padding: 0, paddingHorizontal: 10}]}>
+            {/* <View style={[styles.cardBtn]}>
               <Image
                 resizeMode="contain"
                 source={ImagePath.priceTag}
@@ -484,10 +645,10 @@ const AddScreen = ({navigation}: any) => {
                 onChangeText={text => setCharges(text)}
                 placeholder="Free / Chargeable"
               />
-            </View>
-            <SizeBox size={10} />
+            </View> */}
+            {/* <SizeBox size={10} /> */}
             <TouchableOpacity
-              style={styles.cardBtn}
+              style={[styles.cardBtn, {gap: 5}]}
               activeOpacity={0.5}
               onPress={() => SetModalVisibleLang(true)}>
               <Image
@@ -505,29 +666,96 @@ const AddScreen = ({navigation}: any) => {
                     ...commonStyles.font12Regualar2,
                     color: Colors.white,
                   }}>
-                  {`  `}Languages
+                  Languages
                 </Text>
               )}
-              {selectedLang?.map(item => (
-                <ScrollView horizontal>
-                  <TouchableOpacity
-                    style={styles.langItem}
-                    activeOpacity={0.8}
-                    onPress={() => {
-                      const filterData2 = selectedLang?.filter(
-                        (i: any) => i != item,
-                      );
-                      setSelectedLang(filterData2);
-                    }}>
-                    <Text style={styles.langItemText}>{item} &#x2715;</Text>
-                  </TouchableOpacity>
-                </ScrollView>
-              ))}
+              {selectedLang?.map(
+                (
+                  item:
+                    | string
+                    | number
+                    | boolean
+                    | React.ReactElement<
+                        any,
+                        string | React.JSXElementConstructor<any>
+                      >
+                    | Iterable<React.ReactNode>
+                    | React.ReactPortal
+                    | null
+                    | undefined,
+                ) => (
+                  <ScrollView horizontal>
+                    <TouchableOpacity
+                      style={styles.langItem}
+                      activeOpacity={0.8}
+                      onPress={() => {
+                        const filterData2 = selectedLang?.filter(
+                          (i: any) => i != item,
+                        );
+                        setSelectedLang(filterData2);
+                      }}>
+                      <Text style={styles.langItemText}>{item} &#x2715;</Text>
+                    </TouchableOpacity>
+                  </ScrollView>
+                ),
+              )}
             </TouchableOpacity>
             <SizeBox size={10} />
+
+            <View style={{gap: 10, marginVertical: 20}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  alignItems: 'center',
+                  gap: 30,
+                }}>
+                <Text
+                  style={{
+                    ...commonStyles.font16Regular,
+                    color: Colors.white,
+                  }}>
+                  Ticket pricing
+                </Text>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Switch
+                    value={isFree}
+                    onValueChange={onToggleIsFree}
+                    style={{
+                      transform: [{scaleX: 0.7}, {scaleY: 0.7}],
+                    }}
+                    trackColor={{
+                      false: '#c6c6c6',
+                      true: 'white',
+                    }}
+                    ios_backgroundColor={'transparent'}
+                  />
+                  <Text
+                    style={{
+                      ...commonStyles.font13,
+                      color: Colors.white,
+                    }}>
+                    Free
+                  </Text>
+                </View>
+              </View>
+              <FlatList
+                data={ticketPricing}
+                renderItem={renderTicketItem}
+                keyExtractor={item => item.title}
+                contentContainerStyle={{gap: 5}}
+              />
+              <Text
+                style={{
+                  ...commonStyles.font16Regular,
+                  color: Colors.white,
+                }}>
+                Total : {calculateTotalPrice()}€
+              </Text>
+            </View>
             <Text
               style={{
-                ...commonStyles.font16Regular,
+                ...commonStyles.font13,
                 color: Colors.lightPink,
               }}>
               Music type
@@ -567,7 +795,7 @@ const AddScreen = ({navigation}: any) => {
                 );
               }}
               numColumns={3}
-              tractor={(item: any) => item._id.toString()}
+              keyExtractor={(item: any) => item._id.toString()}
             />
             <SizeBox size={10} />
             <Text
@@ -710,6 +938,7 @@ const AddScreen = ({navigation}: any) => {
           style={{
             justifyContent: 'flex-end',
             margin: 0,
+            paddingBottom: 0,
           }}
           onBackdropPress={() => {
             SetModalVisibleLang(false);
@@ -724,17 +953,24 @@ const AddScreen = ({navigation}: any) => {
           <View
             style={{
               minHeight: height / 5,
-              maxHeight: height / 3,
+              maxHeight: height / 1.8,
               width: '95%',
               alignSelf: 'center',
+              paddingBottom: 50,
             }}>
             <View style={styles.modalContainer}>
-              <FlatList
-                data={languages}
-                keyExtractor={(item, index) => index?.toString()}
+              <Text
+                style={{
+                  ...commonStyles.font16WhiteBold,
+                  fontSize: textScale(20),
+                  alignSelf: 'center',
+                }}>
+                Select Languages
+              </Text>
+              <SectionList
+                sections={languages}
+                keyExtractor={(item, index) => index.toString()}
                 renderItem={({item, index}) => {
-                  const lengthFlag = languages?.length;
-
                   const filterData = selectedLang?.filter(
                     (i: any) => i == item?.name,
                   );
@@ -747,12 +983,15 @@ const AddScreen = ({navigation}: any) => {
                       }}
                       style={[
                         {
-                          borderBottomWidth: lengthFlag - 1 == index ? 0 : 1,
+                          width: '85%',
+                          alignSelf: 'center',
+                          // borderBottomWidth: lengthFlag - 1 == index ? 0 : 1,
                         },
                         styles.mondaInvw,
                       ]}>
                       <Text
                         style={{
+                          ...commonStyles.font10Regular,
                           color: Colors.white,
                           padding: 5,
                           fontWeight: '600',
@@ -760,15 +999,54 @@ const AddScreen = ({navigation}: any) => {
                         }}>
                         {item?.name}
                       </Text>
-                      <VectorIcon
-                        groupName="MaterialCommunityIcons"
-                        name={
-                          filterData[0] == item?.name
-                            ? 'radiobox-marked'
-                            : 'radiobox-blank'
-                        }
-                        size={18}
-                      />
+                      <View
+                        style={{
+                          width: 14,
+                          height: 14,
+                          backgroundColor: Colors.white,
+                          borderRadius: 2,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        {filterData[0] == item?.name && (
+                          <VectorIcon
+                            groupName="FontAwesome"
+                            name={'check'}
+                            size={10}
+                            color={Colors.black}
+                          />
+                        )}
+                      </View>
+                    </TouchableOpacity>
+                  );
+                }}
+                renderSectionHeader={({section: {title}}) => {
+                  const filterData = languages
+                    .filter(i => i.title === title) // Get only the category with the given title
+                    .flatMap(i => i.data.map(item => item.name)); // Extract and flatten the names
+                  // console.log(title, 'title');
+                  var allSelected = filterData.every(item =>
+                    selectedLang.includes(item),
+                  );
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={() => {}}
+                      style={[
+                        {
+                          // borderBottomWidth: lengthFlag - 1 == index ? 0 : 1,
+                        },
+                        styles.mondaInvw,
+                      ]}>
+                      <Text
+                        style={{
+                          ...commonStyles.font16White,
+                          padding: 5,
+                          fontWeight: '600',
+                          fontFamily: fontFamily.time_regular,
+                        }}>
+                        {title}
+                      </Text>
                     </TouchableOpacity>
                   );
                 }}
@@ -776,14 +1054,7 @@ const AddScreen = ({navigation}: any) => {
             </View>
           </View>
         </Modal>
-        {/* {showStartPicker && (
-          <DateTimePicker
-            value={new Date()}
-            mode="time"
-            display="default"
-         
-          />
-        )} */}
+
         <DateTimePickerModal
           isVisible={showStartPicker}
           mode="time"
@@ -798,6 +1069,14 @@ const AddScreen = ({navigation}: any) => {
           onConfirm={onEndChange}
           onCancel={hideDatePicker}
           date={new Date()}
+        />
+
+        <CountryPicker
+          visible={isCountryCodeVisible}
+          withCallingCode
+          withFlagButton={false}
+          onSelect={onSelectCountryCode}
+          countryCode={countryCode}
         />
       </SafeAreaView>
     </LinearGradient>

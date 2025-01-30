@@ -155,7 +155,7 @@ const TeamsCard: React.FC<TeamsCardCardProps> = ({
           onPress={() => likeUserProfileHanlder('superlike', item)}>
           <VectorIcon
             groupName={
-              !item?.superlike?.isSuperliked
+              !item?.likeStatus?.superlike
                 ? 'SimpleLineIcons'
                 : 'MaterialCommunityIcons'
             }

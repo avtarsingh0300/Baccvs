@@ -17,6 +17,9 @@ import VectorIcon from './vectorIcons';
 import {SizeBox} from './Helpers';
 
 const ProfileImagePreview = ({showModal, setShowModal, data, image}: any) => {
+
+  console.log(data, 'SSS');
+  
   return (
     <Modal
       useNativeDriver={true}

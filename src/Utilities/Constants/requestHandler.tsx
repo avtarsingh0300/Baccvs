@@ -94,7 +94,9 @@ export async function apiGet(
   headers?: object,
 ) {
   console.log(endPoint, ':endPoint');
+  console.log(data, ':DATA');
   var result = await apiReq(endPoint, data, 'get', headers);
+
   if (result === true) {
     return await apiReq(endPoint, data, 'get', headers);
   } else {
