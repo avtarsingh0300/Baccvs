@@ -254,7 +254,11 @@ const AddScreen = ({navigation}: any) => {
 
   return (
     <LinearGradient
-      colors={[Colors.backgroundNew, Colors.backgroundNew, Colors.backgroundNew]}
+      colors={[
+        Colors.backgroundNew,
+        Colors.backgroundNew,
+        Colors.backgroundNew,
+      ]}
       start={{x: 0, y: 0}}
       end={{x: 1.3, y: 0.9}}
       style={styles.LinearConatiner}>
@@ -567,7 +571,7 @@ const AddScreen = ({navigation}: any) => {
                 );
               }}
               numColumns={3}
-              tractor={(item: any) => item._id.toString()}
+              keyExtractor={(item: any) => item._id.toString()}
             />
             <SizeBox size={10} />
             <Text

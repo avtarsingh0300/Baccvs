@@ -17,8 +17,6 @@ import {Keyboard} from 'react-native';
 import {saveUserData} from '../../Redux/Action/auth';
 import NavigationStrings from '../../Utilities/Constants/NavigationStrings';
 const Login = ({navigation}: any) => {
-  // const [username, setUsername] = useState('Moosa@yopmail.com');
-  // const [password, setPassword] = useState('Avtar@123');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loader, setLoader] = useState(false);
@@ -70,7 +68,7 @@ const Login = ({navigation}: any) => {
     setPassword(value);
   };
   const onForget = () => {
-  navigation.navigate(NavigationStrings.forgot);
+    navigation.navigate(NavigationStrings.forgot);
   };
 
   return (
@@ -111,7 +109,8 @@ const Login = ({navigation}: any) => {
           style={{
             alignSelf: 'flex-end',
             ...commonStyles.font16White,
-          }} onPress={onForget}>
+          }}
+          onPress={onForget}>
           Forgot password?
         </Text>
         <SizeBox size={10} />
